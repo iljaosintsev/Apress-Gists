@@ -29,8 +29,7 @@ public class AllGistsFragment extends BaseFragment {
     @BindView(R.id.recycler)
     RecyclerView recycler;
 
-    SwipeRefreshLayout mSwipe;
-
+    private SwipeRefreshLayout mSwipe;
     private AllGistAdapter mAdapter;
     private LinearLayoutManager mLayoutManager;
 
@@ -38,34 +37,26 @@ public class AllGistsFragment extends BaseFragment {
             = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
         public void onRefresh() {
-            if (mSwipe.isEnabled()) {
-                mSwipe.setEnabled(false);
-                loadPage(0);
-            }
+            resetToFirstPage();
         }
     };
 
     private final RecyclerView.OnScrollListener mScrollListener = new RecyclerView.OnScrollListener() {
 
-        private static final int MAX_PAGE = 3;
-
-        private static final int PAGE_SIZE = 30;
-
-        private int mCurrentPage;
+        private int mLastDownloadedSize = 0;
 
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            int firstVisibleItem = mLayoutManager.findFirstVisibleItemPosition();
             int visibleItemCount = mLayoutManager.getChildCount();
             int totalItemCount = mLayoutManager.getItemCount();
-            int firstVisibleItemPosition = mLayoutManager.findFirstVisibleItemPosition();
 
-            boolean isLastPage = mCurrentPage >= MAX_PAGE;
-            if (!mSwipe.isEnabled() && !isLastPage) {
-                boolean out = (visibleItemCount + firstVisibleItemPosition + 3) >= totalItemCount;
-                if (out && firstVisibleItemPosition >= 0) {
-                    int page = (visibleItemCount + firstVisibleItemPosition) / PAGE_SIZE + 1;
-                    loadPage(-1);
-                }
+            boolean closeEdge = firstVisibleItem + visibleItemCount + 3 == totalItemCount;
+            boolean sizeNotDownload = totalItemCount > mLastDownloadedSize;
+            if (closeEdge && sizeNotDownload && !mSwipe.isRefreshing()) {
+                mLastDownloadedSize = totalItemCount;
+                mSwipe.setRefreshing(true);
+                loadNewPage(totalItemCount);
             }
         }
     };
@@ -103,23 +94,35 @@ public class AllGistsFragment extends BaseFragment {
     @Override
     public void onStart() {
         super.onStart();
-        loadPage(0);
+        mSwipe.setRefreshing(true);
+        resetToFirstPage();
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        _presenter.attach(this);
+        _presenter.detach();
     }
 
-    public void onGist(List<Gist> value) {
+    @Override
+    public void showError(String msg) {
+        super.showError(msg);
+        mSwipe.setRefreshing(false);
+    }
+
+    public void onGistLoaded(List<Gist> value) {
         mAdapter.addGist(value);
         mSwipe.setRefreshing(false);
         mSwipe.setEnabled(true);
     }
 
-    private void loadPage(int page) {
-        _presenter.loadPublicGists();
+    private void resetToFirstPage() {
+        mAdapter.clearGist();
+        _presenter.loadPublicGists(0);
+    }
+
+    private void loadNewPage(int totalItemCount) {
+        _presenter.loadPublicGists(totalItemCount);
     }
 
 }

@@ -36,16 +36,12 @@ public abstract class BasePresenter<T extends BaseView> {
         subs.add(s);
     }
 
-    protected <E> ObservableTransformer<E, E> onIo() {
-        return new SubscribeOnIoTransformer<>();
+    protected <E> ObservableTransformer<E, E> subscribeIo() {
+        return new SubscribeIo<>();
     }
 
-    protected <E> ObservableTransformer<E, E> toMain() {
-        return new ObserveOnMainTransformer<>();
-    }
-
-    protected CharSequence getErrorMessage(Context context, Throwable e) {
-        return context.getText(R.string.error_general);
+    protected <E> ObservableTransformer<E, E> observeMain() {
+        return new ObserveMain<>();
     }
 
     protected abstract class Handler<E> implements Observer<E> {
@@ -68,14 +64,15 @@ public abstract class BasePresenter<T extends BaseView> {
         @Override
         public void onError(Throwable e) {
             T view = getView();
+            e.printStackTrace();
             if (view != null) {
-                CharSequence msg = getErrorMessage(view.getContext(), e);
+                CharSequence msg = view.getContext().getText(R.string.error_general);
                 view.showError(msg.toString());
             }
         }
     }
 
-    private static final class SubscribeOnIoTransformer<T> implements ObservableTransformer<T, T> {
+    private static final class SubscribeIo<T> implements ObservableTransformer<T, T> {
 
         @Override
         public ObservableSource<T> apply(Observable<T> upstream) {
@@ -83,7 +80,7 @@ public abstract class BasePresenter<T extends BaseView> {
         }
     }
 
-    private static final class ObserveOnMainTransformer<T> implements ObservableTransformer<T, T> {
+    private static final class ObserveMain<T> implements ObservableTransformer<T, T> {
 
         @Override
         public ObservableSource<T> apply(Observable<T> upstream) {

@@ -16,6 +16,8 @@ import java.util.List;
 
 class AllGistAdapter extends RecyclerView.Adapter<AllGistAdapter.Holder> {
 
+    private static final String TAG = "AllGistAdapter";
+
     private final LayoutInflater mInflater;
 
     private final List<Gist> mContent;
@@ -46,14 +48,21 @@ class AllGistAdapter extends RecyclerView.Adapter<AllGistAdapter.Holder> {
     void addGist(List<Gist> value) {
         int start = mContent.size();
         mContent.addAll(value);
-        this.notifyItemRangeInserted(start, start + value.size());
+        Log.d(TAG, "notifyItemRangeInserted " + start + " " + value.size());
+        notifyItemRangeInserted(start, start + value.size());
+    }
+
+    void clearGist() {
+        int c = getItemCount();
+        notifyItemRangeRemoved(0, c);
+        mContent.clear();
     }
 
     static class Holder extends RecyclerView.ViewHolder {
 
         Holder(View itemView) {
             super(itemView);
-            Log.i("HOLDER", "new holder created");
+            Log.i(TAG, "new holder created");
         }
 
         void setData(Gist item) {
