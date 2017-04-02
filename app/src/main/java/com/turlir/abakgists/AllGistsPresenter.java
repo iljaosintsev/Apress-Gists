@@ -20,9 +20,7 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
     }
 
     void loadPublicGists(int currentSize) {
-        if (currentSize == 0) {
-            currentSize = PAGE_SIZE;
-        }
+        currentSize = Math.max(currentSize, PAGE_SIZE);
         int page = currentSize / PAGE_SIZE;
         mClient.publicGist(page)
                 .compose(this.<List<Gist>>subscribeIo())
@@ -37,7 +35,12 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
                     @Override
                     public void onNext(List<Gist> value) {
                         if (getView() != null) {
-                            getView().onGistLoaded(value);
+                            if (value.size() < PAGE_SIZE) {
+                                // достигнут конец списка
+                                getView().stopGistLoad();
+                            } else {
+                                getView().onGistLoaded(value);
+                            }
                         }
                     }
                 });

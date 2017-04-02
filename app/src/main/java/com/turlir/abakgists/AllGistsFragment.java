@@ -102,6 +102,7 @@ public class AllGistsFragment extends BaseFragment {
     public void onDetach() {
         super.onDetach();
         _presenter.detach();
+        recycler.removeOnScrollListener(mScrollListener);
     }
 
     @Override
@@ -113,7 +114,10 @@ public class AllGistsFragment extends BaseFragment {
     public void onGistLoaded(List<Gist> value) {
         mAdapter.addGist(value);
         mSwipe.setRefreshing(false);
-        mSwipe.setEnabled(true);
+    }
+
+    public void stopGistLoad() {
+        recycler.removeOnScrollListener(mScrollListener);
     }
 
     private void resetToFirstPage() {
