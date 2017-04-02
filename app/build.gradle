@@ -37,4 +37,11 @@ dependencies {
     compile 'com.squareup.retrofit2:adapter-rxjava2:2.2.0'
     compile 'com.squareup.retrofit2:converter-gson:2.2.0'
 
+    compile 'com.pushtorefresh.storio:sqlite:1.12.3'
+    compile 'com.pushtorefresh.storio:sqlite-annotations:1.12.3'
+    apt 'com.pushtorefresh.storio:sqlite-annotations-processor:1.12.3'
+
+    compile 'com.facebook.stetho:stetho:1.4.2'
+    compile 'com.facebook.stetho:stetho-okhttp3:1.4.2'
+    compile 'com.facebook.stetho:stetho-urlconnection:1.4.2'
 }

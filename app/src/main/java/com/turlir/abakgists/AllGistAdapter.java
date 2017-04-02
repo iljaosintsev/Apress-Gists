@@ -67,7 +67,7 @@ class AllGistAdapter extends RecyclerView.Adapter<AllGistAdapter.Holder> {
 
         void setData(Gist item) {
             TextView tvId = (TextView) itemView.findViewById(R.id.item_gist_id);
-            tvId.setText(item.id);
+            tvId.setText(String.valueOf(item.id));
 
             TextView tvCreated = (TextView) itemView.findViewById(R.id.item_gist_created);
             tvCreated.setText(item.created);

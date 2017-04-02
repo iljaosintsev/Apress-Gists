@@ -5,6 +5,7 @@ import android.app.Application;
 import android.os.Build;
 import android.os.StrictMode;
 
+import com.facebook.stetho.Stetho;
 import com.turlir.abakgists.di.AppComponent;
 import com.turlir.abakgists.di.AppModule;
 import com.turlir.abakgists.di.DaggerAppComponent;
@@ -30,6 +31,25 @@ public class App extends Application {
                     .penaltyDeathOnNetwork()
                     .build());
         }
+
+        initStetho();
+    }
+
+    private void initStetho() {
+        // Create an InitializerBuilder
+        Stetho.InitializerBuilder initializerBuilder =
+                Stetho.newInitializerBuilder(this);
+
+        // Enable Chrome DevTools
+        initializerBuilder.enableWebKitInspector(
+                Stetho.defaultInspectorModulesProvider(this)
+        );
+
+        // Use the InitializerBuilder to generate an Initializer
+        Stetho.Initializer initializer = initializerBuilder.build();
+
+        // Initialize Stetho with the Initializer
+        Stetho.initialize(initializer);
     }
 
     public static AppComponent getComponent() {
