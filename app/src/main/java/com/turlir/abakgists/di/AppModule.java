@@ -4,14 +4,12 @@ package com.turlir.abakgists.di;
 import android.content.Context;
 
 import com.turlir.abakgists.network.ApiClient;
-
-import java.io.File;
+import com.turlir.abakgists.network.LogInterceptor;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 
 @Module
@@ -33,6 +31,7 @@ public class AppModule {
     @Singleton
     OkHttpClient provideOkHttpClient() {
         return new OkHttpClient.Builder()
+                .addInterceptor(new LogInterceptor())
                 .build();
     }
 
