@@ -4,11 +4,17 @@ package com.turlir.abakgists;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.turlir.abakgists.model.Gist;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class GistActivity extends AppCompatActivity {
 
@@ -20,13 +26,46 @@ public class GistActivity extends AppCompatActivity {
         return i;
     }
 
+    @BindView(R.id.tv_login)
+    TextView login;
+
+    @BindView(R.id.iv_avatar)
+    ImageView avatar;
+
+    @BindView(R.id.et_edsc)
+    EditText desc;
+
+    @BindView(R.id.et_note)
+    EditText note;
+
     private Gist mContent;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gist);
+        ButterKnife.bind(this);
         mContent = getIntent().getParcelableExtra(EXTRA_GIST);
+
+        fillControl();
+    }
+
+    private void fillControl() {
+        if (mContent.ownerLogin != null) {
+            login.setText(mContent.ownerLogin);
+        }
+        if (mContent.ownerAvatarUrl != null) {
+            loadAvatar(mContent.ownerAvatarUrl);
+        }
+        desc.setText(mContent.description);
+        note.setText(mContent.note);
+    }
+
+    private void loadAvatar(String url) {
+        Picasso.with(this)
+                .load(url)
+                .fit()
+                .into(avatar);
     }
 
 }
