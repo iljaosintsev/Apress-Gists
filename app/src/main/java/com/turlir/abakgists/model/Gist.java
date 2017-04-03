@@ -53,6 +53,9 @@ public class Gist implements Parcelable {
 
     ////////
 
+    @StorIOSQLiteColumn(name = "note")
+    public String note;
+
     public static final Creator<Gist> CREATOR = new Creator<Gist>() {
         @Override
         public Gist createFromParcel(Parcel in) {
