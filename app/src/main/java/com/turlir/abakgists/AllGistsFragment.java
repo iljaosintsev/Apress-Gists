@@ -1,12 +1,14 @@
 package com.turlir.abakgists;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +23,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 
 
-public class AllGistsFragment extends BaseFragment {
+public class AllGistsFragment extends BaseFragment implements OnClickListener {
 
     @Inject
     AllGistsPresenter _presenter;
@@ -76,7 +78,7 @@ public class AllGistsFragment extends BaseFragment {
         mSwipe = ((SwipeRefreshLayout) root);
         mSwipe.setOnRefreshListener(mSwipeListener);
 
-        mAdapter = new AllGistAdapter(getContext());
+        mAdapter = new AllGistAdapter(getContext(), this);
         recycler.setAdapter(mAdapter);
         mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recycler.setLayoutManager(mLayoutManager);
@@ -109,6 +111,12 @@ public class AllGistsFragment extends BaseFragment {
     public void showError(String msg) {
         super.showError(msg);
         mSwipe.setRefreshing(false);
+    }
+
+    @Override
+    public void onListItemClick(int position) {
+        Intent i = GistActivity.getStartIntent(getActivity());
+        startActivity(i);
     }
 
     public void onGistLoaded(List<Gist> value) {

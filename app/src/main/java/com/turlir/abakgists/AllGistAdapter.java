@@ -19,19 +19,30 @@ class AllGistAdapter extends RecyclerView.Adapter<AllGistAdapter.Holder> {
     private static final String TAG = "AllGistAdapter";
 
     private final LayoutInflater mInflater;
+    private final OnClickListener mClick;
 
     private final List<Gist> mContent;
 
-    AllGistAdapter(Context cnt) {
+    AllGistAdapter(Context cnt, OnClickListener clickListener) {
         mInflater = LayoutInflater.from(cnt);
+        mClick = clickListener;
         mContent = new ArrayList<>();
     }
 
     @Override
     public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.item_gist, parent, false);
-        return new Holder(view);
-
+        final Holder holder = new Holder(view);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = holder.getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION) {
+                    mClick.onListItemClick(position);
+                }
+            }
+        });
+        return holder;
     }
 
     @Override

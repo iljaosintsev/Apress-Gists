@@ -22,6 +22,8 @@
 
         <activity android:name=".AllGistsActivity" android:label="@string/all_gists"/>
 
+        <activity android:name=".GistActivity" android:label="@string/gist"/>
+
     </application>
 
 </manifest>
