@@ -17,10 +17,11 @@ public class ApiClient {
     private final GitHubService mApi;
 
     public ApiClient(OkHttpClient okhttp) {
+        GsonConverterFactory factory = GsonConverterFactory.create();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(URL)
                 .client(okhttp)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(factory)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
 

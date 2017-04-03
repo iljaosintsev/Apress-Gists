@@ -27,9 +27,6 @@ public class GistActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gist);
         mContent = getIntent().getParcelableExtra(EXTRA_GIST);
-        if (savedInstanceState != null) {
-
-        }
     }
 
 }

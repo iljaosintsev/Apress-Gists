@@ -57,6 +57,18 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
                 });
 
         addSubscription(mClient.publicGist(page)
+                .map(new Func1<List<Gist>, List<Gist>>() {
+                    @Override
+                    public List<Gist> call(List<Gist> gists) {
+                        for (Gist item : gists) {
+                            if (item.owner != null) {
+                                item.ownerLogin = item.owner.login;
+                                item.ownerAvatarUrl = item.owner.avatarUrl;
+                            }
+                        }
+                        return gists;
+                    }
+                })
                 .doOnNext(new Action1<List<Gist>>() {
                     @Override
                     public void call(List<Gist> gists) {

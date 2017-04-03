@@ -17,6 +17,8 @@ class GistDatabaseHelper extends SQLiteOpenHelper {
                 "desc TEXT, " +
                 "url TEXT NOT NULL, " +
                 "created TEXT NOT NULL, " +
+                "ownerLogin TEXT, " +
+                "ownerAvatarUrl TEXT, " +
                 "_id INTEGER NOT NULL PRIMARY KEY " +
                 ")");
     }

@@ -37,6 +37,22 @@ public class Gist implements Parcelable {
     @NonNull
     public String created;
 
+    ////////
+
+    @SerializedName("owner")
+    @Nullable
+    public GistOwner owner;
+
+    @StorIOSQLiteColumn(name = "ownerLogin")
+    @Nullable
+    public String ownerLogin;
+
+    @StorIOSQLiteColumn(name = "ownerAvatarUrl")
+    @Nullable
+    public String ownerAvatarUrl;
+
+    ////////
+
     public static final Creator<Gist> CREATOR = new Creator<Gist>() {
         @Override
         public Gist createFromParcel(Parcel in) {
@@ -58,6 +74,8 @@ public class Gist implements Parcelable {
         id = in.readString();
         description = in.readString();
         created = in.readString();
+        ownerLogin = in.readString();
+        ownerAvatarUrl = in.readString();
     }
 
     @Override
@@ -69,6 +87,8 @@ public class Gist implements Parcelable {
         dest.writeString(id);
         dest.writeString(description);
         dest.writeString(created);
+        dest.writeString(ownerLogin);
+        dest.writeString(ownerAvatarUrl);
     }
 
     @Override
