@@ -56,6 +56,10 @@ class AllGistAdapter extends RecyclerView.Adapter<AllGistAdapter.Holder> {
         return mContent.size();
     }
 
+    Gist getItemByPosition(int p) {
+        return mContent.get(p);
+    }
+
     void addGist(List<Gist> value) {
         int start = mContent.size();
         mContent.addAll(value);

@@ -1,6 +1,8 @@
 package com.turlir.abakgists.model;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -9,7 +11,7 @@ import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteColumn;
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteType;
 
 @StorIOSQLiteType(table = "gists")
-public class Gist {
+public class Gist implements Parcelable {
 
     @StorIOSQLiteColumn(name = "_id", key = true)
     @Nullable
@@ -34,6 +36,45 @@ public class Gist {
     @StorIOSQLiteColumn(name = "created")
     @NonNull
     public String created;
+
+    public static final Creator<Gist> CREATOR = new Creator<Gist>() {
+        @Override
+        public Gist createFromParcel(Parcel in) {
+            return new Gist(in);
+        }
+
+        @Override
+        public Gist[] newArray(int size) {
+            return new Gist[size];
+        }
+    };
+
+    public Gist() {
+
+    }
+
+    protected Gist(Parcel in) {
+        url = in.readString();
+        id = in.readString();
+        description = in.readString();
+        created = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        if (number != null) {
+            dest.writeLong(number);
+        }
+        dest.writeString(url);
+        dest.writeString(id);
+        dest.writeString(description);
+        dest.writeString(created);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -60,4 +101,5 @@ public class Gist {
         result = 17 * result + created.hashCode();
         return result;
     }
+
 }
