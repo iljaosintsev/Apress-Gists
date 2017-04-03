@@ -6,6 +6,8 @@ import android.content.Context;
 import com.turlir.abakgists.network.ApiClient;
 import com.turlir.abakgists.network.LogInterceptor;
 
+import java.util.concurrent.TimeUnit;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -32,6 +34,7 @@ public class AppModule {
     OkHttpClient provideOkHttpClient() {
         return new OkHttpClient.Builder()
                 .addInterceptor(new LogInterceptor())
+                .connectTimeout(5, TimeUnit.SECONDS)
                 .build();
     }
 

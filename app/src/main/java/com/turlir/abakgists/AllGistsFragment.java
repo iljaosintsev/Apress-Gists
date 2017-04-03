@@ -117,6 +117,7 @@ public class AllGistsFragment extends BaseFragment {
     }
 
     public void stopGistLoad() {
+        mSwipe.setRefreshing(false);
         recycler.removeOnScrollListener(mScrollListener);
     }
 
