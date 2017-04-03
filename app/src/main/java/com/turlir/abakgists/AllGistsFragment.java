@@ -8,7 +8,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -128,11 +127,6 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener {
     public void onGistLoaded(List<Gist> value, int start, int offset) {
         mAdapter.addGist(value, start, offset);
         mSwipe.setRefreshing(false);
-    }
-
-    public void stopGistLoad() {
-        mSwipe.setRefreshing(false);
-        recycler.removeOnScrollListener(mScrollListener);
     }
 
     private void resetToFirstPage() {

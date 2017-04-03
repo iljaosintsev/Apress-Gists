@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
-import com.pushtorefresh.storio.sqlite.queries.Query;
 import com.squareup.picasso.Picasso;
 import com.turlir.abakgists.model.Gist;
 
@@ -63,14 +62,8 @@ public class GistActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_save)
     public void onClickSave() {
-        _database.delete()
-                .object(mContent)
-                .prepare()
-                .executeAsBlocking();
-
         mContent.description = desc.getText().toString();
         mContent.note = note.getText().toString();
-
         _database
                 .put()
                 .object(mContent)

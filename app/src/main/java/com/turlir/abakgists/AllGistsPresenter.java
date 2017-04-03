@@ -1,27 +1,18 @@
 package com.turlir.abakgists;
 
 
-import android.renderscript.RSInvalidStateException;
-import android.util.Log;
-
-import com.pushtorefresh.storio.sqlite.Changes;
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.queries.Query;
 import com.turlir.abakgists.base.BasePresenter;
 import com.turlir.abakgists.model.Gist;
-import com.turlir.abakgists.model.GistSQLiteTypeMapping;
 import com.turlir.abakgists.network.ApiClient;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.functions.Func1;
-import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
 public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
@@ -37,8 +28,10 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
     }
 
     void loadPublicGists(final int currentSize) {
+        int tmp = Math.max(currentSize, PAGE_SIZE);
+        int page = tmp / PAGE_SIZE;
 
-        final Observable<List<Gist>> serverData = mClient.publicGist(1)
+        final Observable<List<Gist>> serverData = mClient.publicGist(page)
                 .map(new Func1<List<Gist>, List<Gist>>() {
                     @Override
                     public List<Gist> call(List<Gist> gists) {
@@ -57,6 +50,7 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
                 .withQuery(
                         Query.builder()
                                 .table("gists")
+                                .limit(currentSize, PAGE_SIZE)
                                 .build()
                 )
                 .prepare()
