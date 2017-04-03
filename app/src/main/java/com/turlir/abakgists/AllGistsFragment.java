@@ -94,17 +94,22 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         mSwipe.setRefreshing(true);
         resetToFirstPage();
+    }
+
+    @Override
+    public void onDestroyView() {
+        recycler.removeOnScrollListener(mScrollListener);
+        super.onDestroyView();
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         _presenter.detach();
-        recycler.removeOnScrollListener(mScrollListener);
     }
 
     @Override
