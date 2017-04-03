@@ -10,11 +10,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.pushtorefresh.storio.sqlite.StorIOSQLite;
+import com.pushtorefresh.storio.sqlite.queries.Query;
 import com.squareup.picasso.Picasso;
 import com.turlir.abakgists.model.Gist;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class GistActivity extends AppCompatActivity {
 
@@ -25,6 +30,9 @@ public class GistActivity extends AppCompatActivity {
         i.putExtra(EXTRA_GIST, data);
         return i;
     }
+
+    @Inject
+    StorIOSQLite _database;
 
     @BindView(R.id.tv_login)
     TextView login;
@@ -44,10 +52,36 @@ public class GistActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gist);
+        App.getComponent().inject(this);
         ButterKnife.bind(this);
         mContent = getIntent().getParcelableExtra(EXTRA_GIST);
 
-        fillControl();
+        if (savedInstanceState == null) {
+            fillControl();
+        }
+    }
+
+    @OnClick(R.id.btn_save)
+    public void onClickSave() {
+        _database.delete()
+                .object(mContent)
+                .prepare()
+                .executeAsBlocking();
+
+        mContent.description = desc.getText().toString();
+        mContent.note = note.getText().toString();
+
+        _database
+                .put()
+                .object(mContent)
+                .prepare()
+                .executeAsBlocking();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        onClickSave();
     }
 
     private void fillControl() {

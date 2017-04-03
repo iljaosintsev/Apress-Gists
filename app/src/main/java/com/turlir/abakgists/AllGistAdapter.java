@@ -60,11 +60,23 @@ class AllGistAdapter extends RecyclerView.Adapter<AllGistAdapter.Holder> {
         return mContent.get(p);
     }
 
-    void addGist(List<Gist> value) {
-        int start = mContent.size();
-        mContent.addAll(value);
-        Log.d(TAG, "notifyItemRangeInserted " + start + " " + value.size());
-        notifyItemRangeInserted(start, start + value.size());
+    void addGist(List<Gist> value, int start, int offset) {
+        int l = mContent.size();
+        if (l <= start) { // вставка
+            mContent.addAll(value);
+            Log.d(TAG, "notifyItemRangeInserted " + l + " " + value.size());
+            notifyItemRangeInserted(l, l + value.size());
+        } else if (l > start) { // обновление
+            for (int i = l; i < l + offset; i++) {
+                Gist old = mContent.get(i - l);
+                Gist now = value.get(i - l);
+                if (!now.equals(old)) {
+                    mContent.set(i - l, value.get(i - l));
+                    notifyItemChanged(i - l);
+                    Log.d(TAG, "notifyItemChanged " + (i - l));
+                }
+            }
+        }
     }
 
     void clearGist() {
