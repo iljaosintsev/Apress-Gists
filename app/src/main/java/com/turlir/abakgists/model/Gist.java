@@ -13,17 +13,13 @@ import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteType;
 @StorIOSQLiteType(table = "gists")
 public class Gist implements Parcelable {
 
-    @StorIOSQLiteColumn(name = "_id", key = true)
-    @Nullable
-    public Long number;
-
     @SerializedName("url")
     @StorIOSQLiteColumn(name = "url")
     @NonNull
     public String url;
 
     @SerializedName("id")
-    @StorIOSQLiteColumn(name = "id")
+    @StorIOSQLiteColumn(name = "id", key = true)
     @NonNull
     public String id;
 
@@ -83,9 +79,6 @@ public class Gist implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        if (number != null) {
-            dest.writeLong(number);
-        }
         dest.writeString(url);
         dest.writeString(id);
         dest.writeString(description);
@@ -106,7 +99,6 @@ public class Gist implements Parcelable {
 
         Gist gist = (Gist) o;
 
-        if (number != null ? !number.equals(gist.number) : gist.number != null) return false;
         if (!url.equals(gist.url)) return false;
         if (!id.equals(gist.id)) return false;
         if (description != null ? !description.equals(gist.description) : gist.description != null)
@@ -117,8 +109,7 @@ public class Gist implements Parcelable {
 
     @Override
     public int hashCode() {
-        int result = number != null ? number.hashCode() : 0;
-        result = 17 * result + url.hashCode();
+        int result = 17 + url.hashCode();
         result = 17 * result + id.hashCode();
         result = 17 * result + (description != null ? description.hashCode() : 0);
         result = 17 * result + created.hashCode();
