@@ -9,9 +9,10 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <!--<Button
+    <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/btn_all_gists"
         android:text="@string/all_gists" />
 
     <Button
@@ -24,13 +25,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/all_is_one" />-->
+        android:text="@string/all_is_one" />
 
-    <fragment
-        android:tag="tag"
-        class="com.turlir.abakgists.AllGistsFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout="@layout/fragment_all_gists" />
 
 </LinearLayout>
