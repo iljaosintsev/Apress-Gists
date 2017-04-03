@@ -50,6 +50,7 @@ public class Gist implements Parcelable {
     ////////
 
     @StorIOSQLiteColumn(name = "note")
+    @Nullable
     public String note;
 
     public static final Creator<Gist> CREATOR = new Creator<Gist>() {
@@ -75,6 +76,7 @@ public class Gist implements Parcelable {
         created = in.readString();
         ownerLogin = in.readString();
         ownerAvatarUrl = in.readString();
+        note = in.readString();
     }
 
     @Override
@@ -85,6 +87,7 @@ public class Gist implements Parcelable {
         dest.writeString(created);
         dest.writeString(ownerLogin);
         dest.writeString(ownerAvatarUrl);
+        dest.writeString(note);
     }
 
     @Override
@@ -101,19 +104,24 @@ public class Gist implements Parcelable {
 
         if (!url.equals(gist.url)) return false;
         if (!id.equals(gist.id)) return false;
-        if (description != null ? !description.equals(gist.description) : gist.description != null)
-            return false;
-        return created.equals(gist.created);
+        if (!created.equals(gist.created)) return false;
 
+        if (description != null ? !description.equals(gist.description) : gist.description != null) return false;
+        if (ownerLogin != null ? !ownerLogin.equals(gist.ownerLogin) : gist.ownerLogin != null) return false;
+        if (ownerAvatarUrl != null ? !ownerAvatarUrl.equals(gist.ownerAvatarUrl) : gist.ownerAvatarUrl != null) return false;
+
+        return note != null ? note.equals(gist.note) : gist.note == null;
     }
 
     @Override
     public int hashCode() {
-        int result = 17 + url.hashCode();
-        result = 17 * result + id.hashCode();
-        result = 17 * result + (description != null ? description.hashCode() : 0);
-        result = 17 * result + created.hashCode();
+        int result = url.hashCode();
+        result = 31 * result + id.hashCode();
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + created.hashCode();
+        result = 31 * result + (ownerLogin != null ? ownerLogin.hashCode() : 0);
+        result = 31 * result + (ownerAvatarUrl != null ? ownerAvatarUrl.hashCode() : 0);
+        result = 31 * result + (note != null ? note.hashCode() : 0);
         return result;
     }
-
 }

@@ -62,13 +62,23 @@ public class GistActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_save)
     public void onClickSave() {
-        mContent.description = desc.getText().toString();
-        mContent.note = note.getText().toString();
-        _database
-                .put()
-                .object(mContent)
-                .prepare()
-                .executeAsBlocking();
+        String oldDesc = mContent.description;
+        String oldNote = mContent.note;
+
+        String newDesc = desc.getText().toString();
+        String newNote = note.getText().toString();
+
+        boolean descChanged = !newDesc.equals(oldDesc) && oldDesc != null;
+        boolean noteChanged = !newNote.equals(oldNote) && oldNote != null;
+
+        if (descChanged || noteChanged) {
+            mContent.description = newDesc;
+            mContent.note = newNote;
+            _database.put()
+                    .object(mContent)
+                    .prepare()
+                    .executeAsBlocking();
+        }
     }
 
     @Override

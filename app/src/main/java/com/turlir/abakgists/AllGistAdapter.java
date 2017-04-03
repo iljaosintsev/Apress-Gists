@@ -74,6 +74,7 @@ class AllGistAdapter extends RecyclerView.Adapter<AllGistAdapter.Holder> {
                     mContent.set(i - l, value.get(i - l));
                     notifyItemChanged(i - l);
                     Log.d(TAG, "notifyItemChanged " + (i - l));
+                    return;
                 }
             }
         }
