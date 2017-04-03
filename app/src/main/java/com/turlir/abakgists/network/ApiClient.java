@@ -5,11 +5,11 @@ import com.turlir.abakgists.model.Gist;
 
 import java.util.List;
 
-import io.reactivex.Observable;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import rx.Observable;
 
 public class ApiClient {
 
@@ -21,7 +21,7 @@ public class ApiClient {
                 .baseUrl(URL)
                 .client(okhttp)
                 .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
 
         mApi = retrofit.create(GitHubService.class);

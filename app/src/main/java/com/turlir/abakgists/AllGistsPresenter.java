@@ -8,8 +8,6 @@ import com.turlir.abakgists.network.ApiClient;
 
 import java.util.List;
 
-import io.reactivex.disposables.Disposable;
-
 public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
 
     private static final int PAGE_SIZE = 30;
@@ -25,15 +23,9 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
     void loadPublicGists(int currentSize) {
         currentSize = Math.max(currentSize, PAGE_SIZE);
         int page = currentSize / PAGE_SIZE;
-        mClient.publicGist(page)
-                .compose(this.<List<Gist>>subscribeIo())
-                .compose(this.<List<Gist>>observeMain())
+        addSubscription(mClient.publicGist(page)
+                .compose(this.<List<Gist>>defaultSchedule())
                 .subscribe(new Handler<List<Gist>>() {
-
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        add(d);
-                    }
 
                     @Override
                     public void onNext(List<Gist> value) {
@@ -50,7 +42,8 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
                             }
                         }
                     }
-                });
+
+                }));
     }
 
 }

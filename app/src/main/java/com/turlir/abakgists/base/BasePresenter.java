@@ -6,19 +6,20 @@ import android.support.annotation.Nullable;
 import com.turlir.abakgists.R;
 
 import java.lang.ref.WeakReference;
-
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.ObservableTransformer;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
+import rx.Observable;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 public abstract class BasePresenter<T extends BaseView> {
 
-    private final CompositeDisposable subs = new CompositeDisposable();
+    private static final ObservableSchedulersTransformer STANDARD_SCHEDULER
+            = new ObservableSchedulersTransformer();
+
+    private final CompositeSubscription subs = new CompositeSubscription();
+
     private WeakReference<T> view = new WeakReference<>(null);
 
     public void attach(T view) {
@@ -34,38 +35,28 @@ public abstract class BasePresenter<T extends BaseView> {
         return view.get();
     }
 
-    public void add(Disposable s) {
+    public void addSubscription(Subscription s) {
         subs.add(s);
     }
 
-    protected <E> ObservableTransformer<E, E> subscribeIo() {
-        return new SubscribeIo<>();
+    protected <E> Observable.Transformer<E, E> defaultSchedule() {
+        return (Observable.Transformer<E, E>) STANDARD_SCHEDULER;
     }
 
-    protected <E> ObservableTransformer<E, E> observeMain() {
-        return new ObserveMain<>();
-    }
-
-    private static final class SubscribeIo<T> implements ObservableTransformer<T, T> {
-
+    private static final class ObservableSchedulersTransformer<T>
+            implements Observable.Transformer<T, T> {
         @Override
-        public ObservableSource<T> apply(Observable<T> upstream) {
-            return upstream.subscribeOn(Schedulers.io());
+        public Observable<T> call(Observable<T> upstream) {
+            return upstream
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread());
         }
     }
 
-    private static final class ObserveMain<T> implements ObservableTransformer<T, T> {
+    protected abstract class Handler<E> extends Subscriber<E> {
 
         @Override
-        public ObservableSource<T> apply(Observable<T> upstream) {
-            return upstream.observeOn(AndroidSchedulers.mainThread());
-        }
-    }
-
-    protected abstract class Handler<E> implements Observer<E> {
-
-        @Override
-        public void onComplete() {
+        public void onCompleted() {
 
         }
 
