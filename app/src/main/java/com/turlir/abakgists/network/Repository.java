@@ -1,6 +1,7 @@
 package com.turlir.abakgists.network;
 
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
+import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
 import com.pushtorefresh.storio.sqlite.queries.DeleteQuery;
 import com.pushtorefresh.storio.sqlite.queries.Query;
 import com.turlir.abakgists.model.Gist;
@@ -24,11 +25,38 @@ public class Repository {
     }
 
     public Observable<List<Gist>> loadGists(int currentSize) {
+        final int page = currentSize / PAGE_SIZE + 1;
+        Observable<List<Gist>> cacheData = createCacheObservable(currentSize);
+        return cacheData
+                .flatMap(new Func1<List<Gist>, Observable<List<Gist>>>() {
+                    @Override
+                    public Observable<List<Gist>> call(List<Gist> gists) {
+                        if (gists.size() < 1) {
+                            return createServerObservable(page);
+                        }
+                        return Observable.just(gists);
+                    }
+                });
+    }
 
-        int tmp = Math.max(currentSize, PAGE_SIZE);
-        int page = tmp / PAGE_SIZE;
+    private Observable<List<Gist>> createCacheObservable(int currentSize) {
+       return mDatabase.get()
+                .listOfObjects(Gist.class)
+                .withQuery(
+                        Query.builder()
+                                .table("gists")
+                                .limit(currentSize, PAGE_SIZE)
+                                .build()
+                )
+                .prepare()
+                .asRxObservable(); // подписка на обновления
+    }
 
-        final Observable<List<Gist>> serverData = mClient.publicGist(page)
+
+    List<Gist> tmp;
+
+    private Observable<List<Gist>> createServerObservable(int page) {
+        return mClient.publicGist(page)
                 .map(new Func1<List<Gist>, List<Gist>>() {
                     @Override
                     public List<Gist> call(List<Gist> gists) {
@@ -40,31 +68,29 @@ public class Repository {
                         }
                         return gists;
                     }
-                });
-
-        final Observable<List<Gist>> cacheData = mDatabase.get()
-                .listOfObjects(Gist.class)
-                .withQuery(
-                        Query.builder()
-                                .table("gists")
-                                .limit(currentSize, PAGE_SIZE)
-                                .build()
-                )
-                .prepare()
-                .asRxObservable();
-
-        return cacheData
-                .map(new Func1<List<Gist>, List<Gist>>() {
+                })
+                .flatMap(new Func1<List<Gist>, Observable<PutResults<Gist>>>() {
                     @Override
-                    public List<Gist> call(List<Gist> gists) {
-                        if (gists.size() < 1) {
-                            gists = serverData.toBlocking().first();
-                            mDatabase.put().objects(gists).prepare().executeAsBlocking();
+                    public Observable<PutResults<Gist>> call(List<Gist> gists) {
+                        if (tmp == null) {
+                            tmp = gists;
+                        } else{
+                            gists = tmp;
                         }
-                        return gists;
+                        return mDatabase.put()
+                                .objects(gists)
+                                .prepare()
+                                .asRxObservable()
+                                .skip(1); // для предотвращения повторного вызова все цепочки
                     }
-                });
-
+                })
+                .concatMapIterable(new Func1<PutResults<Gist>, Iterable<Gist>>() {
+                    @Override
+                    public Iterable<Gist> call(PutResults<Gist> gistPutResults) {
+                        return gistPutResults.results().keySet();
+                    }
+                })
+                .toList();
     }
 
     public Completable clearCache() {

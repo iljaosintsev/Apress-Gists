@@ -13,7 +13,7 @@ class GistDatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE gists ( " +
-                "id TEXT NOT NULL, " +
+                "id TEXT NOT NULL UNIQUE ON CONFLICT IGNORE, " +
                 "desc TEXT, " +
                 "url TEXT NOT NULL, " +
                 "created TEXT NOT NULL, " +

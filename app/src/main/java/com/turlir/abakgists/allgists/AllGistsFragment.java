@@ -57,7 +57,7 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener {
             int visibleItemCount = mLayoutManager.getChildCount();
             int totalItemCount = mLayoutManager.getItemCount();
 
-            boolean closeEdge = firstVisibleItem + visibleItemCount + 3 == totalItemCount;
+            boolean closeEdge = firstVisibleItem + visibleItemCount + 3  >=  totalItemCount;
             boolean sizeNotDownload = totalItemCount > mLastDownloadedSize;
             if (closeEdge && sizeNotDownload && !mSwipe.isRefreshing()) {
                 mLastDownloadedSize = totalItemCount;
