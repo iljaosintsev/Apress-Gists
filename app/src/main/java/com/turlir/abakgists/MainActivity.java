@@ -22,4 +22,10 @@ public class MainActivity extends AppCompatActivity {
         startActivity(i);
     }
 
+    @OnClick(R.id.btn_notes)
+    public void onClickNotes() {
+        Intent i = new Intent(this, NotesActivity.class);
+        startActivity(i);
+    }
+
 }

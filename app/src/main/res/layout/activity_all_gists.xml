@@ -10,7 +10,7 @@
         class="com.turlir.abakgists.AllGistsFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:tag="tag"
+        android:tag="AllGistsFragment"
         tools:layout="@layout/fragment_all_gists" />
 
 </LinearLayout>

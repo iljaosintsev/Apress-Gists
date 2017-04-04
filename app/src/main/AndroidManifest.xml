@@ -24,6 +24,8 @@
 
         <activity android:name=".GistActivity" android:label="@string/gist"/>
 
+        <activity android:name=".NotesActivity" android:label="@string/notes"/>
+
     </application>
 
 </manifest>
