@@ -68,8 +68,8 @@ public class GistActivity extends AppCompatActivity {
         String newDesc = desc.getText().toString();
         String newNote = note.getText().toString();
 
-        boolean descChanged = !newDesc.equals(oldDesc) && oldDesc != null;
-        boolean noteChanged = !newNote.equals(oldNote) && oldNote != null;
+        boolean descChanged = !newDesc.equals(oldDesc);
+        boolean noteChanged = !newNote.equals(oldNote);
 
         if (descChanged || noteChanged) {
             mContent.description = newDesc;

@@ -27,6 +27,10 @@ public class GistTest {
 
         boolean equals = two.equals(one);
         org.junit.Assert.assertTrue(equals);
+
+        two.note = "note";
+        equals = two.equals(one);
+        org.junit.Assert.assertFalse(equals);
     }
 
 }
