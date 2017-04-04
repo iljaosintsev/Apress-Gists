@@ -1,4 +1,4 @@
-package com.turlir.abakgists;
+package com.turlir.abakgists.base;
 
 
 import android.app.Application;

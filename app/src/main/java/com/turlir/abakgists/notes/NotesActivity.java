@@ -1,8 +1,10 @@
-package com.turlir.abakgists;
+package com.turlir.abakgists.notes;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+
+import com.turlir.abakgists.R;
 
 public class NotesActivity extends AppCompatActivity {
 

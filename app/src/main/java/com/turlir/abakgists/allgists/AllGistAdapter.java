@@ -1,4 +1,4 @@
-package com.turlir.abakgists;
+package com.turlir.abakgists.allgists;
 
 
 import android.content.Context;
@@ -9,12 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.turlir.abakgists.base.OnClickListener;
+import com.turlir.abakgists.R;
 import com.turlir.abakgists.model.Gist;
 
 import java.util.ArrayList;
 import java.util.List;
 
-class AllGistAdapter extends RecyclerView.Adapter<AllGistAdapter.Holder> {
+public class AllGistAdapter extends RecyclerView.Adapter<AllGistAdapter.Holder> {
 
     private static final String TAG = "AllGistAdapter";
 
@@ -23,7 +25,7 @@ class AllGistAdapter extends RecyclerView.Adapter<AllGistAdapter.Holder> {
 
     private final List<Gist> mContent;
 
-    AllGistAdapter(Context cnt, OnClickListener clickListener) {
+    public AllGistAdapter(Context cnt, OnClickListener clickListener) {
         mInflater = LayoutInflater.from(cnt);
         mClick = clickListener;
         mContent = new ArrayList<>();
@@ -56,11 +58,11 @@ class AllGistAdapter extends RecyclerView.Adapter<AllGistAdapter.Holder> {
         return mContent.size();
     }
 
-    Gist getItemByPosition(int p) {
+    public Gist getItemByPosition(int p) {
         return mContent.get(p);
     }
 
-    void addGist(List<Gist> value, int start, int offset) {
+    public void addGist(List<Gist> value, int start, int offset) {
         int l = mContent.size();
         if (l <= start) { // вставка
             mContent.addAll(value);

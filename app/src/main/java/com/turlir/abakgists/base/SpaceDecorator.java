@@ -1,4 +1,4 @@
-package com.turlir.abakgists;
+package com.turlir.abakgists.base;
 
 import android.content.Context;
 import android.graphics.Rect;
@@ -6,11 +6,11 @@ import android.support.annotation.DimenRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-class SpaceDecorator extends RecyclerView.ItemDecoration {
+public class SpaceDecorator extends RecyclerView.ItemDecoration {
 
     private int mOffset;
 
-    SpaceDecorator(Context cnt, @DimenRes int offset) {
+    public SpaceDecorator(Context cnt, @DimenRes int offset) {
         mOffset = (int) cnt.getResources().getDimension(offset);
     }
 

@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.squareup.picasso.Picasso;
+import com.turlir.abakgists.base.App;
 import com.turlir.abakgists.model.Gist;
 
 import javax.inject.Inject;

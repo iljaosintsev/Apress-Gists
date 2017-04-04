@@ -1,4 +1,4 @@
-package com.turlir.abakgists;
+package com.turlir.abakgists.notes;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.turlir.abakgists.base.App;
+import com.turlir.abakgists.GistActivity;
+import com.turlir.abakgists.base.OnClickListener;
+import com.turlir.abakgists.R;
+import com.turlir.abakgists.base.SpaceDecorator;
+import com.turlir.abakgists.allgists.AllGistAdapter;
 import com.turlir.abakgists.base.BaseFragment;
 import com.turlir.abakgists.model.Gist;
 

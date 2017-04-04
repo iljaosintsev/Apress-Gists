@@ -11,6 +11,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import com.turlir.abakgists.allgists.AllGistsFragment;
+import com.turlir.abakgists.notes.NotesFragment;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

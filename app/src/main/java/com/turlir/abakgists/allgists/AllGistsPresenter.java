@@ -1,4 +1,4 @@
-package com.turlir.abakgists;
+package com.turlir.abakgists.allgists;
 
 
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;

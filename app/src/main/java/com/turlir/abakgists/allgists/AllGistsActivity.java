@@ -1,7 +1,9 @@
-package com.turlir.abakgists;
+package com.turlir.abakgists.allgists;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.turlir.abakgists.R;
 
 public class AllGistsActivity extends AppCompatActivity {
 
