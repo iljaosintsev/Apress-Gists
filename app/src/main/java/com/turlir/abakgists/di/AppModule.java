@@ -3,8 +3,10 @@ package com.turlir.abakgists.di;
 
 import android.content.Context;
 
+import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.turlir.abakgists.network.ApiClient;
 import com.turlir.abakgists.network.LogInterceptor;
+import com.turlir.abakgists.network.Repository;
 
 import java.util.concurrent.TimeUnit;
 
@@ -42,6 +44,12 @@ public class AppModule {
     @Singleton
     ApiClient provideApiClient(OkHttpClient okhttp) {
         return new ApiClient(okhttp);
+    }
+
+    @Provides
+    @Singleton
+    Repository provideRepository(ApiClient client, StorIOSQLite base) {
+        return new Repository(client, base);
     }
 
 }
