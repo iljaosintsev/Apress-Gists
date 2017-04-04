@@ -7,5 +7,6 @@
     <string name="gist">Gist</string>
 
     <string name="error_general">Произошла ошибка</string>
+    <string name="save">save</string>
 
 </resources>
