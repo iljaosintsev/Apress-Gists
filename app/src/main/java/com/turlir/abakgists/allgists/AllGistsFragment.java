@@ -62,7 +62,7 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener {
             if (closeEdge && sizeNotDownload && !mSwipe.isRefreshing()) {
                 mLastDownloadedSize = totalItemCount;
                 mSwipe.setRefreshing(true);
-                loadNewPage(totalItemCount);
+                loadNewPage();
             }
         }
     };
@@ -101,7 +101,7 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mSwipe.setRefreshing(true);
-        resetToFirstPage();
+        loadNewPage();
     }
 
     @Override
@@ -141,11 +141,11 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener {
 
     private void resetToFirstPage() {
         mAdapter.clearGist();
-        _presenter.loadPublicGists(0);
+        _presenter.resetGist();
     }
 
-    private void loadNewPage(int totalItemCount) {
-        _presenter.loadPublicGists(totalItemCount);
+    private void loadNewPage() {
+        _presenter.loadPublicGists(mAdapter.getItemCount());
     }
 
 }

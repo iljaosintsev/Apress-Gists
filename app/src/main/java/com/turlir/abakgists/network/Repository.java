@@ -1,11 +1,13 @@
 package com.turlir.abakgists.network;
 
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
+import com.pushtorefresh.storio.sqlite.queries.DeleteQuery;
 import com.pushtorefresh.storio.sqlite.queries.Query;
 import com.turlir.abakgists.model.Gist;
 
 import java.util.List;
 
+import rx.Completable;
 import rx.Observable;
 import rx.functions.Func1;
 
@@ -63,5 +65,17 @@ public class Repository {
                     }
                 });
 
+    }
+
+    public Completable clearCache() {
+        return mDatabase.delete()
+                .byQuery(
+                        DeleteQuery
+                                .builder()
+                                .table("gists")
+                                .build()
+                )
+                .prepare()
+                .asRxCompletable();
     }
 }

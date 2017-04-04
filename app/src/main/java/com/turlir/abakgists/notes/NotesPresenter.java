@@ -26,7 +26,7 @@ public class NotesPresenter extends BasePresenter<NotesFragment> {
                 )
                 .prepare()
                 .asRxObservable()
-                .compose(this.<List<Gist>>defaultSchedule())
+                .compose(this.<List<Gist>>defaultScheduler())
                 .subscribe(new Handler<List<Gist>>() {
                     @Override
                     public void onNext(List<Gist> gist) {

@@ -39,7 +39,7 @@ public abstract class BasePresenter<T extends BaseView> {
         subs.add(s);
     }
 
-    protected <E> Observable.Transformer<E, E> defaultSchedule() {
+    protected <E> Observable.Transformer<E, E> defaultScheduler() {
         return (Observable.Transformer<E, E>) STANDARD_SCHEDULER;
     }
 
@@ -62,12 +62,16 @@ public abstract class BasePresenter<T extends BaseView> {
 
         @Override
         public void onError(Throwable e) {
-            e.printStackTrace();
-            T view = getView();
-            if (view != null) {
-                CharSequence msg = view.getContext().getText(R.string.error_general);
-                view.showError(msg.toString());
-            }
+            processError(e);
+        }
+    }
+
+    protected void processError(Throwable e) {
+        e.printStackTrace();
+        T view = getView();
+        if (view != null) {
+            CharSequence msg = view.getContext().getText(R.string.error_general);
+            view.showError(msg.toString());
         }
     }
 
