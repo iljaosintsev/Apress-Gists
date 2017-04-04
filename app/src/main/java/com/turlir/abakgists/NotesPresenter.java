@@ -7,8 +7,6 @@ import com.turlir.abakgists.model.Gist;
 
 import java.util.List;
 
-import rx.Observable;
-
 public class NotesPresenter extends BasePresenter<NotesFragment> {
 
     private StorIOSQLite mDatabase;
@@ -18,7 +16,7 @@ public class NotesPresenter extends BasePresenter<NotesFragment> {
     }
 
     void loadNotes() {
-        Observable<List<Gist>> notes = mDatabase.get()
+        addSubscription(mDatabase.get()
                 .listOfObjects(Gist.class)
                 .withQuery(
                         Query.builder()
@@ -27,16 +25,16 @@ public class NotesPresenter extends BasePresenter<NotesFragment> {
                                 .build()
                 )
                 .prepare()
-                .asRxObservable();
-
-        notes.subscribe(new Handler<List<Gist>>() {
-            @Override
-            public void onNext(List<Gist> gist) {
-                if (getView() != null) {
-                    getView().onNotesLoaded(gist);
-                }
-            }
-        });
+                .asRxObservable()
+                .compose(this.<List<Gist>>defaultSchedule())
+                .subscribe(new Handler<List<Gist>>() {
+                    @Override
+                    public void onNext(List<Gist> gist) {
+                        if (getView() != null) {
+                            getView().onNotesLoaded(gist);
+                        }
+                    }
+                }));
     }
 
 }

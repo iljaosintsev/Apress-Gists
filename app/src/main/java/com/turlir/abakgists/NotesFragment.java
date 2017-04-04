@@ -74,6 +74,11 @@ public class NotesFragment extends BaseFragment implements OnClickListener {
         startActivity(i);
     }
 
+    @Override
+    public String toString() {
+        return "Notes";
+    }
+
     void onNotesLoaded(List<Gist> gist) {
         mAdapter.addGist(gist, 0, gist.size());
     }

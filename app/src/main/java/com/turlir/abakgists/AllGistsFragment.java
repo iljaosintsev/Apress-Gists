@@ -124,6 +124,11 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener {
         startActivity(i);
     }
 
+    @Override
+    public String toString() {
+        return "All Gists";
+    }
+
     public void onGistLoaded(List<Gist> value, int start, int offset) {
         mAdapter.addGist(value, start, offset);
         mSwipe.setRefreshing(false);
