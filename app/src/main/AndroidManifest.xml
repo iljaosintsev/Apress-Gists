@@ -26,6 +26,9 @@
 
         <activity android:name=".NotesActivity" android:label="@string/notes"/>
 
+        <activity android:name=".AllInOneActivity" android:theme="@style/AllInOneTheme"
+            android:label="@string/all_in_one"/>
+
     </application>
 
 </manifest>

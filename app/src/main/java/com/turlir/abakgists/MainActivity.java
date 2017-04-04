@@ -28,4 +28,10 @@ public class MainActivity extends AppCompatActivity {
         startActivity(i);
     }
 
+    @OnClick(R.id.btn_all_in_one)
+    public void clickAllInOne() {
+        Intent i = new Intent(this, AllInOneActivity.class);
+        startActivity(i);
+    }
+
 }

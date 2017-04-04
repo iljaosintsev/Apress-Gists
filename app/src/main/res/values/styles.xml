@@ -4,4 +4,8 @@
         <item name="android:listDivider">@drawable/divider</item>
     </style>
 
+    <style name="AllInOneTheme" parent="Theme.AppCompat.NoActionBar">
+
+    </style>
+
 </resources>
