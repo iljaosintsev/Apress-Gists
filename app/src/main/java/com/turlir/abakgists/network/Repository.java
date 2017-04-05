@@ -1,5 +1,7 @@
 package com.turlir.abakgists.network;
 
+import android.util.Log;
+
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
 import com.pushtorefresh.storio.sqlite.queries.DeleteQuery;
@@ -14,7 +16,8 @@ import rx.functions.Func1;
 
 public class Repository {
 
-    public static final int PAGE_SIZE = 30;
+    private static final String TAG = "REPO";
+    private static final int PAGE_SIZE = 30;
 
     private ApiClient mClient;
     private StorIOSQLite mDatabase;
@@ -31,6 +34,7 @@ public class Repository {
                 .flatMap(new Func1<List<Gist>, Observable<List<Gist>>>() {
                     @Override
                     public Observable<List<Gist>> call(List<Gist> gists) {
+                        Log.d(TAG, "fromCache " + gists.size());
                         if (gists.size() < 1) {
                             return createServerObservable(page);
                         }
@@ -69,13 +73,14 @@ public class Repository {
                 .flatMap(new Func1<List<Gist>, Observable<PutResults<Gist>>>() {
                     @Override
                     public Observable<PutResults<Gist>> call(List<Gist> gists) {
+                        Log.d("REPO", "fromServerToCache " + gists.size());
                         return mDatabase.put()
                                 .objects(gists)
                                 .prepare()
-                                .asRxObservable()
-                                .skip(1); // для предотвращения повторного вызова все цепочки
+                                .asRxObservable();
                     }
                 })
+                .skip(1)
                 .concatMapIterable(new Func1<PutResults<Gist>, Iterable<Gist>>() {
                     @Override
                     public Iterable<Gist> call(PutResults<Gist> gistPutResults) {
