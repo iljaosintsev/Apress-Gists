@@ -1,87 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginLeft="@dimen/activity_horizontal_margin"
     android:layout_marginRight="@dimen/activity_horizontal_margin"
-    android:layout_marginTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical">
+    android:layout_marginTop="@dimen/activity_vertical_margin">
 
-    <ImageView
-        android:id="@+id/iv_avatar"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginBottom="8dp"
-        tools:background="@android:color/holo_red_dark" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="8dp"
-        android:layout_toRightOf="@+id/iv_avatar"
-        android:text="Owner"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1" />
-
-    <TextView
-        android:id="@+id/tv_login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView"
-        android:layout_alignStart="@+id/textView"
-        android:layout_below="@+id/textView"
-        android:layout_marginTop="8dp"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-        tools:text="turlir" />
-
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/iv_avatar"
         android:orientation="vertical">
 
+        <ImageView
+            android:id="@+id/iv_avatar"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginBottom="8dp"
+            tools:background="@android:color/holo_red_dark" />
+
         <TextView
+            android:id="@+id/textView"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@+id/iv_avatar"
+            android:text="Owner"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1" />
+
+        <TextView
+            android:id="@+id/tv_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/textView"
+            android:layout_alignStart="@+id/textView"
+            android:layout_below="@+id/textView"
+            android:layout_marginTop="8dp"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+            tools:text="turlir" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/iv_avatar"
-            android:layout_marginBottom="4dp"
-            android:text="Description"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1" />
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/et_edsc"
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:layout_marginBottom="8dp"
-            android:maxLines="1"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-            tools:text="Description" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/iv_avatar"
+                android:layout_marginBottom="4dp"
+                android:text="Description"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1" />
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:text="Note"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1" />
+            <EditText
+                android:id="@+id/et_edsc"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_marginBottom="8dp"
+                android:maxLines="1"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                tools:text="Description" />
 
-        <EditText
-            android:id="@+id/et_note"
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:layout_marginBottom="8dp"
-            android:maxLines="1"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-            tools:text="Long long far away" />
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:text="Note"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1" />
 
-        <Button
-            android:id="@+id/btn_save"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/save" />
+            <EditText
+                android:id="@+id/et_note"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_marginBottom="8dp"
+                android:maxLines="1"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                tools:text="Long long far away" />
 
-    </LinearLayout>
+            <Button
+                android:id="@+id/btn_save"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/save" />
 
-</RelativeLayout>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</ScrollView>

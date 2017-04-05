@@ -60,9 +60,7 @@ public class GistActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         mContent = getIntent().getParcelableExtra(EXTRA_GIST);
 
-        if (savedInstanceState == null) {
-            fillControl();
-        }
+        fillControl();
     }
 
     @OnClick(R.id.btn_save)
@@ -83,7 +81,7 @@ public class GistActivity extends AppCompatActivity {
                     .prepare()
                     .executeAsBlocking();
         } else {
-            Log.i("GistActivty", "Изменения не внесены");
+            Log.i(TAG, "Изменения не внесены");
         }
     }
 
