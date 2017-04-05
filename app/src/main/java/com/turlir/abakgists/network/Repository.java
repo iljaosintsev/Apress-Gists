@@ -52,9 +52,6 @@ public class Repository {
                 .asRxObservable(); // подписка на обновления
     }
 
-
-    List<Gist> tmp;
-
     private Observable<List<Gist>> createServerObservable(int page) {
         return mClient.publicGist(page)
                 .map(new Func1<List<Gist>, List<Gist>>() {
@@ -72,11 +69,6 @@ public class Repository {
                 .flatMap(new Func1<List<Gist>, Observable<PutResults<Gist>>>() {
                     @Override
                     public Observable<PutResults<Gist>> call(List<Gist> gists) {
-                        if (tmp == null) {
-                            tmp = gists;
-                        } else{
-                            gists = tmp;
-                        }
                         return mDatabase.put()
                                 .objects(gists)
                                 .prepare()
