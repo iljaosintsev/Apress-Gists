@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,6 +25,9 @@ import butterknife.OnClick;
 public class GistActivity extends AppCompatActivity {
 
     private static final String EXTRA_GIST = "EXTRA_GIST";
+    private static final String TAG = "GistActivty";
+
+    private static final EqualsSolver SOLVER = new EqualsSolver();
 
     public static Intent getStartIntent(Context cnt, Gist data) {
         Intent i = new Intent(cnt, GistActivity.class);
@@ -69,16 +73,17 @@ public class GistActivity extends AppCompatActivity {
         String newDesc = desc.getText().toString();
         String newNote = note.getText().toString();
 
-        boolean descChanged = !newDesc.equals(oldDesc);
-        boolean noteChanged = !newNote.equals(oldNote);
-
-        if (descChanged || noteChanged) {
+        boolean isChange = SOLVER.solveDescAndNote(oldDesc, newDesc, oldNote, newNote);
+        if (isChange) {
+            Log.i(TAG, "Внесены изменения, обновление БД");
             mContent.description = newDesc;
             mContent.note = newNote;
             _database.put()
                     .object(mContent)
                     .prepare()
                     .executeAsBlocking();
+        } else {
+            Log.i("GistActivty", "Изменения не внесены");
         }
     }
 
@@ -89,9 +94,7 @@ public class GistActivity extends AppCompatActivity {
     }
 
     private void fillControl() {
-        if (mContent.ownerLogin != null) {
-            login.setText(mContent.ownerLogin);
-        }
+        login.setText(mContent.ownerLogin);
         if (mContent.ownerAvatarUrl != null) {
             loadAvatar(mContent.ownerAvatarUrl);
         }
