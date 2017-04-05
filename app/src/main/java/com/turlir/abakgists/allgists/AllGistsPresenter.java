@@ -1,6 +1,8 @@
 package com.turlir.abakgists.allgists;
 
 
+import android.util.Log;
+
 import com.turlir.abakgists.base.BasePresenter;
 import com.turlir.abakgists.model.Gist;
 import com.turlir.abakgists.network.Repository;
@@ -29,8 +31,9 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
                 .subscribe(new Handler<List<Gist>>() {
                     @Override
                     public void onNext(List<Gist> value) {
+                        Log.d("AllGistPresenter", "onNext " + value.size());
                         if (getView() != null && value.size() > 0) {
-                            getView().onGistLoaded(value, currentSize, Repository.PAGE_SIZE);
+                            getView().onGistLoaded(value, currentSize, value.size());
                         }
                     }
                 });

@@ -43,7 +43,8 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener {
             = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
         public void onRefresh() {
-            resetToFirstPage();
+            mAdapter.clearGist();
+            _presenter.resetGist();
         }
     };
 
@@ -134,14 +135,9 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener {
         return "All Gists";
     }
 
-    public void onGistLoaded(List<Gist> value, int start, int offset) {
-        mAdapter.addGist(value, start, offset);
+    public void onGistLoaded(List<Gist> value, int start, int count) {
+        mAdapter.addGist(value, start, count);
         mSwipe.setRefreshing(false);
-    }
-
-    private void resetToFirstPage() {
-        mAdapter.clearGist();
-        _presenter.resetGist();
     }
 
     private void loadNewPage() {

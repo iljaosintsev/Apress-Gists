@@ -62,21 +62,31 @@ public class AllGistAdapter extends RecyclerView.Adapter<AllGistAdapter.Holder> 
         return mContent.get(p);
     }
 
-    public void addGist(List<Gist> value, int start, int offset) {
-        int l = mContent.size();
+    public void addGist(List<Gist> value, int start, int count) {
+        int l = mContent.size(); // текущий объем данных
+
         if (l <= start) { // вставка
-            mContent.addAll(value);
-            Log.d(TAG, "notifyItemRangeInserted " + l + " " + value.size());
-            notifyItemRangeInserted(l, l + value.size());
+            if (start - l == 1) { // одного элемента
+                mContent.add(value.get(0));
+                notifyItemInserted(start);
+                Log.i(TAG, "notifyItemInserted " + l);
+
+            } else { // множества элементов
+                mContent.addAll(value);
+                notifyItemRangeInserted(l, l + value.size());
+                Log.i(TAG, "notifyItemRangeInserted " + l + " " + l + value.size());
+            }
+
         } else if (l > start) { // обновление
-            for (int i = l; i < l + offset; i++) {
-                Gist old = mContent.get(i - l);
-                Gist now = value.get(i - l);
+            for (int i = l; i < l + count; i++) {
+                int index = i - l;
+                Gist old = mContent.get(index);
+                Gist now = value.get(index);
                 if (!now.equals(old)) {
-                    mContent.set(i - l, value.get(i - l));
-                    notifyItemChanged(i - l);
-                    Log.d(TAG, "notifyItemChanged " + (i - l));
-                    return;
+                    mContent.set(index, now);
+                    notifyItemChanged(index);
+                    Log.i(TAG, "notifyItemChanged " + index);
+                    break;
                 }
             }
         }
