@@ -7,6 +7,7 @@ import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
 import com.pushtorefresh.storio.sqlite.queries.DeleteQuery;
 import com.pushtorefresh.storio.sqlite.queries.Query;
 import com.turlir.abakgists.model.Gist;
+import com.turlir.abakgists.model.GistsTable;
 
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class Repository {
                 .listOfObjects(Gist.class)
                 .withQuery(
                         Query.builder()
-                                .table("gists")
+                                .table(GistsTable.GISTS)
                                 .limit(currentSize, PAGE_SIZE)
                                 .build()
                 )
@@ -95,7 +96,7 @@ public class Repository {
                 .byQuery(
                         DeleteQuery
                                 .builder()
-                                .table("gists")
+                                .table(GistsTable.GISTS)
                                 .build()
                 )
                 .prepare()

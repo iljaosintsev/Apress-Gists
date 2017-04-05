@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.turlir.abakgists.model.GistsTable;
+
 class GistDatabaseHelper extends SQLiteOpenHelper {
 
     public GistDatabaseHelper(Context context) {
@@ -12,15 +14,7 @@ class GistDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE gists ( " +
-                "id TEXT NOT NULL UNIQUE ON CONFLICT IGNORE, " +
-                "desc TEXT, " +
-                "url TEXT NOT NULL, " +
-                "created TEXT NOT NULL, " +
-                "ownerLogin TEXT, " +
-                "ownerAvatarUrl TEXT, " +
-                "note TEXT " +
-                ")");
+        db.execSQL(GistsTable.CREATE);
     }
 
     @Override

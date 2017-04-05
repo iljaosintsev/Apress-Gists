@@ -4,6 +4,7 @@ import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.queries.Query;
 import com.turlir.abakgists.base.BasePresenter;
 import com.turlir.abakgists.model.Gist;
+import com.turlir.abakgists.model.GistsTable;
 
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class NotesPresenter extends BasePresenter<NotesFragment> {
                 .listOfObjects(Gist.class)
                 .withQuery(
                         Query.builder()
-                                .table("gists")
+                                .table(GistsTable.GISTS)
                                 .where("note IS NOT NULL AND note != \"\"")
                                 .build()
                 )
