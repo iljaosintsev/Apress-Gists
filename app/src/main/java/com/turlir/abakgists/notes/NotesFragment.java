@@ -32,6 +32,7 @@ public class NotesFragment extends BaseFragment implements OnClickListener {
 
     @BindView(R.id.recycler)
     RecyclerView recycler;
+
     private AllGistAdapter mAdapter;
 
     @Override
@@ -85,8 +86,8 @@ public class NotesFragment extends BaseFragment implements OnClickListener {
         return "Notes";
     }
 
-    void onNotesLoaded(List<Gist> gist) {
-        mAdapter.addGist(gist, 0, gist.size());
+    void onNotesLoaded(List<Gist> gistDiff) {
+        mAdapter.addGist(gistDiff, mAdapter.getItemCount(), gistDiff.size());
     }
 
 }
