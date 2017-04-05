@@ -3,6 +3,7 @@ package com.turlir.abakgists.notes;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -44,8 +45,10 @@ public class NotesFragment extends BaseFragment implements OnClickListener {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle saved) {
         View root = inflater.inflate(R.layout.fragment_all_gists, container, false);
+        root.setEnabled(false); // SwipeRefreshLayout
         butterKnifeBind(root);
 
         mAdapter = new AllGistAdapter(getContext(), this);
