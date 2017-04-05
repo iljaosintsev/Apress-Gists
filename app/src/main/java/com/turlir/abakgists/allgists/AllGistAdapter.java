@@ -66,7 +66,7 @@ public class AllGistAdapter extends RecyclerView.Adapter<AllGistAdapter.Holder> 
         int l = mContent.size(); // текущий объем данных
 
         if (l <= start) { // вставка
-            if (start - l == 1) { // одного элемента
+            if (count == 1) { // одного элемента
                 mContent.add(value.get(0));
                 notifyItemInserted(start);
                 Log.i(TAG, "notifyItemInserted " + l);
@@ -74,7 +74,7 @@ public class AllGistAdapter extends RecyclerView.Adapter<AllGistAdapter.Holder> 
             } else { // множества элементов
                 mContent.addAll(value);
                 notifyItemRangeInserted(l, l + value.size());
-                Log.i(TAG, "notifyItemRangeInserted " + l + " " + l + value.size());
+                Log.i(TAG, "notifyItemRangeInserted " + l + " " + (l + value.size()));
             }
 
         } else if (l > start) { // обновление
@@ -89,13 +89,20 @@ public class AllGistAdapter extends RecyclerView.Adapter<AllGistAdapter.Holder> 
                     break;
                 }
             }
+
         }
+    }
+
+    public void removeLastGist() {
+        int index = mContent.size() - 1;
+        mContent.remove(index);
+        notifyItemRemoved(index);
     }
 
     void clearGist() {
         int c = getItemCount();
-        notifyItemRangeRemoved(0, c);
         mContent.clear();
+        notifyItemRangeRemoved(0, c);
     }
 
     static class Holder extends RecyclerView.ViewHolder {

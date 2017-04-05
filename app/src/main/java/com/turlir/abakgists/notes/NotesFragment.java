@@ -90,4 +90,8 @@ public class NotesFragment extends BaseFragment implements OnClickListener {
         mAdapter.addGist(gistDiff, mAdapter.getItemCount(), gistDiff.size());
     }
 
+    void onNotesDeleted() {
+        mAdapter.removeLastGist();
+    }
+
 }

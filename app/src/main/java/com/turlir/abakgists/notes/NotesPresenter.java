@@ -7,8 +7,6 @@ import com.turlir.abakgists.model.Gist;
 
 import java.util.List;
 
-import rx.functions.Func1;
-
 public class NotesPresenter extends BasePresenter<NotesFragment> {
 
     private StorIOSQLite mDatabase;
@@ -35,25 +33,25 @@ public class NotesPresenter extends BasePresenter<NotesFragment> {
                 )
                 .prepare()
                 .asRxObservable()
-                .map(new Func1<List<Gist>, List<Gist>>() {
-                    @Override
-                    public List<Gist> call(List<Gist> gist) {
-                        if (gist.size() > mLastSize) {
-                            return gist.subList(mLastSize, gist.size());
-                        }
-                        return gist;
-                    }
-                })
                 .compose(this.<List<Gist>>defaultScheduler())
                 .subscribe(new Handler<List<Gist>>() {
                     @Override
                     public void onNext(List<Gist> gist) {
-                        mLastSize = gist.size();
                         if (getView() != null) {
                             if (gist.size() > 0) {
-                                getView().onNotesLoaded(gist);
+                                if (gist.size() > mLastSize) {
+                                    gist = gist.subList(mLastSize, gist.size());
+                                    getView().onNotesLoaded(gist);
+                                } else {
+                                    getView().onNotesDeleted();
+                                }
+                                mLastSize = gist.size();
+
+                            } else if (mLastSize != 0) {
+                                getView().onNotesDeleted();
                             }
                         }
+
                     }
                 }));
     }
