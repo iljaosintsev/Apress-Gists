@@ -22,7 +22,7 @@
 
         <activity android:name=".allgists.AllGistsActivity" android:label="@string/all_gists"/>
 
-        <activity android:name=".GistActivity" android:label="@string/gist"/>
+        <activity android:name=".gist.GistActivity" android:label="@string/gist"/>
 
         <activity android:name=".notes.NotesActivity" android:label="@string/notes"/>
 

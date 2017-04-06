@@ -2,7 +2,7 @@ package com.turlir.abakgists.di;
 
 
 import com.turlir.abakgists.allgists.AllGistsFragment;
-import com.turlir.abakgists.GistActivity;
+import com.turlir.abakgists.gist.GistActivity;
 import com.turlir.abakgists.notes.NotesFragment;
 
 import javax.inject.Singleton;

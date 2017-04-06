@@ -1,4 +1,4 @@
-package com.turlir.abakgists;
+package com.turlir.abakgists.gist;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,12 +10,11 @@ import android.support.annotation.Nullable;
  *     <li>старая и новая заметка</li>
  * </ul>
  * Итоговый результат вычисляется как логическое ИЛИ от сравнений заметок и описаний.
+ * Сравнение пар заметок и описаний происходит одинаковым образом.
+ * Старое значение по-умолчанию null, а новое пустая строка.
+ * В этом случае считается, что изменения внесены не были.
  */
 class EqualsSolver {
-
-    EqualsSolver() {
-
-    }
 
     boolean solveDescAndNote(@Nullable String oldDesc, @NonNull String nowDes,
                              @Nullable String oldNote, @NonNull String nowNote) {
