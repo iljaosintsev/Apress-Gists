@@ -10,26 +10,26 @@ import com.google.gson.annotations.SerializedName;
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteColumn;
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteType;
 
-@StorIOSQLiteType(table = "gists")
+@StorIOSQLiteType(table = GistsTable.GISTS)
 public class Gist implements Parcelable {
 
     @SerializedName("url")
-    @StorIOSQLiteColumn(name = "url")
+    @StorIOSQLiteColumn(name = GistsTable.URL)
     @NonNull
     public String url;
 
     @SerializedName("id")
-    @StorIOSQLiteColumn(name = "id", key = true)
+    @StorIOSQLiteColumn(name = GistsTable.ID, key = true)
     @NonNull
     public String id;
 
     @SerializedName("description")
-    @StorIOSQLiteColumn(name = "desc")
+    @StorIOSQLiteColumn(name = GistsTable.DESC)
     @Nullable
     public String description;
 
     @SerializedName("created_at")
-    @StorIOSQLiteColumn(name = "created")
+    @StorIOSQLiteColumn(name = GistsTable.CREATED)
     @NonNull
     public String created;
 
@@ -39,17 +39,17 @@ public class Gist implements Parcelable {
     @Nullable
     public GistOwner owner;
 
-    @StorIOSQLiteColumn(name = "ownerLogin")
+    @StorIOSQLiteColumn(name = GistsTable.OWNER_LOGIN)
     @Nullable
     public String ownerLogin;
 
-    @StorIOSQLiteColumn(name = "ownerAvatarUrl")
+    @StorIOSQLiteColumn(name = GistsTable.OWNER_AVATAR)
     @Nullable
     public String ownerAvatarUrl;
 
     ////////
 
-    @StorIOSQLiteColumn(name = "note")
+    @StorIOSQLiteColumn(name = GistsTable.NOTE)
     @Nullable
     public String note;
 
