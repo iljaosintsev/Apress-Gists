@@ -1,10 +1,18 @@
 package com.turlir.abakgists.network;
 
+import android.content.ContentValues;
+import android.support.annotation.NonNull;
+import android.util.Log;
+
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
+import com.pushtorefresh.storio.sqlite.operations.put.PutResolver;
+import com.pushtorefresh.storio.sqlite.operations.put.PutResult;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
 import com.pushtorefresh.storio.sqlite.queries.DeleteQuery;
+import com.pushtorefresh.storio.sqlite.queries.InsertQuery;
 import com.pushtorefresh.storio.sqlite.queries.Query;
 import com.turlir.abakgists.model.Gist;
+import com.turlir.abakgists.model.GistStorIOSQLitePutResolver;
 import com.turlir.abakgists.model.GistsTable;
 
 import java.util.List;
@@ -21,6 +29,7 @@ public class Repository {
 
     private ApiClient mClient;
     private StorIOSQLite mDatabase;
+    private PutResolver<Gist> mPutResolver = new SimpleInsertResolver();
 
     public Repository(ApiClient client, StorIOSQLite base) {
         mClient = client;
@@ -49,6 +58,7 @@ public class Repository {
                     public Observable<PutResults<Gist>> call(List<Gist> gists) {
                         return mDatabase.put()
                                 .objects(gists)
+                                .withPutResolver(mPutResolver)
                                 .prepare()
                                 .asRxObservable();
                     }
@@ -78,6 +88,38 @@ public class Repository {
                 )
                 .prepare()
                 .asRxCompletable();
+    }
+
+    private static class SimpleInsertResolver extends GistStorIOSQLitePutResolver {
+
+        @NonNull
+        @Override
+        public PutResult performPut(@NonNull StorIOSQLite storIOSQLite, @NonNull Gist object) {
+            StorIOSQLite.LowLevel lowLevel = storIOSQLite.lowLevel();
+            // for data consistency in concurrent environment, encapsulate Put Operation into transaction
+            lowLevel.beginTransaction();
+
+            try {
+                PutResult putResult;
+                ContentValues contentValues = mapToContentValues(object);
+
+                InsertQuery insertQuery = mapToInsertQuery(object);
+                long insertedId = lowLevel.insert(insertQuery, contentValues);
+                // существующие элементы будут проигнорированы ядром базы данных
+                // так как у поля ID задано ограничение UNIQUE ON CONFLICT IGNORE
+                putResult = PutResult.newInsertResult(insertedId, insertQuery.table());
+
+                // everything okay
+                lowLevel.setTransactionSuccessful();
+                Log.i("DATABASE", "processed " + object.id);
+                return putResult;
+
+            } finally {
+                // in case of bad situations, db won't be affected
+                lowLevel.endTransaction();
+            }
+        }
+
     }
 
 }
