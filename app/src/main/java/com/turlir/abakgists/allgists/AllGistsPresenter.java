@@ -50,23 +50,6 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
         addSubscription(mCacheSubs);
     }
 
-    private void loadFromServer(int currentSize) {
-        Subscription subsToServer = mRepo.loadGistsFromServerAndPutCache(currentSize)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<PutResults<Gist>>() {
-                    @Override
-                    public void call(PutResults<Gist> gistPutResults) {
-                        Log.d("AllGistsPresenter", "fromServer obs " + gistPutResults.results().size());
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        processError(throwable);
-                    }
-                });
-        addSubscription(subsToServer);
-    }
-
     void resetGist() {
         if (mCacheSubs != null) {
             if (!mCacheSubs.isUnsubscribed()) {
@@ -88,5 +71,22 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
                     }
                 });
         addSubscription(subs);
+    }
+
+    private void loadFromServer(int currentSize) {
+        Subscription subsToServer = mRepo.loadGistsFromServerAndPutCache(currentSize)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<PutResults<Gist>>() {
+                    @Override
+                    public void call(PutResults<Gist> gistPutResults) {
+                        Log.d("AllGistsPresenter", "fromServer obs " + gistPutResults.results().size());
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        processError(throwable);
+                    }
+                });
+        addSubscription(subsToServer);
     }
 }

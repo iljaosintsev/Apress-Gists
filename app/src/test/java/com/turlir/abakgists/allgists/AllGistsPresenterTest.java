@@ -22,22 +22,18 @@ public class AllGistsPresenterTest {
 
     @Before
     public void evaluate() throws Throwable {
-
         RxJavaHooks.setOnIOScheduler(new Func1<Scheduler, Scheduler>() {
             @Override
             public Scheduler call(Scheduler scheduler) {
                 return Schedulers.immediate();
             }
         });
-
         RxAndroidPlugins.getInstance().registerSchedulersHook(new RxAndroidSchedulersHook() {
             @Override
             public Scheduler getMainThreadScheduler() {
                 return Schedulers.immediate();
             }
         });
-
-
     }
 
     @Test
