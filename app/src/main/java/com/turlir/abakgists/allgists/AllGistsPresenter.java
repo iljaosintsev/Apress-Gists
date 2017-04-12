@@ -1,8 +1,6 @@
 package com.turlir.abakgists.allgists;
 
 
-import android.util.Log;
-
 import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
 import com.turlir.abakgists.base.BasePresenter;
 import com.turlir.abakgists.model.Gist;
@@ -10,12 +8,12 @@ import com.turlir.abakgists.network.Repository;
 
 import java.util.List;
 
-import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
 
@@ -37,7 +35,7 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
                 .subscribe(new Handler<List<Gist>>() {
                     @Override
                     public void onNext(List<Gist> value) {
-                        Log.d("AllGistPresenter", "onNext " + value.size());
+                        Timber.d("onNext %d", value.size());
                         if (getView() != null) {
                             if (value.size() > 0) {
                                 getView().onGistLoaded(value, currentSize, value.size());
@@ -79,7 +77,7 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
                 .subscribe(new Action1<PutResults<Gist>>() {
                     @Override
                     public void call(PutResults<Gist> gistPutResults) {
-                        Log.d("AllGistsPresenter", "fromServer obs " + gistPutResults.results().size());
+                        Timber.d("fromServer obs %d", gistPutResults.results().size());
                     }
                 }, new Action1<Throwable>() {
                     @Override

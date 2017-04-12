@@ -11,6 +11,8 @@ import com.turlir.abakgists.di.AppModule;
 import com.turlir.abakgists.di.DaggerAppComponent;
 import com.turlir.abakgists.di.PresenterModule;
 
+import timber.log.Timber;
+
 public class App extends Application {
 
     private static AppComponent sComponent;
@@ -33,6 +35,8 @@ public class App extends Application {
         }
 
         initStetho();
+
+        Timber.plant(new Timber.DebugTree());
     }
 
     private void initStetho() {
