@@ -35,8 +35,12 @@ public abstract class BasePresenter<T extends BaseView> {
         return view.get();
     }
 
-    public void addSubscription(Subscription s) {
+    protected void addSubscription(Subscription s) {
         subs.add(s);
+    }
+
+    protected void removeSubscription(Subscription s) {
+        subs.remove(s);
     }
 
     protected <E> Observable.Transformer<E, E> defaultScheduler() {

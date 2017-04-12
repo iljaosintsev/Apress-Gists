@@ -69,6 +69,12 @@ public class Gist implements Parcelable {
 
     }
 
+    public Gist(@NonNull String url, @NonNull String id, @NonNull String created) {
+        this.url = url;
+        this.id = id;
+        this.created = created;
+    }
+
     protected Gist(Parcel in) {
         url = in.readString();
         id = in.readString();
