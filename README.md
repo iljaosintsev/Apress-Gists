@@ -17,7 +17,7 @@
 - butterknife 8
 
 Использование rxjava первой версии, а не второй мотивируется
-[отсутствием](https://github.com/pushtorefresh/storio/issues/685) поддержки у ORM библиотеки storio.
+[отсутствием поддержки](https://github.com/pushtorefresh/storio/issues/685) у ORM библиотеки storio.
 
 # Логика работы
 
