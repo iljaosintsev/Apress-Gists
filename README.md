@@ -1,5 +1,7 @@
 # Apress-Gists
 
+![Иконка](/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png)
+
 Приложение представляет собой средство для создания заметок к фрагментам программного кода,
 размещаемого на платформе Github.com.
 
