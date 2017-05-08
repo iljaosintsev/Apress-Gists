@@ -19,7 +19,9 @@ android {
 }
 
 def v = System.getenv('BUILD_VCS_NUMBER_ApressGists_HttpsGithubComIljaosintsevApressGistsGitRefsHeadsMaster')
+def d = System.getenv('demo')
 println "LAST NUMBER ${v}"
+println "DEMO NUMBER ${d}"
 
 dependencies {
     compile 'com.jakewharton:butterknife:8.2.1'
