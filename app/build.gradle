@@ -18,11 +18,6 @@ android {
     }
 }
 
-def n = System.getenv('changelog')    
-File file = new File(n)  
-println "BUILD CHANGELOG ${n}"
-println file.text
-
 dependencies {
     compile 'com.jakewharton:butterknife:8.2.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.2.1'
