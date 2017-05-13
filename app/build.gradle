@@ -18,6 +18,9 @@ android {
     }
 }
 
+def n = System.getenv('changelog')      
+println "BUILD CHANGELOG ${n}"
+
 dependencies {
     compile 'com.jakewharton:butterknife:8.2.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.2.1'
