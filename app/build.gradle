@@ -13,13 +13,9 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }
-
-def n = System.getenv('BUILD_NUMBER')
-println "BUILD NUMBER ${n}"
 
 dependencies {
     compile 'com.jakewharton:butterknife:8.2.1'
