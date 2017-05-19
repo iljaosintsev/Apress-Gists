@@ -9,7 +9,6 @@ import com.facebook.stetho.Stetho;
 import com.turlir.abakgists.di.AppComponent;
 import com.turlir.abakgists.di.AppModule;
 import com.turlir.abakgists.di.DaggerAppComponent;
-import com.turlir.abakgists.di.PresenterModule;
 
 import timber.log.Timber;
 
@@ -23,15 +22,16 @@ public class App extends Application {
 
         sComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this))
-                .presenterModule(new PresenterModule())
                 .build();
 
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
-            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-                    .detectNetwork()
-                    .penaltyLog()
-                    .penaltyDeathOnNetwork()
-                    .build());
+            StrictMode.setThreadPolicy(
+                    new StrictMode.ThreadPolicy.Builder()
+                            .detectNetwork()
+                            .penaltyLog()
+                            .penaltyDeathOnNetwork()
+                            .build()
+            );
         }
 
         initStetho();

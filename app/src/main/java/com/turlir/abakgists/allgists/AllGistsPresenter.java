@@ -24,12 +24,12 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
         mRepo = repo;
     }
 
+    /**
+     * из локального кеша или сетевого запроса
+     * @param currentSize текущий размер списка (для пагинации)
+     */
     void loadPublicGists(final int currentSize) {
-        if (mCacheSubs != null) {
-            if (!mCacheSubs.isUnsubscribed()) {
-                removeSubscription(mCacheSubs);
-            }
-        }
+        removeCacheSubs();
         mCacheSubs = mRepo.loadGistsFromCache(currentSize)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Handler<List<Gist>>() {
@@ -48,12 +48,11 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
         addSubscription(mCacheSubs);
     }
 
+    /**
+     * сбросить кеш, загрузить и сохранить свежие результаты
+     */
     void resetGist() {
-        if (mCacheSubs != null) {
-            if (!mCacheSubs.isUnsubscribed()) {
-                removeSubscription(mCacheSubs);
-            }
-        }
+        removeCacheSubs();
         Subscription subs = mRepo.clearCache()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -69,6 +68,14 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
                     }
                 });
         addSubscription(subs);
+    }
+
+    private void removeCacheSubs() {
+        if (mCacheSubs != null) {
+            if (!mCacheSubs.isUnsubscribed()) {
+                removeSubscription(mCacheSubs);
+            }
+        }
     }
 
     private void loadFromServer(int currentSize) {

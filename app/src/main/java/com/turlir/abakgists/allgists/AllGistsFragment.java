@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.turlir.abakgists.base.App;
+import com.turlir.abakgists.di.AppComponent;
 import com.turlir.abakgists.gist.GistActivity;
 import com.turlir.abakgists.base.OnClickListener;
 import com.turlir.abakgists.R;
@@ -50,7 +51,7 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener {
 
     private final RecyclerView.OnScrollListener mScrollListener = new RecyclerView.OnScrollListener() {
 
-        private int mLastDownloadedSize = 0;
+        private int mLastDownloadedSize;
 
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -58,7 +59,7 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener {
             int visibleItemCount = mLayoutManager.getChildCount();
             int totalItemCount = mLayoutManager.getItemCount();
 
-            boolean closeEdge = firstVisibleItem + visibleItemCount + 3  >=  totalItemCount;
+            boolean closeEdge = firstVisibleItem + visibleItemCount + 3 >= totalItemCount;
             boolean sizeNotDownload = totalItemCount > mLastDownloadedSize;
             if (closeEdge && sizeNotDownload && !mSwipe.isRefreshing()) {
                 mLastDownloadedSize = totalItemCount;
