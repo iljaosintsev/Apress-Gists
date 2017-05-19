@@ -8,7 +8,7 @@ import com.pushtorefresh.storio.sqlite.operations.put.PutResult;
 import com.turlir.abakgists.model.Gist;
 import com.turlir.abakgists.model.GistStorIOSQLitePutResolver;
 
-class GistStorIoLogPutResolver extends GistStorIOSQLitePutResolver {
+public class GistStorIoLogPutResolver extends GistStorIOSQLitePutResolver {
 
     private static final String TAG = "DATABASE";
 
@@ -16,7 +16,6 @@ class GistStorIoLogPutResolver extends GistStorIOSQLitePutResolver {
     @Override
     public PutResult performPut(@NonNull StorIOSQLite storIOSQLite, @NonNull Gist object) {
         PutResult result = super.performPut(storIOSQLite, object);
-
         if (result.wasInserted()) {
             Long iid = result.insertedId();
             if (iid != null && iid != -1) {

@@ -1,8 +1,8 @@
 package com.turlir.abakgists.model;
 
-public abstract class GistsTable {
+public interface GistsTable {
 
-    public static final String
+    String
             GISTS = "gists",
             ID = "id",
             DESC = "desc",
@@ -12,7 +12,7 @@ public abstract class GistsTable {
             OWNER_AVATAR = "ownerAvatarUrl",
             NOTE = "note";
 
-    public static final String CREATE =
+    String CREATE =
             "CREATE TABLE " + GISTS + "( " +
                     ID + " TEXT NOT NULL UNIQUE ON CONFLICT IGNORE, " +
                     DESC + " TEXT, " +

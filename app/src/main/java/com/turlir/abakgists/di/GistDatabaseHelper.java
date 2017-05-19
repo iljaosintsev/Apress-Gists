@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.turlir.abakgists.model.GistsTable;
 
-class GistDatabaseHelper extends SQLiteOpenHelper {
+public class GistDatabaseHelper extends SQLiteOpenHelper {
 
     public GistDatabaseHelper(Context context) {
         super(context, "gists_db", null, 1);
