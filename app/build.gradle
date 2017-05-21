@@ -47,4 +47,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:2.7.22'
     testCompile 'org.robolectric:robolectric:3.3.2'
+    testCompile 'com.github.fabioCollini:DaggerMock:0.6.6'
 }

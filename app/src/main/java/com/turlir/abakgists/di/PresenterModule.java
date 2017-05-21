@@ -17,13 +17,13 @@ public class PresenterModule {
 
     @Provides
     @Singleton
-    AllGistsPresenter provideAllGistsPresenter(Repository repo) {
+    public AllGistsPresenter provideAllGistsPresenter(Repository repo) {
         return new AllGistsPresenter(repo);
     }
 
     @Provides
     @Singleton
-    NotesPresenter provideNotesPresenter(StorIOSQLite database) {
+    public NotesPresenter provideNotesPresenter(StorIOSQLite database) {
         return new NotesPresenter(database);
     }
 

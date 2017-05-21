@@ -1,8 +1,11 @@
 package com.turlir.abakgists.di;
 
 
+import android.support.annotation.VisibleForTesting;
+
 import com.turlir.abakgists.allgists.AllGistsFragment;
 import com.turlir.abakgists.gist.GistActivity;
+import com.turlir.abakgists.network.Repository;
 import com.turlir.abakgists.notes.NotesFragment;
 
 import javax.inject.Singleton;
@@ -18,4 +21,8 @@ public interface AppComponent {
     void inject(GistActivity fragment);
 
     void inject(NotesFragment fragment);
+
+    @VisibleForTesting
+    Repository provideRepository();
+
 }
