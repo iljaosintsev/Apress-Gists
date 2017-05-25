@@ -20,6 +20,7 @@ import com.turlir.abakgists.model.GistStorIOSQLiteGetResolver;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.Verifier;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -52,6 +53,15 @@ public class NewRepoTest {
     @Rule
     public final DaggerMockRule<AppComponent> rule = new JUnitDaggerMockRule();
 
+    @Rule
+    public Verifier verifier = new Verifier() {
+        @Override
+        protected void verify() throws Throwable {
+            assertNotNull(_repo);
+            assertNotNull(_mockClient);
+        }
+    };
+
     @InjectFromComponent
     private Repository _repo;
 
@@ -72,12 +82,6 @@ public class NewRepoTest {
                 return Schedulers.immediate();
             }
         });
-    }
-
-    @Test
-    public void injectTest() {
-        assertNotNull(_repo);
-        assertNotNull(_mockClient);
     }
 
     @Test
