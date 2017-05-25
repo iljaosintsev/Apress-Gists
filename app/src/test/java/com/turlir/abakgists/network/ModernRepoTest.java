@@ -48,7 +48,7 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = Build.VERSION_CODES.LOLLIPOP, packageName = "com.turlir.abakgists")
-public class NewRepoTest {
+public class ModernRepoTest {
 
     @Rule
     public final DaggerMockRule<AppComponent> rule = new JUnitDaggerMockRule();

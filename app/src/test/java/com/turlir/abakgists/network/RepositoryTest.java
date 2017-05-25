@@ -38,6 +38,8 @@ import static org.junit.Assert.assertTrue;
 @Config(constants = BuildConfig.class, sdk = Build.VERSION_CODES.LOLLIPOP, packageName = "com.turlir.abakgists")
 public class RepositoryTest {
 
+    private Repository mRepo;
+
     @Before
     public void setup() throws Throwable {
         RxJavaHooks.setOnIOScheduler(new Func1<Scheduler, Scheduler>() {
@@ -52,10 +54,7 @@ public class RepositoryTest {
                 return Schedulers.immediate();
             }
         });
-    }
 
-    @Test
-    public void first() throws Exception {
         GistDatabaseHelper helper = makeHelper("/test.sql");
 
         SQLiteTypeMapping<Gist> typeMapping = SQLiteTypeMapping.<Gist>builder()
@@ -64,27 +63,22 @@ public class RepositoryTest {
                 .deleteResolver(new GistStorIOSQLiteDeleteResolver())
                 .build();
 
-        DefaultStorIOSQLite storIo = DefaultStorIOSQLite.builder()
+        DefaultStorIOSQLite storio = DefaultStorIOSQLite.builder()
                 .sqliteOpenHelper(helper)
                 .addTypeMapping(Gist.class, typeMapping)
                 .build();
 
-        Repository repo = new Repository(Mockito.mock(ApiClient.class), storIo);
-        Observable<List<Gist>> cacheObs = repo.loadGistsFromCache(0);
+        mRepo = new Repository(Mockito.mock(ApiClient.class), storio);
+    }
+
+    @Test
+    public void successFromCache() throws Exception {
+        Observable<List<Gist>> cacheObs = mRepo.loadGistsFromCache(0);
         TestSubscriber<List<Gist>> subscriber = new TestSubscriber<>();
         cacheObs.subscribe(subscriber);
 
         subscriber.assertNoErrors();
         subscriber.assertValueCount(1);
-
-        storIo.put()
-                .object(new Gist("url", "url", "created"))
-                .prepare()
-                .executeAsBlocking();
-
-        subscriber.assertValueCount(2);
-
-        storIo.close();
     }
 
     private GistDatabaseHelper makeHelper(String name) {
