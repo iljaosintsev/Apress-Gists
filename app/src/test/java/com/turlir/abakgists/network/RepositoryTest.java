@@ -32,6 +32,7 @@ import rx.observers.TestSubscriber;
 import rx.plugins.RxJavaHooks;
 import rx.schedulers.Schedulers;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
@@ -79,6 +80,21 @@ public class RepositoryTest {
 
         subscriber.assertNoErrors();
         subscriber.assertValueCount(1);
+
+        List<List<Gist>> events = subscriber.getOnNextEvents();
+        assertEquals(1, events.size());
+        List<Gist> gists = events.get(0);
+        assertEquals(1, gists.size());
+        Gist stub = new Gist(
+                "85547e4878dd9a573215cd905650f284",
+                "https://api.github.com/gists/85547e4878dd9a573215cd905650f284",
+                "2017-04-27T21:54:24Z",
+                "Part of setTextByParts",
+                "note",
+                "https://avatars1.githubusercontent.com/u/3526847?v=3",
+                "iljaosintsev"
+        );
+        assertEquals(stub, gists.get(0));
     }
 
     private GistDatabaseHelper makeHelper(String name) {
