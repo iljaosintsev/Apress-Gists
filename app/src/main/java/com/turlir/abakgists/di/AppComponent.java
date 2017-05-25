@@ -3,6 +3,7 @@ package com.turlir.abakgists.di;
 
 import android.support.annotation.VisibleForTesting;
 
+import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.turlir.abakgists.allgists.AllGistsFragment;
 import com.turlir.abakgists.gist.GistActivity;
 import com.turlir.abakgists.network.Repository;
@@ -24,5 +25,8 @@ public interface AppComponent {
 
     @VisibleForTesting
     Repository provideRepository();
+
+    @VisibleForTesting
+    StorIOSQLite provideStorIOSQLite();
 
 }

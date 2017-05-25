@@ -5,6 +5,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 
 import com.google.gson.annotations.SerializedName;
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteColumn;
@@ -69,10 +70,24 @@ public class Gist implements Parcelable {
 
     }
 
+    @VisibleForTesting
     public Gist(@NonNull String url, @NonNull String id, @NonNull String created) {
         this.url = url;
         this.id = id;
         this.created = created;
+    }
+
+    @VisibleForTesting
+    public Gist(@NonNull String id, @NonNull String url, @NonNull String created,
+                @NonNull String desc, @NonNull String note, @NonNull String ownerAvatarUrl,
+                @NonNull String ownerLogin) {
+        this.id = id;
+        this.url = url;
+        this.created = created;
+        this.description = desc;
+        this.note = note;
+        this.ownerAvatarUrl = ownerAvatarUrl;
+        this.ownerLogin = ownerLogin;
     }
 
     protected Gist(Parcel in) {
@@ -112,11 +127,30 @@ public class Gist implements Parcelable {
         if (!id.equals(gist.id)) return false;
         if (!created.equals(gist.created)) return false;
 
-        if (description != null ? !description.equals(gist.description) : gist.description != null) return false;
-        if (ownerLogin != null ? !ownerLogin.equals(gist.ownerLogin) : gist.ownerLogin != null) return false;
-        if (ownerAvatarUrl != null ? !ownerAvatarUrl.equals(gist.ownerAvatarUrl) : gist.ownerAvatarUrl != null) return false;
+        if (description != null) {
+            if (!description.equals(gist.description)) return false;
+        } else {
+            if (gist.description != null) return false;
+        }
 
-        return note != null ? note.equals(gist.note) : gist.note == null;
+        if (ownerLogin != null) {
+            if (!ownerLogin.equals(gist.ownerLogin)) return false;
+        } else {
+            if (gist.ownerLogin != null) return false;
+        }
+
+        if (ownerAvatarUrl != null) {
+            if (!ownerAvatarUrl.equals(gist.ownerAvatarUrl)) return false;
+        } else {
+            if (gist.ownerAvatarUrl != null) return false;
+        }
+
+        if (note != null) {
+            return note.equals(gist.note);
+        }
+        else {
+            return gist.note == null;
+        }
     }
 
     @Override
