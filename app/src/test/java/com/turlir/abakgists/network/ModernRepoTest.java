@@ -1,9 +1,11 @@
 package com.turlir.abakgists.network;
 
 
-import android.database.sqlite.SQLiteDatabase;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.os.Build;
 
+import com.google.common.io.Files;
 import com.pushtorefresh.storio.sqlite.SQLiteTypeMapping;
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.impl.DefaultStorIOSQLite;
@@ -16,6 +18,7 @@ import com.turlir.abakgists.di.GistStorIoLogPutResolver;
 import com.turlir.abakgists.model.Gist;
 import com.turlir.abakgists.model.GistStorIOSQLiteDeleteResolver;
 import com.turlir.abakgists.model.GistStorIOSQLiteGetResolver;
+import com.turlir.abakgists.model.GistsTable;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -23,16 +26,17 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import it.cosenonjaviste.daggermock.DaggerMockRule;
 import it.cosenonjaviste.daggermock.InjectFromComponent;
+import rx.Completable;
 import rx.Observable;
 import rx.Scheduler;
 import rx.android.plugins.RxAndroidPlugins;
@@ -45,6 +49,7 @@ import rx.schedulers.Schedulers;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = Build.VERSION_CODES.LOLLIPOP, packageName = "com.turlir.abakgists")
@@ -88,6 +93,7 @@ public class ModernRepoTest {
         TestSubscriber<List<Gist>> subs = new TestSubscriber<>();
         obs.subscribe(subs);
         subs.assertNoErrors();
+        subs.assertNotCompleted();
         subs.assertValueCount(1);
 
         List<Gist> first = subs.getOnNextEvents().get(0);
@@ -104,6 +110,28 @@ public class ModernRepoTest {
                 "iljaosintsev"
         );
         assertEquals(stub, first.get(0));
+    }
+
+    @Test
+    public void clearCacheTest() throws IOException {
+        Completable obs = _repo.clearCache();
+        TestSubscriber subs = new TestSubscriber();
+        obs.subscribe(subs);
+
+        subs.assertNoErrors();
+        subs.assertCompleted();
+
+        Observable<List<Gist>> server = _repo.loadGistsFromCache(0);
+        TestSubscriber<List<Gist>> test = new TestSubscriber<>();
+        server.subscribe(test);
+
+        test.assertNoErrors();
+        test.assertValueCount(1);
+        test.assertNotCompleted();
+        List<List<Gist>> events = test.getOnNextEvents();
+        assertEquals(1, events.size());
+        List<Gist> first = events.get(0);
+        assertEquals(0, first.size());
     }
 
     private static class JUnitDaggerMockRule extends DaggerMockRule<AppComponent> {
@@ -128,17 +156,29 @@ public class ModernRepoTest {
             provides(StorIOSQLite.class, instance);
         }
 
-        private GistDatabaseHelper makeHelper(String name) {
-            GistDatabaseHelper helper = new GistDatabaseHelper(RuntimeEnvironment.application);
-            GistDatabaseHelper spyHelper = Mockito.spy(helper);
+        private GistDatabaseHelper makeHelper(final String name) {
+            substitutionDatabase(name, GistsTable.BASE_NAME);
+            return new GistDatabaseHelper(RuntimeEnvironment.application);
+        }
 
-            File dbFile = new File(getClass().getResource(name).getFile());
-            assertTrue(dbFile.exists());
-            SQLiteDatabase database = SQLiteDatabase.openDatabase(dbFile.getAbsolutePath(), null, 1);
-            Mockito.when(spyHelper.getReadableDatabase()).thenReturn(database);
-            Mockito.when(spyHelper.getWritableDatabase()).thenReturn(database);
 
-            return spyHelper;
+        private void substitutionDatabase(final String file, final String basename) {
+            String filePath = getClass().getResource(file).getFile();
+
+            Context cnt = RuntimeEnvironment.application.getApplicationContext();
+            String destinationPath = new ContextWrapper(cnt).getDatabasePath(basename).getAbsolutePath();
+            File to = new File(destinationPath);
+            String parent = to.getParent();
+            boolean isDirCreate = new File(parent).mkdir();
+            assertTrue(isDirCreate);
+
+            File from = new File(filePath);
+            try {
+                Files.copy(from, to);
+            } catch (IOException e) {
+                e.printStackTrace();
+                fail(e.getMessage());
+            }
         }
 
     }

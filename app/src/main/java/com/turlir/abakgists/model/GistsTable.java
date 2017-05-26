@@ -3,6 +3,7 @@ package com.turlir.abakgists.model;
 public interface GistsTable {
 
     String
+            BASE_NAME = "gists_db",
             GISTS = "gists",
             ID = "id",
             DESC = "desc",
@@ -13,7 +14,7 @@ public interface GistsTable {
             NOTE = "note";
 
     String CREATE =
-            "CREATE TABLE " + GISTS + "( " +
+            "CREATE TABLE IF NOT EXISTS " + GISTS + "( " +
                     ID + " TEXT NOT NULL UNIQUE ON CONFLICT IGNORE, " +
                     DESC + " TEXT, " +
                     URL + " TEXT NOT NULL, " +

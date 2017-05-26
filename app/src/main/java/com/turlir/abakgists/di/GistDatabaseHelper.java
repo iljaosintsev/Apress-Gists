@@ -9,7 +9,7 @@ import com.turlir.abakgists.model.GistsTable;
 public class GistDatabaseHelper extends SQLiteOpenHelper {
 
     public GistDatabaseHelper(Context context) {
-        super(context, "gists_db", null, 1);
+        super(context, GistsTable.BASE_NAME, null, 1);
     }
 
     @Override
