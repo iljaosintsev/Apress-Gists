@@ -44,14 +44,22 @@ import rx.plugins.RxJavaHooks;
 import rx.schedulers.Schedulers;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = Build.VERSION_CODES.LOLLIPOP, packageName = "com.turlir.abakgists")
 public class RepositoryTest {
+
+    private static final Gist FULL_STUB = new Gist(
+            "85547e4878dd9a573215cd905650f284",
+            "https://api.github.com/gists/85547e4878dd9a573215cd905650f284",
+            "2017-04-27T21:54:24Z",
+            "Part of setTextByParts",
+            "note",
+            "https://avatars1.githubusercontent.com/u/3526847?v=3",
+            "iljaosintsev"
+    );
 
     private Repository mRepo;
     private ApiClient mockApi;
@@ -105,16 +113,7 @@ public class RepositoryTest {
         assertEquals(1, events.size());
         List<Gist> gists = events.get(0);
         assertEquals(1, gists.size());
-        Gist stub = new Gist(
-                "85547e4878dd9a573215cd905650f284",
-                "https://api.github.com/gists/85547e4878dd9a573215cd905650f284",
-                "2017-04-27T21:54:24Z",
-                "Part of setTextByParts",
-                "note",
-                "https://avatars1.githubusercontent.com/u/3526847?v=3",
-                "iljaosintsev"
-        );
-        assertEquals(stub, gists.get(0));
+        assertEquals(FULL_STUB, gists.get(0));
     }
 
     @Test
@@ -148,28 +147,68 @@ public class RepositoryTest {
         Observable<List<Gist>> serverObs = Observable.just(serverList);
         Mockito.when(mockApi.publicGist(1)).thenReturn(serverObs);
 
+        Observable<List<Gist>> cacheObs = mRepo.loadGistsFromCache(0);
+        TestSubscriber<List<Gist>> cacheSubs = new TestSubscriber<>();
+        cacheObs.subscribe(cacheSubs);
+
         Observable<PutResults<Gist>> obs = mRepo.loadGistsFromServerAndPutCache(0);
-        TestSubscriber<PutResults<Gist>> subs = new TestSubscriber<>();
-        obs.subscribe(subs);
+        TestSubscriber<PutResults<Gist>> serverSubs = new TestSubscriber<>();
+        obs.subscribe(serverSubs);
 
-        subs.assertNoErrors();
-        subs.assertCompleted();
-        subs.assertValueCount(1);
-        List<PutResults<Gist>> events = subs.getOnNextEvents();
-        assertEquals(1, events.size());
+        serverSubs.assertNoErrors();
+        serverSubs.assertCompleted();
+        serverSubs.assertValueCount(1);
+        List<PutResults<Gist>> putEvents = serverSubs.getOnNextEvents();
+        assertEquals(1, putEvents.size());
 
-        Map<Gist, PutResult> now = events.get(0).results();// new element, from server
-        for (Map.Entry<Gist, PutResult> entry : now.entrySet()) { // only one
-            Gist key = entry.getKey();
-            Gist local = new Gist("id", "url", "created", "desc", null, "avatarurl", "login");
-            assertEquals(local, key);
+        // в cacheSubs пришел новый набор результатов (второй)
+        // содержащий уже два обекта Gist, последний из которых - новый с сервера
+        cacheSubs.assertNotCompleted();
+        cacheSubs.assertValueCount(2);
+        List<List<Gist>> cacheEvents = cacheSubs.getOnNextEvents();
+        List<Gist> second = cacheEvents.get(1);
+        assertEquals(2, second.size());
+        Gist now = second.get(1);
+        Gist stub = new Gist("id", "url", "created", "desc", null, "avatarurl", "login");
+        assertEquals(stub, now);
+    }
 
-            PutResult value = entry.getValue();
-            assertTrue(value.wasInserted());
-            assertNotNull(value.affectedTables());
-            assertFalse(value.affectedTables().isEmpty());
-        }
+    @Test
+    public void loadOldGistsFromServerAndPutCacheTest() {
+        GistOwner owner = new GistOwner("iljaosintsev", "https://avatars1.githubusercontent.com/u/3526847?v=3");
+        Gist stub = FULL_STUB;
+        stub.description = "new desc";
+        stub.ownerAvatarUrl = null;
+        stub.ownerLogin = null;
+        stub.owner = owner;
+        List<Gist> serverList = Collections.singletonList(stub);
 
+        Observable<List<Gist>> serverObs = Observable.just(serverList);
+        Mockito.when(mockApi.publicGist(1)).thenReturn(serverObs);
+
+        Observable<List<Gist>> cacheObs = mRepo.loadGistsFromCache(0);
+        TestSubscriber<List<Gist>> cacheSubs = new TestSubscriber<>();
+        cacheObs.subscribe(cacheSubs);
+
+        Observable<PutResults<Gist>> obs = mRepo.loadGistsFromServerAndPutCache(0);
+        TestSubscriber<PutResults<Gist>> serverSubs = new TestSubscriber<>();
+        obs.subscribe(serverSubs);
+
+        serverSubs.assertNoErrors();
+        serverSubs.assertCompleted();
+        //serverSubs.assertValueCount(1);
+        List<PutResults<Gist>> putEvents = serverSubs.getOnNextEvents();
+        assertEquals(1, putEvents.size());
+
+        // в cacheSubs пришел новый набор результатов (второй)
+        // оба набора одинаковы, содержат один элемент - FULL_STUB
+        cacheSubs.assertNotCompleted();
+        cacheSubs.assertValueCount(2);
+        List<List<Gist>> cacheEvents = cacheSubs.getOnNextEvents();
+        List<Gist> first = cacheEvents.get(0);
+        List<Gist> second = cacheEvents.get(1);
+        assertEquals(first, second);
+        assertEquals(FULL_STUB, first.get(0));
     }
 
     private GistDatabaseHelper makeHelper(final String name) {
