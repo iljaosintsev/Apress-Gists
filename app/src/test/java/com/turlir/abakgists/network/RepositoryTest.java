@@ -7,6 +7,7 @@ import android.os.Build;
 import com.google.common.io.Files;
 import com.pushtorefresh.storio.sqlite.SQLiteTypeMapping;
 import com.pushtorefresh.storio.sqlite.impl.DefaultStorIOSQLite;
+import com.pushtorefresh.storio.sqlite.operations.put.PutResult;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
 import com.turlir.abakgists.BuildConfig;
 import com.turlir.abakgists.di.GistDatabaseHelper;
@@ -30,6 +31,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import rx.Completable;
 import rx.Observable;
@@ -54,6 +57,7 @@ public class RepositoryTest {
             "https://api.github.com/gists/85547e4878dd9a573215cd905650f284",
             "2017-04-27T21:54:24Z",
             "Part of setTextByParts",
+
             "note",
             "iljaosintsev", "https://avatars1.githubusercontent.com/u/3526847?v=3"
     );
@@ -199,6 +203,12 @@ public class RepositoryTest {
         serverSubs.assertNoErrors();
         serverSubs.assertCompleted();
         serverSubs.assertValueCount(1);
+        List<PutResults<Gist>> events = serverSubs.getOnNextEvents();
+        Set<Map.Entry<Gist, PutResult>> entries = events.get(0).results().entrySet();
+        for (Map.Entry<Gist, PutResult> entry : entries) {
+            PutResult value = entry.getValue();
+            assertEquals(Long.valueOf(-1), value.insertedId());
+        }
 
         // в cacheSubs пришел новый набор результатов (второй)
         // оба набора одинаковы, содержат один элемент - FULL_STUB
