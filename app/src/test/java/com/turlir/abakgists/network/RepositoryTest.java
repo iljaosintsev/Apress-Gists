@@ -7,10 +7,13 @@ import android.os.Build;
 import com.google.common.io.Files;
 import com.pushtorefresh.storio.sqlite.SQLiteTypeMapping;
 import com.pushtorefresh.storio.sqlite.impl.DefaultStorIOSQLite;
+import com.pushtorefresh.storio.sqlite.operations.put.PutResult;
+import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
 import com.turlir.abakgists.BuildConfig;
 import com.turlir.abakgists.di.GistDatabaseHelper;
 import com.turlir.abakgists.di.GistStorIoLogPutResolver;
 import com.turlir.abakgists.model.Gist;
+import com.turlir.abakgists.model.GistOwner;
 import com.turlir.abakgists.model.GistStorIOSQLiteDeleteResolver;
 import com.turlir.abakgists.model.GistStorIOSQLiteGetResolver;
 import com.turlir.abakgists.model.GistsTable;
@@ -26,7 +29,9 @@ import org.robolectric.annotation.Config;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import rx.Completable;
 import rx.Observable;
@@ -39,6 +44,8 @@ import rx.plugins.RxJavaHooks;
 import rx.schedulers.Schedulers;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -47,6 +54,7 @@ import static org.junit.Assert.fail;
 public class RepositoryTest {
 
     private Repository mRepo;
+    private ApiClient mockApi;
 
     @BeforeClass
     public static void setupRxHooks() throws Throwable {
@@ -65,7 +73,7 @@ public class RepositoryTest {
     }
 
     @Before
-    public void setup() throws IOException {
+    public void setup() {
         GistDatabaseHelper helper = makeHelper("/test.sql");
 
         SQLiteTypeMapping<Gist> typeMapping = SQLiteTypeMapping.<Gist>builder()
@@ -79,11 +87,12 @@ public class RepositoryTest {
                 .addTypeMapping(Gist.class, typeMapping)
                 .build();
 
-        mRepo = new Repository(Mockito.mock(ApiClient.class), storio);
+        mockApi = Mockito.mock(ApiClient.class);
+        mRepo = new Repository(mockApi, storio);
     }
 
     @Test
-    public void successFromCache() throws Exception {
+    public void successFromCache() {
         Observable<List<Gist>> cacheObs = mRepo.loadGistsFromCache(0);
         TestSubscriber<List<Gist>> subs = new TestSubscriber<>();
         cacheObs.subscribe(subs);
@@ -109,7 +118,7 @@ public class RepositoryTest {
     }
 
     @Test
-    public void clearCacheTest() throws IOException {
+    public void clearCacheTest() {
         Completable obs = mRepo.clearCache();
         TestSubscriber subs = new TestSubscriber();
         obs.subscribe(subs);
@@ -128,6 +137,39 @@ public class RepositoryTest {
         assertEquals(1, events.size()); // единственный вызов onNext
         List<Gist> first = events.get(0);
         assertEquals(0, first.size()); // с пустым списком
+    }
+
+    @Test
+    public void loadNewGistsFromServerAndPutCacheTest() {
+        GistOwner owner = new GistOwner("login", "avatarurl");
+        Gist gist = new Gist("id", "url", "created", "desc", owner);
+        List<Gist> serverList = Collections.singletonList(gist);
+
+        Observable<List<Gist>> serverObs = Observable.just(serverList);
+        Mockito.when(mockApi.publicGist(1)).thenReturn(serverObs);
+
+        Observable<PutResults<Gist>> obs = mRepo.loadGistsFromServerAndPutCache(0);
+        TestSubscriber<PutResults<Gist>> subs = new TestSubscriber<>();
+        obs.subscribe(subs);
+
+        subs.assertNoErrors();
+        subs.assertCompleted();
+        subs.assertValueCount(1);
+        List<PutResults<Gist>> events = subs.getOnNextEvents();
+        assertEquals(1, events.size());
+
+        Map<Gist, PutResult> now = events.get(0).results();// new element, from server
+        for (Map.Entry<Gist, PutResult> entry : now.entrySet()) { // only one
+            Gist key = entry.getKey();
+            Gist local = new Gist("id", "url", "created", "desc", null, "avatarurl", "login");
+            assertEquals(local, key);
+
+            PutResult value = entry.getValue();
+            assertTrue(value.wasInserted());
+            assertNotNull(value.affectedTables());
+            assertFalse(value.affectedTables().isEmpty());
+        }
+
     }
 
     private GistDatabaseHelper makeHelper(final String name) {
