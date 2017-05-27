@@ -12,7 +12,7 @@ import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteColumn;
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteType;
 
 @StorIOSQLiteType(table = GistsTable.GISTS)
-public class Gist implements Parcelable {
+public class Gist implements Parcelable, Cloneable {
 
     @SerializedName("id")
     @StorIOSQLiteColumn(name = GistsTable.ID, key = true)
@@ -70,6 +70,17 @@ public class Gist implements Parcelable {
 
     }
 
+    public Gist(Gist other) {
+        this(other.id, other.url, other.created, other.description);
+        this.note = other.note;
+        if (other.owner != null) {
+            this.owner = other.owner;
+        } else {
+            this.ownerAvatarUrl = other.ownerAvatarUrl;
+            this.ownerLogin = other.ownerLogin;
+        }
+    }
+
     @VisibleForTesting
     public Gist(@NonNull String id, @NonNull String url, @NonNull String created, @Nullable String desc) {
         this.id = id;
@@ -81,14 +92,15 @@ public class Gist implements Parcelable {
 
     @VisibleForTesting
     public Gist(@NonNull String id, @NonNull String url, @NonNull String created, @Nullable String desc,
-                @NonNull GistOwner owner) {
+                @Nullable String note, @NonNull GistOwner owner) {
         this(id, url, created,desc);
+        this.note = note;
         this.owner = owner;
     }
 
     @VisibleForTesting
     public Gist(@NonNull String id, @NonNull String url, @NonNull String created, @Nullable String desc,
-                @Nullable String note, @NonNull String ownerAvatarUrl, @NonNull String ownerLogin) {
+                @Nullable String note, @NonNull String ownerLogin, @NonNull String ownerAvatarUrl) {
         this(id, url, created,desc);
         this.note = note;
         this.ownerAvatarUrl = ownerAvatarUrl;

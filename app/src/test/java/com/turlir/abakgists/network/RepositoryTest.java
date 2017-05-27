@@ -7,7 +7,6 @@ import android.os.Build;
 import com.google.common.io.Files;
 import com.pushtorefresh.storio.sqlite.SQLiteTypeMapping;
 import com.pushtorefresh.storio.sqlite.impl.DefaultStorIOSQLite;
-import com.pushtorefresh.storio.sqlite.operations.put.PutResult;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
 import com.turlir.abakgists.BuildConfig;
 import com.turlir.abakgists.di.GistDatabaseHelper;
@@ -31,7 +30,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import rx.Completable;
 import rx.Observable;
@@ -57,8 +55,16 @@ public class RepositoryTest {
             "2017-04-27T21:54:24Z",
             "Part of setTextByParts",
             "note",
-            "https://avatars1.githubusercontent.com/u/3526847?v=3",
-            "iljaosintsev"
+            "iljaosintsev", "https://avatars1.githubusercontent.com/u/3526847?v=3"
+    );
+
+    private static final Gist SERVER_STUB = new Gist(
+            "85547e4878dd9a573215cd905650f284",
+            "https://api.github.com/gists/85547e4878dd9a573215cd905650f284",
+            "2017-04-27T21:54:24Z",
+            "Part of setTextByParts",
+            null,
+            new GistOwner("iljaosintsev", "https://avatars1.githubusercontent.com/u/3526847?v=3")
     );
 
     private Repository mRepo;
@@ -141,7 +147,7 @@ public class RepositoryTest {
     @Test
     public void loadNewGistsFromServerAndPutCacheTest() {
         GistOwner owner = new GistOwner("login", "avatarurl");
-        Gist gist = new Gist("id", "url", "created", "desc", owner);
+        Gist gist = new Gist("id", "url", "created", "desc", null, owner);
         List<Gist> serverList = Collections.singletonList(gist);
 
         Observable<List<Gist>> serverObs = Observable.just(serverList);
@@ -169,18 +175,14 @@ public class RepositoryTest {
         List<Gist> second = cacheEvents.get(1);
         assertEquals(2, second.size());
         Gist now = second.get(1);
-        Gist stub = new Gist("id", "url", "created", "desc", null, "avatarurl", "login");
+        Gist stub = new Gist("id", "url", "created", "desc", null, "login", "avatarurl");
         assertEquals(stub, now);
     }
 
     @Test
     public void loadOldGistsFromServerAndPutCacheTest() {
-        GistOwner owner = new GistOwner("iljaosintsev", "https://avatars1.githubusercontent.com/u/3526847?v=3");
-        Gist stub = FULL_STUB;
+        Gist stub = new Gist(SERVER_STUB);
         stub.description = "new desc";
-        stub.ownerAvatarUrl = null;
-        stub.ownerLogin = null;
-        stub.owner = owner;
         List<Gist> serverList = Collections.singletonList(stub);
 
         Observable<List<Gist>> serverObs = Observable.just(serverList);
@@ -196,9 +198,7 @@ public class RepositoryTest {
 
         serverSubs.assertNoErrors();
         serverSubs.assertCompleted();
-        //serverSubs.assertValueCount(1);
-        List<PutResults<Gist>> putEvents = serverSubs.getOnNextEvents();
-        assertEquals(1, putEvents.size());
+        serverSubs.assertValueCount(1);
 
         // в cacheSubs пришел новый набор результатов (второй)
         // оба набора одинаковы, содержат один элемент - FULL_STUB
@@ -208,7 +208,8 @@ public class RepositoryTest {
         List<Gist> first = cacheEvents.get(0);
         List<Gist> second = cacheEvents.get(1);
         assertEquals(first, second);
-        assertEquals(FULL_STUB, first.get(0));
+        Gist old = new Gist(FULL_STUB);
+        assertEquals(old, first.get(0));
     }
 
     private GistDatabaseHelper makeHelper(final String name) {

@@ -106,8 +106,7 @@ public class ModernRepoTest {
                 "2017-04-27T21:54:24Z",
                 "Part of setTextByParts",
                 "note",
-                "https://avatars1.githubusercontent.com/u/3526847?v=3",
-                "iljaosintsev"
+                "iljaosintsev", "https://avatars1.githubusercontent.com/u/3526847?v=3"
         );
         assertEquals(stub, first.get(0));
     }
