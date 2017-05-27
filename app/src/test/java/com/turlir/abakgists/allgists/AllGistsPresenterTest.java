@@ -41,7 +41,7 @@ public class AllGistsPresenterTest {
         Repository mock = Mockito.mock(Repository.class);
 
         List<Gist> list = new ArrayList<>();
-        list.add(new Gist("url", "id", "created"));
+        list.add(new Gist("id", "url", "created", "desc"));
         Observable<List<Gist>> resultObs = Observable.just(list);
         Mockito.when(mock.loadGistsFromCache(Mockito.anyInt())).thenReturn(resultObs);
 

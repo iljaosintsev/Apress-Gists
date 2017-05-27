@@ -14,25 +14,25 @@ import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteType;
 @StorIOSQLiteType(table = GistsTable.GISTS)
 public class Gist implements Parcelable {
 
-    @SerializedName("url")
-    @StorIOSQLiteColumn(name = GistsTable.URL)
-    @NonNull
-    public String url;
-
     @SerializedName("id")
     @StorIOSQLiteColumn(name = GistsTable.ID, key = true)
     @NonNull
     public String id;
 
-    @SerializedName("description")
-    @StorIOSQLiteColumn(name = GistsTable.DESC)
-    @Nullable
-    public String description;
+    @SerializedName("url")
+    @StorIOSQLiteColumn(name = GistsTable.URL)
+    @NonNull
+    public String url;
 
     @SerializedName("created_at")
     @StorIOSQLiteColumn(name = GistsTable.CREATED)
     @NonNull
     public String created;
+
+    @SerializedName("description")
+    @StorIOSQLiteColumn(name = GistsTable.DESC)
+    @Nullable
+    public String description;
 
     ////////
 
@@ -71,20 +71,25 @@ public class Gist implements Parcelable {
     }
 
     @VisibleForTesting
-    public Gist(@NonNull String url, @NonNull String id, @NonNull String created) {
-        this.url = url;
-        this.id = id;
-        this.created = created;
-    }
-
-    @VisibleForTesting
-    public Gist(@NonNull String id, @NonNull String url, @NonNull String created,
-                @NonNull String desc, @NonNull String note, @NonNull String ownerAvatarUrl,
-                @NonNull String ownerLogin) {
+    public Gist(@NonNull String id, @NonNull String url, @NonNull String created, @Nullable String desc) {
         this.id = id;
         this.url = url;
         this.created = created;
         this.description = desc;
+    }
+
+
+    @VisibleForTesting
+    public Gist(@NonNull String id, @NonNull String url, @NonNull String created, @Nullable String desc,
+                @NonNull GistOwner owner) {
+        this(id, url, created,desc);
+        this.owner = owner;
+    }
+
+    @VisibleForTesting
+    public Gist(@NonNull String id, @NonNull String url, @NonNull String created, @Nullable String desc,
+                @Nullable String note, @NonNull String ownerAvatarUrl, @NonNull String ownerLogin) {
+        this(id, url, created,desc);
         this.note = note;
         this.ownerAvatarUrl = ownerAvatarUrl;
         this.ownerLogin = ownerLogin;

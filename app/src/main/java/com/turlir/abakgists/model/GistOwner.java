@@ -11,4 +11,13 @@ public class GistOwner {
     @SerializedName("avatar_url")
     public String avatarUrl;
 
+    public GistOwner() {
+
+    }
+
+    public GistOwner(String login, String avatarUrl) {
+        this.login = login;
+        this.avatarUrl = avatarUrl;
+    }
+
 }
