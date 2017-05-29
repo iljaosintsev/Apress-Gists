@@ -76,6 +76,8 @@ public class RepositoryTest {
 
     @BeforeClass
     public static void setupRxHooks() throws Throwable {
+        RxJavaHooks.reset();
+        RxAndroidPlugins.getInstance().reset();
         RxJavaHooks.setOnIOScheduler(new Func1<Scheduler, Scheduler>() {
             @Override
             public Scheduler call(Scheduler scheduler) {
