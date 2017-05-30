@@ -4,6 +4,7 @@ package com.turlir.abakgists.allgists;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
 import com.turlir.abakgists.base.BasePresenter;
 import com.turlir.abakgists.model.Gist;
+import com.turlir.abakgists.model.GistModel;
 import com.turlir.abakgists.network.Repository;
 
 import java.util.List;
@@ -32,9 +33,9 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
         removeCacheSubs();
         mCacheSubs = mRepo.loadGistsFromCache(currentSize)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Handler<List<Gist>>() {
+                .subscribe(new Handler<List<GistModel>>() {
                     @Override
-                    public void onNext(List<Gist> value) {
+                    public void onNext(List<GistModel> value) {
                         Timber.d("onNext %d", value.size());
                         if (getView() != null) {
                             if (value.size() > 0) {
@@ -81,9 +82,9 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
     private void loadFromServer(int currentSize) {
         Subscription subsToServer = mRepo.loadGistsFromServerAndPutCache(currentSize)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<PutResults<Gist>>() {
+                .subscribe(new Action1<PutResults<GistModel>>() {
                     @Override
-                    public void call(PutResults<Gist> gistPutResults) {
+                    public void call(PutResults<GistModel> gistPutResults) {
                         Timber.d("fromServer obs %d", gistPutResults.results().size());
                     }
                 }, new Action1<Throwable>() {

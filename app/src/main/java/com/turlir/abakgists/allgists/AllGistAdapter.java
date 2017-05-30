@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.turlir.abakgists.base.OnClickListener;
 import com.turlir.abakgists.R;
-import com.turlir.abakgists.model.Gist;
+import com.turlir.abakgists.model.GistModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,7 @@ public class AllGistAdapter extends RecyclerView.Adapter<AllGistAdapter.Holder> 
     private final LayoutInflater mInflater;
     private final OnClickListener mClick;
 
-    private final List<Gist> mContent;
+    private final List<GistModel> mContent;
 
     public AllGistAdapter(Context cnt, OnClickListener clickListener) {
         mInflater = LayoutInflater.from(cnt);
@@ -49,7 +49,7 @@ public class AllGistAdapter extends RecyclerView.Adapter<AllGistAdapter.Holder> 
 
     @Override
     public void onBindViewHolder(Holder holder, int position) {
-        Gist item = mContent.get(position);
+        GistModel item = mContent.get(position);
         holder.setData(item);
     }
 
@@ -58,11 +58,11 @@ public class AllGistAdapter extends RecyclerView.Adapter<AllGistAdapter.Holder> 
         return mContent.size();
     }
 
-    public Gist getItemByPosition(int p) {
+    public GistModel getItemByPosition(int p) {
         return mContent.get(p);
     }
 
-    public void addGist(List<Gist> value, int start, int count) {
+    public void addGist(List<GistModel> value, int start, int count) {
         int l = mContent.size(); // текущий объем данных
 
         if (l <= start) { // вставка
@@ -80,8 +80,8 @@ public class AllGistAdapter extends RecyclerView.Adapter<AllGistAdapter.Holder> 
         } else if (l > start) { // обновление
             for (int i = l; i < l + count; i++) {
                 int index = i - l;
-                Gist old = mContent.get(index);
-                Gist now = value.get(index);
+                GistModel old = mContent.get(index);
+                GistModel now = value.get(index);
                 if (!now.equals(old)) {
                     mContent.set(index, now);
                     notifyItemChanged(index);
@@ -112,7 +112,7 @@ public class AllGistAdapter extends RecyclerView.Adapter<AllGistAdapter.Holder> 
             Log.i(TAG, "new holder created");
         }
 
-        void setData(Gist item) {
+        void setData(GistModel item) {
             TextView tvId = (TextView) itemView.findViewById(R.id.item_gist_id);
             tvId.setText(String.valueOf(item.id));
 

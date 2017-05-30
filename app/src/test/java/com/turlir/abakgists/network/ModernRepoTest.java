@@ -13,11 +13,9 @@ import com.turlir.abakgists.BuildConfig;
 import com.turlir.abakgists.di.AppComponent;
 import com.turlir.abakgists.di.AppModule;
 import com.turlir.abakgists.di.DatabaseModule;
-import com.turlir.abakgists.di.GistDatabaseHelper;
-import com.turlir.abakgists.di.GistStorIoLogPutResolver;
-import com.turlir.abakgists.model.Gist;
-import com.turlir.abakgists.model.GistStorIOSQLiteDeleteResolver;
-import com.turlir.abakgists.model.GistStorIOSQLiteGetResolver;
+import com.turlir.abakgists.model.GistModel;
+import com.turlir.abakgists.model.GistModelStorIOSQLiteDeleteResolver;
+import com.turlir.abakgists.model.GistModelStorIOSQLiteGetResolver;
 import com.turlir.abakgists.model.GistsTable;
 
 import org.junit.Before;
@@ -88,25 +86,26 @@ public class ModernRepoTest {
 
     @Test
     public void successFromCache() {
-        Observable<List<Gist>> obs = _repo.loadGistsFromCache(0);
+        Observable<List<GistModel>> obs = _repo.loadGistsFromCache(0);
 
-        TestSubscriber<List<Gist>> subs = new TestSubscriber<>();
+        TestSubscriber<List<GistModel>> subs = new TestSubscriber<>();
         obs.subscribe(subs);
         subs.assertNoErrors();
         subs.assertNotCompleted();
         subs.assertValueCount(1);
 
-        List<Gist> first = subs.getOnNextEvents().get(0);
+        List<GistModel> first = subs.getOnNextEvents().get(0);
         assertNotNull(first);
         assertEquals(1, first.size());
 
-        Gist stub = new Gist(
+        GistModel stub = new GistModel(
                 "85547e4878dd9a573215cd905650f284",
                 "https://api.github.com/gists/85547e4878dd9a573215cd905650f284",
                 "2017-04-27T21:54:24Z",
                 "Part of setTextByParts",
                 "note",
-                "iljaosintsev", "https://avatars1.githubusercontent.com/u/3526847?v=3"
+                "iljaosintsev",
+                "https://avatars1.githubusercontent.com/u/3526847?v=3"
         );
         assertEquals(stub, first.get(0));
     }
@@ -120,16 +119,16 @@ public class ModernRepoTest {
         subs.assertNoErrors();
         subs.assertCompleted();
 
-        Observable<List<Gist>> server = _repo.loadGistsFromCache(0);
-        TestSubscriber<List<Gist>> test = new TestSubscriber<>();
+        Observable<List<GistModel>> server = _repo.loadGistsFromCache(0);
+        TestSubscriber<List<GistModel>> test = new TestSubscriber<>();
         server.subscribe(test);
 
         test.assertNoErrors();
         test.assertValueCount(1);
         test.assertNotCompleted();
-        List<List<Gist>> events = test.getOnNextEvents();
+        List<List<GistModel>> events = test.getOnNextEvents();
         assertEquals(1, events.size());
-        List<Gist> first = events.get(0);
+        List<GistModel> first = events.get(0);
         assertEquals(0, first.size());
     }
 
@@ -143,14 +142,14 @@ public class ModernRepoTest {
             );
 
             GistDatabaseHelper helper = makeHelper("/test.sql");
-            SQLiteTypeMapping<Gist> typeMapping = SQLiteTypeMapping.<Gist>builder()
-                    .putResolver(new GistStorIoLogPutResolver()) // logger
-                    .getResolver(new GistStorIOSQLiteGetResolver())
-                    .deleteResolver(new GistStorIOSQLiteDeleteResolver())
+            SQLiteTypeMapping<GistModel> typeMapping = SQLiteTypeMapping.<GistModel>builder()
+                    .putResolver(new GistModelStorIoLogPutResolver()) // logger
+                    .getResolver(new GistModelStorIOSQLiteGetResolver())
+                    .deleteResolver(new GistModelStorIOSQLiteDeleteResolver())
                     .build();
             DefaultStorIOSQLite instance = DefaultStorIOSQLite.builder()
                     .sqliteOpenHelper(helper)
-                    .addTypeMapping(Gist.class, typeMapping)
+                    .addTypeMapping(GistModel.class, typeMapping)
                     .build();
             provides(StorIOSQLite.class, instance);
         }

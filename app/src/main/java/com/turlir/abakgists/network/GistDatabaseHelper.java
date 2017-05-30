@@ -1,4 +1,4 @@
-package com.turlir.abakgists.di;
+package com.turlir.abakgists.network;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

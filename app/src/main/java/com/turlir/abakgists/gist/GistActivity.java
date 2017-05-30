@@ -16,6 +16,7 @@ import com.squareup.picasso.Picasso;
 import com.turlir.abakgists.R;
 import com.turlir.abakgists.base.App;
 import com.turlir.abakgists.model.Gist;
+import com.turlir.abakgists.model.GistModel;
 
 import javax.inject.Inject;
 
@@ -30,7 +31,7 @@ public class GistActivity extends AppCompatActivity {
 
     private static final EqualsSolver SOLVER = new EqualsSolver();
 
-    public static Intent getStartIntent(Context cnt, Gist data) {
+    public static Intent getStartIntent(Context cnt, GistModel data) {
         Intent i = new Intent(cnt, GistActivity.class);
         i.putExtra(EXTRA_GIST, data);
         return i;
@@ -51,7 +52,7 @@ public class GistActivity extends AppCompatActivity {
     @BindView(R.id.et_note)
     EditText note;
 
-    private Gist mContent;
+    private GistModel mContent;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

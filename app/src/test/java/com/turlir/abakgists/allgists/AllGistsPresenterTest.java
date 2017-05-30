@@ -1,6 +1,7 @@
 package com.turlir.abakgists.allgists;
 
 import com.turlir.abakgists.model.Gist;
+import com.turlir.abakgists.model.GistModel;
 import com.turlir.abakgists.network.Repository;
 
 import org.junit.Before;
@@ -40,9 +41,9 @@ public class AllGistsPresenterTest {
     public void successFromCache() {
         Repository mock = Mockito.mock(Repository.class);
 
-        List<Gist> list = new ArrayList<>();
-        list.add(new Gist("id", "url", "created", "desc"));
-        Observable<List<Gist>> resultObs = Observable.just(list);
+        List<GistModel> list = new ArrayList<>();
+        list.add(new GistModel("id", "url", "created", "desc"));
+        Observable<List<GistModel>> resultObs = Observable.just(list);
         Mockito.when(mock.loadGistsFromCache(Mockito.anyInt())).thenReturn(resultObs);
 
         AllGistsPresenter presenter = new AllGistsPresenter(mock);

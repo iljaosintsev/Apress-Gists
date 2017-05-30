@@ -17,7 +17,7 @@ import com.turlir.abakgists.R;
 import com.turlir.abakgists.base.SpaceDecorator;
 import com.turlir.abakgists.allgists.AllGistAdapter;
 import com.turlir.abakgists.base.BaseFragment;
-import com.turlir.abakgists.model.Gist;
+import com.turlir.abakgists.model.GistModel;
 
 import java.util.List;
 
@@ -78,7 +78,7 @@ public class NotesFragment extends BaseFragment implements OnClickListener {
 
     @Override
     public void onListItemClick(int position) {
-        Gist item = mAdapter.getItemByPosition(position);
+        GistModel item = mAdapter.getItemByPosition(position);
         Intent i = GistActivity.getStartIntent(getContext(), item);
         startActivity(i);
     }
@@ -88,7 +88,7 @@ public class NotesFragment extends BaseFragment implements OnClickListener {
         return "Notes";
     }
 
-    void onNotesLoaded(List<Gist> gistDiff) {
+    void onNotesLoaded(List<GistModel> gistDiff) {
         mAdapter.addGist(gistDiff, mAdapter.getItemCount(), gistDiff.size());
     }
 

@@ -5,7 +5,6 @@ import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.turlir.abakgists.allgists.AllGistsPresenter;
 import com.turlir.abakgists.network.Repository;
 import com.turlir.abakgists.notes.NotesPresenter;
-import com.turlir.abakgists.network.ApiClient;
 
 import javax.inject.Singleton;
 

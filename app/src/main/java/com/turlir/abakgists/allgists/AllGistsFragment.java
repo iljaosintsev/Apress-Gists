@@ -13,13 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.turlir.abakgists.base.App;
-import com.turlir.abakgists.di.AppComponent;
 import com.turlir.abakgists.gist.GistActivity;
 import com.turlir.abakgists.base.OnClickListener;
 import com.turlir.abakgists.R;
 import com.turlir.abakgists.base.SpaceDecorator;
 import com.turlir.abakgists.base.BaseFragment;
-import com.turlir.abakgists.model.Gist;
+import com.turlir.abakgists.model.GistModel;
 
 import java.util.List;
 
@@ -126,7 +125,7 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener {
 
     @Override
     public void onListItemClick(int position) {
-        Gist g = mAdapter.getItemByPosition(position);
+        GistModel g = mAdapter.getItemByPosition(position);
         Intent i = GistActivity.getStartIntent(getActivity(), g);
         startActivity(i);
     }
@@ -136,7 +135,7 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener {
         return "All Gists";
     }
 
-    public void onGistLoaded(List<Gist> value, int start, int count) {
+    public void onGistLoaded(List<GistModel> value, int start, int count) {
         mAdapter.addGist(value, start, count);
         mSwipe.setRefreshing(false);
     }

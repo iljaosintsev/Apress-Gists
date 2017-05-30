@@ -3,11 +3,11 @@ package com.turlir.abakgists.model;
 import org.junit.Test;
 
 
-public class GistTest {
+public class GistModelTest {
 
     @Test
     public void testEquals() {
-        Gist one = new Gist();
+        GistModel one = new GistModel();
         one.url = "url";
         one.note = null;
         one.description = null;
@@ -16,7 +16,7 @@ public class GistTest {
         one.ownerAvatarUrl = null;
         one.ownerLogin = "login";
 
-        Gist two = new Gist();
+        GistModel two = new GistModel();
         two.url = "url";
         two.note = null;
         two.description = null;

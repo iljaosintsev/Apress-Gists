@@ -14,9 +14,11 @@ import com.pushtorefresh.storio.sqlite.queries.DeleteQuery;
 import com.pushtorefresh.storio.sqlite.queries.InsertQuery;
 import com.pushtorefresh.storio.sqlite.queries.Query;
 import com.turlir.abakgists.model.Gist;
-import com.turlir.abakgists.model.GistStorIOSQLitePutResolver;
+import com.turlir.abakgists.model.GistModel;
+import com.turlir.abakgists.model.GistModelStorIOSQLitePutResolver;
 import com.turlir.abakgists.model.GistsTable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import rx.Completable;
@@ -31,45 +33,50 @@ public class Repository {
 
     private ApiClient mClient;
     private StorIOSQLite mDatabase;
-    private PutResolver<Gist> mPutResolver = new SimpleInsertResolver();
 
     public Repository(ApiClient client, StorIOSQLite base) {
         mClient = client;
         mDatabase = base;
     }
 
-    public Observable<PutResults<Gist>> loadGistsFromServerAndPutCache(int currentSize) {
+    public Observable<PutResults<GistModel>> loadGistsFromServerAndPutCache(int currentSize) {
         int page = currentSize / PAGE_SIZE + 1;
         return mClient
                 .publicGist(page)
                 .subscribeOn(Schedulers.io())
-                .map(new Func1<List<Gist>, List<Gist>>() {
+                .map(new Func1<List<Gist>, List<GistModel>>() {
                     @Override
-                    public List<Gist> call(List<Gist> gists) {
-                        for (Gist item : gists) {
+                    public List<GistModel> call(List<Gist> gists) {
+                        final int s = gists.size();
+                        List<GistModel> arr = new ArrayList<>(s);
+                        for (int i = 0; i < s; i++) {
+                            Gist item = gists.get(i);
+                            final GistModel model;
                             if (item.owner != null) {
-                                item.ownerLogin = item.owner.login;
-                                item.ownerAvatarUrl = item.owner.avatarUrl;
+                                model = new GistModel(item.id, item.url, item.created, item.description,
+                                        item.owner.login, item.owner.avatarUrl);
+                            } else {
+                                model = new GistModel(item.id, item.url, item.created, item.description);
                             }
+                            arr.add(i, model);
                         }
-                        return gists;
+                        return arr;
                     }
                 })
-                .flatMap(new Func1<List<Gist>, Observable<PutResults<Gist>>>() {
+                .flatMap(new Func1<List<GistModel>, Observable<PutResults<GistModel>>>() {
                     @Override
-                    public Observable<PutResults<Gist>> call(List<Gist> gists) {
+                    public Observable<PutResults<GistModel>> call(List<GistModel> gists) {
                         return mDatabase.put()
                                 .objects(gists)
-                                .withPutResolver(mPutResolver)
                                 .prepare()
                                 .asRxObservable();
                     }
                 });
     }
 
-    public Observable<List<Gist>> loadGistsFromCache(int currentSize) {
+    public Observable<List<GistModel>> loadGistsFromCache(int currentSize) {
         return mDatabase.get()
-                .listOfObjects(Gist.class)
+                .listOfObjects(GistModel.class)
                 .withQuery(
                         Query.builder()
                                 .table(GistsTable.GISTS)
@@ -90,36 +97,6 @@ public class Repository {
                 )
                 .prepare()
                 .asRxCompletable();
-    }
-
-    private static class SimpleInsertResolver extends GistStorIOSQLitePutResolver {
-
-        @NonNull
-        @Override
-        public PutResult performPut(@NonNull StorIOSQLite storIOSQLite, @NonNull Gist object) {
-            StorIOSQLite.LowLevel lowLevel = storIOSQLite.lowLevel();
-
-            ContentValues contentValues = mapToContentValues(object);
-            InsertQuery insertQuery = mapToInsertQuery(object);
-
-            lowLevel.beginTransaction();
-            try {
-                long insertedId = lowLevel.insertWithOnConflict(insertQuery, contentValues, SQLiteDatabase.CONFLICT_FAIL);
-                PutResult putResult = PutResult.newInsertResult(insertedId, insertQuery.table());
-                lowLevel.setTransactionSuccessful();
-
-                Log.i("DATABASE", "processed " + object.id);
-                return putResult;
-
-            } catch (SQLiteConstraintException e) {
-                return PutResult.newInsertResult(-1, insertQuery.table());
-
-            } finally {
-                lowLevel.endTransaction();
-            }
-
-        }
-
     }
 
 }
