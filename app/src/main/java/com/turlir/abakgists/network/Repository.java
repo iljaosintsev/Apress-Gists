@@ -1,21 +1,11 @@
 package com.turlir.abakgists.network;
 
-import android.content.ContentValues;
-import android.database.sqlite.SQLiteConstraintException;
-import android.database.sqlite.SQLiteDatabase;
-import android.support.annotation.NonNull;
-import android.util.Log;
-
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
-import com.pushtorefresh.storio.sqlite.operations.put.PutResolver;
-import com.pushtorefresh.storio.sqlite.operations.put.PutResult;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
 import com.pushtorefresh.storio.sqlite.queries.DeleteQuery;
-import com.pushtorefresh.storio.sqlite.queries.InsertQuery;
 import com.pushtorefresh.storio.sqlite.queries.Query;
 import com.turlir.abakgists.model.Gist;
 import com.turlir.abakgists.model.GistModel;
-import com.turlir.abakgists.model.GistModelStorIOSQLitePutResolver;
 import com.turlir.abakgists.model.GistsTable;
 
 import java.util.ArrayList;

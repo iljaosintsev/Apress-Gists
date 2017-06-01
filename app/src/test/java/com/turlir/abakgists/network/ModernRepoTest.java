@@ -54,7 +54,7 @@ import static org.junit.Assert.fail;
 public class ModernRepoTest {
 
     @Rule
-    public final DaggerMockRule<AppComponent> rule = new JUnitDaggerMockRule();
+    public final DaggerMockRule<AppComponent> rule = new DatabaseMocking();
 
     @InjectFromComponent
     private Repository _repo;
@@ -132,9 +132,9 @@ public class ModernRepoTest {
         assertEquals(0, first.size());
     }
 
-    private static class JUnitDaggerMockRule extends DaggerMockRule<AppComponent> {
+    private static class DatabaseMocking extends DaggerMockRule<AppComponent> {
 
-        JUnitDaggerMockRule() {
+        DatabaseMocking() {
             super(
                     AppComponent.class,
                     new AppModule(RuntimeEnvironment.application),

@@ -3,7 +3,6 @@ package com.turlir.abakgists.allgists;
 
 import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
 import com.turlir.abakgists.base.BasePresenter;
-import com.turlir.abakgists.model.Gist;
 import com.turlir.abakgists.model.GistModel;
 import com.turlir.abakgists.network.Repository;
 
@@ -27,6 +26,7 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
 
     /**
      * из локального кеша или сетевого запроса
+     *
      * @param currentSize текущий размер списка (для пагинации)
      */
     void loadPublicGists(final int currentSize) {

@@ -1,6 +1,5 @@
 package com.turlir.abakgists.allgists;
 
-import com.turlir.abakgists.model.Gist;
 import com.turlir.abakgists.model.GistModel;
 import com.turlir.abakgists.network.Repository;
 
