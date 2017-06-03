@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteColumn;
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteType;
@@ -55,19 +56,6 @@ public class GistModel implements Parcelable, Cloneable {
         // for storio, don`t use
     }
 
-    public GistModel(GistModel other) {
-        this(other.id, other.url, other.created, other.description);
-        if (other.note != null) {
-            note = other.note;
-        }
-        if (other.ownerLogin != null) {
-            ownerLogin = other.ownerLogin;
-        }
-        if (other.ownerAvatarUrl != null) {
-            ownerAvatarUrl = other.ownerAvatarUrl;
-        }
-    }
-
     public GistModel(@NonNull String id, @NonNull String url, @NonNull String created,
                      @Nullable String description) {
         this(id, url, created, description, null, null);
@@ -88,6 +76,20 @@ public class GistModel implements Parcelable, Cloneable {
         this.note = note;
         this.ownerLogin = ownerLogin;
         this.ownerAvatarUrl = ownerAvatarUrl;
+    }
+
+    @VisibleForTesting
+    public GistModel(GistModel other) {
+        this(other.id, other.url, other.created, other.description);
+        if (other.note != null) {
+            note = other.note;
+        }
+        if (other.ownerLogin != null) {
+            ownerLogin = other.ownerLogin;
+        }
+        if (other.ownerAvatarUrl != null) {
+            ownerAvatarUrl = other.ownerAvatarUrl;
+        }
     }
 
     private GistModel(Parcel in) {

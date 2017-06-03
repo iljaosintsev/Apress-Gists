@@ -10,6 +10,7 @@ import com.pushtorefresh.storio.sqlite.impl.DefaultStorIOSQLite;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResult;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
 import com.turlir.abakgists.BuildConfig;
+import com.turlir.abakgists.Data;
 import com.turlir.abakgists.model.Gist;
 import com.turlir.abakgists.model.GistModel;
 import com.turlir.abakgists.model.GistModelStorIOSQLiteDeleteResolver;
@@ -50,24 +51,6 @@ import static org.junit.Assert.fail;
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = Build.VERSION_CODES.LOLLIPOP, packageName = "com.turlir.abakgists")
 public class RepositoryTest {
-
-    private static final GistModel FULL_STUB = new GistModel(
-            "85547e4878dd9a573215cd905650f284",
-            "https://api.github.com/gists/85547e4878dd9a573215cd905650f284",
-            "2017-04-27T21:54:24Z",
-            "Part of setTextByParts",
-            "note",
-            "iljaosintsev",
-            "https://avatars1.githubusercontent.com/u/3526847?v=3"
-    );
-
-    private static final Gist SERVER_STUB = new Gist(
-            "85547e4878dd9a573215cd905650f284",
-            "https://api.github.com/gists/85547e4878dd9a573215cd905650f284",
-            "2017-04-27T21:54:24Z",
-            "Part of setTextByParts",
-            new GistOwner("iljaosintsev", "https://avatars1.githubusercontent.com/u/3526847?v=3")
-    );
 
     private Repository mRepo;
     private ApiClient mockApi;
@@ -124,7 +107,7 @@ public class RepositoryTest {
         assertEquals(1, events.size());
         List<GistModel> gists = events.get(0);
         assertEquals(1, gists.size());
-        assertEquals(FULL_STUB, gists.get(0));
+        assertEquals(Data.LOCAL_STUB, gists.get(0));
     }
 
     @Test
@@ -185,7 +168,7 @@ public class RepositoryTest {
 
     @Test
     public void loadOldGistsFromServerAndPutCacheTest() {
-        Gist stub = new Gist(SERVER_STUB);
+        Gist stub = new Gist(Data.SERVER_STUB);
         stub.description = "new desc";
         List<Gist> serverList = Collections.singletonList(stub);
 
@@ -211,14 +194,14 @@ public class RepositoryTest {
         }
 
         // в cacheSubs пришел новый набор результатов (второй)
-        // оба набора одинаковы, содержат один элемент - FULL_STUB
+        // оба набора одинаковы, содержат один элемент - LOCAL_STUB
         cacheSubs.assertNotCompleted();
         cacheSubs.assertValueCount(2);
         List<List<GistModel>> cacheEvents = cacheSubs.getOnNextEvents();
         List<GistModel> first = cacheEvents.get(0);
         List<GistModel> second = cacheEvents.get(1);
         assertEquals(first, second);
-        GistModel old = new GistModel(FULL_STUB);
+        GistModel old = new GistModel(Data.LOCAL_STUB);
         assertEquals(old, first.get(0));
     }
 

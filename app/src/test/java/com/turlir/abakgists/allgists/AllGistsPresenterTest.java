@@ -3,6 +3,7 @@ package com.turlir.abakgists.allgists;
 import android.os.Build;
 
 import com.turlir.abakgists.BuildConfig;
+import com.turlir.abakgists.Data;
 import com.turlir.abakgists.DatabaseMocking;
 import com.turlir.abakgists.di.AppComponent;
 import com.turlir.abakgists.model.Gist;
@@ -16,7 +17,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.ArgumentMatchers;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -44,16 +44,6 @@ import static org.mockito.Mockito.*;
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = Build.VERSION_CODES.LOLLIPOP, packageName = "com.turlir.abakgists")
 public class AllGistsPresenterTest {
-
-    private static final GistModel LOCAL_STUB = new GistModel(
-            "85547e4878dd9a573215cd905650f284",
-            "https://api.github.com/gists/85547e4878dd9a573215cd905650f284",
-            "2017-04-27T21:54:24Z",
-            "Part of setTextByParts",
-            "note",
-            "iljaosintsev",
-            "https://avatars1.githubusercontent.com/u/3526847?v=3"
-    );
 
     @Rule
     public final DaggerMockRule<AppComponent> rule = new DatabaseMocking();
@@ -104,15 +94,12 @@ public class AllGistsPresenterTest {
     @Test
     public void successFirstLoadFromCacheTest() {
         _presenter.loadPublicGists(0);
-        verify(mView).onGistLoaded(Collections.singletonList(LOCAL_STUB), 0 , 1);
+        verify(mView).onGistLoaded(Collections.singletonList(Data.LOCAL_STUB), 0 , 1);
     }
 
     @Test
     public void successLoadFromServerTest() {
-        Gist stub = new Gist("id", "url", "created", "desc");
-        List<Gist> serverList = Collections.singletonList(stub);
-        Observable<List<Gist>> serverObs = Observable.just(serverList);
-        when(_mockClient.publicGist(eq(1))).thenReturn(serverObs);
+        mockServerRequest();
 
         _presenter.loadPublicGists(1);
 
@@ -126,10 +113,7 @@ public class AllGistsPresenterTest {
 
     @Test
     public void resetGistTest() {
-        Gist stub = new Gist("id", "url", "created", "desc");
-        List<Gist> serverList = Collections.singletonList(stub);
-        Observable<List<Gist>> serverObs = Observable.just(serverList);
-        when(_mockClient.publicGist(eq(1))).thenReturn(serverObs);
+        mockServerRequest();
 
         _presenter.resetGist();
         _presenter.loadPublicGists(0); // what ?
@@ -157,6 +141,13 @@ public class AllGistsPresenterTest {
         verify(mock).loadGistsFromCache(0);
 
         verify(mockView).onGistLoaded(list, 0, 1);
+    }
+
+    private void mockServerRequest() {
+        Gist stub = new Gist("id", "url", "created", "desc");
+        List<Gist> serverList = Collections.singletonList(stub);
+        Observable<List<Gist>> serverObs = Observable.just(serverList);
+        when(_mockClient.publicGist(eq(1))).thenReturn(serverObs);
     }
 
 }
