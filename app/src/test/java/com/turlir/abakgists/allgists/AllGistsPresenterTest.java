@@ -16,6 +16,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -33,7 +34,6 @@ import rx.Scheduler;
 import rx.android.plugins.RxAndroidPlugins;
 import rx.android.plugins.RxAndroidSchedulersHook;
 import rx.functions.Func1;
-import rx.observers.TestSubscriber;
 import rx.plugins.RxJavaHooks;
 import rx.schedulers.Schedulers;
 
@@ -118,18 +118,24 @@ public class AllGistsPresenterTest {
 
         verify(_mockClient).publicGist(eq(1));
 
-        Observable<List<GistModel>> demoObs = _repo.loadGistsFromCache(0);
-        TestSubscriber<List<GistModel>> demoSubs = new TestSubscriber<>();
-        demoObs.subscribe(demoSubs);
-        demoSubs.assertNoErrors();
-        demoSubs.assertValueCount(1);
-        List<List<GistModel>> eve = demoSubs.getOnNextEvents();
-        assertEquals(2, eve.get(0).size());
-
         _presenter.loadPublicGists(0); // what ?
 
         verify(mView).onGistLoaded(mListCaptor.capture(), eq(0), eq(2));
         assertEquals(2, mListCaptor.getValue().size());
+    }
+
+    @Test
+    public void resetGistTest() {
+        Gist stub = new Gist("id", "url", "created", "desc");
+        List<Gist> serverList = Collections.singletonList(stub);
+        Observable<List<Gist>> serverObs = Observable.just(serverList);
+        when(_mockClient.publicGist(eq(1))).thenReturn(serverObs);
+
+        _presenter.resetGist();
+        _presenter.loadPublicGists(0); // what ?
+
+        verify(mView).onGistLoaded(mListCaptor.capture(), eq(0), eq(1));
+        assertEquals("id", mListCaptor.getValue().get(0).id);
     }
 
     @Test
