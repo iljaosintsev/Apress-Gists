@@ -76,6 +76,7 @@ public class RepositoryTest {
     public static void setupRxHooks() throws Throwable {
         RxJavaHooks.reset();
         RxAndroidPlugins.getInstance().reset();
+
         RxJavaHooks.setOnIOScheduler(new Func1<Scheduler, Scheduler>() {
             @Override
             public Scheduler call(Scheduler scheduler) {
@@ -177,7 +178,6 @@ public class RepositoryTest {
         cacheSubs.assertValueCount(2);
         List<List<GistModel>> cacheEvents = cacheSubs.getOnNextEvents();
         List<GistModel> second = cacheEvents.get(1);
-        assertEquals(2, second.size());
         GistModel now = second.get(1);
         GistModel stub = new GistModel("id", "url", "created", "desc", "login", "avatarurl");
         assertEquals(stub, now);

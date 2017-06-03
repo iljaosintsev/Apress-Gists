@@ -33,6 +33,7 @@ import rx.Scheduler;
 import rx.android.plugins.RxAndroidPlugins;
 import rx.android.plugins.RxAndroidSchedulersHook;
 import rx.functions.Func1;
+import rx.observers.TestSubscriber;
 import rx.plugins.RxJavaHooks;
 import rx.schedulers.Schedulers;
 
@@ -73,6 +74,9 @@ public class AllGistsPresenterTest {
 
     @BeforeClass
     public static void setup() throws Throwable {
+        RxJavaHooks.reset();
+        RxAndroidPlugins.getInstance().reset();
+
         RxJavaHooks.setOnIOScheduler(new Func1<Scheduler, Scheduler>() {
             @Override
             public Scheduler call(Scheduler scheduler) {
@@ -112,14 +116,23 @@ public class AllGistsPresenterTest {
 
         _presenter.loadPublicGists(1);
 
-        // verify(_repo).loadGistsFromServerAndPutCache(eq(1));
         verify(_mockClient).publicGist(eq(1));
 
-        verify(mView).onGistLoaded(mListCaptor.capture(), eq(1), eq(1));
-        assertEquals(1, mListCaptor.getValue().size()); //
+        Observable<List<GistModel>> demoObs = _repo.loadGistsFromCache(0);
+        TestSubscriber<List<GistModel>> demoSubs = new TestSubscriber<>();
+        demoObs.subscribe(demoSubs);
+        demoSubs.assertNoErrors();
+        demoSubs.assertValueCount(1);
+        List<List<GistModel>> eve = demoSubs.getOnNextEvents();
+        assertEquals(2, eve.get(0).size());
+
+        _presenter.loadPublicGists(0); // what ?
+
+        verify(mView).onGistLoaded(mListCaptor.capture(), eq(0), eq(2));
+        assertEquals(2, mListCaptor.getValue().size());
     }
 
-    //@Test
+    @Test
     public void successFromCache() {
         Repository mock = mock(Repository.class);
 
