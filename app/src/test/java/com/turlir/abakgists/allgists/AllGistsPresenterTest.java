@@ -1,5 +1,7 @@
 package com.turlir.abakgists.allgists;
 
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.os.Build;
 
 import com.turlir.abakgists.BuildConfig;
@@ -34,6 +36,7 @@ import rx.Scheduler;
 import rx.android.plugins.RxAndroidPlugins;
 import rx.android.plugins.RxAndroidSchedulersHook;
 import rx.functions.Func1;
+import rx.observers.TestSubscriber;
 import rx.plugins.RxJavaHooks;
 import rx.schedulers.Schedulers;
 
@@ -109,6 +112,21 @@ public class AllGistsPresenterTest {
 
         verify(mView).onGistLoaded(mListCaptor.capture(), eq(0), eq(2));
         assertEquals(2, mListCaptor.getValue().size());
+    }
+
+    @Test
+    public void failureLoadFromServerTest() {
+        Observable<List<Gist>> obs = Observable.error(new IllegalStateException("message"));
+
+        when(_mockClient.publicGist(1)).thenReturn(obs);
+
+        Context mockContext = mock(ContextWrapper.class);
+        when(mockContext.getString(anyInt())).thenReturn("string res message");
+        when(mView.getContext()).thenReturn(mockContext);
+
+        _presenter.loadPublicGists(1);
+
+        verify(mView).showError("string res message");
     }
 
     @Test
