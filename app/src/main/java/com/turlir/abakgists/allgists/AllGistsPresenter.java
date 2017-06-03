@@ -31,7 +31,7 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
      */
     void loadPublicGists(final int currentSize) {
         removeCacheSubs();
-        mCacheSubs = mRepo.loadGistsFromCache(currentSize)
+        Subscription subs = mRepo.loadGistsFromCache(currentSize)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Handler<List<GistModel>>() {
                     @Override
@@ -46,7 +46,7 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
                         }
                     }
                 });
-        addSubscription(mCacheSubs);
+        addCacheSubs(subs);
     }
 
     /**
@@ -68,15 +68,7 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
                         processError(e);
                     }
                 });
-        addSubscription(subs);
-    }
-
-    private void removeCacheSubs() {
-        if (mCacheSubs != null) {
-            if (!mCacheSubs.isUnsubscribed()) {
-                removeSubscription(mCacheSubs);
-            }
-        }
+        addCacheSubs(subs);
     }
 
     private void loadFromServer(int currentSize) {
@@ -94,5 +86,18 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
                     }
                 });
         addSubscription(subsToServer);
+    }
+
+    private void removeCacheSubs() {
+        if (mCacheSubs != null) {
+            if (!mCacheSubs.isUnsubscribed()) {
+                removeSubscription(mCacheSubs);
+            }
+        }
+    }
+
+    private void addCacheSubs(Subscription subs) {
+        mCacheSubs = subs;
+        addSubscription(mCacheSubs);
     }
 }
