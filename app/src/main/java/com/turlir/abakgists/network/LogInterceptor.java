@@ -1,8 +1,5 @@
 package com.turlir.abakgists.network;
 
-
-import android.util.Log;
-
 import java.io.IOException;
 
 import okhttp3.Interceptor;
@@ -11,6 +8,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import okio.Buffer;
+import timber.log.Timber;
 
 public class LogInterceptor implements Interceptor {
 
@@ -47,7 +45,7 @@ public class LogInterceptor implements Interceptor {
     }
 
     private static void log(String message) {
-        Log.i("LogInterceptor", message);
+        Timber.i(message);
     }
 
 }

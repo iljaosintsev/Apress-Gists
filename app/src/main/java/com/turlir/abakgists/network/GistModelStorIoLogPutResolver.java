@@ -4,13 +4,14 @@ import android.content.ContentValues;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResult;
 import com.pushtorefresh.storio.sqlite.queries.InsertQuery;
 import com.turlir.abakgists.model.GistModel;
 import com.turlir.abakgists.model.GistModelStorIOSQLitePutResolver;
+
+import timber.log.Timber;
 
 public class GistModelStorIoLogPutResolver extends GistModelStorIOSQLitePutResolver {
 
@@ -28,7 +29,7 @@ public class GistModelStorIoLogPutResolver extends GistModelStorIOSQLitePutResol
             PutResult putResult = PutResult.newInsertResult(insertedId, insertQuery.table());
             lowLevel.setTransactionSuccessful();
 
-            Log.i("DATABASE", "processed " + object.id);
+            Timber.i("processed %s", object.id);
             return putResult;
 
         } catch (SQLiteConstraintException e) {
