@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+    android:layout_marginRight="@dimen/activity_horizontal_margin"
+    android:orientation="vertical">
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/radio_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_half_vertical_margin"
+            android:text="Content"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
+
+        <RadioButton
+            android:id="@+id/radio_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_half_vertical_margin"
+            android:text="Error"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
+
+        <RadioButton
+            android:id="@+id/radio_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_half_vertical_margin"
+            android:text="Loading"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
+
+    </RadioGroup>
+
+    <com.turlir.abakgists.utils.SwitchLayout
+        android:id="@+id/switchLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#66ffbb33"
+        app:init="content">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="top|right"
+            android:text="Content"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="Error"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="bottom"
+            android:text="Loading"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1"/>
+
+    </com.turlir.abakgists.utils.SwitchLayout>
+
+</LinearLayout>

@@ -10,5 +10,6 @@
     <string name="save">save</string>
     <string name="desc">Description</string>
     <string name="note">Note</string>
+    <string name="switch_act">Exp switch</string>
 
 </resources>
