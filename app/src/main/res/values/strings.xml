@@ -8,5 +8,7 @@
 
     <string name="error_general">Error occurred</string>
     <string name="save">save</string>
+    <string name="desc">Description</string>
+    <string name="note">Note</string>
 
 </resources>

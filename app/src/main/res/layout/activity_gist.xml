@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -17,7 +18,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_marginBottom="8dp"
-            tools:background="@android:color/holo_red_dark" />
+            tools:background="@android:color/holo_red_dark"/>
 
         <TextView
             android:id="@+id/textView"
@@ -26,8 +27,8 @@
             android:layout_alignParentTop="true"
             android:layout_marginLeft="8dp"
             android:layout_toRightOf="@+id/iv_avatar"
-            android:text="Owner"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1" />
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1"
+            tools:text="Owner"/>
 
         <TextView
             android:id="@+id/tv_login"
@@ -38,7 +39,7 @@
             android:layout_below="@+id/textView"
             android:layout_marginTop="8dp"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-            tools:text="turlir" />
+            tools:text="turlir"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -46,15 +47,15 @@
             android:layout_below="@id/iv_avatar"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            tools:background="#4600ddff">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/iv_avatar"
                 android:layout_marginBottom="4dp"
-                android:text="Description"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1" />
+                android:text="@string/desc"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1"/>
 
             <EditText
                 android:id="@+id/et_edsc"
@@ -63,15 +64,15 @@
                 android:layout_marginBottom="8dp"
                 android:maxLines="1"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-                tools:text="Description" />
+                tools:text="Description"/>
 
             <TextView
                 android:id="@+id/textView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
-                android:text="Note"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1" />
+                android:text="@string/note"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1"/>
 
             <EditText
                 android:id="@+id/et_note"
@@ -80,13 +81,13 @@
                 android:layout_marginBottom="8dp"
                 android:maxLines="1"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-                tools:text="Long long far away" />
+                tools:text="Long long far away"/>
 
             <Button
                 android:id="@+id/btn_save"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/save" />
+                android:text="@string/save"/>
 
         </LinearLayout>
 
