@@ -79,13 +79,13 @@ public class SwitchLayout extends FrameLayout implements Switching {
     }
 
     @Override
-    protected LayoutParams generateDefaultLayoutParams() {
-        return new SwitchLayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+    public LayoutParams generateLayoutParams(AttributeSet attrs) {
+        return new SwitchLayoutParams(getContext(), attrs);
     }
 
     @Override
-    public LayoutParams generateLayoutParams(AttributeSet attrs) {
-        return new SwitchLayoutParams(getContext(), attrs);
+    protected LayoutParams generateDefaultLayoutParams() {
+        return new SwitchLayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
     }
 
     @Override
