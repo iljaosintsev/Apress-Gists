@@ -108,68 +108,24 @@ public class SwitchLayout extends FrameLayout implements Switching {
     }
 
     /**
-     * naive
-     */
-    /*private int changeGroup(int now) {
-        for (int i = 0; i < getChildCount(); i++) {
-            View child = getChildAt(i);
-            if(i != now) {
-                SwitchLayoutParams params = (SwitchLayoutParams) child.getLayoutParams();
-                int def = params.getHideVisibility();
-
-                //noinspection WrongConstant
-                child.setVisibility(*//*View.INVISIBLE*//* def);
-            } else {
-                child.setVisibility(View.VISIBLE);
-            }
-        }
-        return mIndex = now;
-    }*/
-
-    /**
      * optimize
-     */
-    /*private int changeGroup(int i) {
-        if (i < getChildCount()) {
-
-            View old = getChildAt(i);
-            old.setVisibility(View.VISIBLE);
-
-            if (i != mIndex) {
-                getChildAt(mIndex).setVisibility(View.INVISIBLE);
-            } else if (getChildCount() > 1) {
-                int t = getChildCount() - 1;
-                if (t != i) getChildAt(t).setVisibility(View.INVISIBLE);
-            }
-
-        } else {
-            View max = getChildAt(getChildCount() - 1);
-            max.setVisibility(View.INVISIBLE);
-        }
-
-        return mIndex = i;
-    }*/
-
-    /**
-     * simplify
      */
     private int changeGroup(int i) {
         if (i < getChildCount()) {
+
             View old = getChildAt(i);
             old.setVisibility(View.VISIBLE);
 
             if (i != mIndex) {
                 hideChild(mIndex);
 
-            } else if (getChildCount() - 1 != i) {
+            } else if (getChildCount() > 1) {
                 int t = getChildCount() - 1;
-                hideChild(t);
+                if (t != i) hideChild(t);
             }
 
         } else {
-            if (getChildCount() > 1) {
-                hideChild(getChildCount() - 1);
-            }
+            hideChild(getChildCount() - 1);
         }
 
         return mIndex = i;
