@@ -1,4 +1,4 @@
-package com.turlir.abakgists.di;
+package com.turlir.abakgists.network;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -6,10 +6,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.turlir.abakgists.model.GistsTable;
 
-class GistDatabaseHelper extends SQLiteOpenHelper {
+public class GistDatabaseHelper extends SQLiteOpenHelper {
 
     public GistDatabaseHelper(Context context) {
-        super(context, "gists_db", null, 1);
+        super(context, GistsTable.BASE_NAME, null, 1);
     }
 
     @Override

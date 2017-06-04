@@ -3,7 +3,7 @@ package com.turlir.abakgists.allgists;
 
 import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
 import com.turlir.abakgists.base.BasePresenter;
-import com.turlir.abakgists.model.Gist;
+import com.turlir.abakgists.model.GistModel;
 import com.turlir.abakgists.network.Repository;
 
 import java.util.List;
@@ -24,17 +24,18 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
         mRepo = repo;
     }
 
+    /**
+     * из локального кеша или сетевого запроса
+     *
+     * @param currentSize текущий размер списка (для пагинации)
+     */
     void loadPublicGists(final int currentSize) {
-        if (mCacheSubs != null) {
-            if (!mCacheSubs.isUnsubscribed()) {
-                removeSubscription(mCacheSubs);
-            }
-        }
-        mCacheSubs = mRepo.loadGistsFromCache(currentSize)
+        removeCacheSubs();
+        Subscription subs = mRepo.loadGistsFromCache(currentSize)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Handler<List<Gist>>() {
+                .subscribe(new Handler<List<GistModel>>() {
                     @Override
-                    public void onNext(List<Gist> value) {
+                    public void onNext(List<GistModel> value) {
                         Timber.d("onNext %d", value.size());
                         if (getView() != null) {
                             if (value.size() > 0) {
@@ -45,15 +46,14 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
                         }
                     }
                 });
-        addSubscription(mCacheSubs);
+        addCacheSubs(subs);
     }
 
+    /**
+     * сбросить кеш, загрузить и сохранить свежие результаты
+     */
     void resetGist() {
-        if (mCacheSubs != null) {
-            if (!mCacheSubs.isUnsubscribed()) {
-                removeSubscription(mCacheSubs);
-            }
-        }
+        removeCacheSubs();
         Subscription subs = mRepo.clearCache()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -68,15 +68,15 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
                         processError(e);
                     }
                 });
-        addSubscription(subs);
+        addCacheSubs(subs);
     }
 
     private void loadFromServer(int currentSize) {
         Subscription subsToServer = mRepo.loadGistsFromServerAndPutCache(currentSize)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<PutResults<Gist>>() {
+                .subscribe(new Action1<PutResults<GistModel>>() {
                     @Override
-                    public void call(PutResults<Gist> gistPutResults) {
+                    public void call(PutResults<GistModel> gistPutResults) {
                         Timber.d("fromServer obs %d", gistPutResults.results().size());
                     }
                 }, new Action1<Throwable>() {
@@ -86,5 +86,18 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
                     }
                 });
         addSubscription(subsToServer);
+    }
+
+    private void removeCacheSubs() {
+        if (mCacheSubs != null) {
+            if (!mCacheSubs.isUnsubscribed()) {
+                removeSubscription(mCacheSubs);
+            }
+        }
+    }
+
+    private void addCacheSubs(Subscription subs) {
+        mCacheSubs = subs;
+        addSubscription(mCacheSubs);
     }
 }

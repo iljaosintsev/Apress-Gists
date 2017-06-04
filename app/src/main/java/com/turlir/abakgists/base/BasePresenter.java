@@ -74,7 +74,7 @@ public abstract class BasePresenter<T extends BaseView> {
         e.printStackTrace();
         T view = getView();
         if (view != null) {
-            CharSequence msg = view.getContext().getText(R.string.error_general);
+            CharSequence msg = view.getContext().getString(R.string.error_general);
             view.showError(msg.toString());
         }
     }

@@ -3,7 +3,7 @@ package com.turlir.abakgists.notes;
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.queries.Query;
 import com.turlir.abakgists.base.BasePresenter;
-import com.turlir.abakgists.model.Gist;
+import com.turlir.abakgists.model.GistModel;
 import com.turlir.abakgists.model.GistsTable;
 
 import java.util.List;
@@ -25,7 +25,7 @@ public class NotesPresenter extends BasePresenter<NotesFragment> {
 
     void loadNotes() {
         addSubscription(mDatabase.get()
-                .listOfObjects(Gist.class)
+                .listOfObjects(GistModel.class)
                 .withQuery(
                         Query.builder()
                                 .table(GistsTable.GISTS)
@@ -34,10 +34,10 @@ public class NotesPresenter extends BasePresenter<NotesFragment> {
                 )
                 .prepare()
                 .asRxObservable()
-                .compose(this.<List<Gist>>defaultScheduler())
-                .subscribe(new Handler<List<Gist>>() {
+                .compose(this.<List<GistModel>>defaultScheduler())
+                .subscribe(new Handler<List<GistModel>>() {
                     @Override
-                    public void onNext(List<Gist> gist) {
+                    public void onNext(List<GistModel> gist) {
                         if (getView() != null) {
                             if (gist.size() > 0) {
                                 if (gist.size() > mLastSize) {

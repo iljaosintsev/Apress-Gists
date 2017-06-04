@@ -3,7 +3,6 @@ package com.turlir.abakgists.allgists;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,19 +10,19 @@ import android.widget.TextView;
 
 import com.turlir.abakgists.base.OnClickListener;
 import com.turlir.abakgists.R;
-import com.turlir.abakgists.model.Gist;
+import com.turlir.abakgists.model.GistModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AllGistAdapter extends RecyclerView.Adapter<AllGistAdapter.Holder> {
+import timber.log.Timber;
 
-    private static final String TAG = "AllGistAdapter";
+public class AllGistAdapter extends RecyclerView.Adapter<AllGistAdapter.Holder> {
 
     private final LayoutInflater mInflater;
     private final OnClickListener mClick;
 
-    private final List<Gist> mContent;
+    private final List<GistModel> mContent;
 
     public AllGistAdapter(Context cnt, OnClickListener clickListener) {
         mInflater = LayoutInflater.from(cnt);
@@ -49,7 +48,7 @@ public class AllGistAdapter extends RecyclerView.Adapter<AllGistAdapter.Holder> 
 
     @Override
     public void onBindViewHolder(Holder holder, int position) {
-        Gist item = mContent.get(position);
+        GistModel item = mContent.get(position);
         holder.setData(item);
     }
 
@@ -58,34 +57,34 @@ public class AllGistAdapter extends RecyclerView.Adapter<AllGistAdapter.Holder> 
         return mContent.size();
     }
 
-    public Gist getItemByPosition(int p) {
+    public GistModel getItemByPosition(int p) {
         return mContent.get(p);
     }
 
-    public void addGist(List<Gist> value, int start, int count) {
+    public void addGist(List<GistModel> value, int start, int count) {
         int l = mContent.size(); // текущий объем данных
 
         if (l <= start) { // вставка
             if (count == 1) { // одного элемента
                 mContent.add(value.get(0));
                 notifyItemInserted(start);
-                Log.i(TAG, "notifyItemInserted " + l);
+                Timber.i("notifyItemInserted " + l);
 
             } else { // множества элементов
                 mContent.addAll(value);
                 notifyItemRangeInserted(l, l + value.size());
-                Log.i(TAG, "notifyItemRangeInserted " + l + " " + (l + value.size()));
+                Timber.i("notifyItemRangeInserted " + l + " " + (l + value.size()));
             }
 
         } else if (l > start) { // обновление
             for (int i = l; i < l + count; i++) {
                 int index = i - l;
-                Gist old = mContent.get(index);
-                Gist now = value.get(index);
+                GistModel old = mContent.get(index);
+                GistModel now = value.get(index);
                 if (!now.equals(old)) {
                     mContent.set(index, now);
                     notifyItemChanged(index);
-                    Log.i(TAG, "notifyItemChanged " + index);
+                    Timber.i("notifyItemChanged " + index);
                     break;
                 }
             }
@@ -109,10 +108,10 @@ public class AllGistAdapter extends RecyclerView.Adapter<AllGistAdapter.Holder> 
 
         Holder(View itemView) {
             super(itemView);
-            Log.i(TAG, "new holder created");
+            Timber.i("new holder created");
         }
 
-        void setData(Gist item) {
+        void setData(GistModel item) {
             TextView tvId = (TextView) itemView.findViewById(R.id.item_gist_id);
             tvId.setText(String.valueOf(item.id));
 

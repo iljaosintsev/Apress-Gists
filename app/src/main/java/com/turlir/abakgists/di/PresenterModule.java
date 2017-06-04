@@ -5,7 +5,6 @@ import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.turlir.abakgists.allgists.AllGistsPresenter;
 import com.turlir.abakgists.network.Repository;
 import com.turlir.abakgists.notes.NotesPresenter;
-import com.turlir.abakgists.network.ApiClient;
 
 import javax.inject.Singleton;
 
@@ -17,13 +16,13 @@ public class PresenterModule {
 
     @Provides
     @Singleton
-    AllGistsPresenter provideAllGistsPresenter(Repository repo) {
+    public AllGistsPresenter provideAllGistsPresenter(Repository repo) {
         return new AllGistsPresenter(repo);
     }
 
     @Provides
     @Singleton
-    NotesPresenter provideNotesPresenter(StorIOSQLite database) {
+    public NotesPresenter provideNotesPresenter(StorIOSQLite database) {
         return new NotesPresenter(database);
     }
 

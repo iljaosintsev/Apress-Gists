@@ -22,18 +22,18 @@ public class AppModule {
     private final Context mContext;
 
     public AppModule(Context cnt) {
-        this.mContext = cnt;
+        mContext = cnt;
     }
 
     @Provides
     @Singleton
-    Context provideContext() {
+    public Context provideContext() {
         return mContext;
     }
 
     @Provides
     @Singleton
-    OkHttpClient provideOkHttpClient() {
+    public OkHttpClient provideOkHttpClient() {
         return new OkHttpClient.Builder()
                 .addInterceptor(new LogInterceptor())
                 .connectTimeout(5, TimeUnit.SECONDS)
@@ -42,13 +42,13 @@ public class AppModule {
 
     @Provides
     @Singleton
-    ApiClient provideApiClient(OkHttpClient okhttp) {
+    public ApiClient provideApiClient(OkHttpClient okhttp) {
         return new ApiClient(okhttp);
     }
 
     @Provides
     @Singleton
-    Repository provideRepository(ApiClient client, StorIOSQLite base) {
+    public Repository provideRepository(ApiClient client, StorIOSQLite base) {
         return new Repository(client, base);
     }
 

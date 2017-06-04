@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,22 +14,22 @@ import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.squareup.picasso.Picasso;
 import com.turlir.abakgists.R;
 import com.turlir.abakgists.base.App;
-import com.turlir.abakgists.model.Gist;
+import com.turlir.abakgists.model.GistModel;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import timber.log.Timber;
 
 public class GistActivity extends AppCompatActivity {
 
     private static final String EXTRA_GIST = "EXTRA_GIST";
-    private static final String TAG = "GistActivty";
 
     private static final EqualsSolver SOLVER = new EqualsSolver();
 
-    public static Intent getStartIntent(Context cnt, Gist data) {
+    public static Intent getStartIntent(Context cnt, GistModel data) {
         Intent i = new Intent(cnt, GistActivity.class);
         i.putExtra(EXTRA_GIST, data);
         return i;
@@ -51,7 +50,7 @@ public class GistActivity extends AppCompatActivity {
     @BindView(R.id.et_note)
     EditText note;
 
-    private Gist mContent;
+    private GistModel mContent;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,7 +73,7 @@ public class GistActivity extends AppCompatActivity {
 
         boolean isChange = SOLVER.solveDescAndNote(oldDesc, newDesc, oldNote, newNote);
         if (isChange) {
-            Log.i(TAG, "Внесены изменения, обновление БД");
+            Timber.i("Внесены изменения, обновление БД");
             mContent.description = newDesc;
             mContent.note = newNote;
             _database.put()
@@ -82,7 +81,7 @@ public class GistActivity extends AppCompatActivity {
                     .prepare()
                     .executeAsBlocking();
         } else {
-            Log.i(TAG, "Изменения не внесены");
+            Timber.i("Изменения не внесены");
         }
     }
 
