@@ -10,8 +10,8 @@
 
     <declare-styleable name="SwitchLayout_Layout">
         <attr name="hided" format="enum">
-            <enum name="gone" value="4"/>
-            <enum name="invisible" value="8"/>
+            <enum name="invisible" value="4"/>
+            <enum name="gone" value="8"/>
         </attr>
     </declare-styleable>
 

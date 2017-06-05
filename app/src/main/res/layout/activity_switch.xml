@@ -98,16 +98,23 @@
     <com.turlir.abakgists.utils.SwitchLayout
         android:id="@+id/switchLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="#66ffbb33"
-        app:init="loading">
+        app:init="error">
 
-        <TextView
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="top|right"
-            android:text="Content"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1"/>
+            android:layout_height="250dp"
+            app:hided="gone">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="top|right"
+                android:text="Content"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1"/>
+
+        </ScrollView>
 
         <TextView
             android:layout_width="match_parent"
