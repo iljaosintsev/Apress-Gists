@@ -8,42 +8,99 @@
     android:layout_marginRight="@dimen/activity_horizontal_margin"
     android:orientation="vertical">
 
-    <RadioGroup
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-        <RadioButton
-            android:id="@+id/radio_content"
+        <RadioGroup
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <RadioButton
+                android:id="@+id/radio_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_half_vertical_margin"
+                android:text="Content"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
+
+            <RadioButton
+                android:id="@+id/radio_error"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_half_vertical_margin"
+                android:text="Error"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
+
+            <RadioButton
+                android:id="@+id/radio_loading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_half_vertical_margin"
+                android:text="Loading"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
+
+        </RadioGroup>
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/activity_half_vertical_margin"
-            android:text="Content"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
+            android:orientation="vertical">
 
-        <RadioButton
-            android:id="@+id/radio_error"
+            <Button
+                android:id="@+id/switch_add_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Add view"/>
+
+            <Button
+                android:id="@+id/switch_remove_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Remove view"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/activity_half_vertical_margin"
-            android:text="Error"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
+            android:text="Token"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
 
-        <RadioButton
-            android:id="@+id/radio_loading"
+        <EditText
+            android:id="@+id/switch_et_token"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/activity_half_vertical_margin"
-            android:text="Loading"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:ems="5"
+            android:inputType="numberDecimal"
+            android:text="1"/>
 
-    </RadioGroup>
+        <Button
+            android:id="@+id/switch_set_token"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="set"/>
+
+    </LinearLayout>
+
 
     <com.turlir.abakgists.utils.SwitchLayout
         android:id="@+id/switchLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#66ffbb33"
-        app:init="content">
+        app:init="loading">
 
         <TextView
             android:layout_width="match_parent"

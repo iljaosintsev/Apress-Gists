@@ -4,8 +4,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.turlir.abakgists.utils.SwitchLayout;
+import com.turlir.abakgists.utils.TokenizeLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,13 +28,16 @@ public class SwitchActivity extends AppCompatActivity {
     @BindView(R.id.radio_loading)
     CompoundButton loading;
 
+    @BindView(R.id.switch_et_token)
+    EditText etToken;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_switch);
         ButterKnife.bind(this);
 
-        int c = layout.currentGroup();
+        int c = layout.currentToken();
         switch (c) {
             case SwitchLayout.CONTENT:
                 content.setChecked(true);
@@ -59,5 +65,28 @@ public class SwitchActivity extends AppCompatActivity {
                 break;
         }
     }
+
+    @OnClick(R.id.switch_add_view)
+    public void clickAddView() {
+        TextView textView = new TextView(this);
+        textView.setText(String.valueOf(layout.getChildCount() + 1));
+        textView.setTextAppearance(android.R.style.TextAppearance_Medium);
+        layout.addView(textView);
+    }
+
+    @OnClick(R.id.switch_remove_view)
+    public void clickRemoveView() {
+        if (layout.getChildCount() > 0) {
+            layout.removeViewAt(layout.getChildCount() - 1);
+        }
+    }
+
+    @OnClick(R.id.switch_set_token)
+    public void clickSetToken() {
+        String token = etToken.getText().toString();
+        Integer t = Integer.valueOf(token);
+        layout.changeToken(t);
+    }
+
 
 }

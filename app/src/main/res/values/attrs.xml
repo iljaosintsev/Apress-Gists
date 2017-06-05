@@ -1,6 +1,6 @@
 <resources>
 
-    <declare-styleable name="SwitchLayout">
+    <declare-styleable name="TokenizeLayout">
         <attr name="init" format="enum">
             <enum name="content" value="0"/>
             <enum name="error" value="1"/>
