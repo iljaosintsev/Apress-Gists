@@ -58,7 +58,14 @@ public class SwitchLayout extends FrameLayout {
             throw new IllegalStateException("getChildCount() must be between 0 and 2");
         }
         super.addView(child, index, params);
-        changeGroup(mIndex);
+
+        final int i;
+        if (index > 0) {
+            i = index;
+        } else {
+            i = getChildCount() - 1;
+        }
+        applyGroupByChild(i);
     }
 
     @Override
@@ -108,7 +115,35 @@ public class SwitchLayout extends FrameLayout {
     }
 
     /**
-     * optimize
+     * Применение группы к только-что добавленному потомку
+     */
+    private boolean applyGroupByChild(int child) {
+        if (mLastItem != null) {
+
+            if (child == mLastItem.getPosition()) {
+                showChild(child);
+                return true;
+            } else {
+                hideChild(child);
+                return false;
+            }
+
+        } else {
+
+            if (doesViewToGroup(mIndex, child)) { // mLastItem.getPosition() кэширует значение doesViewToGroup
+                mLastItem = new Setting(mIndex, child);
+                showChild(child);
+                return true;
+            } else {
+                hideChild(child);
+                return false;
+            }
+
+        }
+    }
+
+    /**
+     * Изменение группы при наличии/отсутствии потомков
      */
     private int changeGroup(int group) {
 
@@ -120,29 +155,18 @@ public class SwitchLayout extends FrameLayout {
                 int position = getChildIndexByGroup(group);
                 mLastItem = new Setting(group, position);
                 showChild(mLastItem.getPosition());
-
-                return mIndex = group;
-
-            } else { // группа не изменилась
-
-                if (getChildCount() - 1 != mLastItem.getPosition()) {
-                    hideChild(getChildCount() -1 );
-                }
-
             }
+
+            return mIndex = group; // иначе ничего не делаем
+
+        } else { // нет настроек
+
+            int index = getChildIndexByGroup(group);
+            showChild(index);
+            mLastItem = new Setting(group, index);
+
+            return mIndex = group;
         }
-
-        int indexLastView = getChildCount() - 1;
-        boolean isAccepted = doesViewToGroup(group, indexLastView);
-
-        if (isAccepted) {
-            mLastItem = new Setting(group, indexLastView);
-            showChild(indexLastView);
-        } else {
-            hideChild(indexLastView);
-        }
-
-        return mIndex = group;
     }
 
     private boolean doesViewToGroup(int group, int index) {
@@ -248,11 +272,11 @@ public class SwitchLayout extends FrameLayout {
             this.mPosition = position;
         }
 
-        public int getGroup() {
+        private int getGroup() {
             return mGroup;
         }
 
-        public int getPosition() {
+        private int getPosition() {
             return mPosition;
         }
 
