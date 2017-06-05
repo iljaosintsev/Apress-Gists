@@ -4,20 +4,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CompoundButton;
-import android.widget.RadioButton;
 
 import com.turlir.abakgists.utils.SwitchLayout;
-import com.turlir.abakgists.utils.Switching;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 
 public class SwitchActivity extends AppCompatActivity {
 
     @BindView(R.id.switchLayout)
-    Switching layout;
+    SwitchLayout layout;
 
     @BindView(R.id.radio_content)
     CompoundButton content;

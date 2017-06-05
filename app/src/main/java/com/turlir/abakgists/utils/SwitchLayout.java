@@ -18,7 +18,9 @@ import com.turlir.abakgists.R;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-public class SwitchLayout extends FrameLayout implements Switching {
+import timber.log.Timber;
+
+public class SwitchLayout extends FrameLayout {
 
     private static final int MAX_CHILD = 3;
 
@@ -28,6 +30,8 @@ public class SwitchLayout extends FrameLayout implements Switching {
             LOADING = 1 << 1;
 
     private int mIndex;
+
+    private Setting mLastItem;
 
     public SwitchLayout(@NonNull Context context) {
         this(context, null);
@@ -46,27 +50,6 @@ public class SwitchLayout extends FrameLayout implements Switching {
         } finally {
             ta.recycle();
         }
-    }
-
-    @Override
-    public void toContent() {
-        changeGroup(CONTENT);
-    }
-
-    @Override
-    public void toError() {
-        changeGroup(ERROR);
-    }
-
-    @Override
-    public void toLoading() {
-        changeGroup(LOADING);
-    }
-
-    @Override
-    @Group
-    public int currentGroup() {
-        return mIndex;
     }
 
     @Override
@@ -107,36 +90,81 @@ public class SwitchLayout extends FrameLayout implements Switching {
         changeGroup(mIndex);
     }
 
+    public void toContent() {
+        changeGroup(CONTENT);
+    }
+
+    public void toError() {
+        changeGroup(ERROR);
+    }
+
+    public void toLoading() {
+        changeGroup(LOADING);
+    }
+
+    @Group
+    public int currentGroup() {
+        return mIndex;
+    }
+
     /**
      * optimize
      */
-    private int changeGroup(int i) {
-        if (i < getChildCount()) {
+    private int changeGroup(int group) {
 
-            View old = getChildAt(i);
-            old.setVisibility(View.VISIBLE);
+        if (mLastItem != null) { // есть настройки
 
-            if (i != mIndex) {
-                hideChild(mIndex);
+            if (group != mLastItem.getGroup()) { // группа изменилась
+                hideChild(mLastItem.getPosition());
 
-            } else if (getChildCount() > 1) {
-                int t = getChildCount() - 1;
-                if (t != i) hideChild(t);
+                int position = getChildIndexByGroup(group);
+                mLastItem = new Setting(group, position);
+                showChild(mLastItem.getPosition());
+
+                return mIndex = group;
+
+            } else { // группа не изменилась
+
+                if (getChildCount() - 1 != mLastItem.getPosition()) {
+                    hideChild(getChildCount() -1 );
+                }
+
             }
-
-        } else {
-            hideChild(getChildCount() - 1);
         }
 
-        return mIndex = i;
+        int indexLastView = getChildCount() - 1;
+        boolean isAccepted = doesViewToGroup(group, indexLastView);
+
+        if (isAccepted) {
+            mLastItem = new Setting(group, indexLastView);
+            showChild(indexLastView);
+        } else {
+            hideChild(indexLastView);
+        }
+
+        return mIndex = group;
+    }
+
+    private boolean doesViewToGroup(int group, int index) {
+        return group == index;
+    }
+
+    private int getChildIndexByGroup(int group) {
+        return group;
     }
 
     private void hideChild(int i) {
+        Timber.i("hideChild %d", i);
         View child = getChildAt(i);
         ViewGroup.LayoutParams lp = child.getLayoutParams();
         int def = ((SwitchLayoutParams) lp).getHideVisibility();
         //noinspection WrongConstant
         child.setVisibility(def);
+    }
+
+    private void showChild(int i) {
+        Timber.i("showChild %d", i);
+        getChildAt(i).setVisibility(View.VISIBLE);
     }
 
     private static class SwitchLayoutParams extends FrameLayout.LayoutParams {
@@ -210,4 +238,23 @@ public class SwitchLayout extends FrameLayout implements Switching {
     @interface Group {
     }
 
+    private static class Setting {
+
+        private int mGroup;
+        private int mPosition;
+
+        Setting(int group, int position) {
+            this.mGroup = group;
+            this.mPosition = position;
+        }
+
+        public int getGroup() {
+            return mGroup;
+        }
+
+        public int getPosition() {
+            return mPosition;
+        }
+
+    }
 }
