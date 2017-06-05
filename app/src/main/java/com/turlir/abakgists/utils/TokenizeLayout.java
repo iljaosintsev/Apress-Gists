@@ -123,15 +123,13 @@ public abstract class TokenizeLayout extends FrameLayout {
     /**
      * Применение токена к только что добавленному потомку
      */
-    private boolean applyGroupByChild(int child) {
+    private void applyGroupByChild(int child) {
         if (mLastItem != null) {
 
             if (child == mLastItem.getPosition()) {
                 showChild(child);
-                return true;
             } else {
                 hideChild(child);
-                return false;
             }
 
         } else {
@@ -139,10 +137,8 @@ public abstract class TokenizeLayout extends FrameLayout {
             if (doesViewToToken(mToken, child)) {
                 mLastItem = new Setting(mToken, child);
                 showChild(child);
-                return true;
             } else {
                 hideChild(child);
-                return false;
             }
 
         }
@@ -151,7 +147,7 @@ public abstract class TokenizeLayout extends FrameLayout {
     /**
      * Изменение токена при наличии/отсутствии потомков
      */
-    private int setToken(int group) {
+    private void setToken(int group) {
         if (mLastItem != null) { // есть настройки
 
             if (group != mLastItem.getToken()) { // группа изменилась
@@ -167,8 +163,6 @@ public abstract class TokenizeLayout extends FrameLayout {
                 }
             }
 
-            return mToken = group; // иначе ничего не делаем
-
         } else { // нет настроек
 
             int index = getChildIndexByToken(group);
@@ -177,7 +171,6 @@ public abstract class TokenizeLayout extends FrameLayout {
                 mLastItem = new Setting(group, index);
             }
 
-            return mToken = group;
         }
     }
 
