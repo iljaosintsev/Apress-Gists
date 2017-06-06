@@ -8,7 +8,6 @@ import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -21,7 +20,8 @@ import timber.log.Timber;
  * Абстрактный layout для единовременного отображения только одного своего потомка.
  * Какого, решает наследник с помощью механизма токенизации.
  */
-public abstract class TokenizeLayout extends FrameLayout implements TokenSwitcher.TokenInformator {
+public abstract class TokenizeLayout extends FrameLayout
+        implements TokenSwitcher.TokenInformator, ChildDiff.ChildManipulator {
 
     public static final int INVALID_INDEX = -1;
 
@@ -104,16 +104,8 @@ public abstract class TokenizeLayout extends FrameLayout implements TokenSwitche
      * @param value новый токен
      */
     public final void changeToken(int value) {
-        Pair<Integer, Boolean>[] set = mSwitcher.setToken(value);
-        for (Pair<Integer, Boolean> r : set) {
-            if (r != null) {
-                if (r.second) {
-                    showChild(r.first);
-                } else {
-                    hideChild(r.first);
-                }
-            }
-        }
+        ChildDiff set = mSwitcher.setToken(value);
+        set.apply(this);
     }
 
     @Override
@@ -152,7 +144,8 @@ public abstract class TokenizeLayout extends FrameLayout implements TokenSwitche
         }
     }
 
-    private void hideChild(int i) {
+    @Override
+    public void hideChild(int i) {
         Timber.i("hideChild %d", i);
         View child = getChildAt(i);
         ViewGroup.LayoutParams lp = child.getLayoutParams();
@@ -161,7 +154,8 @@ public abstract class TokenizeLayout extends FrameLayout implements TokenSwitche
         child.setVisibility(def);
     }
 
-    private void showChild(int i) {
+    @Override
+    public void showChild(int i) {
         Timber.i("showChild %d", i);
         getChildAt(i).setVisibility(View.VISIBLE);
     }

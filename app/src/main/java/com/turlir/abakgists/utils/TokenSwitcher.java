@@ -1,6 +1,6 @@
 package com.turlir.abakgists.utils;
 
-import android.util.Pair;
+import android.support.annotation.NonNull;
 
 /**
  * Класс описывает логику переключения видимости потомков во ViewGroup
@@ -48,19 +48,20 @@ class TokenSwitcher {
     /**
      * @return проверить текущий набор потомков для имеющегося токена
      */
-    Pair<Integer, Boolean>[] invalidateToken() {
+    @NonNull
+    ChildDiff invalidateToken() {
         return setToken(mToken);
     }
 
     /**
      * Установить токен для уже имеющихся потомков
      * @param group токен
-     * @return набор размерности 2 diff инструкций по отображению/скрытию определенных потомков.
-     * Элементы набора могут быть null
+     * @return объект, описывающий изменение видимости потомков
      */
-    Pair<Integer, Boolean>[] setToken(int group) {
+    @NonNull
+    ChildDiff setToken(int group) {
 
-        Pair<Integer, Boolean>[] arr = new Pair[2];
+        ChildDiff.Builder builder = new ChildDiff.Builder();
 
         if (mLastItem != null) { // есть настройки
 
@@ -68,13 +69,13 @@ class TokenSwitcher {
 
                 if (mInformator.getChildCount() > mLastItem.getPosition()
                         && mLastItem.getPosition() > TokenizeLayout.INVALID_INDEX) {
-                    arr[0] = new Pair<>(mLastItem.getPosition(), false);
+                    builder.hide(mLastItem.getPosition());
                 }
 
                 int index = mInformator.getChildIndexByToken(group);
                 mLastItem = new Setting(group, index);
                 if (index != TokenizeLayout.INVALID_INDEX) {
-                    arr[1] = new Pair<>(index, true);
+                    builder.show(index);
                 }
             }
 
@@ -83,12 +84,12 @@ class TokenSwitcher {
             int index = mInformator.getChildIndexByToken(group);
             if (index != TokenizeLayout.INVALID_INDEX) {
                 mLastItem = new Setting(group, index);
-                arr[0] = new Pair<>(index, true);
+                builder.show(index);
             }
 
         }
 
-        return arr;
+        return builder.build();
     }
 
     /**
