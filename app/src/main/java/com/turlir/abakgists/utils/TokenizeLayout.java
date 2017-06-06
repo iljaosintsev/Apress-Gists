@@ -8,6 +8,7 @@ import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -16,13 +17,15 @@ import com.turlir.abakgists.R;
 
 import timber.log.Timber;
 
-public abstract class TokenizeLayout extends FrameLayout {
+/**
+ * Абстрактный layout для единовременного отображения только одного своего потомка.
+ * Какого, решает наследник с помощью механизма токенизации.
+ */
+public abstract class TokenizeLayout extends FrameLayout implements TokenSwitcher.TokenInformator {
 
     public static final int INVALID_INDEX = -1;
 
-    private int mToken;
-
-    private Setting mLastItem;
+    private TokenSwitcher mSwitcher;
 
     public TokenizeLayout(@NonNull Context context) {
         this(context, null);
@@ -37,7 +40,8 @@ public abstract class TokenizeLayout extends FrameLayout {
 
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.TokenizeLayout, 0, 0);
         try {
-            mToken = ta.getInteger(R.styleable.TokenizeLayout_init, 0);
+            int token = ta.getInteger(R.styleable.TokenizeLayout_init, 0);
+            mSwitcher = new TokenSwitcher(token, this);
         } finally {
             ta.recycle();
         }
@@ -84,25 +88,41 @@ public abstract class TokenizeLayout extends FrameLayout {
     }
 
     @Override
-    public LayoutParams generateLayoutParams(AttributeSet attrs) {
+    public SwitchLayoutParams generateLayoutParams(AttributeSet attrs) {
         return new SwitchLayoutParams(getContext(), attrs);
     }
 
+    /**
+     * @return текущий токен, по-умолчанию 0
+     */
     public final int currentToken() {
-        return mToken;
+        return mSwitcher.currentToken();
     }
 
+    /**
+     * Изменение токена при наличии/отсутствии потомков
+     * @param value новый токен
+     */
     public final void changeToken(int value) {
-        setToken(value);
+        Pair<Integer, Boolean>[] set = mSwitcher.setToken(value);
+        for (Pair<Integer, Boolean> r : set) {
+            if (r != null) {
+                if (r.second) {
+                    showChild(r.first);
+                } else {
+                    hideChild(r.first);
+                }
+            }
+        }
     }
 
     @Override
-    protected LayoutParams generateDefaultLayoutParams() {
+    protected SwitchLayoutParams generateDefaultLayoutParams() {
         return new SwitchLayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
     }
 
     @Override
-    protected ViewGroup.LayoutParams generateLayoutParams(ViewGroup.LayoutParams lp) {
+    protected SwitchLayoutParams generateLayoutParams(ViewGroup.LayoutParams lp) {
         return generateDefaultLayoutParams();
     }
 
@@ -117,60 +137,18 @@ public abstract class TokenizeLayout extends FrameLayout {
         super.onRestoreInstanceState(state);
         SwitchLayoutState now = (SwitchLayoutState) state;
         now.apply(this);
-        setToken(mToken);
+        mSwitcher.invalidateToken();
     }
 
     /**
      * Применение токена к только что добавленному потомку
      */
     private void applyGroupByChild(int child) {
-        if (mLastItem != null) {
-
-            if (child == mLastItem.getPosition()) {
-                showChild(child);
-            } else {
-                hideChild(child);
-            }
-
+        boolean isVisible = mSwitcher.applyGroupByChild(child);
+        if (isVisible) {
+            showChild(child);
         } else {
-
-            if (doesViewToToken(mToken, child)) {
-                mLastItem = new Setting(mToken, child);
-                showChild(child);
-            } else {
-                hideChild(child);
-            }
-
-        }
-    }
-
-    /**
-     * Изменение токена при наличии/отсутствии потомков
-     */
-    private void setToken(int group) {
-        if (mLastItem != null) { // есть настройки
-
-            if (group != mLastItem.getToken()) { // группа изменилась
-
-                if (getChildCount() > mLastItem.getPosition() && mLastItem.getPosition() > INVALID_INDEX) {
-                    hideChild(mLastItem.getPosition());
-                }
-
-                int position = getChildIndexByToken(group);
-                mLastItem = new Setting(group, position);
-                if (position != INVALID_INDEX) {
-                    showChild(mLastItem.getPosition());
-                }
-            }
-
-        } else { // нет настроек
-
-            int index = getChildIndexByToken(group);
-            if (index != INVALID_INDEX) {
-                showChild(index);
-                mLastItem = new Setting(group, index);
-            }
-
+            hideChild(child);
         }
     }
 
@@ -232,7 +210,7 @@ public abstract class TokenizeLayout extends FrameLayout {
 
         private SwitchLayoutState(Parcelable in, TokenizeLayout layout) {
             super(in);
-            index = layout.mToken;
+            index = layout.mSwitcher.currentToken();
         }
 
         private SwitchLayoutState(Parcel source) {
@@ -247,31 +225,9 @@ public abstract class TokenizeLayout extends FrameLayout {
         }
 
         private void apply(TokenizeLayout layout) {
-            layout.mToken = index;
+            layout.mSwitcher = new TokenSwitcher(index, layout);
         }
 
     }
 
-    /**
-     * Олицетворяет пару токен против позиция вью, которой он принадлежит
-     * Служит для кеширования значения и удобного манипулирования значением {@link #getChildIndexByToken(int)}
-     */
-    private static class Setting {
-
-        private final int mToken, mPosition;
-
-        Setting(int token, int position) {
-            mToken = token;
-            mPosition = position;
-        }
-
-        private int getToken() {
-            return mToken;
-        }
-
-        private int getPosition() {
-            return mPosition;
-        }
-
-    }
 }
