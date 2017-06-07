@@ -1,28 +1,38 @@
 package com.turlir.abakgists.utils;
 
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class TokenSwitcherTest {
 
+    @Mock
+    ChildDiff.ChildManipulator man;
+
+    @Mock
+    TokenSwitcher.TokenInformator inf;
+
     private TokenSwitcher mSwitcher;
+
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+        mSwitcher = new TokenSwitcher(0, inf);
+    }
 
     //<editor-fold desc="ApplyGroup">
 
     @Test
     public void applyGroupByChild_BySingleChild_DoesToken_Test() {
-        TokenSwitcher.TokenInformator inf = mock(TokenSwitcher.TokenInformator.class);
-        mSwitcher = new TokenSwitcher(0, inf);
-
         when(inf.doesViewToToken(0, 0)).thenReturn(true);
         boolean b = mSwitcher.applyGroupByChild(0);
         assertTrue(b);
@@ -30,9 +40,6 @@ public class TokenSwitcherTest {
 
     @Test
     public void applyGroupByChild_BySingleChild_NotDoesToken_Test() {
-        TokenSwitcher.TokenInformator inf = mock(TokenSwitcher.TokenInformator.class);
-        mSwitcher = new TokenSwitcher(0, inf);
-
         when(inf.doesViewToToken(0, 0)).thenReturn(false);
         boolean b = mSwitcher.applyGroupByChild(0);
         assertFalse(b);
@@ -40,9 +47,6 @@ public class TokenSwitcherTest {
 
     @Test
     public void applyGroupChild_BySecondChild_NotEquals_Test() {
-        TokenSwitcher.TokenInformator inf = mock(TokenSwitcher.TokenInformator.class);
-        mSwitcher = new TokenSwitcher(0, inf);
-
         when(inf.doesViewToToken(0, 0)).thenReturn(true);
         boolean b = mSwitcher.applyGroupByChild(0);
         assertTrue(b);
@@ -59,13 +63,9 @@ public class TokenSwitcherTest {
      */
     @Test
     public void setToken_FistTime_ThereChild_Test() {
-        TokenSwitcher.TokenInformator inf = mock(TokenSwitcher.TokenInformator.class);
-        mSwitcher = new TokenSwitcher(0, inf);
-
         when(inf.getChildIndexByToken(0)).thenReturn(0);
         ChildDiff diff = mSwitcher.setToken(0);
 
-        ChildDiff.ChildManipulator man = mock(ChildDiff.ChildManipulator.class);
         diff.apply(man);
 
         verify(man).showChild(0);
@@ -79,13 +79,9 @@ public class TokenSwitcherTest {
      */
     @Test
     public void setToken_FistTime_NoChild_Test() {
-        TokenSwitcher.TokenInformator inf = mock(TokenSwitcher.TokenInformator.class);
-        mSwitcher = new TokenSwitcher(0, inf);
-
         when(inf.getChildIndexByToken(1)).thenReturn(TokenizeLayout.INVALID_INDEX);
         ChildDiff diff = mSwitcher.setToken(1); // пустой diff
 
-        ChildDiff.ChildManipulator man = mock(ChildDiff.ChildManipulator.class);
         diff.apply(man);
 
         verify(man, never()).hideChild(anyInt());
@@ -103,15 +99,10 @@ public class TokenSwitcherTest {
      */
     @Test
     public void setToken_TokenNotChange_Test() {
-        TokenSwitcher.TokenInformator inf = mock(TokenSwitcher.TokenInformator.class);
-        mSwitcher = new TokenSwitcher(0, inf);
-
-        when(inf.getChildIndexByToken(0)).thenReturn(0);
-        mSwitcher.setToken(0);
+        setTokenZero();
 
         ChildDiff diff = mSwitcher.setToken(0);
 
-        ChildDiff.ChildManipulator man = mock(ChildDiff.ChildManipulator.class);
         diff.apply(man);
 
         verify(man, never()).hideChild(anyInt());
@@ -125,17 +116,12 @@ public class TokenSwitcherTest {
      */
     @Test
     public void setToken_WithOld_WitTarget_Test() {
-        TokenSwitcher.TokenInformator inf = mock(TokenSwitcher.TokenInformator.class);
-        mSwitcher = new TokenSwitcher(0, inf);
-
-        when(inf.getChildIndexByToken(0)).thenReturn(0);
-        mSwitcher.setToken(0);
+        setTokenZero();
         //
         when(inf.getChildCount()).thenReturn(2);
         when(inf.getChildIndexByToken(1)).thenReturn(1);
         ChildDiff diff = mSwitcher.setToken(1);
 
-        ChildDiff.ChildManipulator man = mock(ChildDiff.ChildManipulator.class);
         diff.apply(man);
 
         verify(man).hideChild(0);
@@ -149,9 +135,6 @@ public class TokenSwitcherTest {
      */
     @Test
     public void setToken_WithoutOld_WitTarget_Test() {
-        TokenSwitcher.TokenInformator inf = mock(TokenSwitcher.TokenInformator.class);
-        mSwitcher = new TokenSwitcher(0, inf);
-
         when(inf.getChildIndexByToken(0)).thenReturn(2); // 0, 1, 2 - три потомка
         mSwitcher.setToken(0);
         //
@@ -159,7 +142,6 @@ public class TokenSwitcherTest {
         when(inf.getChildIndexByToken(1)).thenReturn(1); // 0, 1 - два потомка
         ChildDiff diff = mSwitcher.setToken(1);
 
-        ChildDiff.ChildManipulator man = mock(ChildDiff.ChildManipulator.class);
         diff.apply(man);
 
         verify(man).showChild(1);
@@ -173,17 +155,12 @@ public class TokenSwitcherTest {
      */
     @Test
     public void setToken_WithOld_WithoutTarget_Test() {
-        TokenSwitcher.TokenInformator inf = mock(TokenSwitcher.TokenInformator.class);
-        mSwitcher = new TokenSwitcher(0, inf);
-
-        when(inf.getChildIndexByToken(0)).thenReturn(0);
-        mSwitcher.setToken(0);
+        setTokenZero();
         //
         when(inf.getChildCount()).thenReturn(1);
         when(inf.getChildIndexByToken(1)).thenReturn(TokenizeLayout.INVALID_INDEX);
         ChildDiff diff = mSwitcher.setToken(1);
 
-        ChildDiff.ChildManipulator man = mock(ChildDiff.ChildManipulator.class);
         diff.apply(man);
 
         verify(man).hideChild(0);
@@ -197,16 +174,12 @@ public class TokenSwitcherTest {
      */
     @Test
     public void setToken_withoutAny_Test() {
-        TokenSwitcher.TokenInformator inf = mock(TokenSwitcher.TokenInformator.class);
-        mSwitcher = new TokenSwitcher(0, inf);
-
         when(inf.getChildIndexByToken(1)).thenReturn(1); // было > 0 элементов
         mSwitcher.setToken(1);
         //
         when(inf.getChildCount()).thenReturn(0); // стало 0
         ChildDiff diff = mSwitcher.setToken(0);
 
-        ChildDiff.ChildManipulator man = mock(ChildDiff.ChildManipulator.class);
         diff.apply(man);
 
         verify(man, never()).hideChild(anyInt()); // ничего не сработало
@@ -219,11 +192,7 @@ public class TokenSwitcherTest {
      */
     @Test
     public void setToken_afterHided_and_NotShowing_Test() {
-        TokenSwitcher.TokenInformator inf = mock(TokenSwitcher.TokenInformator.class);
-        mSwitcher = new TokenSwitcher(0, inf);
-
-        when(inf.getChildIndexByToken(0)).thenReturn(0);
-        mSwitcher.setToken(0);
+        setTokenZero();
         //
         when(inf.getChildCount()).thenReturn(1);
         when(inf.getChildIndexByToken(1)).thenReturn(TokenizeLayout.INVALID_INDEX);
@@ -234,10 +203,14 @@ public class TokenSwitcherTest {
         when(inf.getChildIndexByToken(1)).thenReturn(1);
         ChildDiff diff = mSwitcher.setToken(1);
 
-        ChildDiff.ChildManipulator man = mock(ChildDiff.ChildManipulator.class);
         diff.apply(man);
 
         verify(man).showChild(1);
+    }
+
+    private void setTokenZero() {
+        when(inf.getChildIndexByToken(0)).thenReturn(0);
+        mSwitcher.setToken(0);
     }
 
 }
