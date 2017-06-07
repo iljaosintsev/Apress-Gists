@@ -2,6 +2,7 @@ package com.turlir.abakgists.utils;
 
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -67,14 +68,16 @@ public class TokenSwitcherTest {
         TokenSwitcher.TokenInformator inf = mock(TokenSwitcher.TokenInformator.class);
         mSwitcher = new TokenSwitcher(0, inf);
 
-        when(inf.getChildIndexByToken(0)).thenReturn(TokenizeLayout.INVALID_INDEX);
-        ChildDiff diff = mSwitcher.setToken(0); // пустой diff
+        when(inf.getChildIndexByToken(1)).thenReturn(TokenizeLayout.INVALID_INDEX);
+        ChildDiff diff = mSwitcher.setToken(1); // пустой diff
 
         ChildDiff.ChildManipulator man = mock(ChildDiff.ChildManipulator.class);
         diff.apply(man);
 
         verify(man, never()).hideChild(anyInt());
         verify(man, never()).showChild(anyInt());
+
+        assertEquals(1, mSwitcher.currentToken());
     }
 
 }

@@ -8,7 +8,7 @@ import android.support.annotation.NonNull;
 class TokenSwitcher {
 
     private Setting mLastItem;
-    private final int mToken;
+    private int mToken;
     private final TokenInformator mInformator;
 
     TokenSwitcher(int token, TokenInformator informator) {
@@ -55,25 +55,25 @@ class TokenSwitcher {
 
     /**
      * Установить токен для уже имеющихся потомков
-     * @param group токен
+     * @param token токен
      * @return объект, описывающий изменение видимости потомков
      */
     @NonNull
-    ChildDiff setToken(int group) {
+    ChildDiff setToken(int token) {
 
         ChildDiff.Builder builder = new ChildDiff.Builder();
 
         if (mLastItem != null) { // есть настройки
 
-            if (group != mLastItem.getToken()) { // группа изменилась
+            if (token != mLastItem.getToken()) { // группа изменилась
 
                 if (mInformator.getChildCount() > mLastItem.getPosition()
                         && mLastItem.getPosition() > TokenizeLayout.INVALID_INDEX) {
                     builder.hide(mLastItem.getPosition());
                 }
 
-                int index = mInformator.getChildIndexByToken(group);
-                mLastItem = new Setting(group, index);
+                int index = mInformator.getChildIndexByToken(token);
+                mLastItem = new Setting(token, index);
                 if (index != TokenizeLayout.INVALID_INDEX) {
                     builder.show(index);
                 }
@@ -81,14 +81,15 @@ class TokenSwitcher {
 
         } else { // нет настроек
 
-            int index = mInformator.getChildIndexByToken(group);
+            int index = mInformator.getChildIndexByToken(token);
             if (index != TokenizeLayout.INVALID_INDEX) {
-                mLastItem = new Setting(group, index);
+                mLastItem = new Setting(token, index);
                 builder.show(index);
             }
 
         }
 
+        mToken = token;
         return builder.build();
     }
 
