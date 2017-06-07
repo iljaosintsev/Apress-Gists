@@ -65,17 +65,20 @@ class TokenSwitcher {
 
         if (mLastItem != null) { // есть настройки
 
-            if (token != mLastItem.getToken()) { // группа изменилась
+            if (token != mToken) { // токен изменился
 
-                if (mInformator.getChildCount() > mLastItem.getPosition()
-                        && mLastItem.getPosition() > TokenizeLayout.INVALID_INDEX) {
+                int cc = mInformator.getChildCount();
+                if (cc > mLastItem.getPosition() && mLastItem.getPosition() > TokenizeLayout.INVALID_INDEX) {
                     builder.hide(mLastItem.getPosition());
                 }
 
-                int index = mInformator.getChildIndexByToken(token);
-                mLastItem = new Setting(token, index);
-                if (index != TokenizeLayout.INVALID_INDEX) {
-                    builder.show(index);
+                if (cc > 0) {
+                    int index = mInformator.getChildIndexByToken(token);
+                    mLastItem = new Setting(token, index);
+                    if (index != TokenizeLayout.INVALID_INDEX) {
+                        builder.show(index);
+                        mToken = token;
+                    }
                 }
             }
 
@@ -87,9 +90,9 @@ class TokenSwitcher {
                 builder.show(index);
             }
 
+            mToken = token;
         }
 
-        mToken = token;
         return builder.build();
     }
 
