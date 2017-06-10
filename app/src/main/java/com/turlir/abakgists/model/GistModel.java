@@ -8,9 +8,11 @@ import android.support.annotation.VisibleForTesting;
 
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteColumn;
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteType;
+import com.turlir.abakgists.allgists.TypesFactory;
+import com.turlir.abakgists.allgists.ViewModel;
 
 @StorIOSQLiteType(table = GistsTable.GISTS)
-public class GistModel implements Parcelable, Cloneable {
+public class GistModel extends ViewModel implements Parcelable, Cloneable {
 
     @StorIOSQLiteColumn(name = GistsTable.ID, key = true)
     @NonNull
@@ -99,6 +101,11 @@ public class GistModel implements Parcelable, Cloneable {
         created = in.readString();
         ownerLogin = in.readString();
         ownerAvatarUrl = in.readString();
+    }
+
+    @Override
+    public int type(TypesFactory factory) {
+        return factory.type(this);
     }
 
     @Override

@@ -78,7 +78,7 @@ public class NotesFragment extends BaseFragment implements OnClickListener {
 
     @Override
     public void onListItemClick(int position) {
-        GistModel item = mAdapter.getItemByPosition(position);
+        GistModel item = mAdapter.getGistByPosition(position);
         Intent i = GistActivity.getStartIntent(getContext(), item);
         startActivity(i);
     }

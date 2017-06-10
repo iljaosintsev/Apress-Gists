@@ -2,11 +2,11 @@ package com.turlir.abakgists.allgists;
 
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.turlir.abakgists.base.OnClickListener;
 import com.turlir.abakgists.R;
@@ -17,23 +17,33 @@ import java.util.List;
 
 import timber.log.Timber;
 
-public class AllGistAdapter extends RecyclerView.Adapter<AllGistAdapter.Holder> {
+public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
 
     private final LayoutInflater mInflater;
     private final OnClickListener mClick;
 
-    private final List<GistModel> mContent;
+    private final TypesFactory mFactory;
+    private final List<ViewModel> mContent;
 
     public AllGistAdapter(Context cnt, OnClickListener clickListener) {
         mInflater = LayoutInflater.from(cnt);
         mClick = clickListener;
         mContent = new ArrayList<>();
+
+        mFactory = new TypesFactory();
     }
 
     @Override
-    public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public int getItemViewType(int position) {
+        mContent.get(position).type(mFactory);
+        return super.getItemViewType(position);
+    }
+
+    @Override
+    public ModelViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.item_gist, parent, false);
-        final Holder holder = new Holder(view);
+
+        final ModelViewHolder holder = mFactory.holder(viewType, view);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -43,13 +53,15 @@ public class AllGistAdapter extends RecyclerView.Adapter<AllGistAdapter.Holder> 
                 }
             }
         });
+
         return holder;
     }
 
     @Override
-    public void onBindViewHolder(Holder holder, int position) {
-        GistModel item = mContent.get(position);
-        holder.setData(item);
+    public void onBindViewHolder(ModelViewHolder holder, int position) {
+        ViewModel item = mContent.get(position);
+        //noinspection unchecked
+        holder.bind(item);
     }
 
     @Override
@@ -57,8 +69,14 @@ public class AllGistAdapter extends RecyclerView.Adapter<AllGistAdapter.Holder> 
         return mContent.size();
     }
 
-    public GistModel getItemByPosition(int p) {
+    public ViewModel getItemByPosition(int p) {
         return mContent.get(p);
+    }
+
+    @Nullable
+    public GistModel getGistByPosition(int p) {
+        ViewModel item = getItemByPosition(p);
+        return mFactory.instance(item, GistModel.class);
     }
 
     public void addGist(List<GistModel> value, int start, int count) {
@@ -79,9 +97,9 @@ public class AllGistAdapter extends RecyclerView.Adapter<AllGistAdapter.Holder> 
         } else if (l > start) { // обновление
             for (int i = l; i < l + count; i++) {
                 int index = i - l;
-                GistModel old = mContent.get(index);
+                GistModel old = getGistByPosition(index);
                 GistModel now = value.get(index);
-                if (!now.equals(old)) {
+                if (old != null && !now.equals(old)) {
                     mContent.set(index, now);
                     notifyItemChanged(index);
                     Timber.i("notifyItemChanged " + index);
@@ -102,26 +120,6 @@ public class AllGistAdapter extends RecyclerView.Adapter<AllGistAdapter.Holder> 
         int c = getItemCount();
         mContent.clear();
         notifyItemRangeRemoved(0, c);
-    }
-
-    static class Holder extends RecyclerView.ViewHolder {
-
-        Holder(View itemView) {
-            super(itemView);
-            Timber.i("new holder created");
-        }
-
-        void setData(GistModel item) {
-            TextView tvId = (TextView) itemView.findViewById(R.id.item_gist_id);
-            tvId.setText(String.valueOf(item.id));
-
-            TextView tvCreated = (TextView) itemView.findViewById(R.id.item_gist_created);
-            tvCreated.setText(item.created);
-
-            TextView tvDesc = (TextView) itemView.findViewById(R.id.item_gist_desc);
-            tvDesc.setText(item.description);
-        }
-
     }
 
 }

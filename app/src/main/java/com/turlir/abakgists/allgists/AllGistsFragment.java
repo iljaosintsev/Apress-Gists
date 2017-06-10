@@ -130,9 +130,11 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener {
 
     @Override
     public void onListItemClick(int position) {
-        GistModel g = mAdapter.getItemByPosition(position);
-        Intent i = GistActivity.getStartIntent(getActivity(), g);
-        startActivity(i);
+        GistModel g = mAdapter.getGistByPosition(position);
+        if (g != null) {
+            Intent i = GistActivity.getStartIntent(getActivity(), g);
+            startActivity(i);
+        }
     }
 
     @Override
