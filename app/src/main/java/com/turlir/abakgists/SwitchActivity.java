@@ -8,7 +8,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.turlir.abakgists.utils.SwitchLayout;
-import com.turlir.abakgists.utils.TokenizeLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

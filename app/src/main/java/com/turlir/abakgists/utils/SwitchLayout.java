@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 
+import com.turlir.tokenizelayout.TokenizeLayout;
+
 public class SwitchLayout extends TokenizeLayout {
 
     public static final int

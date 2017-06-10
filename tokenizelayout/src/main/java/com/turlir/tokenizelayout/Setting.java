@@ -1,4 +1,4 @@
-package com.turlir.abakgists.utils;
+package com.turlir.tokenizelayout;
 
 /**
  * Олицетворяет пару токен против позиция вью, которой он принадлежит

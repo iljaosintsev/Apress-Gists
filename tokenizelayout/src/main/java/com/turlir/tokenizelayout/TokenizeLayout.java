@@ -1,4 +1,4 @@
-package com.turlir.abakgists.utils;
+package com.turlir.tokenizelayout;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -11,10 +11,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-
-import com.turlir.abakgists.R;
-
-import timber.log.Timber;
 
 /**
  * Абстрактный layout для единовременного отображения только одного своего потомка.
@@ -146,7 +142,6 @@ public abstract class TokenizeLayout extends FrameLayout
 
     @Override
     public void hideChild(int i) {
-        Timber.i("hideChild %d", i);
         View child = getChildAt(i);
         ViewGroup.LayoutParams lp = child.getLayoutParams();
         int def = ((SwitchLayoutParams) lp).getHideVisibility();
@@ -156,7 +151,6 @@ public abstract class TokenizeLayout extends FrameLayout
 
     @Override
     public void showChild(int i) {
-        Timber.i("showChild %d", i);
         getChildAt(i).setVisibility(View.VISIBLE);
     }
 
