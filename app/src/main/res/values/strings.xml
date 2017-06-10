@@ -12,4 +12,7 @@
     <string name="note">Note</string>
     <string name="switch_act">Exp switch</string>
 
+    <string name="in_loading">Please wait, while list loading</string>
+    <string name="main_network_error">Your network connection broken</string>
+
 </resources>

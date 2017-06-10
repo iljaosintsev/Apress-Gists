@@ -19,6 +19,7 @@ import com.turlir.abakgists.R;
 import com.turlir.abakgists.base.SpaceDecorator;
 import com.turlir.abakgists.base.BaseFragment;
 import com.turlir.abakgists.model.GistModel;
+import com.turlir.abakgists.utils.SwitchLayout;
 
 import java.util.List;
 
@@ -32,10 +33,15 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener {
     @Inject
     AllGistsPresenter _presenter;
 
+    @BindView(R.id.all_gist_switch)
+    SwitchLayout root;
+
     @BindView(R.id.recycler)
     RecyclerView recycler;
 
-    private SwipeRefreshLayout mSwipe;
+    @BindView(R.id.swipeLayout)
+    SwipeRefreshLayout swipe;
+
     private AllGistAdapter mAdapter;
     private LinearLayoutManager mLayoutManager;
 
@@ -60,9 +66,9 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener {
 
             boolean closeEdge = firstVisibleItem + visibleItemCount + 3 >= totalItemCount;
             boolean sizeNotDownload = totalItemCount > mLastDownloadedSize;
-            if (closeEdge && sizeNotDownload && !mSwipe.isRefreshing()) {
+            if (closeEdge && sizeNotDownload && !swipe.isRefreshing()) {
                 mLastDownloadedSize = totalItemCount;
-                mSwipe.setRefreshing(true);
+                swipe.setRefreshing(true);
                 loadNewPage();
             }
         }
@@ -80,8 +86,7 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener {
         View root = inflater.inflate(R.layout.fragment_all_gists, container, false);
         butterKnifeBind(root);
 
-        mSwipe = ((SwipeRefreshLayout) root);
-        mSwipe.setOnRefreshListener(mSwipeListener);
+        swipe.setOnRefreshListener(mSwipeListener);
 
         mAdapter = new AllGistAdapter(getContext(), this);
         recycler.setAdapter(mAdapter);
@@ -100,7 +105,7 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mSwipe.setRefreshing(true);
+        root.toLoading();
         loadNewPage();
     }
 
@@ -119,7 +124,8 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener {
     @Override
     public void showError(String msg) {
         super.showError(msg);
-        mSwipe.setRefreshing(false);
+        root.toError();
+        swipe.setRefreshing(false);
     }
 
     @Override
@@ -131,12 +137,13 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener {
 
     @Override
     public String toString() {
-        return "All Gists";
+        return getString(R.string.all_gists);
     }
 
     public void onGistLoaded(List<GistModel> value, int start, int count) {
+        root.toContent();
         mAdapter.addGist(value, start, count);
-        mSwipe.setRefreshing(false);
+        swipe.setRefreshing(false);
     }
 
     private void loadNewPage() {

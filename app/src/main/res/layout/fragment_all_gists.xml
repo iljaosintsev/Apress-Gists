@@ -1,16 +1,29 @@
-<android.support.v4.widget.SwipeRefreshLayout
+<com.turlir.abakgists.utils.SwitchLayout
+    android:id="@+id/all_gist_switch"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/swipeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:init="loading"
     tools:context=".allgists.AllGistsFragment">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/item_gist"/>
+        tools:context=".allgists.AllGistsFragment">
 
-</android.support.v4.widget.SwipeRefreshLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/item_gist"/>
 
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <include layout="@layout/network_error"/>
+
+    <include layout="@layout/in_loading"/>
+
+</com.turlir.abakgists.utils.SwitchLayout>
