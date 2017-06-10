@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.turlir.abakgists.base.OnClickListener;
-import com.turlir.abakgists.R;
 import com.turlir.abakgists.model.GistModel;
 
 import java.util.ArrayList;
@@ -35,16 +34,15 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        mContent.get(position).type(mFactory);
-        return super.getItemViewType(position);
+        return mContent.get(position).type(mFactory);
     }
 
     @Override
     public ModelViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.item_gist, parent, false);
+        View view = mInflater.inflate(viewType, parent, false);
 
         final ModelViewHolder holder = mFactory.holder(viewType, view);
-        view.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int position = holder.getAdapterPosition();
@@ -76,7 +74,7 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
     @Nullable
     public GistModel getGistByPosition(int p) {
         ViewModel item = getItemByPosition(p);
-        return mFactory.instance(item, GistModel.class);
+        return mFactory.instance(item);
     }
 
     public void addGist(List<GistModel> value, int start, int count) {

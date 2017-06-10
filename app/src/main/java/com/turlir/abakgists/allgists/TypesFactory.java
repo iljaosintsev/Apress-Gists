@@ -4,19 +4,18 @@ package com.turlir.abakgists.allgists;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import com.turlir.abakgists.R;
 import com.turlir.abakgists.model.GistModel;
 
 public class TypesFactory {
 
-    static final int TYPE_GIST = 0;
-
     public int type(GistModel model) {
-        return TYPE_GIST;
+        return R.layout.item_gist;
     }
 
     ModelViewHolder holder(int viewType, View view) {
         switch (viewType) {
-            case TYPE_GIST:
+            case R.layout.item_gist:
                 return new GistModelHolder(view);
 
             default:
@@ -25,8 +24,9 @@ public class TypesFactory {
     }
 
     @Nullable
-    GistModel instance(ViewModel viewModel, Class<GistModel> classz) {
-        if (viewModel.getClass() == classz) {
+    GistModel instance(ViewModel viewModel) {
+        int actual = viewModel.type(this);
+        if (actual == R.layout.item_gist) {
             return (GistModel) viewModel;
         } else {
             return null;
