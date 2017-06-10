@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+    android:layout_marginRight="@dimen/activity_horizontal_margin"
     android:orientation="vertical">
 
     <TextView
@@ -13,7 +16,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        tools:text="986fa7aa42dd456c19982cf40574c5a6" />
+        tools:text="986fa7aa42dd456c19982cf40574c5a6"/>
 
     <TextView
         android:id="@+id/item_gist_desc"
@@ -22,7 +25,7 @@
         android:layout_marginBottom="@dimen/activity_half_vertical_margin"
         android:maxLines="2"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        tools:text="desc gist for turlir" />
+        tools:text="desc gist for turlir"/>
 
     <TextView
         android:id="@+id/item_gist_created"
@@ -31,6 +34,6 @@
         android:layout_gravity="right"
         android:maxLines="1"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-        tools:text="2017-04-01T19:30:18Z" />
+        tools:text="2017-04-01T19:30:18Z"/>
 
 </LinearLayout>
