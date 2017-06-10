@@ -1,43 +1,40 @@
 package com.turlir.tokenizelayout;
 
-import android.support.v4.util.Pair;
-
-import java.util.ArrayList;
-import java.util.List;
-
 class ChildDiff {
 
-    private final List<Pair<Integer, Boolean>> mInstructions;
+    private final Pair[] mInstructions;
 
-    private ChildDiff(List<Pair<Integer, Boolean>> data) {
+    private ChildDiff(Pair[] data) {
         mInstructions = data;
     }
 
     void apply(ChildManipulator manipulator) {
-        for (Pair<Integer, Boolean> item : mInstructions) {
-            if (item.second) {
-                manipulator.showChild(item.first);
-            } else {
-                manipulator.hideChild(item.first);
+        for (Pair item : mInstructions) {
+            if (item != null) {
+                if (item.second) {
+                    manipulator.showChild(item.first);
+                } else {
+                    manipulator.hideChild(item.first);
+                }
             }
         }
     }
 
     static class Builder {
 
-        private List<Pair<Integer, Boolean>> mInstructions;
+        private Pair[] mInstructions;
 
         Builder() {
-            mInstructions = new ArrayList<>(2);
+            mInstructions = new Pair[2];
         }
 
         Builder hide(int position) {
-            mInstructions.add(new Pair<>(position, false));
+            mInstructions[0] = new Pair(position, false);
             return this;
         }
 
         Builder show(int position) {
-            mInstructions.add(new Pair<>(position, true));
+            mInstructions[1] = new Pair(position, true);
             return this;
         }
 
@@ -52,6 +49,18 @@ class ChildDiff {
         void hideChild(int i);
 
         void showChild(int i);
+
+    }
+
+    private static class Pair {
+
+        final Integer first;
+        final Boolean second;
+
+        Pair(Integer first, Boolean second) {
+            this.first = first;
+            this.second = second;
+        }
 
     }
 }
