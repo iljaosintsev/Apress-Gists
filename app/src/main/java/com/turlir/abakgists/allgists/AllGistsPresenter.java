@@ -32,16 +32,6 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
     void loadPublicGists(final int currentSize) {
         removeCacheSubs();
         Subscription subs = mRepo.loadGistsFromCache(currentSize)
-                .doOnNext(new Action1<List<GistModel>>() {
-                    @Override
-                    public void call(List<GistModel> gistModels) {
-                        try {
-                            Thread.sleep(5*1000L);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Handler<List<GistModel>>() {
                     @Override

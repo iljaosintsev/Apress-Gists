@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.turlir.abakgists.base.OnClickListener;
+import com.turlir.abakgists.model.ErrorModel;
 import com.turlir.abakgists.model.GistModel;
 
 import java.util.ArrayList;
@@ -108,16 +109,21 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
         }
     }
 
-    public void removeLastGist() {
+    public void removeLastItem() {
         int index = mContent.size() - 1;
         mContent.remove(index);
         notifyItemRemoved(index);
     }
 
-    void clearGist() {
+    void addError() {
+        int s = mContent.size();
+        mContent.add(new ErrorModel());
+        notifyItemInserted(s + 1);
+    }
+
+    void clearAll() {
         int c = getItemCount();
         mContent.clear();
         notifyItemRangeRemoved(0, c);
     }
-
 }

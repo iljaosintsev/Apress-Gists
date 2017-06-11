@@ -19,6 +19,7 @@ import com.turlir.abakgists.R;
 import com.turlir.abakgists.base.SpaceDecorator;
 import com.turlir.abakgists.base.BaseFragment;
 import com.turlir.abakgists.model.GistModel;
+import com.turlir.abakgists.base.ItemDecoration;
 import com.turlir.abakgists.utils.SwitchLayout;
 
 import java.util.List;
@@ -49,12 +50,17 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener {
             = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
         public void onRefresh() {
-            mAdapter.clearGist();
+            mAdapter.clearAll();
+            root.toLoading();
             _presenter.resetGist();
         }
     };
 
     private final RecyclerView.OnScrollListener mScrollListener = new RecyclerView.OnScrollListener() {
+
+        private static final int
+                THRESHOLD = 3,
+                MIN_COUNT = 2;
 
         private int mLastDownloadedSize;
 
@@ -64,9 +70,10 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener {
             int visibleItemCount = mLayoutManager.getChildCount();
             int totalItemCount = mLayoutManager.getItemCount();
 
-            boolean closeEdge = firstVisibleItem + visibleItemCount + 3 >= totalItemCount;
+            boolean closeEdge = firstVisibleItem + visibleItemCount + THRESHOLD >= totalItemCount;
             boolean sizeNotDownload = totalItemCount > mLastDownloadedSize;
-            if (closeEdge && sizeNotDownload && !swipe.isRefreshing()) {
+            boolean isEmpty = totalItemCount < MIN_COUNT;
+            if (closeEdge && sizeNotDownload && !swipe.isRefreshing() && !isEmpty) {
                 mLastDownloadedSize = totalItemCount;
                 swipe.setRefreshing(true);
                 loadNewPage();
@@ -93,7 +100,7 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener {
         mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recycler.setLayoutManager(mLayoutManager);
 
-        DividerItemDecoration divider = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
+        DividerItemDecoration divider = new ItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
         recycler.addItemDecoration(divider);
         recycler.addItemDecoration(new SpaceDecorator(getActivity(), R.dimen.item_offset));
 
@@ -123,9 +130,10 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener {
 
     @Override
     public void showError(String msg) {
-        super.showError(msg);
-        root.toError();
         swipe.setRefreshing(false);
+        root.toContent();
+        mAdapter.clearAll();
+        mAdapter.addError();
     }
 
     @Override

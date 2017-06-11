@@ -93,7 +93,7 @@ public class NotesFragment extends BaseFragment implements OnClickListener {
     }
 
     void onNotesDeleted() {
-        mAdapter.removeLastGist();
+        mAdapter.removeLastItem();
     }
 
 }
