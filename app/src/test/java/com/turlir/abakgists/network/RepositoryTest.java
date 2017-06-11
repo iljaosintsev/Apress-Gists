@@ -167,6 +167,25 @@ public class RepositoryTest {
     }
 
     @Test
+    public void loadFromServerAndPutCacheRoundTest() {
+        GistOwner owner = new GistOwner("login", "avatarurl");
+        Gist gist = new Gist("id", "url", "created", "desc", owner);
+        List<Gist> serverList = Collections.singletonList(gist);
+
+        Observable<List<Gist>> serverObs = Observable.just(serverList);
+        Mockito.when(mockApi.publicGist(3)).thenReturn(serverObs);
+
+        int s = 30 + 24; // 54
+        Observable<PutResults<GistModel>> obs = mRepo.loadGistsFromServerAndPutCache(s);
+        TestSubscriber<PutResults<GistModel>> subs = new TestSubscriber<>();
+        obs.subscribe(subs);
+
+        subs.assertNoErrors();
+        subs.assertValueCount(1);
+        Mockito.verify(mockApi).publicGist(Mockito.eq(3));
+    }
+
+    @Test
     public void loadOldGistsFromServerAndPutCacheTest() {
         Gist stub = new Gist(Data.SERVER_STUB);
         stub.description = "new desc";

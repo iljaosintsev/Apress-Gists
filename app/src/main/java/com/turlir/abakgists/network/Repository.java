@@ -18,7 +18,7 @@ import rx.schedulers.Schedulers;
 
 public class Repository {
 
-    private static final int PAGE_SIZE = 30;
+    private static final float PAGE_SIZE = 30;
 
     private ApiClient mClient;
     private StorIOSQLite mDatabase;
@@ -29,7 +29,7 @@ public class Repository {
     }
 
     public Observable<PutResults<GistModel>> loadGistsFromServerAndPutCache(int currentSize) {
-        int page = currentSize / PAGE_SIZE + 1;
+        int page = Math.round(currentSize / PAGE_SIZE) + 1;
         return mClient
                 .publicGist(page)
                 .subscribeOn(Schedulers.io())
@@ -51,7 +51,7 @@ public class Repository {
                 .withQuery(
                         Query.builder()
                                 .table(GistsTable.GISTS)
-                                .limit(currentSize, PAGE_SIZE)
+                                .limit(currentSize, (int) PAGE_SIZE)
                                 .build()
                 )
                 .prepare()
