@@ -85,7 +85,7 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener, S
         LinearLayoutManager lm = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recycler.setLayoutManager(lm);
 
-        DividerItemDecoration divider = new ItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
+        ItemDecoration divider = new ItemDecoration(getActivity(), ItemDecoration.VERTICAL);
         recycler.addItemDecoration(divider);
         recycler.addItemDecoration(new SpaceDecorator(getActivity(), R.dimen.item_offset));
 

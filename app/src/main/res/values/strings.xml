@@ -14,6 +14,6 @@
 
     <string name="in_loading">Please wait, while list loading</string>
     <string name="main_network_error">Your network connection broken</string>
-    <string name="inline_download">Do not worry, we download</string>
+    <string name="inline_download">Do not worry, we download next part of data</string>
 
 </resources>
