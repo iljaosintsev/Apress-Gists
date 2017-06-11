@@ -25,11 +25,11 @@ public class GistModelStorIoLogPutResolver extends GistModelStorIOSQLitePutResol
 
         lowLevel.beginTransaction();
         try {
-            long insertedId = lowLevel.insertWithOnConflict(insertQuery, contentValues, SQLiteDatabase.CONFLICT_FAIL);
+            long insertedId = lowLevel.insertWithOnConflict(insertQuery, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
             PutResult putResult = PutResult.newInsertResult(insertedId, insertQuery.table());
             lowLevel.setTransactionSuccessful();
 
-            Timber.i("processed %s", object.id);
+            if (insertedId > -1) Timber.i("processed %s", object.id);
             return putResult;
 
         } catch (SQLiteConstraintException e) {

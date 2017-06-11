@@ -15,7 +15,7 @@ public interface GistsTable {
 
     String CREATE =
             "CREATE TABLE IF NOT EXISTS " + GISTS + "( " +
-                    ID + " TEXT NOT NULL UNIQUE ON CONFLICT FAIL, " +
+                    ID + " TEXT NOT NULL UNIQUE ON CONFLICT IGNORE, " +
                     DESC + " TEXT, " +
                     URL + " TEXT NOT NULL, " +
                     CREATED + " TEXT NOT NULL, " +
