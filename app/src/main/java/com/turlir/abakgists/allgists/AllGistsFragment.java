@@ -20,6 +20,7 @@ import com.turlir.abakgists.base.SpaceDecorator;
 import com.turlir.abakgists.base.BaseFragment;
 import com.turlir.abakgists.model.GistModel;
 import com.turlir.abakgists.base.ItemDecoration;
+import com.turlir.abakgists.utils.SimpleScrollListener;
 import com.turlir.abakgists.utils.SwitchLayout;
 
 import java.util.List;
@@ -29,7 +30,9 @@ import javax.inject.Inject;
 import butterknife.BindView;
 
 
-public class AllGistsFragment extends BaseFragment implements OnClickListener {
+public class AllGistsFragment extends BaseFragment implements OnClickListener, SimpleScrollListener.Paginator {
+
+    private static final int MIN_COUNT = 2;
 
     @Inject
     AllGistsPresenter _presenter;
@@ -44,42 +47,24 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener {
     SwipeRefreshLayout swipe;
 
     private AllGistAdapter mAdapter;
-    private LinearLayoutManager mLayoutManager;
 
     private final SwipeRefreshLayout.OnRefreshListener mSwipeListener
             = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
         public void onRefresh() {
+            swipe.setRefreshing(false);
+
             mAdapter.clearAll();
             root.toLoading();
             _presenter.resetGist();
+
+            recycler.removeOnScrollListener(mScrollListener);
+            mScrollListener = new SimpleScrollListener(AllGistsFragment.this);
+            recycler.addOnScrollListener(mScrollListener);
         }
     };
 
-    private final RecyclerView.OnScrollListener mScrollListener = new RecyclerView.OnScrollListener() {
-
-        private static final int
-                THRESHOLD = 3,
-                MIN_COUNT = 2;
-
-        private int mLastDownloadedSize;
-
-        @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-            int firstVisibleItem = mLayoutManager.findFirstVisibleItemPosition();
-            int visibleItemCount = mLayoutManager.getChildCount();
-            int totalItemCount = mLayoutManager.getItemCount();
-
-            boolean closeEdge = firstVisibleItem + visibleItemCount + THRESHOLD >= totalItemCount;
-            boolean sizeNotDownload = totalItemCount > mLastDownloadedSize;
-            boolean isEmpty = totalItemCount < MIN_COUNT;
-            if (closeEdge && sizeNotDownload && !swipe.isRefreshing() && !isEmpty) {
-                mLastDownloadedSize = totalItemCount;
-                swipe.setRefreshing(true);
-                loadNewPage();
-            }
-        }
-    };
+    private RecyclerView.OnScrollListener mScrollListener;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -97,13 +82,14 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener {
 
         mAdapter = new AllGistAdapter(getContext(), this);
         recycler.setAdapter(mAdapter);
-        mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        recycler.setLayoutManager(mLayoutManager);
+        LinearLayoutManager lm = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        recycler.setLayoutManager(lm);
 
         DividerItemDecoration divider = new ItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
         recycler.addItemDecoration(divider);
         recycler.addItemDecoration(new SpaceDecorator(getActivity(), R.dimen.item_offset));
 
+        mScrollListener = new SimpleScrollListener(this);
         recycler.addOnScrollListener(mScrollListener);
 
         return root;
@@ -131,9 +117,13 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener {
     @Override
     public void showError(String msg) {
         swipe.setRefreshing(false);
-        root.toContent();
-        mAdapter.clearAll();
-        mAdapter.addError();
+        if (mAdapter.getItemCount() < MIN_COUNT) {
+            root.toContent();
+            mAdapter.clearAll();
+            mAdapter.addError();
+        } else {
+            super.showError(msg);
+        }
     }
 
     @Override
@@ -150,14 +140,35 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener {
         return getString(R.string.all_gists);
     }
 
+    ////
+    //// Paginator
+    ////
+
+    @Override
+    public boolean isRefreshing() {
+        return swipe.isRefreshing();
+    }
+
+    @Override
+    public void setRefreshing(boolean state) {
+        swipe.setRefreshing(state);
+
+    }
+
+    @Override
+    public void loadNewPage() {
+        _presenter.loadPublicGists(mAdapter.getItemCount());
+    }
+
+    @Override
+    public int minCount() {
+        return MIN_COUNT;
+    }
+
     public void onGistLoaded(List<GistModel> value, int start, int count) {
         root.toContent();
         mAdapter.addGist(value, start, count);
-        swipe.setRefreshing(false);
-    }
-
-    private void loadNewPage() {
-        _presenter.loadPublicGists(mAdapter.getItemCount());
+        setRefreshing(false);
     }
 
 }
