@@ -99,7 +99,7 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener, S
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         root.toLoading();
-        loadNewPage();
+        loadNextPage();
     }
 
     @Override
@@ -114,16 +114,13 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener, S
         _presenter.detach();
     }
 
-    @Override
-    public void showError(String msg) {
-        swipe.setRefreshing(false);
-        if (mAdapter.getItemCount() < MIN_COUNT) {
-            root.toContent();
-            mAdapter.clearAll();
-            mAdapter.addError();
-        } else {
-            super.showError(msg);
+    public void onGistLoaded(List<GistModel> value, int start, int count) {
+        root.toContent();
+        if (!isEmpty()) {
+            mAdapter.removeLastIfLoading();
         }
+        mAdapter.addGist(value, start, count);
+        setRefreshing(false);
     }
 
     @Override
@@ -136,8 +133,15 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener, S
     }
 
     @Override
-    public String toString() {
-        return getString(R.string.all_gists);
+    public void showError(String msg) {
+        swipe.setRefreshing(false);
+        if (mAdapter.getItemCount() < MIN_COUNT) {
+            root.toContent();
+            mAdapter.clearAll();
+            mAdapter.addError();
+        } else {
+            super.showError(msg);
+        }
     }
 
     ////
@@ -156,19 +160,21 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener, S
     }
 
     @Override
-    public void loadNewPage() {
+    public void loadNextPage() {
+        if (!isEmpty()) {
+            mAdapter.addLoading();
+        }
         _presenter.loadPublicGists(mAdapter.getItemCount());
     }
 
     @Override
-    public int minCount() {
-        return MIN_COUNT;
+    public boolean isEmpty() {
+        return mAdapter.getItemCount() < MIN_COUNT;
     }
 
-    public void onGistLoaded(List<GistModel> value, int start, int count) {
-        root.toContent();
-        mAdapter.addGist(value, start, count);
-        setRefreshing(false);
+    @Override
+    public String toString() {
+        return getString(R.string.all_gists);
     }
 
 }

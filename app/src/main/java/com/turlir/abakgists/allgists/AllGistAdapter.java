@@ -8,9 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.turlir.abakgists.R;
 import com.turlir.abakgists.base.OnClickListener;
 import com.turlir.abakgists.model.ErrorModel;
 import com.turlir.abakgists.model.GistModel;
+import com.turlir.abakgists.model.LoadingModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -125,5 +127,21 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
         int c = getItemCount();
         mContent.clear();
         notifyItemRangeRemoved(0, c);
+    }
+
+    public void addLoading() {
+        int s = mContent.size();
+        mContent.add(new LoadingModel());
+        notifyItemInserted(s + 1);
+    }
+
+    public void removeLastIfLoading() {
+        int i = getItemCount() - 1;
+        ViewModel last = getItemByPosition(i);
+        int type = last.type(mFactory);
+        if (type == R.layout.inline_loading) {
+            mContent.remove(i);
+            notifyItemRemoved(i);
+        }
     }
 }

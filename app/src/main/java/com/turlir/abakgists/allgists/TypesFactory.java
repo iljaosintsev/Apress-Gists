@@ -7,6 +7,7 @@ import android.view.View;
 import com.turlir.abakgists.R;
 import com.turlir.abakgists.model.ErrorModel;
 import com.turlir.abakgists.model.GistModel;
+import com.turlir.abakgists.model.LoadingModel;
 
 public class TypesFactory {
 
@@ -18,6 +19,10 @@ public class TypesFactory {
         return R.layout.network_error;
     }
 
+    public int type(LoadingModel model) {
+        return R.layout.inline_loading;
+    }
+
     ModelViewHolder holder(int viewType, View view) {
         switch (viewType) {
             case R.layout.item_gist:
@@ -25,6 +30,9 @@ public class TypesFactory {
 
             case R.layout.network_error:
                 return new ErrorModelHolder(view);
+
+            case R.layout.inline_loading:
+                return new LoadingModelHolder(view);
 
             default:
                 return null;

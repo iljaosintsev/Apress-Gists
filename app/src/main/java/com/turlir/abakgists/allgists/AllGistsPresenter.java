@@ -12,6 +12,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
+import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
@@ -40,6 +41,12 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
+                    }
+                })
+                .distinctUntilChanged(new Func2<List<GistModel>, List<GistModel>, Boolean>() {
+                    @Override
+                    public Boolean call(List<GistModel> prev, List<GistModel> now) {
+                        return prev.size() == now.size() && prev.size() == 0; // anti cycle-repeating request
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
