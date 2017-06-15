@@ -98,6 +98,11 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener, S
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
         root.toLoading();
         loadNextPage();
     }
