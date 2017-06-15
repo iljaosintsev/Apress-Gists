@@ -22,8 +22,8 @@ import com.turlir.abakgists.base.SpaceDecorator;
 import com.turlir.abakgists.base.BaseFragment;
 import com.turlir.abakgists.model.GistModel;
 import com.turlir.abakgists.base.ItemDecoration;
-import com.turlir.abakgists.utils.SimpleScrollListener;
-import com.turlir.abakgists.utils.SwitchLayout;
+import com.turlir.abakgists.widgets.SimpleScrollListener;
+import com.turlir.abakgists.widgets.SwitchLayout;
 
 import java.util.List;
 

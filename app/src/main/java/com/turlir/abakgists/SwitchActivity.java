@@ -7,7 +7,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.turlir.abakgists.utils.SwitchLayout;
+import com.turlir.abakgists.widgets.SwitchLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

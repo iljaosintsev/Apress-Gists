@@ -1,4 +1,4 @@
-<com.turlir.abakgists.utils.SwitchLayout
+<com.turlir.abakgists.widgets.SwitchLayout
     android:id="@+id/all_gist_switch"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -26,4 +26,4 @@
 
     <include layout="@layout/in_loading"/>
 
-</com.turlir.abakgists.utils.SwitchLayout>
+</com.turlir.abakgists.widgets.SwitchLayout>

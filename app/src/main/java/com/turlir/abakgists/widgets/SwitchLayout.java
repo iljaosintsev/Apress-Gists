@@ -1,4 +1,4 @@
-package com.turlir.abakgists.utils;
+package com.turlir.abakgists.widgets;
 
 import android.content.Context;
 import android.support.annotation.AttrRes;

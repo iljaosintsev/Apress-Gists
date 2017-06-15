@@ -95,7 +95,7 @@
     </LinearLayout>
 
 
-    <com.turlir.abakgists.utils.SwitchLayout
+    <com.turlir.abakgists.widgets.SwitchLayout
         android:id="@+id/switchLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -123,6 +123,6 @@
             android:text="Loading"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1"/>
 
-    </com.turlir.abakgists.utils.SwitchLayout>
+    </com.turlir.abakgists.widgets.SwitchLayout>
 
 </LinearLayout>

@@ -1,4 +1,4 @@
-package com.turlir.abakgists.utils;
+package com.turlir.abakgists.widgets;
 
 
 import android.support.v7.widget.LinearLayoutManager;
