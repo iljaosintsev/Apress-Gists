@@ -142,12 +142,12 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener, S
     @Override
     public void showError(String msg) {
         swipe.setRefreshing(false);
-        if (mAdapter.getItemCount() < MIN_COUNT) {
+        if (!isEmpty()) {
+            super.showError(msg);
+        } else {
             root.toContent();
             mAdapter.clearAll();
             mAdapter.addError();
-        } else {
-            super.showError(msg);
         }
     }
 
