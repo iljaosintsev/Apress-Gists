@@ -114,8 +114,8 @@ public class GistModel extends ViewModel implements Parcelable, Cloneable {
         dest.writeString(id);
         dest.writeString(description);
         dest.writeString(created);
+        dest.writeString(ownerLogin);
         dest.writeString(ownerAvatarUrl);
-        dest.writeString(created);
     }
 
     @Override
