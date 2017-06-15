@@ -20,6 +20,10 @@ class ChildDiff {
         }
     }
 
+    boolean isEmpty() {
+        return mInstructions[0] == null && mInstructions[1] == null;
+    }
+
     static class Builder {
 
         private Pair[] mInstructions;

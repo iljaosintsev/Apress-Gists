@@ -15,6 +15,8 @@ public class ChildDiffBuilderTest {
         diff.apply(mock);
 
         Mockito.verify(mock).showChild(0);
+
+        org.junit.Assert.assertFalse(diff.isEmpty());
     }
 
     @Test
@@ -27,6 +29,8 @@ public class ChildDiffBuilderTest {
         diff.apply(mock);
 
         Mockito.verify(mock).hideChild(0);
+
+        org.junit.Assert.assertFalse(diff.isEmpty());
     }
 
     @Test
@@ -39,6 +43,7 @@ public class ChildDiffBuilderTest {
 
         Mockito.verify(mock, Mockito.never()).showChild(Mockito.anyInt());
         Mockito.verify(mock, Mockito.never()).hideChild(Mockito.anyInt());
+        org.junit.Assert.assertTrue(diff.isEmpty());
     }
 
     @Test
@@ -53,6 +58,7 @@ public class ChildDiffBuilderTest {
 
         Mockito.verify(mock).hideChild(0);
         Mockito.verify(mock).showChild(1);
+        org.junit.Assert.assertFalse(diff.isEmpty());
     }
 
 }

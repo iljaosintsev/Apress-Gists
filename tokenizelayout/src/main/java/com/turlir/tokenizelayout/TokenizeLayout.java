@@ -8,6 +8,7 @@ import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -101,6 +102,9 @@ public abstract class TokenizeLayout extends FrameLayout
      */
     public final void changeToken(int value) {
         ChildDiff set = mSwitcher.setToken(value);
+        if (set.isEmpty()) {
+            Log.e(getClass().getSimpleName(), "changeToken broken - ChildDiff is empty");
+        }
         set.apply(this);
     }
 
