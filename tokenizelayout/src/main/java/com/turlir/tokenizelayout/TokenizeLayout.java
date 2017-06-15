@@ -217,7 +217,7 @@ public abstract class TokenizeLayout extends FrameLayout
         }
 
         private void apply(TokenizeLayout layout) {
-            layout.mSwitcher = new TokenSwitcher(index, layout);
+            layout.showChild(index);
         }
 
     }

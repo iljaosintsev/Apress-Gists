@@ -2,15 +2,17 @@ package com.turlir.abakgists.allgists;
 
 
 import android.content.Intent;
+import android.graphics.drawable.Animatable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.turlir.abakgists.base.App;
 import com.turlir.abakgists.gist.GistActivity;
@@ -92,19 +94,11 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener, S
         mScrollListener = new SimpleScrollListener(this);
         recycler.addOnScrollListener(mScrollListener);
 
-        return root;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        root.toLoading();
+        // start
+        this.root.toLoading();
         loadNextPage();
+
+        return root;
     }
 
     @Override
