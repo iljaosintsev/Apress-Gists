@@ -96,6 +96,14 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener, S
 
         // start
         this.root.toLoading();
+        TextView tv = (TextView) root.findViewById(R.id.in_loading_tv);
+        Drawable[] pd = tv.getCompoundDrawables();
+        for (Drawable drawable : pd) {
+            if (drawable instanceof Animatable) {
+                ((Animatable) drawable).start();
+            }
+        }
+
         loadNextPage();
 
         return root;

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_gravity="center"
     android:layout_marginLeft="@dimen/activity_horizontal_margin"
     android:layout_marginRight="@dimen/activity_horizontal_margin"
@@ -12,34 +13,34 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <Button
+    <com.turlir.abakgists.widgets.VectorButton
         android:id="@+id/btn_all_gists"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:drawableLeft="@drawable/ic_list_white_24dp"
+        app:drawableLeftCompat="@drawable/ic_list_white_24dp"
         style="@style/Widget.AppCompat.Button.Colored"
         android:text="@string/all_gists"/>
 
-    <Button
+    <com.turlir.abakgists.widgets.VectorButton
         android:id="@+id/btn_notes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:drawableLeft="@drawable/ic_speaker_notes_white_24dp"
+        app:drawableLeftCompat="@drawable/ic_speaker_notes_white_24dp"
         style="@style/Widget.AppCompat.Button.Colored"
         android:text="@string/notes"/>
 
-    <Button
+    <com.turlir.abakgists.widgets.VectorButton
         android:id="@+id/btn_all_in_one"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:drawableLeft="@drawable/ic_select_all_white_24dp"
+        app:drawableLeftCompat="@drawable/ic_select_all_white_24dp"
         style="@style/Widget.AppCompat.Button.Colored"
         android:text="@string/all_in_one"/>
 
-    <Button
+    <com.turlir.abakgists.widgets.VectorButton
         android:id="@+id/btn_switch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

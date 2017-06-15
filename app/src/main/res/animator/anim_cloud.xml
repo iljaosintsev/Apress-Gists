@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set>
+
+    <objectAnimator
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:duration="2500"
+        android:propertyName="fillColor"
+        android:repeatCount="infinite"
+        android:repeatMode="reverse"
+        android:valueFrom="#8affffff"
+        android:valueTo="#303030"
+        android:valueType="colorType"/>
+
+</set>

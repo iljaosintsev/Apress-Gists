@@ -10,6 +10,8 @@ android {
         targetSdkVersion 25
         versionCode 1
         versionName '1.0'
+
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
@@ -50,6 +52,9 @@ dependencies {
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.1'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
     testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
+
+    compile 'com.android.support:support-vector-drawable:25.3.1'
+    compile 'com.android.support:animated-vector-drawable:25.3.1'
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:2.7.22'
