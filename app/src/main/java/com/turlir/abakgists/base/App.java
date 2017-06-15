@@ -5,6 +5,7 @@ import android.app.Application;
 import android.os.Build;
 import android.os.StrictMode;
 
+import com.squareup.leakcanary.LeakCanary;
 import com.turlir.abakgists.di.AppComponent;
 import com.turlir.abakgists.di.AppModule;
 import com.turlir.abakgists.di.DaggerAppComponent;
@@ -27,14 +28,16 @@ public class App extends Application {
                 .appModule(new AppModule(this))
                 .build();
 
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
-            StrictMode.setThreadPolicy(
-                    new StrictMode.ThreadPolicy.Builder()
-                            .detectNetwork()
-                            .penaltyLog()
-                            .penaltyDeathOnNetwork()
-                            .build()
-            );
+        StrictMode.setThreadPolicy(
+                new StrictMode.ThreadPolicy.Builder()
+                        .detectNetwork()
+                        .penaltyLog()
+                        .penaltyDeathOnNetwork()
+                        .build()
+        );
+
+        if (!LeakCanary.isInAnalyzerProcess(this)) {
+            LeakCanary.install(this);
         }
 
         Timber.plant(new Timber.DebugTree());

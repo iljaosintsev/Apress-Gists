@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId 'com.turlir.abakgists'
-        minSdkVersion 9
+        minSdkVersion 14
         targetSdkVersion 25
         versionCode 1
         versionName '1.0'
@@ -46,6 +46,10 @@ dependencies {
     annotationProcessor 'com.pushtorefresh.storio:sqlite-annotations-processor:1.13.0'
 
     compile 'com.jakewharton.timber:timber:4.5.1'
+
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.1'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
+    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:2.7.22'
