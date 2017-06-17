@@ -109,6 +109,15 @@ public class GistModel extends ViewModel implements Parcelable, Cloneable {
         return factory.type(this);
     }
 
+    /**
+     * различны ли элементы с точки зрения базы данных
+     * @param other сравниваемый элемент
+     * @return {@code true} - различны, иначе {@code false}
+     */
+    public boolean isDifferent(GistModel other) {
+        return !other.id.equals(this.id);
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(url);

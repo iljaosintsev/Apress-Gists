@@ -36,7 +36,6 @@ import rx.Scheduler;
 import rx.android.plugins.RxAndroidPlugins;
 import rx.android.plugins.RxAndroidSchedulersHook;
 import rx.functions.Func1;
-import rx.observers.TestSubscriber;
 import rx.plugins.RxJavaHooks;
 import rx.schedulers.Schedulers;
 
@@ -97,7 +96,7 @@ public class AllGistsPresenterTest {
     @Test
     public void successFirstLoadFromCacheTest() {
         _presenter.loadPublicGists(0);
-        verify(mView).onGistLoaded(Collections.singletonList(Data.LOCAL_STUB), 0 , 1);
+        verify(mView).onGistLoaded(Collections.singletonList(Data.LOCAL_STUB));
     }
 
     @Test
@@ -110,7 +109,7 @@ public class AllGistsPresenterTest {
 
         _presenter.loadPublicGists(0); // what ?
 
-        verify(mView).onGistLoaded(mListCaptor.capture(), eq(0), eq(2));
+        verify(mView).onGistLoaded(mListCaptor.capture());
         assertEquals(2, mListCaptor.getValue().size());
     }
 
@@ -136,7 +135,7 @@ public class AllGistsPresenterTest {
         _presenter.resetGist();
         _presenter.loadPublicGists(0); // what ?
 
-        verify(mView).onGistLoaded(mListCaptor.capture(), eq(0), eq(1));
+        verify(mView).onGistLoaded(mListCaptor.capture());
         assertEquals("id", mListCaptor.getValue().get(0).id);
     }
 
@@ -158,7 +157,7 @@ public class AllGistsPresenterTest {
 
         verify(mock).loadGistsFromCache(0);
 
-        verify(mockView).onGistLoaded(list, 0, 1);
+        verify(mockView).onGistLoaded(list);
     }
 
     private void mockServerRequest() {

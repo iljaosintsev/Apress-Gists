@@ -80,35 +80,47 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
         return mFactory.instance(item);
     }
 
-    public void addGist(List<GistModel> value, int start, int count) {
-        int l = mContent.size(); // текущий объем данных
+    public void addGist(List<GistModel> value) {
+        final int current = mContent.size(); // текущий объем данных
+        final int added = value.size();
 
-        if (l <= start) { // вставка
-            if (count == 1) { // одного элемента
-                mContent.add(value.get(0));
-                notifyItemInserted(start);
-                Timber.i("notifyItemInserted " + l);
+        final boolean isNew;
+        if (getItemCount() > 0) {
+            GistModel lastGist = getGistByPosition(0);
+            isNew = lastGist != null && value.get(0).isDifferent(lastGist);
+        } else {
+            isNew = true;
+        }
 
-            } else { // множества элементов
-                mContent.addAll(value);
-                notifyItemRangeInserted(l, l + value.size());
-                Timber.i("notifyItemRangeInserted " + l + " " + (l + value.size()));
-            }
+        if (!isNew) { // обновление существующего набора
 
-        } else if (l > start) { // обновление
-            for (int i = l; i < l + count; i++) {
-                int index = i - l;
+            for (int i = current; i < current + added; i++) {
+                int index = i - current;
                 GistModel old = getGistByPosition(index);
                 GistModel now = value.get(index);
                 if (old != null && !now.equals(old)) {
                     mContent.set(index, now);
                     notifyItemChanged(index);
                     Timber.i("notifyItemChanged " + index);
-                    break;
+                    break; // может быть исправлен только один элемент
                 }
             }
 
+        } else { // вставка
+
+            if (added == 1) { // одного элемента
+                mContent.add(value.get(0));
+                notifyItemInserted(current + 1);
+                Timber.i("notifyItemInserted %d", current + 1);
+
+            } else { // множества элементов
+                mContent.addAll(value);
+                notifyItemRangeInserted(current, current + added);
+                Timber.i("notifyItemRangeInserted %d - %d", current, current + added);
+            }
+
         }
+
     }
 
     public void removeLastItem() {

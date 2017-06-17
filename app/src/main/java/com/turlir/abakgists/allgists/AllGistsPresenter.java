@@ -56,7 +56,7 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
                         Timber.d("onNext %d", value.size());
                         if (getView() != null) {
                             if (value.size() > 0) {
-                                getView().onGistLoaded(value, currentSize, value.size());
+                                getView().onGistLoaded(value);
                             } else {
                                 loadFromServer(currentSize);
                             }

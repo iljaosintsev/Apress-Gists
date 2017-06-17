@@ -83,17 +83,19 @@ public class NotesFragment extends BaseFragment implements OnClickListener {
         startActivity(i);
     }
 
-    @Override
-    public String toString() {
-        return "Notes";
-    }
-
     void onNotesLoaded(List<GistModel> gistDiff) {
-        mAdapter.addGist(gistDiff, mAdapter.getItemCount(), gistDiff.size());
+        mAdapter.addGist(gistDiff);
     }
 
     void onNotesDeleted() {
-        mAdapter.removeLastItem();
+        if (mAdapter.getItemCount() > 0) {
+            mAdapter.removeLastItem();
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Notes";
     }
 
 }

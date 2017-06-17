@@ -121,12 +121,12 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener, S
         _presenter.detach();
     }
 
-    public void onGistLoaded(List<GistModel> value, int start, int count) {
+    public void onGistLoaded(List<GistModel> value) {
         root.toContent();
         if (!isEmpty()) {
             mAdapter.removeLastIfLoading();
         }
-        mAdapter.addGist(value, start, count);
+        mAdapter.addGist(value);
         setRefreshing(false);
     }
 
