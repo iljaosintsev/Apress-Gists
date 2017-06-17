@@ -97,6 +97,7 @@ public class GistModel implements Parcelable, Cloneable {
         id = in.readString();
         description = in.readString();
         created = in.readString();
+        note = in.readString();
         ownerLogin = in.readString();
         ownerAvatarUrl = in.readString();
     }
@@ -107,6 +108,7 @@ public class GistModel implements Parcelable, Cloneable {
         dest.writeString(id);
         dest.writeString(description);
         dest.writeString(created);
+        dest.writeString(note);
         dest.writeString(ownerAvatarUrl);
         dest.writeString(created);
     }

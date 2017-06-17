@@ -29,7 +29,7 @@ public class NotesPresenter extends BasePresenter<NotesFragment> {
                 .withQuery(
                         Query.builder()
                                 .table(GistsTable.GISTS)
-                                .where("note IS NOT NULL AND note != \"\"")
+                                .where(GistsTable.NOTE + " NOT NULL AND " + GistsTable.NOTE + " != \"\"")
                                 .build()
                 )
                 .prepare()
@@ -37,20 +37,27 @@ public class NotesPresenter extends BasePresenter<NotesFragment> {
                 .compose(this.<List<GistModel>>defaultScheduler())
                 .subscribe(new Handler<List<GistModel>>() {
                     @Override
-                    public void onNext(List<GistModel> gist) {
-                        if (getView() != null) {
-                            if (gist.size() > 0) {
-                                if (gist.size() > mLastSize) {
-                                    gist = gist.subList(mLastSize, gist.size());
+                    public void onNext(final List<GistModel> gist) {
+                        if (getView() == null) return;
+
+                        if (gist.size() > 0) {
+                            if (gist.size() > mLastSize) { // больше
+                                List<GistModel> tmp = gist.subList(mLastSize, gist.size());
+                                getView().onNotesLoaded(tmp);
+                            } else {
+                                if (gist.size() == mLastSize) {
+                                    for (int i = 0; i < mLastSize; i++) {
+                                        getView().onNotesDeleted();
+                                    }
                                     getView().onNotesLoaded(gist);
                                 } else {
                                     getView().onNotesDeleted();
                                 }
-                                mLastSize = gist.size();
-
-                            } else if (mLastSize != 0) {
-                                getView().onNotesDeleted();
                             }
+                            mLastSize = gist.size();
+
+                        } else if (mLastSize != 0) {
+                            getView().onNotesDeleted();
                         }
 
                     }
