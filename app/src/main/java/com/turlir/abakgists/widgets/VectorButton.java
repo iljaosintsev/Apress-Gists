@@ -18,8 +18,8 @@ public class VectorButton extends AppCompatButton {
     public VectorButton(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        Drawable[] compounds = CompoundExtractor.extract(context, attrs, getCompoundDrawables());
-        setCompoundDrawablesWithIntrinsicBounds(compounds[0], compounds[1], compounds[2], compounds[3]);
+        Drawable[] pd = VectorDrawableFactory.extractCompoundDrawable(context, attrs, getCompoundDrawables());
+        setCompoundDrawablesWithIntrinsicBounds(pd[0], pd[1], pd[2], pd[3]);
     }
 
 }

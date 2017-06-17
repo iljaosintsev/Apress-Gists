@@ -3,13 +3,14 @@ package com.turlir.abakgists.widgets;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.DrawableRes;
 import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.util.AttributeSet;
 
 import com.turlir.abakgists.R;
 
-abstract class CompoundExtractor {
+public abstract class VectorDrawableFactory {
 
     private static final int[] IDS = new int[] {
             R.styleable.VectorButton_drawableLeftCompat,
@@ -25,13 +26,20 @@ abstract class CompoundExtractor {
             R.styleable.VectorButton_animateDrawableBottomCompat
     };
 
-    static Drawable[] extract(Context context, AttributeSet attrs, Drawable[] pd) {
+    public static Drawable createDrawable(Context cnt, @DrawableRes int id) {
+        return VectorDrawableCompat.create(cnt.getResources(), id, cnt.getTheme());
+    }
+
+    public static Drawable createAnimateDrawable(Context cnt, @DrawableRes int id) {
+        return AnimatedVectorDrawableCompat.create(cnt, id);
+    }
+
+    static Drawable[] extractCompoundDrawable(Context context, AttributeSet attrs, Drawable[] pd) {
         for (Drawable drawable : pd) {
             if (drawable != null) {
                 throw new UnsupportedOperationException("do not use sdk compound drawable attributes");
             }
         }
-
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.VectorButton);
         Drawable[] dr = new Drawable[4];
         try {
@@ -53,9 +61,9 @@ abstract class CompoundExtractor {
             throw new IllegalStateException("drawableCompat and animateDrawableCompat attr at the same time");
         }
         if (stdRes != -1) {
-            return VectorDrawableCompat.create(context.getResources(), stdRes, context.getTheme());
+            return createDrawable(context, std);
         } else if(animRes != -1) {
-            return AnimatedVectorDrawableCompat.create(context, animRes);
+            return createAnimateDrawable(context, animRes);
         } else {
             return null;
         }

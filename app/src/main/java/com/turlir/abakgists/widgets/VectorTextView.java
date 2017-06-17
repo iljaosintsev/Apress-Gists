@@ -17,7 +17,8 @@ public class VectorTextView extends AppCompatTextView {
 
     public VectorTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        Drawable[] pd = CompoundExtractor.extract(context, attrs, getCompoundDrawables());
+
+        Drawable[] pd = VectorDrawableFactory.extractCompoundDrawable(context, attrs, getCompoundDrawables());
         setCompoundDrawablesWithIntrinsicBounds(pd[0], pd[1], pd[2], pd[3]);
     }
 }
