@@ -3,9 +3,16 @@
 
     <declare-styleable name="VectorButton">
         <attr name="drawableLeftCompat" format="reference" />
+        <attr name="animateDrawableLeftCompat" format="reference" />
+
         <attr name="drawableTopCompat" format="reference" />
+        <attr name="animateDrawableTopCompat" format="reference" />
+
         <attr name="drawableRightCompat" format="reference" />
+        <attr name="animateDrawableRightCompat" format="reference" />
+
         <attr name="drawableBottomCompat" format="reference" />
+        <attr name="animateDrawableBottomCompat" format="reference" />
     </declare-styleable>
 
 </resources>
