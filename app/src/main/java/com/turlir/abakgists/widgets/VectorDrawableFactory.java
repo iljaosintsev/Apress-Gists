@@ -61,7 +61,7 @@ public abstract class VectorDrawableFactory {
             throw new IllegalStateException("drawableCompat and animateDrawableCompat attr at the same time");
         }
         if (stdRes != -1) {
-            return createDrawable(context, std);
+            return createDrawable(context, stdRes);
         } else if(animRes != -1) {
             return createAnimateDrawable(context, animRes);
         } else {
