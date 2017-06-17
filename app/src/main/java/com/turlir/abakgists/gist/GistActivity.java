@@ -15,6 +15,7 @@ import com.squareup.picasso.Picasso;
 import com.turlir.abakgists.R;
 import com.turlir.abakgists.base.App;
 import com.turlir.abakgists.model.GistModel;
+import com.turlir.abakgists.model.GistModelStorIOSQLitePutResolver;
 
 import javax.inject.Inject;
 
@@ -28,6 +29,9 @@ public class GistActivity extends AppCompatActivity {
     private static final String EXTRA_GIST = "EXTRA_GIST";
 
     private static final EqualsSolver SOLVER = new EqualsSolver();
+
+    private static final GistModelStorIOSQLitePutResolver UPDATE_RESOLVER
+            = new GistModelStorIOSQLitePutResolver();
 
     public static Intent getStartIntent(Context cnt, GistModel data) {
         Intent i = new Intent(cnt, GistActivity.class);
@@ -78,6 +82,7 @@ public class GistActivity extends AppCompatActivity {
             mContent.note = newNote;
             _database.put()
                     .object(mContent)
+                    .withPutResolver(UPDATE_RESOLVER)
                     .prepare()
                     .executeAsBlocking();
         } else {

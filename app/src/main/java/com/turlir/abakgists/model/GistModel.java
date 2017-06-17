@@ -99,6 +99,7 @@ public class GistModel extends ViewModel implements Parcelable, Cloneable {
         id = in.readString();
         description = in.readString();
         created = in.readString();
+        note = in.readString();
         ownerLogin = in.readString();
         ownerAvatarUrl = in.readString();
     }
@@ -114,6 +115,7 @@ public class GistModel extends ViewModel implements Parcelable, Cloneable {
         dest.writeString(id);
         dest.writeString(description);
         dest.writeString(created);
+        dest.writeString(note);
         dest.writeString(ownerLogin);
         dest.writeString(ownerAvatarUrl);
     }
