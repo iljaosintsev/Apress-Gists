@@ -181,7 +181,7 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener, S
 
     @Override
     public String toString() {
-        return getString(R.string.all_gists);
+        return "All Gists";
     }
 
 }
