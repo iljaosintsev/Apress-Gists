@@ -12,9 +12,12 @@
         android:layout_height="wrap_content"/>
 
     <TextView
+        android:id="@+id/inline_loading_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/activity_half_vertical_margin"
-        android:text="@string/inline_download"/>
+        android:gravity="center"
+        android:text="@string/inline_download"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
 
 </LinearLayout>

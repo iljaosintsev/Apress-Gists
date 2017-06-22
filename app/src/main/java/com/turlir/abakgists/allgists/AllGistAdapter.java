@@ -143,7 +143,7 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
 
     public void addLoading() {
         int s = mContent.size();
-        mContent.add(new LoadingModel());
+        mContent.add(new LoadingModel(getItemCount()));
         notifyItemInserted(s + 1);
     }
 
