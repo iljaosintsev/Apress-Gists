@@ -11,7 +11,7 @@
         android:id="@+id/in_loading_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawablePadding="@dimen/activity_half_vertical_margin"
+        android:drawablePadding="@dimen/half_margin"
         android:text="@string/in_loading"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         app:animateDrawableTopCompat="@drawable/animation_loading"/>

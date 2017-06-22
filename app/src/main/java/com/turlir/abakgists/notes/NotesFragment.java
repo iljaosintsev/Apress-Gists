@@ -59,7 +59,7 @@ public class NotesFragment extends BaseFragment implements OnClickListener {
 
         RecyclerView.ItemDecoration divider = new ItemDecoration(getActivity(), DividerItemDecoration.VERTICAL, true);
         recycler.addItemDecoration(divider);
-        SpaceDecorator space = new SpaceDecorator(getActivity(), R.dimen.activity_half_vertical_margin);
+        SpaceDecorator space = new SpaceDecorator(getActivity(), R.dimen.half_margin);
         recycler.addItemDecoration(space);
         return root;
     }

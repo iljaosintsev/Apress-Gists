@@ -10,7 +10,7 @@
         android:id="@+id/item_gist_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_half_vertical_margin"
+        android:layout_marginBottom="@dimen/half_margin"
         android:ellipsize="end"
         android:maxLines="1"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
@@ -20,7 +20,7 @@
         android:id="@+id/item_gist_desc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_half_vertical_margin"
+        android:layout_marginBottom="@dimen/half_margin"
         android:maxLines="2"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         tools:text="desc gist for turlir"/>
