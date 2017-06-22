@@ -6,6 +6,6 @@
 
     <size
         android:width="1dp"
-        android:height="@dimen/item_offset" />
+        android:height="@dimen/divider_height" />
 
 </shape>

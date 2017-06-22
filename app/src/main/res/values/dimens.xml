@@ -3,5 +3,5 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="activity_half_vertical_margin">8dp</dimen>
-    <dimen name="item_offset">2dp</dimen>
+    <dimen name="divider_height">2dp</dimen>
 </resources>

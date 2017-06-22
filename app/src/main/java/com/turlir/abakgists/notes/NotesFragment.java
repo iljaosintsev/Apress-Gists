@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.turlir.abakgists.base.App;
+import com.turlir.abakgists.base.ItemDecoration;
 import com.turlir.abakgists.gist.GistActivity;
 import com.turlir.abakgists.base.OnClickListener;
 import com.turlir.abakgists.R;
@@ -56,11 +57,10 @@ public class NotesFragment extends BaseFragment implements OnClickListener {
                 = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recycler.setLayoutManager(lm);
 
-        DividerItemDecoration divider =
-                new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
+        RecyclerView.ItemDecoration divider = new ItemDecoration(getActivity(), DividerItemDecoration.VERTICAL, true);
         recycler.addItemDecoration(divider);
-        recycler.addItemDecoration(new SpaceDecorator(getActivity(), R.dimen.item_offset));
-
+        SpaceDecorator space = new SpaceDecorator(getActivity(), R.dimen.activity_half_vertical_margin);
+        recycler.addItemDecoration(space);
         return root;
     }
 

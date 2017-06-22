@@ -28,20 +28,25 @@ public class ItemDecoration extends RecyclerView.ItemDecoration  {
 
     private final Rect mBounds;
 
+    private final boolean isLast;
+
     /**
      * Creates a divider {@link RecyclerView.ItemDecoration} that can be used with a
      * {@link LinearLayoutManager}.
      *
      * @param context Current context, it will be used to access resources.
      * @param orientation Divider orientation. Should be {@link #HORIZONTAL} or {@link #VERTICAL}.
+     * @param isLast should last item decoration
      */
-    public ItemDecoration(Context context, int orientation) {
+    public ItemDecoration(Context context, int orientation, boolean isLast) {
         mBounds = new Rect();
 
         final TypedArray a = context.obtainStyledAttributes(ATTRS);
         mDivider = a.getDrawable(0);
         a.recycle();
         setOrientation(orientation);
+
+        this.isLast = isLast;
     }
 
     /**
@@ -94,7 +99,7 @@ public class ItemDecoration extends RecyclerView.ItemDecoration  {
             right = parent.getWidth();
         }
 
-        final int childCount = parent.getChildCount() - 1;
+        final int childCount = maxChildIndex(parent);
         for (int i = 0; i < childCount; i++) {
             final View child = parent.getChildAt(i);
             parent.getDecoratedBoundsWithMargins(child, mBounds);
@@ -121,7 +126,7 @@ public class ItemDecoration extends RecyclerView.ItemDecoration  {
             bottom = parent.getHeight();
         }
 
-        final int childCount = parent.getChildCount() - 1;
+        final int childCount = maxChildIndex(parent);
         for (int i = 0; i < childCount; i++) {
             final View child = parent.getChildAt(i);
             parent.getLayoutManager().getDecoratedBoundsWithMargins(child, mBounds);
@@ -136,7 +141,7 @@ public class ItemDecoration extends RecyclerView.ItemDecoration  {
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
                                RecyclerView.State state) {
-        if (parent.getChildCount() ==1) {
+        if (parent.getChildCount() == 1) {
             return;
         }
         if (mOrientation == VERTICAL) {
@@ -144,6 +149,16 @@ public class ItemDecoration extends RecyclerView.ItemDecoration  {
         } else {
             outRect.set(0, 0, mDivider.getIntrinsicWidth(), 0);
         }
+    }
+
+    private int maxChildIndex(RecyclerView parent) {
+        int childCount;
+        if (isLast) {
+            childCount = parent.getChildCount();
+        } else {
+            childCount = parent.getChildCount() - 1;
+        }
+        return childCount;
     }
 
 
