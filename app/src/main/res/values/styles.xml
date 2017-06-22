@@ -11,7 +11,7 @@
     </style>
 
     <style name="AllInOneTheme" parent="Theme.AppCompat.NoActionBar">
-
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
     </style>
 
 </resources>
