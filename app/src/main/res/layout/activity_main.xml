@@ -40,12 +40,4 @@
         style="@style/Widget.AppCompat.Button.Colored"
         android:text="@string/all_in_one"/>
 
-    <com.turlir.abakgists.widgets.VectorButton
-        android:id="@+id/btn_switch"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
-        style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
-        android:text="@string/switch_act"/>
-
 </LinearLayout>

@@ -29,8 +29,6 @@
         <activity android:name=".AllInOneActivity" android:theme="@style/AllInOneTheme"
             android:label="@string/all_in_one"/>
 
-        <activity android:name=".SwitchActivity" android:label="@string/switch_act"/>
-
     </application>
 
 </manifest>

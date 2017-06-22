@@ -37,10 +37,4 @@ public class MainActivity extends AppCompatActivity {
         startActivity(i);
     }
 
-    @OnClick(R.id.btn_switch)
-    public void clickExpSwitch() {
-        Intent i = new Intent(this, SwitchActivity.class);
-        startActivity(i);
-    }
-
 }
