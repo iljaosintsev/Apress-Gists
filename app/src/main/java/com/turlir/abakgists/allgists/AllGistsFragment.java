@@ -125,9 +125,9 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener, S
         root.toContent();
         if (!isEmpty()) {
             mAdapter.removeLastIfLoading();
+            swipe.setRefreshing(false);
         }
         mAdapter.addGist(value);
-        setRefreshing(false);
     }
 
     @Override
@@ -157,13 +157,8 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener, S
 
     @Override
     public boolean isRefreshing() {
-        return swipe.isRefreshing();
-    }
-
-    @Override
-    public void setRefreshing(boolean state) {
-        swipe.setRefreshing(state);
-
+        boolean lastNotGist = mAdapter.getGistByPosition(mAdapter.getItemCount() - 1) == null;
+        return swipe.isRefreshing() || lastNotGist;
     }
 
     @Override

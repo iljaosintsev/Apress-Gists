@@ -19,16 +19,17 @@ public class SimpleScrollListener extends RecyclerView.OnScrollListener {
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         LinearLayoutManager lm = (LinearLayoutManager) recyclerView.getLayoutManager();
         int firstVisibleItem = lm.findFirstVisibleItemPosition();
+        if (firstVisibleItem == RecyclerView.NO_POSITION) return; // игнор, если список пустой
         int visibleItemCount = lm.getChildCount();
         int totalItemCount = lm.getItemCount();
 
         boolean closeEdge = firstVisibleItem + visibleItemCount + THRESHOLD >= totalItemCount;
         boolean sizeNotDownload = totalItemCount > mLastDownloadedSize;
-        boolean isEmpty = mPg.isEmpty();
-        if (closeEdge && sizeNotDownload && !mPg.isRefreshing() && !isEmpty) {
-            mLastDownloadedSize = totalItemCount;
-            mPg.setRefreshing(true);
+        boolean notEmpty = !mPg.isEmpty();
+        boolean notRefreshing = !mPg.isRefreshing();
 
+        if (closeEdge && sizeNotDownload && notRefreshing && notEmpty) {
+            mLastDownloadedSize = totalItemCount;
             // load next page
             recyclerView.post(new Runnable() {
                 @Override
@@ -42,8 +43,6 @@ public class SimpleScrollListener extends RecyclerView.OnScrollListener {
     public interface Paginator {
 
         boolean isRefreshing();
-
-        void setRefreshing(boolean state);
 
         void loadNextPage();
 

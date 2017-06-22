@@ -91,15 +91,10 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
     private void loadFromServer(int currentSize) {
         Subscription subsToServer = mRepo.loadGistsFromServerAndPutCache(currentSize)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<PutResults<GistModel>>() {
+                .subscribe(new Handler<PutResults<GistModel>>() {
                     @Override
-                    public void call(PutResults<GistModel> gistPutResults) {
-                        Timber.d("fromServer obs %d", gistPutResults.results().size());
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        processError(throwable);
+                    public void onNext(PutResults<GistModel> result) {
+                        Timber.d("fromServer obs %d", result.results().size());
                     }
                 });
         addSubscription(subsToServer);
