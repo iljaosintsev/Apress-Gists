@@ -103,7 +103,7 @@ public abstract class TokenizeLayout extends FrameLayout
     public final void changeToken(int value) {
         ChildDiff set = mSwitcher.setToken(value);
         if (set.isEmpty()) {
-            Log.e(getClass().getSimpleName(), "changeToken broken - ChildDiff is empty");
+            Log.w(getClass().getSimpleName(), "changeToken broken - ChildDiff is empty");
         }
         set.apply(this);
     }
