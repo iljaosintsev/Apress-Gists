@@ -10,14 +10,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.turlir.abakgists.base.App;
-import com.turlir.abakgists.base.ItemDecoration;
-import com.turlir.abakgists.gist.GistActivity;
-import com.turlir.abakgists.base.OnClickListener;
 import com.turlir.abakgists.R;
-import com.turlir.abakgists.base.SpaceDecorator;
 import com.turlir.abakgists.allgists.AllGistAdapter;
+import com.turlir.abakgists.base.App;
 import com.turlir.abakgists.base.BaseFragment;
+import com.turlir.abakgists.base.ItemDecoration;
+import com.turlir.abakgists.base.OnClickListener;
+import com.turlir.abakgists.base.SpaceDecorator;
+import com.turlir.abakgists.gist.GistActivity;
 import com.turlir.abakgists.model.GistModel;
 
 import java.util.List;
@@ -34,6 +34,9 @@ public class NotesFragment extends BaseFragment implements OnClickListener {
     @BindView(R.id.recycler)
     RecyclerView recycler;
 
+    @BindView(R.id.swipeLayout)
+    View swipe;
+
     private AllGistAdapter mAdapter;
 
     @Override
@@ -48,8 +51,9 @@ public class NotesFragment extends BaseFragment implements OnClickListener {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle saved) {
         View root = inflater.inflate(R.layout.fragment_all_gists, container, false);
-        root.setEnabled(false); // SwipeRefreshLayout
         butterKnifeBind(root);
+
+        swipe.setEnabled(false);
 
         mAdapter = new AllGistAdapter(getContext(), this);
         recycler.setAdapter(mAdapter);

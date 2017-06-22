@@ -14,13 +14,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.turlir.abakgists.base.App;
-import com.turlir.abakgists.base.ItemDecoration;
-import com.turlir.abakgists.gist.GistActivity;
-import com.turlir.abakgists.base.OnClickListener;
 import com.turlir.abakgists.R;
-import com.turlir.abakgists.base.SpaceDecorator;
+import com.turlir.abakgists.base.App;
 import com.turlir.abakgists.base.BaseFragment;
+import com.turlir.abakgists.base.ItemDecoration;
+import com.turlir.abakgists.base.OnClickListener;
+import com.turlir.abakgists.base.SpaceDecorator;
+import com.turlir.abakgists.gist.GistActivity;
 import com.turlir.abakgists.model.GistModel;
 import com.turlir.abakgists.widgets.SimpleScrollListener;
 import com.turlir.abakgists.widgets.SwitchLayout;
@@ -114,6 +114,7 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener, S
     @Override
     public void onDestroyView() {
         recycler.removeOnScrollListener(mScrollListener);
+        swipe.setOnRefreshListener(null);
         super.onDestroyView();
     }
 
