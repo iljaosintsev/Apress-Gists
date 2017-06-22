@@ -22,7 +22,7 @@ public abstract class TokenizeLayout extends FrameLayout
 
     public static final int INVALID_INDEX = -1;
 
-    private TokenSwitcher mSwitcher;
+    private final TokenSwitcher mSwitcher;
 
     public TokenizeLayout(@NonNull Context context) {
         this(context, null);
@@ -35,23 +35,15 @@ public abstract class TokenizeLayout extends FrameLayout
     public TokenizeLayout(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.TokenizeLayout, 0, 0);
-        try {
-            int token = ta.getInteger(R.styleable.TokenizeLayout_init, 0);
-            mSwitcher = new TokenSwitcher(token, this);
-        } finally {
-            ta.recycle();
-        }
+        mSwitcher = new TokenSwitcher(getDefaultToken(attrs), this);
     }
 
     /**
-     *
      * @return максимально поддерживаемое число токенов, больше 0
      */
     public abstract int getMaxTokenCount();
 
     /**
-     *
      * @param token токен потомка
      * @param index индекс потомка
      * @return принадлежит ли токен указанному потомку
@@ -59,11 +51,16 @@ public abstract class TokenizeLayout extends FrameLayout
     public abstract boolean doesViewToToken(int token, int index);
 
     /**
-     *
      * @param token токен потомка
      * @return индекс потомка, имеющего этот токен или {@link #INVALID_INDEX}
      */
     public abstract int getChildIndexByToken(int token);
+
+    /**
+     * @param attrs атрибуты макета
+     * @return токен по-умолчанию видимого потомка
+     */
+    protected abstract int getDefaultToken(final AttributeSet attrs);
 
     @Override
     public void addView(View child, int index, ViewGroup.LayoutParams params) {

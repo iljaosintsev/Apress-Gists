@@ -1,12 +1,5 @@
 <resources>
 
-    <declare-styleable name="TokenizeLayout">
-        <attr name="init" format="enum">
-            <enum name="content" value="0"/>
-            <enum name="error" value="1"/>
-            <enum name="loading" value="2"/>
-        </attr>
-    </declare-styleable>
 
     <declare-styleable name="SwitchLayout_Layout">
         <attr name="hided" format="enum">
