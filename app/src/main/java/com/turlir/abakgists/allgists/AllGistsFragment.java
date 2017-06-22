@@ -15,13 +15,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.turlir.abakgists.base.App;
+import com.turlir.abakgists.base.ItemDecoration;
 import com.turlir.abakgists.gist.GistActivity;
 import com.turlir.abakgists.base.OnClickListener;
 import com.turlir.abakgists.R;
 import com.turlir.abakgists.base.SpaceDecorator;
 import com.turlir.abakgists.base.BaseFragment;
 import com.turlir.abakgists.model.GistModel;
-import com.turlir.abakgists.base.ItemDecoration;
 import com.turlir.abakgists.widgets.SimpleScrollListener;
 import com.turlir.abakgists.widgets.SwitchLayout;
 
@@ -87,7 +87,8 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener, S
         LinearLayoutManager lm = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recycler.setLayoutManager(lm);
 
-        ItemDecoration divider = new ItemDecoration(getActivity(), ItemDecoration.VERTICAL, false);
+        ItemDecoration divider = new ItemDecoration(getActivity(), R.drawable.divider,
+                ItemDecoration.VERTICAL, false);
         recycler.addItemDecoration(divider);
         SpaceDecorator space = new SpaceDecorator(getActivity(), R.dimen.half_margin);
         recycler.addItemDecoration(space);

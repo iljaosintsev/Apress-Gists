@@ -7,7 +7,9 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -33,16 +35,15 @@ public class ItemDecoration extends RecyclerView.ItemDecoration  {
     /**
      * Creates a divider {@link RecyclerView.ItemDecoration} that can be used with a
      * {@link LinearLayoutManager}.
-     *
-     * @param context Current context, it will be used to access resources.
+     *  @param context Current context, it will be used to access resources.
      * @param orientation Divider orientation. Should be {@link #HORIZONTAL} or {@link #VERTICAL}.
      * @param isLast should last item decoration
      */
-    public ItemDecoration(Context context, int orientation, boolean isLast) {
+    public ItemDecoration(Context context, @DrawableRes int divider, int orientation, boolean isLast) {
         mBounds = new Rect();
 
         final TypedArray a = context.obtainStyledAttributes(ATTRS);
-        mDivider = a.getDrawable(0);
+        mDivider = ContextCompat.getDrawable(context, divider);
         a.recycle();
         setOrientation(orientation);
 
