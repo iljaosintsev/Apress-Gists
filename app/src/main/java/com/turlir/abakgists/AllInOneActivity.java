@@ -6,6 +6,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -13,10 +14,6 @@ import android.support.v7.widget.Toolbar;
 
 import com.turlir.abakgists.allgists.AllGistsFragment;
 import com.turlir.abakgists.notes.NotesFragment;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,26 +35,25 @@ public class AllInOneActivity extends AppCompatActivity {
         setContentView(R.layout.activity_all_in_one);
         ButterKnife.bind(this);
 
-        AllGistsFragment allGist = new AllGistsFragment();
-        NotesFragment note = new NotesFragment();
-        PagerAdapter adapter = new SimplePagerAdapter(getSupportFragmentManager(), allGist, note);
+        PagerAdapter adapter = new SimplePagerAdapter(getSupportFragmentManager());
         pager.setAdapter(adapter);
         tabs.setupWithViewPager(pager);
     }
 
     private static class SimplePagerAdapter extends FragmentPagerAdapter {
 
-        private List<Fragment> mFragmentTabs;
-
-        SimplePagerAdapter(FragmentManager fm, Fragment... tabs) {
+        SimplePagerAdapter(FragmentManager fm) {
             super(fm);
-            mFragmentTabs = new ArrayList<>(tabs.length);
-            mFragmentTabs.addAll(Arrays.asList(tabs));
         }
 
         @Override
         public Fragment getItem(int position) {
-            return mFragmentTabs.get(position);
+            switch (position) {
+                case 0:
+                    return new AllGistsFragment();
+                default:
+                    return new NotesFragment();
+            }
         }
 
         @Override
@@ -67,7 +63,12 @@ public class AllInOneActivity extends AppCompatActivity {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return getItem(position).toString();
+            switch (position) {
+                case 0:
+                    return "All Gists";
+                default:
+                    return "Notes";
+            }
         }
     }
 }
