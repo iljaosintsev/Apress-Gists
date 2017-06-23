@@ -34,12 +34,7 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
         removeCacheSubs();
         Subscription subs = mRepo
                 .loadGistsFromCache(currentSize)
-                .distinctUntilChanged(new Func2<List<GistModel>, List<GistModel>, Boolean>() {
-                    @Override
-                    public Boolean call(List<GistModel> prev, List<GistModel> now) {
-                        return prev.size() == now.size() && prev.size() == 0; // anti cycle-repeating request
-                    }
-                })
+                .distinctUntilChanged(new CycleRepeatingBreaker())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Handler<List<GistModel>>() {
                     @Override
@@ -104,5 +99,16 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
     private void addCacheSubs(Subscription subs) {
         mCacheSubs = subs;
         addSubscription(mCacheSubs);
+    }
+
+
+    /**
+     * Anti cycle-repeating request
+     */
+    private static class CycleRepeatingBreaker implements Func2<List<GistModel>, List<GistModel>, Boolean> {
+        @Override
+        public Boolean call(List<GistModel> prev, List<GistModel> now) {
+            return prev.size() == now.size() && prev.size() == 0;
+        }
     }
 }
