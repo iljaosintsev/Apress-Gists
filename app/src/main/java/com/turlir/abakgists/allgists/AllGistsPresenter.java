@@ -32,17 +32,8 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
      */
     void loadPublicGists(final int currentSize) {
         removeCacheSubs();
-        Subscription subs = mRepo.loadGistsFromCache(currentSize)
-                .doOnNext(new Action1<List<GistModel>>() {
-                    @Override
-                    public void call(List<GistModel> gistModels) {
-                        try {
-                            Thread.sleep(2500);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                })
+        Subscription subs = mRepo
+                .loadGistsFromCache(currentSize)
                 .distinctUntilChanged(new Func2<List<GistModel>, List<GistModel>, Boolean>() {
                     @Override
                     public Boolean call(List<GistModel> prev, List<GistModel> now) {
@@ -71,7 +62,8 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
      */
     void resetGist() {
         removeCacheSubs();
-        Subscription subs = mRepo.clearCache()
+        Subscription subs = mRepo
+                .clearCache()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action0() {
@@ -89,7 +81,8 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
     }
 
     private void loadFromServer(int currentSize) {
-        Subscription subsToServer = mRepo.loadGistsFromServerAndPutCache(currentSize)
+        Subscription subsToServer = mRepo
+                .loadGistsFromServerAndPutCache(currentSize)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Handler<PutResults<GistModel>>() {
                     @Override

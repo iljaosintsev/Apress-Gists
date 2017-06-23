@@ -4,6 +4,7 @@ import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
 import com.pushtorefresh.storio.sqlite.queries.DeleteQuery;
 import com.pushtorefresh.storio.sqlite.queries.Query;
+import com.turlir.abakgists.model.Gist;
 import com.turlir.abakgists.model.GistModel;
 import com.turlir.abakgists.model.ListGistToModelMapper;
 import com.turlir.abakgists.model.GistsTable;
@@ -12,6 +13,7 @@ import java.util.List;
 
 import rx.Completable;
 import rx.Observable;
+import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
@@ -32,6 +34,16 @@ public class Repository {
         int page = Math.round(currentSize / PAGE_SIZE) + 1;
         return mClient
                 .publicGist(page)
+                .doOnNext(new Action1<List<Gist>>() {
+                    @Override
+                    public void call(List<Gist> data) {
+                        try {
+                            Thread.sleep(2500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                })
                 .subscribeOn(Schedulers.io())
                 .map(new ListGistToModelMapper())
                 .flatMap(new Func1<List<GistModel>, Observable<PutResults<GistModel>>>() {
