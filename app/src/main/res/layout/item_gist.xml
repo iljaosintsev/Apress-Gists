@@ -13,7 +13,7 @@
         android:layout_marginBottom="@dimen/half_margin"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         tools:text="986fa7aa42dd456c19982cf40574c5a6"/>
 
     <TextView
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/half_margin"
         android:maxLines="2"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         tools:text="desc gist for turlir"/>
 
     <TextView
@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/half_margin"
         android:maxLines="2"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         tools:text="note"/>
 
     <TextView

@@ -18,6 +18,6 @@
         android:layout_marginTop="@dimen/half_margin"
         android:gravity="center"
         android:text="@string/inline_download"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"/>
 
 </LinearLayout>
