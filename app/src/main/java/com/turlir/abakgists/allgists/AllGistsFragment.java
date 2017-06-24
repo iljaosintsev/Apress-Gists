@@ -90,7 +90,7 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener, S
         ItemDecoration divider = new ItemDecoration(getActivity(), R.drawable.divider,
                 ItemDecoration.VERTICAL, false);
         recycler.addItemDecoration(divider);
-        SpaceDecorator space = new SpaceDecorator(getActivity(), R.dimen.half_margin);
+        SpaceDecorator space = new SpaceDecorator(getActivity(), R.dimen.activity_horizontal_margin, R.dimen.half_margin);
         recycler.addItemDecoration(space);
 
         mScrollListener = new SimpleScrollListener(this);
