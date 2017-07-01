@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">AbakGists</string>
+    <string name="description">GitHub public gist viewer</string>
 
     <string name="all_gists">All Gists</string>
     <string name="notes">Notes</string>
