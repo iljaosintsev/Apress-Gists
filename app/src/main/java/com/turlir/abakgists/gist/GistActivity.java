@@ -97,9 +97,11 @@ public class GistActivity extends AppCompatActivity {
     }
 
     private void fillControl() {
-        login.setText(mContent.ownerLogin);
-        if (mContent.ownerAvatarUrl != null) {
-            loadAvatar(mContent.ownerAvatarUrl);
+        loadAvatar(mContent.ownerAvatarUrl);
+        if (mContent.ownerLogin != null) {
+            login.setText(mContent.ownerLogin);
+        } else {
+            login.setText(R.string.anonymous);
         }
         desc.setText(mContent.description);
         note.setText(mContent.note);
@@ -109,6 +111,8 @@ public class GistActivity extends AppCompatActivity {
         Picasso.with(this)
                 .load(url)
                 .fit()
+                .error(R.drawable.ic_github)
+                .placeholder(R.drawable.ic_github)
                 .into(avatar);
     }
 
