@@ -3,6 +3,7 @@ package com.turlir.abakgists.gist;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -90,6 +91,14 @@ public class GistActivity extends AppCompatActivity {
         }
     }
 
+    @OnClick(R.id.btn_web)
+    public void onClickWeb() {
+        Uri link = mContent.insteadWebLink();
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(link);
+        startActivity(i);
+    }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -98,11 +107,7 @@ public class GistActivity extends AppCompatActivity {
 
     private void fillControl() {
         loadAvatar(mContent.ownerAvatarUrl);
-        if (mContent.ownerLogin != null) {
-            login.setText(mContent.ownerLogin);
-        } else {
-            login.setText(R.string.anonymous);
-        }
+        login.setText(mContent.ownerLogin);
         desc.setText(mContent.description);
         note.setText(mContent.note);
     }
