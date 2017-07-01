@@ -54,10 +54,10 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener, S
             = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
         public void onRefresh() {
-            swipe.setRefreshing(false);
-
-            mAdapter.clearAll();
             root.toLoading();
+
+            swipe.setRefreshing(false);
+            mAdapter.clearAll();
             _presenter.resetGist();
 
             recycler.removeOnScrollListener(mScrollListener);

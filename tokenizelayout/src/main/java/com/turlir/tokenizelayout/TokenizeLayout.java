@@ -141,6 +141,10 @@ public abstract class TokenizeLayout extends FrameLayout
         }
     }
 
+    ///
+    /// ChildManipulator
+    ///
+
     @Override
     public void hideChild(int i) {
         View child = getChildAt(i);
@@ -148,11 +152,14 @@ public abstract class TokenizeLayout extends FrameLayout
         int def = ((SwitchLayoutParams) lp).getHideVisibility();
         //noinspection WrongConstant
         child.setVisibility(def);
+
+        getChildAt(i).setEnabled(false);
     }
 
     @Override
     public void showChild(int i) {
         getChildAt(i).setVisibility(View.VISIBLE);
+        getChildAt(i).setEnabled(true);
     }
 
     public static class SwitchLayoutParams extends FrameLayout.LayoutParams {
