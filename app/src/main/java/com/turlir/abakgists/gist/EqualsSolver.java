@@ -3,6 +3,8 @@ package com.turlir.abakgists.gist;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.turlir.abakgists.model.GistModel;
+
 /**
  * Utility класс для определения относительного состояния двух наборов данных
  * <ul>
@@ -16,21 +18,28 @@ import android.support.annotation.Nullable;
  */
 class EqualsSolver {
 
-    boolean solveDescAndNote(@Nullable String oldDesc, @NonNull String nowDes,
-                             @Nullable String oldNote, @NonNull String nowNote) {
-        return solveDesc(oldDesc, nowDes) || solveNote(oldNote, nowNote);
+    boolean solveModel(GistModel old, GistModel now) {
+        if (now.description == null || now.note == null) {
+            throw new IllegalStateException("after ui field desc and note not be null");
+        }
+        return solveDescAndNote(
+                old.description, now.description,
+                old.note, now.note
+        );
     }
 
-    boolean solveDesc(@Nullable String old, @NonNull String now) {
-        return solveNote(old, now);
+    private boolean solveDescAndNote(@Nullable String oldDesc, @NonNull String nowDes,
+                                     @Nullable String oldNote, @NonNull String nowNote) {
+        return solveOldNow(oldDesc, nowDes) || solveOldNow(oldNote, nowNote);
     }
 
-    boolean solveNote(@Nullable String old, @NonNull String now) {
+    private boolean solveOldNow(@Nullable String old, @NonNull String now) {
         if (old == null) {
             return !now.isEmpty();
         } else {
             return !now.equals(old);
         }
     }
+
 
 }

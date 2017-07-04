@@ -31,8 +31,6 @@ public class GistActivity extends AppCompatActivity {
 
     private static final String EXTRA_GIST = "EXTRA_GIST";
 
-    private static final EqualsSolver SOLVER = new EqualsSolver();
-
     private static final GistModelStorIOSQLitePutResolver UPDATE_RESOLVER
             = new GistModelStorIOSQLitePutResolver();
 
@@ -57,32 +55,33 @@ public class GistActivity extends AppCompatActivity {
     @BindView(R.id.et_note)
     EditText note;
 
-    private GistModel mContent;
+    private DescNoteGistMember member;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gist);
         App.getComponent().inject(this);
-        ButterKnife.bind(this);
-        mContent = getIntent().getParcelableExtra(EXTRA_GIST);
 
-        applyContent();
+        ButterKnife.bind(this);
+
+        GistModel content = getIntent().getParcelableExtra(EXTRA_GIST);
+        member = new DescNoteGistMember(content);
+
+        member.applyContent();
     }
 
     @OnClick(R.id.btn_save)
     public void onClickSave() {
-        String newDesc = desc.getText().toString();
-        String newNote = note.getText().toString();
-        if (isChange(newDesc, newNote)) {
+        if (member.isChange()) {
             Timber.i("Внесены изменения, обновление БД");
-            GistModel now = createContent(newDesc, newNote);
+            GistModel now = member.createContent();
             _database.put()
                     .object(now)
                     .withPutResolver(UPDATE_RESOLVER)
                     .prepare()
                     .executeAsBlocking();
-            mContent = now;
+            member = new DescNoteGistMember(now);
         } else {
             Timber.i("Изменения не внесены");
         }
@@ -90,7 +89,7 @@ public class GistActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_web)
     public void onClickWeb() {
-        Uri link = mContent.insteadWebLink();
+        Uri link = member.insteadWebLink();
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setData(link);
         startActivity(i);
@@ -98,7 +97,7 @@ public class GistActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (!isChange(desc.getText().toString(), note.getText().toString())) {
+        if (!member.isChange()) {
             GistActivity.super.onBackPressed();
         } else {
             new AlertDialog.Builder(this)
@@ -124,30 +123,46 @@ public class GistActivity extends AppCompatActivity {
         }
     }
 
-    private boolean isChange(String newDesc, String newNote) {
-        String oldDesc = mContent.description;
-        String oldNote = mContent.note;
-        return SOLVER.solveDescAndNote(oldDesc, newDesc, oldNote, newNote);
-    }
+    private class DescNoteGistMember {
 
-    private void applyContent() {
-        loadAvatar(mContent.ownerAvatarUrl);
-        login.setText(mContent.ownerLogin);
-        desc.setText(mContent.description);
-        note.setText(mContent.note);
-    }
+        private final EqualsSolver mSolver = new EqualsSolver();
+        private final GistModel mContent;
 
-    private GistModel createContent(final String newDesc, final String newNote) {
-        return new GistModel(mContent, newDesc, newNote);
-    }
+        DescNoteGistMember(GistModel content) {
+            mContent = content;
+        }
 
-    private void loadAvatar(String url) {
-        Picasso.with(this)
-                .load(url)
-                .fit()
-                .error(R.drawable.ic_github)
-                .placeholder(R.drawable.ic_github)
-                .into(avatar);
-    }
+        void applyContent() {
+            loadAvatar(mContent.ownerAvatarUrl);
+            login.setText(mContent.ownerLogin);
+            desc.setText(mContent.description);
+            note.setText(mContent.note);
+        }
 
+        GistModel createContent() {
+            String descAt = desc.getText().toString();
+            String noteAt = note.getText().toString();
+
+            return new GistModel(mContent, descAt, noteAt);
+        }
+
+        boolean isChange() {
+            GistModel now = createContent();
+            return mSolver.solveModel(mContent, now);
+        }
+
+        Uri insteadWebLink() {
+            return mContent.insteadWebLink();
+        }
+
+        private void loadAvatar(String url) {
+            Picasso.with(GistActivity.this)
+                    .load(url)
+                    .fit()
+                    .error(R.drawable.ic_github)
+                    .placeholder(R.drawable.ic_github)
+                    .into(avatar);
+        }
+
+    }
 }

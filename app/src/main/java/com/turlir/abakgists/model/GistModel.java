@@ -81,7 +81,7 @@ public class GistModel extends ViewModel implements Parcelable {
         this.ownerAvatarUrl = ownerAvatarUrl;
     }
 
-    public GistModel(GistModel other, String desc, String note) {
+    public GistModel(GistModel other, @NonNull String desc, @NonNull String note) {
         this(other.id, other.url, other.created, other.description, other.note,
                 other.ownerLogin, other.ownerAvatarUrl);
         description = desc;
