@@ -11,21 +11,23 @@ import timber.log.Timber;
 
 class GistModelHolder extends ModelViewHolder<GistModel> {
 
+    private final TextView mId, mCreated, mDesc, mNote;
+
     GistModelHolder(View itemView) {
         super(itemView);
+        mId = (TextView) itemView.findViewById(R.id.item_gist_id);
+        mCreated = (TextView) itemView.findViewById(R.id.item_gist_created);
+        mDesc = (TextView) itemView.findViewById(R.id.item_gist_desc);
+        mNote = (TextView) itemView.findViewById(R.id.item_gist_note);
         Timber.i("new holder created");
     }
 
     @Override
     void bind(GistModel item) {
-        TextView tvId = (TextView) itemView.findViewById(R.id.item_gist_id);
-        tvId.setText(String.valueOf(item.id));
-
-        TextView tvCreated = (TextView) itemView.findViewById(R.id.item_gist_created);
-        tvCreated.setText(item.created);
-
-        TextView tvDesc = (TextView) itemView.findViewById(R.id.item_gist_desc);
-        tvDesc.setText(item.description);
+        mId.setText(String.valueOf(item.id));
+        mCreated.setText(item.created);
+        mNote.setText(item.note);
+        mDesc.setText(item.description);
     }
 
 }

@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">AbakGists</string>
+    <string name="description">GitHub public gist viewer</string>
 
     <string name="all_gists">All Gists</string>
     <string name="notes">Notes</string>
@@ -14,5 +15,11 @@
     <string name="in_loading">Please wait, while list loading</string>
     <string name="main_network_error">Your network connection broken</string>
     <string name="inline_download" formatted="false">You looked at %d items already. Do not worry, we download next part of data</string>
+    <string name="owner">Owner</string>
+    <string name="anonymous">Anonymous</string>
+    <string name="web_link">view it on Github.com</string>
+
+    <string name="there_changes">There are changes</string>
+    <string name="save_quest">Do you want to save the changes?</string>
 
 </resources>

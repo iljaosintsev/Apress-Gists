@@ -2,9 +2,12 @@ package com.turlir.abakgists.gist;
 
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -69,17 +72,11 @@ public class GistActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_save)
     public void onClickSave() {
-        String oldDesc = mContent.description;
-        String oldNote = mContent.note;
-
         String newDesc = desc.getText().toString();
         String newNote = note.getText().toString();
-
-        boolean isChange = SOLVER.solveDescAndNote(oldDesc, newDesc, oldNote, newNote);
-        if (isChange) {
+        if (isChange(newDesc, newNote)) {
             Timber.i("Внесены изменения, обновление БД");
-            mContent.description = newDesc;
-            mContent.note = newNote;
+            fillObject(newDesc, newNote);
             _database.put()
                     .object(mContent)
                     .withPutResolver(UPDATE_RESOLVER)
@@ -90,25 +87,66 @@ public class GistActivity extends AppCompatActivity {
         }
     }
 
+    @OnClick(R.id.btn_web)
+    public void onClickWeb() {
+        Uri link = mContent.insteadWebLink();
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(link);
+        startActivity(i);
+    }
+
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        onClickSave();
+        if (!isChange(desc.getText().toString(), note.getText().toString())) {
+            GistActivity.super.onBackPressed();
+        } else {
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.there_changes)
+                    .setMessage(R.string.save_quest)
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            onClickSave();
+                            dialog.dismiss();
+                            GistActivity.super.onBackPressed();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                            GistActivity.super.onBackPressed();
+                        }
+                    })
+                    .create()
+                    .show();
+        }
+    }
+
+    private boolean isChange(String newDesc, String newNote) {
+        String oldDesc = mContent.description;
+        String oldNote = mContent.note;
+        return SOLVER.solveDescAndNote(oldDesc, newDesc, oldNote, newNote);
     }
 
     private void fillControl() {
+        loadAvatar(mContent.ownerAvatarUrl);
         login.setText(mContent.ownerLogin);
-        if (mContent.ownerAvatarUrl != null) {
-            loadAvatar(mContent.ownerAvatarUrl);
-        }
         desc.setText(mContent.description);
         note.setText(mContent.note);
+    }
+
+    private void fillObject(String newDesc, String newNote) {
+        mContent.description = newDesc;
+        mContent.note = newNote;
     }
 
     private void loadAvatar(String url) {
         Picasso.with(this)
                 .load(url)
                 .fit()
+                .error(R.drawable.ic_github)
+                .placeholder(R.drawable.ic_github)
                 .into(avatar);
     }
 

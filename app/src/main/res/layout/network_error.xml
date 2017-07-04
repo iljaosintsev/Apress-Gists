@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:drawablePadding="@dimen/half_margin"
         android:text="@string/main_network_error"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         app:drawableTopCompat="@drawable/ic_main_network_error"/>
 
 </LinearLayout>

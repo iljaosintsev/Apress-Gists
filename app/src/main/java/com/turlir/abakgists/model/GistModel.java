@@ -1,5 +1,6 @@
 package com.turlir.abakgists.model;
 
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -76,7 +77,11 @@ public class GistModel extends ViewModel implements Parcelable, Cloneable {
         this.created = created;
         this.description = description;
         this.note = note;
-        this.ownerLogin = ownerLogin;
+        if (ownerLogin != null) {
+            this.ownerLogin = ownerLogin;
+        } else {
+            this.ownerLogin = "anonymous";
+        }
         this.ownerAvatarUrl = ownerAvatarUrl;
     }
 
@@ -116,6 +121,10 @@ public class GistModel extends ViewModel implements Parcelable, Cloneable {
      */
     public boolean isDifferent(GistModel other) {
         return !other.id.equals(this.id);
+    }
+
+    public Uri insteadWebLink() {
+        return Uri.parse(String.format("http://gist.github.com/%s/%s", ownerLogin, id));
     }
 
     @Override

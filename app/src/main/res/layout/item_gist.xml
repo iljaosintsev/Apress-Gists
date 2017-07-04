@@ -13,7 +13,7 @@
         android:layout_marginBottom="@dimen/half_margin"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         tools:text="986fa7aa42dd456c19982cf40574c5a6"/>
 
     <TextView
@@ -22,16 +22,24 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/half_margin"
         android:maxLines="2"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         tools:text="desc gist for turlir"/>
+
+    <TextView
+        android:id="@+id/item_gist_note"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/half_margin"
+        android:maxLines="2"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        tools:text="note"/>
 
     <TextView
         android:id="@+id/item_gist_created"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
-        android:maxLines="1"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
         tools:text="2017-04-01T19:30:18Z"/>
 
 </LinearLayout>

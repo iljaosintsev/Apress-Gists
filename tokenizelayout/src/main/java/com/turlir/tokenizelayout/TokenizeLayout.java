@@ -82,12 +82,12 @@ public abstract class TokenizeLayout extends FrameLayout
     }
 
     @Override
-    public SwitchLayoutParams generateLayoutParams(AttributeSet attrs) {
-        return new SwitchLayoutParams(getContext(), attrs);
+    public TokenizeLayoutParams generateLayoutParams(AttributeSet attrs) {
+        return new TokenizeLayoutParams(getContext(), attrs);
     }
 
     /**
-     * @return текущий токен, по-умолчанию 0
+     * @return текущий токен, по-умолчанию равен {@link #getDefaultToken(AttributeSet)}
      */
     public final int currentToken() {
         return mSwitcher.currentToken();
@@ -106,25 +106,25 @@ public abstract class TokenizeLayout extends FrameLayout
     }
 
     @Override
-    protected SwitchLayoutParams generateDefaultLayoutParams() {
-        return new SwitchLayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+    protected TokenizeLayoutParams generateDefaultLayoutParams() {
+        return new TokenizeLayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
     }
 
     @Override
-    protected SwitchLayoutParams generateLayoutParams(ViewGroup.LayoutParams lp) {
+    protected TokenizeLayoutParams generateLayoutParams(ViewGroup.LayoutParams lp) {
         return generateDefaultLayoutParams();
     }
 
     @Override
     protected Parcelable onSaveInstanceState() {
         Parcelable instance = super.onSaveInstanceState();
-        return new SwitchLayoutState(instance, this);
+        return new TokenizeLayoutState(instance, this);
     }
 
     @Override
     protected void onRestoreInstanceState(Parcelable state) {
         super.onRestoreInstanceState(state);
-        SwitchLayoutState now = (SwitchLayoutState) state;
+        TokenizeLayoutState now = (TokenizeLayoutState) state;
         now.apply(this);
         mSwitcher.invalidateToken();
     }
@@ -141,35 +141,42 @@ public abstract class TokenizeLayout extends FrameLayout
         }
     }
 
+    ///
+    /// ChildManipulator
+    ///
+
     @Override
     public void hideChild(int i) {
         View child = getChildAt(i);
         ViewGroup.LayoutParams lp = child.getLayoutParams();
-        int def = ((SwitchLayoutParams) lp).getHideVisibility();
+        int def = ((TokenizeLayoutParams) lp).getHideVisibility();
         //noinspection WrongConstant
         child.setVisibility(def);
+
+        getChildAt(i).setEnabled(false);
     }
 
     @Override
     public void showChild(int i) {
         getChildAt(i).setVisibility(View.VISIBLE);
+        getChildAt(i).setEnabled(true);
     }
 
-    public static class SwitchLayoutParams extends FrameLayout.LayoutParams {
+    public static class TokenizeLayoutParams extends FrameLayout.LayoutParams {
 
         private final int mHided;
 
-        SwitchLayoutParams(int width, int height) {
+        TokenizeLayoutParams(int width, int height) {
             super(width, height);
             mHided = View.INVISIBLE;
         }
 
-        SwitchLayoutParams(@NonNull Context c, @Nullable AttributeSet attrs) {
+        TokenizeLayoutParams(@NonNull Context c, @Nullable AttributeSet attrs) {
             super(c, attrs);
 
-            TypedArray ta = c.obtainStyledAttributes(attrs, R.styleable.SwitchLayout_Layout, 0, 0);
+            TypedArray ta = c.obtainStyledAttributes(attrs, R.styleable.TokenizeLayout_Layout, 0, 0);
             try {
-                mHided = ta.getInteger(R.styleable.SwitchLayout_Layout_hided, View.INVISIBLE); // default
+                mHided = ta.getInteger(R.styleable.TokenizeLayout_Layout_hided, View.INVISIBLE); // default
             } finally {
                 ta.recycle();
             }
@@ -181,40 +188,40 @@ public abstract class TokenizeLayout extends FrameLayout
 
     }
 
-    private static final class SwitchLayoutState extends BaseSavedState {
+    private static final class TokenizeLayoutState extends BaseSavedState {
 
-        public static final Parcelable.Creator<SwitchLayoutState> CREATOR
-                = new Parcelable.Creator<SwitchLayoutState>() {
+        public static final Parcelable.Creator<TokenizeLayoutState> CREATOR
+                = new Parcelable.Creator<TokenizeLayoutState>() {
 
-            public SwitchLayoutState createFromParcel(Parcel in) {
-                return new SwitchLayoutState(in);
+            public TokenizeLayoutState createFromParcel(Parcel in) {
+                return new TokenizeLayoutState(in);
             }
 
-            public SwitchLayoutState[] newArray(int size) {
-                return new SwitchLayoutState[size];
+            public TokenizeLayoutState[] newArray(int size) {
+                return new TokenizeLayoutState[size];
             }
         };
 
-        int index;
+        private final int mIndex;
 
-        private SwitchLayoutState(Parcelable in, TokenizeLayout layout) {
+        private TokenizeLayoutState(Parcelable in, TokenizeLayout layout) {
             super(in);
-            index = layout.mSwitcher.currentToken();
+            mIndex = layout.mSwitcher.currentToken();
         }
 
-        private SwitchLayoutState(Parcel source) {
+        private TokenizeLayoutState(Parcel source) {
             super(source);
-            index = source.readInt();
+            mIndex = source.readInt();
         }
 
         @Override
         public void writeToParcel(Parcel out, int flags) {
             super.writeToParcel(out, flags);
-            out.writeInt(index);
+            out.writeInt(mIndex);
         }
 
         private void apply(TokenizeLayout layout) {
-            layout.showChild(index);
+            layout.showChild(mIndex);
         }
 
     }
