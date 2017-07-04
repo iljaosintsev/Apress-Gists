@@ -77,11 +77,7 @@ public class GistModel extends ViewModel implements Parcelable, Cloneable {
         this.created = created;
         this.description = description;
         this.note = note;
-        if (ownerLogin != null) {
-            this.ownerLogin = ownerLogin;
-        } else {
-            this.ownerLogin = "anonymous";
-        }
+        overrideOwnerLogin(ownerLogin);
         this.ownerAvatarUrl = ownerAvatarUrl;
     }
 
@@ -114,6 +110,10 @@ public class GistModel extends ViewModel implements Parcelable, Cloneable {
         return factory.type(this);
     }
 
+    public boolean doesOwnerLogin(GistModel item) {
+        return !"anonymous".equals(item.ownerLogin);
+    }
+
     /**
      * различны ли элементы с точки зрения базы данных
      * @param other сравниваемый элемент
@@ -125,6 +125,14 @@ public class GistModel extends ViewModel implements Parcelable, Cloneable {
 
     public Uri insteadWebLink() {
         return Uri.parse(String.format("http://gist.github.com/%s/%s", ownerLogin, id));
+    }
+
+    private void overrideOwnerLogin(@Nullable String ownerLogin) {
+        if (ownerLogin != null) {
+            this.ownerLogin = ownerLogin;
+        } else {
+            this.ownerLogin = "anonymous";
+        }
     }
 
     @Override
