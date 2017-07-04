@@ -81,6 +81,12 @@ public class GistModel extends ViewModel implements Parcelable {
         this.ownerAvatarUrl = ownerAvatarUrl;
     }
 
+    public GistModel(GistModel other, SideEffect effect) {
+        this(other.id, other.url, other.created, other.description, other.note,
+                other.ownerLogin, other.ownerAvatarUrl);
+        effect.apply(this);
+    }
+
     @VisibleForTesting
     public GistModel(GistModel other) {
         this(other.id, other.url, other.created, other.description);
@@ -198,5 +204,9 @@ public class GistModel extends ViewModel implements Parcelable {
         result = 113 * result + (ownerAvatarUrl != null ? ownerAvatarUrl.hashCode() : 0);
         result = 113 * result + (note != null ? note.hashCode() : 0);
         return result;
+    }
+
+    public interface SideEffect {
+        void apply(GistModel origin);
     }
 }

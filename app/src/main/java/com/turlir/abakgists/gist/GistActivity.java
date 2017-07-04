@@ -67,7 +67,7 @@ public class GistActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         mContent = getIntent().getParcelableExtra(EXTRA_GIST);
 
-        fillControl();
+        applyContent();
     }
 
     @OnClick(R.id.btn_save)
@@ -76,12 +76,13 @@ public class GistActivity extends AppCompatActivity {
         String newNote = note.getText().toString();
         if (isChange(newDesc, newNote)) {
             Timber.i("Внесены изменения, обновление БД");
-            fillObject(newDesc, newNote);
+            GistModel now = createContent(newDesc, newNote);
             _database.put()
-                    .object(mContent)
+                    .object(now)
                     .withPutResolver(UPDATE_RESOLVER)
                     .prepare()
                     .executeAsBlocking();
+            mContent = now;
         } else {
             Timber.i("Изменения не внесены");
         }
@@ -129,16 +130,21 @@ public class GistActivity extends AppCompatActivity {
         return SOLVER.solveDescAndNote(oldDesc, newDesc, oldNote, newNote);
     }
 
-    private void fillControl() {
+    private void applyContent() {
         loadAvatar(mContent.ownerAvatarUrl);
         login.setText(mContent.ownerLogin);
         desc.setText(mContent.description);
         note.setText(mContent.note);
     }
 
-    private void fillObject(String newDesc, String newNote) {
-        mContent.description = newDesc;
-        mContent.note = newNote;
+    private GistModel createContent(final String newDesc, final String newNote) {
+        return new GistModel(mContent, new GistModel.SideEffect() {
+            @Override
+            public void apply(GistModel origin) {
+                origin.description = newDesc;
+                origin.note = newNote;
+            }
+        });
     }
 
     private void loadAvatar(String url) {
