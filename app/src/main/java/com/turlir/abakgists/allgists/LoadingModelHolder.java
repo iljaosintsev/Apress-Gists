@@ -7,18 +7,22 @@ import android.widget.TextView;
 import com.turlir.abakgists.R;
 import com.turlir.abakgists.model.LoadingModel;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 class LoadingModelHolder extends ModelViewHolder<LoadingModel> {
 
-    private final TextView tv;
+    @BindView(R.id.inline_loading_tv)
+    TextView tvLoading;
 
-    public LoadingModelHolder(View view) {
+    LoadingModelHolder(View view) {
         super(view);
-        tv = (TextView) itemView.findViewById(R.id.inline_loading_tv);
+        ButterKnife.bind(this, itemView);
     }
 
     @Override
     void bind(LoadingModel model) {
         String text = itemView.getContext().getString(R.string.inline_download, model.count);
-        tv.setText(text);
+        tvLoading.setText(text);
     }
 }

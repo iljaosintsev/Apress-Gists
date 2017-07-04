@@ -6,7 +6,7 @@ import android.view.View;
 
 abstract class ModelViewHolder<T> extends RecyclerView.ViewHolder {
 
-    public ModelViewHolder(View itemView) {
+    ModelViewHolder(View itemView) {
         super(itemView);
     }
 

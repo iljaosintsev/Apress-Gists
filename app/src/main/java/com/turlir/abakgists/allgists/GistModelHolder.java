@@ -7,31 +7,40 @@ import android.widget.TextView;
 import com.turlir.abakgists.R;
 import com.turlir.abakgists.model.GistModel;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import timber.log.Timber;
 
 class GistModelHolder extends ModelViewHolder<GistModel> {
 
-    private final TextView mId, mCreated, mDesc, mNote;
+    @BindView(R.id.item_gist_id)
+    TextView tvId;
+
+    @BindView(R.id.item_gist_created)
+    TextView tvCreated;
+
+    @BindView(R.id.item_gist_desc)
+    TextView tvDesc;
+
+    @BindView(R.id.item_gist_note)
+    TextView tvNote;
 
     GistModelHolder(View itemView) {
         super(itemView);
-        mId = (TextView) itemView.findViewById(R.id.item_gist_id);
-        mCreated = (TextView) itemView.findViewById(R.id.item_gist_created);
-        mDesc = (TextView) itemView.findViewById(R.id.item_gist_desc);
-        mNote = (TextView) itemView.findViewById(R.id.item_gist_note);
+        ButterKnife.bind(this, itemView);
         Timber.i("new holder created");
     }
 
     @Override
     void bind(GistModel item) {
         if (!item.doesOwnerLogin(item)) {
-            mId.setText(String.valueOf(item.id));
+            tvId.setText(String.valueOf(item.id));
         } else {
-            mId.setText(item.ownerLogin);
+            tvId.setText(item.ownerLogin);
         }
-        mCreated.setText(item.created);
-        mNote.setText(item.note);
-        mDesc.setText(item.description);
+        tvCreated.setText(item.created);
+        tvNote.setText(item.note);
+        tvDesc.setText(item.description);
     }
 
 }

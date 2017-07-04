@@ -7,7 +7,7 @@ import com.turlir.abakgists.model.ErrorModel;
 
 class ErrorModelHolder extends ModelViewHolder<ErrorModel> {
 
-    public ErrorModelHolder(View view) {
+    ErrorModelHolder(View view) {
         super(view);
     }
 
@@ -15,5 +15,4 @@ class ErrorModelHolder extends ModelViewHolder<ErrorModel> {
     void bind(ErrorModel model) {
         // stub
     }
-
 }
