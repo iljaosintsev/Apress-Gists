@@ -138,13 +138,7 @@ public class GistActivity extends AppCompatActivity {
     }
 
     private GistModel createContent(final String newDesc, final String newNote) {
-        return new GistModel(mContent, new GistModel.SideEffect() {
-            @Override
-            public void apply(GistModel origin) {
-                origin.description = newDesc;
-                origin.note = newNote;
-            }
-        });
+        return new GistModel(mContent, newDesc, newNote);
     }
 
     private void loadAvatar(String url) {
