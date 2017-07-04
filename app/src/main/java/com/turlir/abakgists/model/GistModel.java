@@ -13,7 +13,7 @@ import com.turlir.abakgists.allgists.TypesFactory;
 import com.turlir.abakgists.allgists.ViewModel;
 
 @StorIOSQLiteType(table = GistsTable.GISTS)
-public class GistModel extends ViewModel implements Parcelable, Cloneable {
+public class GistModel extends ViewModel implements Parcelable {
 
     @StorIOSQLiteColumn(name = GistsTable.ID, key = true)
     @NonNull
