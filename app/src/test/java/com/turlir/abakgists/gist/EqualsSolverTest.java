@@ -18,63 +18,31 @@ public class EqualsSolverTest {
     //<editor-fold desc="Desc">
     @Test
     public void solveDescNullText() throws Exception {
-        boolean actual = mSolver.solveDesc(null, "text");
+        boolean actual = mSolver.solveOldNow(null, "text");
         assertTrue(actual);
     }
 
     @Test
     public void solveDescTextEmpty() {
-        boolean actual = mSolver.solveDesc("text", "");
+        boolean actual = mSolver.solveOldNow("text", "");
         assertTrue(actual);
     }
 
     @Test
     public void solveDescTextText() {
-        boolean actual = mSolver.solveDesc("text", "text");
+        boolean actual = mSolver.solveOldNow("text", "text");
         assertFalse(actual);
     }
 
     @Test
     public void solveDescNullEmpty() {
-        boolean actual = mSolver.solveDesc(null, "");
+        boolean actual = mSolver.solveOldNow(null, "");
         assertFalse(actual);
     }
 
     @Test
     public void solveDescEmptyText() {
-        boolean actual = mSolver.solveDesc("", "text");
-        assertTrue(actual);
-    }
-    //</editor-fold>
-
-    //<editor-fold desc="Note">
-    @Test
-    public void solveNoteNullText() throws Exception {
-        boolean actual = mSolver.solveNote(null, "text");
-        assertTrue(actual);
-    }
-
-    @Test
-    public void solveNoteTextEmpty() {
-        boolean actual = mSolver.solveNote("text", "");
-        assertTrue(actual);
-    }
-
-    @Test
-    public void solveNoteTextText() {
-        boolean actual = mSolver.solveNote("text", "text");
-        assertFalse(actual);
-    }
-
-    @Test
-    public void solveNoteNullEmpty() {
-        boolean actual = mSolver.solveNote(null, "");
-        assertFalse(actual);
-    }
-
-    @Test
-    public void solveNoteEmptyText() {
-        boolean actual = mSolver.solveNote("", "text");
+        boolean actual = mSolver.solveOldNow("", "text");
         assertTrue(actual);
     }
     //</editor-fold>

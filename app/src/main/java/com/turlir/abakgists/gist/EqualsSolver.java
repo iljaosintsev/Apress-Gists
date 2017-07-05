@@ -33,7 +33,7 @@ class EqualsSolver {
         return solveOldNow(oldDesc, nowDes) || solveOldNow(oldNote, nowNote);
     }
 
-    private boolean solveOldNow(@Nullable String old, @NonNull String now) {
+    boolean solveOldNow(@Nullable String old, @NonNull String now) {
         if (old == null) {
             return !now.isEmpty();
         } else {
