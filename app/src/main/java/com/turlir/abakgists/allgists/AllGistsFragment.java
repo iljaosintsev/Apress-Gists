@@ -60,13 +60,11 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener, S
             mAdapter.clearAll();
             _presenter.resetGist();
 
-            recycler.removeOnScrollListener(mScrollListener);
-            mScrollListener = new SimpleScrollListener(AllGistsFragment.this);
-            recycler.addOnScrollListener(mScrollListener);
+            recycler.clearOnScrollListeners();
+            RecyclerView.OnScrollListener scroller = new SimpleScrollListener(AllGistsFragment.this);
+            recycler.addOnScrollListener(scroller);
         }
     };
-
-    private RecyclerView.OnScrollListener mScrollListener;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -93,8 +91,8 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener, S
         SpaceDecorator space = new SpaceDecorator(getActivity(), R.dimen.activity_horizontal_margin, R.dimen.half_margin);
         recycler.addItemDecoration(space);
 
-        mScrollListener = new SimpleScrollListener(this);
-        recycler.addOnScrollListener(mScrollListener);
+        RecyclerView.OnScrollListener scroller = new SimpleScrollListener(this);
+        recycler.addOnScrollListener(scroller);
 
         // start
         this.root.toLoading();
@@ -113,7 +111,7 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener, S
 
     @Override
     public void onDestroyView() {
-        recycler.removeOnScrollListener(mScrollListener);
+        recycler.clearOnScrollListeners();
         swipe.setOnRefreshListener(null);
         super.onDestroyView();
     }
