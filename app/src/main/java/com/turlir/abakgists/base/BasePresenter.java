@@ -1,6 +1,7 @@
 package com.turlir.abakgists.base;
 
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.turlir.abakgists.R;
@@ -55,6 +56,42 @@ public abstract class BasePresenter<T extends BaseView> {
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread());
         }
+    }
+
+    protected abstract class ErrorHandler<E> extends Subscriber<E> {
+
+        private final TroubleSelector mRobot;
+
+        protected ErrorHandler() {
+            super();
+            mRobot = new TroubleSelector(additionalSituation());
+        }
+
+        @Override
+        public void onCompleted() {
+
+        }
+
+        @Override
+        public void onError(Throwable throwable) {
+            if (throwable instanceof Exception) {
+                TroubleSelector.ErrorSituation callback =
+                        mRobot.select((Exception) throwable, isDataAvailable(), isError());
+
+                callback.perform(interpreter(), (Exception) throwable);
+            }
+        }
+
+        @NonNull
+        protected TroubleSelector.ErrorSituation[] additionalSituation() {
+            return new TroubleSelector.ErrorSituation[0];
+        }
+
+        protected abstract boolean isError();
+
+        protected abstract boolean isDataAvailable();
+
+        protected abstract TroubleSelector.ErrorInterpreter interpreter();
     }
 
     protected abstract class Handler<E> extends Subscriber<E> {
