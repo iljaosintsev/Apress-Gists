@@ -70,7 +70,7 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
         return mContent.size();
     }
 
-    public ViewModel getItemByPosition(int p) {
+    private ViewModel getItemByPosition(int p) {
         return mContent.get(p);
     }
 
@@ -129,9 +129,9 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
         notifyItemRemoved(index);
     }
 
-    void addError() {
+    void addError(String desc) {
         int s = mContent.size();
-        mContent.add(new ErrorModel());
+        mContent.add(new ErrorModel(desc));
         notifyItemInserted(s + 1);
     }
 
@@ -141,13 +141,13 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
         notifyItemRangeRemoved(0, c);
     }
 
-    public void addLoading() {
+    void addLoading() {
         int s = mContent.size();
         mContent.add(new LoadingModel(getItemCount()));
         notifyItemInserted(s + 1);
     }
 
-    public void removeLastIfLoading() {
+    void removeLastIfLoading() {
         int i = getItemCount() - 1;
         ViewModel last = getItemByPosition(i);
         int type = last.type(mFactory);

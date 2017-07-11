@@ -1,19 +1,22 @@
 package com.turlir.abakgists.allgists;
 
 
+import android.support.annotation.NonNull;
+
+import com.pushtorefresh.storio.sqlite.operations.delete.DeleteResult;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
 import com.turlir.abakgists.base.BasePresenter;
+import com.turlir.abakgists.base.TroubleSelector;
 import com.turlir.abakgists.model.GistModel;
 import com.turlir.abakgists.network.Repository;
 
 import java.util.List;
 
+import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
-import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.functions.Func2;
-import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
@@ -52,34 +55,51 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
         addCacheSubs(subs);
     }
 
-    /**
-     * сбросить кеш, загрузить и сохранить свежие результаты
-     */
-    void resetGist() {
+    void updateGist() {
         removeCacheSubs();
-        Subscription subs = mRepo
-                .clearCache()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action0() {
+        Subscription subs = mRepo.loadGistsFromServer(0)
+                .flatMap(new Func1<List<GistModel>, Observable<DeleteResult>>() {
                     @Override
-                    public void call() {
-                        loadPublicGists(0);
+                    public Observable<DeleteResult> call(List<GistModel> gistModels) {
+                        return mRepo.clearCache();
                     }
-                }, new Action1<Throwable>() {
+                }, new Func2<List<GistModel>, DeleteResult, List<GistModel>>() {
                     @Override
-                    public void call(Throwable e) {
-                        processError(e);
+                    public List<GistModel> call(List<GistModel> gistModels, DeleteResult o) {
+                        return gistModels;
+                    }
+                })
+                .flatMap(new Func1<List<GistModel>, Observable<PutResults<GistModel>>>() {
+                    @Override
+                    public Observable<PutResults<GistModel>> call(List<GistModel> gistModels) {
+                        return mRepo.putGistsToCache(gistModels);
+                    }
+                })
+                .compose(this.<PutResults<GistModel>>defaultScheduler())
+                .subscribe(new GistDownloadHandler<PutResults<GistModel>>() {
+
+                    @NonNull
+                    @Override
+                    protected TroubleSelector.ErrorSituation[] additionalSituation() {
+                        return new TroubleSelector.ErrorSituation[] { new RepeatingError() };
+                    }
+
+                    @Override
+                    public void onNext(PutResults<GistModel> gistModelPutResults) {
+                        if (getView() != null) {
+                            getView().onUpdateSuccessful();
+                            loadPublicGists(0);
+                        }
                     }
                 });
-        addCacheSubs(subs);
+        addSubscription(subs);
     }
 
     private void loadFromServer(int currentSize) {
         Subscription subsToServer = mRepo
                 .loadGistsFromServerAndPutCache(currentSize)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Handler<PutResults<GistModel>>() {
+                .subscribe(new GistDownloadHandler<PutResults<GistModel>>() {
                     @Override
                     public void onNext(PutResults<GistModel> result) {
                         Timber.d("fromServer obs %d", result.results().size());
@@ -101,14 +121,45 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
         addSubscription(mCacheSubs);
     }
 
-
     /**
      * Anti cycle-repeating request
      */
-    private static class CycleRepeatingBreaker implements Func2<List<GistModel>, List<GistModel>, Boolean> {
+    private static class CycleRepeatingBreaker
+            implements Func2<List<GistModel>, List<GistModel>, Boolean> {
+
         @Override
         public Boolean call(List<GistModel> prev, List<GistModel> now) {
             return prev.size() == now.size() && prev.size() == 0;
+        }
+
+    }
+    private abstract class GistDownloadHandler<E> extends ErrorHandler<E> {
+
+        @Override
+        protected boolean isError() {
+            return getView() != null && getView().isError();
+        }
+
+        @Override
+        protected boolean isDataAvailable() {
+            return getView() != null && !getView().isEmpty();
+        }
+
+        @Override
+        protected TroubleSelector.ErrorInterpreter interpreter() {
+            return getView();
+        }
+
+    }
+
+    private static final class RepeatingError implements TroubleSelector.ErrorSituation {
+        @Override
+        public boolean should(Exception ex, boolean dataAvailable, boolean isErrorNow) {
+            return isErrorNow;
+        }
+        @Override
+        public void perform(TroubleSelector.ErrorInterpreter v, Exception e) {
+            v.blockingError("Увы, попытайтесь снова через некоторое время");
         }
     }
 }
