@@ -3,11 +3,11 @@ package com.turlir.abakgists.base;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
@@ -16,13 +16,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.LinearLayout;
 
-public class ItemDecoration extends RecyclerView.ItemDecoration  {
+import timber.log.Timber;
+
+public class DividerDecorator extends RecyclerView.ItemDecoration  {
 
     public static final int HORIZONTAL = LinearLayout.HORIZONTAL;
-
     public static final int VERTICAL = LinearLayout.VERTICAL;
 
-    private static final int[] ATTRS = new int[]{ android.R.attr.listDivider };
+    public static final int DOUBLE_DIVIDER = 0;
+    public static final int TOP_DIVIDER = 1;
+    public static final int NO_DIVIDER = 1 << 1;
 
     private Drawable mDivider;
 
@@ -30,24 +33,21 @@ public class ItemDecoration extends RecyclerView.ItemDecoration  {
 
     private final Rect mBounds;
 
-    private final boolean isLast;
+    private int shouldLastDivider;
 
     /**
      * Creates a divider {@link RecyclerView.ItemDecoration} that can be used with a
      * {@link LinearLayoutManager}.
      *  @param context Current context, it will be used to access resources.
      * @param orientation Divider orientation. Should be {@link #HORIZONTAL} or {@link #VERTICAL}.
-     * @param isLast should last item decoration
+     * @param shouldLastDivider strategy for flexibility last item decoration
      */
-    public ItemDecoration(Context context, @DrawableRes int divider, int orientation, boolean isLast) {
+    public DividerDecorator(Context context, @DrawableRes int divider, int orientation,
+                            @DECORATION int shouldLastDivider) {
         mBounds = new Rect();
-
-        final TypedArray a = context.obtainStyledAttributes(ATTRS);
         mDivider = ContextCompat.getDrawable(context, divider);
-        a.recycle();
         setOrientation(orientation);
-
-        this.isLast = isLast;
+        this.shouldLastDivider = shouldLastDivider;
     }
 
     /**
@@ -73,6 +73,15 @@ public class ItemDecoration extends RecyclerView.ItemDecoration  {
         mDivider = drawable;
     }
 
+    @DECORATION
+    public int lastDividerStrategy() {
+        return shouldLastDivider;
+    }
+
+    public void setLastDividerStategy(@DECORATION int value) {
+        shouldLastDivider = value;
+    }
+
     @Override
     public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
         if (parent.getLayoutManager() == null || parent.getChildCount() == 1) {
@@ -93,14 +102,19 @@ public class ItemDecoration extends RecyclerView.ItemDecoration  {
         if (parent.getClipToPadding()) {
             left = parent.getPaddingLeft();
             right = parent.getWidth() - parent.getPaddingRight();
-            canvas.clipRect(left, parent.getPaddingTop(), right,
-                    parent.getHeight() - parent.getPaddingBottom());
+            canvas.clipRect(
+                    left,
+                    parent.getPaddingTop(),
+                    right,
+                    parent.getHeight() - parent.getPaddingBottom()
+            );
         } else {
             left = 0;
             right = parent.getWidth();
         }
 
         final int childCount = maxChildIndex(parent);
+        Timber.d("recycler item decoration in range %d - %d", 0, childCount);
         for (int i = 0; i < childCount; i++) {
             final View child = parent.getChildAt(i);
             parent.getDecoratedBoundsWithMargins(child, mBounds);
@@ -120,8 +134,12 @@ public class ItemDecoration extends RecyclerView.ItemDecoration  {
         if (parent.getClipToPadding()) {
             top = parent.getPaddingTop();
             bottom = parent.getHeight() - parent.getPaddingBottom();
-            canvas.clipRect(parent.getPaddingLeft(), top,
-                    parent.getWidth() - parent.getPaddingRight(), bottom);
+            canvas.clipRect(
+                    parent.getPaddingLeft(),
+                    top,
+                    parent.getWidth() - parent.getPaddingRight(),
+                    bottom
+            );
         } else {
             top = 0;
             bottom = parent.getHeight();
@@ -142,9 +160,7 @@ public class ItemDecoration extends RecyclerView.ItemDecoration  {
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
                                RecyclerView.State state) {
-        if (parent.getChildCount() == 1) {
-            return;
-        }
+        if (parent.getChildCount() == 1) return;
         if (mOrientation == VERTICAL) {
             outRect.set(0, 0, 0, mDivider.getIntrinsicHeight());
         } else {
@@ -153,14 +169,35 @@ public class ItemDecoration extends RecyclerView.ItemDecoration  {
     }
 
     private int maxChildIndex(RecyclerView parent) {
-        int childCount;
-        if (isLast) {
-            childCount = parent.getChildCount();
+        LinearLayoutManager llm = (LinearLayoutManager) parent.getLayoutManager();
+        int lv = llm.findLastVisibleItemPosition();
+        int all = llm.getItemCount();
+        boolean endOfList = all == lv + 1;
+        if (endOfList) {
+            int delta = lastItemDeltaFactory();
+            return parent.getChildCount() - delta;
         } else {
-            childCount = parent.getChildCount() - 1;
+            return parent.getChildCount();
         }
-        return childCount;
     }
 
+    private int lastItemDeltaFactory() {
+        switch (lastDividerStrategy()) {
+            case DOUBLE_DIVIDER:
+                return 0;
+            case TOP_DIVIDER:
+               return 1;
+            case NO_DIVIDER:
+                return  2;
+        }
+        return 2; // no one else
+    }
+
+    @IntDef(flag = true, value = {
+            DOUBLE_DIVIDER, TOP_DIVIDER, NO_DIVIDER
+    })
+    public @interface DECORATION {
+
+    }
 
 }

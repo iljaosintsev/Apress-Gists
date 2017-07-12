@@ -14,7 +14,7 @@ import com.turlir.abakgists.R;
 import com.turlir.abakgists.allgists.AllGistAdapter;
 import com.turlir.abakgists.base.App;
 import com.turlir.abakgists.base.BaseFragment;
-import com.turlir.abakgists.base.ItemDecoration;
+import com.turlir.abakgists.base.DividerDecorator;
 import com.turlir.abakgists.base.OnClickListener;
 import com.turlir.abakgists.base.SpaceDecorator;
 import com.turlir.abakgists.gist.GistActivity;
@@ -61,8 +61,8 @@ public class NotesFragment extends BaseFragment implements OnClickListener {
                 = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recycler.setLayoutManager(lm);
 
-        ItemDecoration divider = new ItemDecoration(getActivity(), R.drawable.divider,
-                DividerItemDecoration.VERTICAL, true);
+        DividerDecorator divider = new DividerDecorator(getActivity(), R.drawable.divider,
+                DividerItemDecoration.VERTICAL, DividerDecorator.TOP_DIVIDER);
         recycler.addItemDecoration(divider);
         SpaceDecorator space = new SpaceDecorator(getActivity(), R.dimen.activity_horizontal_margin, R.dimen.half_margin);
         recycler.addItemDecoration(space);

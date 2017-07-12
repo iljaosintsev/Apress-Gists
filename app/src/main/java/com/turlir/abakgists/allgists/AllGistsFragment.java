@@ -1,6 +1,7 @@
 package com.turlir.abakgists.allgists;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
@@ -17,7 +18,7 @@ import android.widget.TextView;
 import com.turlir.abakgists.R;
 import com.turlir.abakgists.base.App;
 import com.turlir.abakgists.base.BaseFragment;
-import com.turlir.abakgists.base.ItemDecoration;
+import com.turlir.abakgists.base.DividerDecorator;
 import com.turlir.abakgists.base.OnClickListener;
 import com.turlir.abakgists.base.SpaceDecorator;
 import com.turlir.abakgists.gist.GistActivity;
@@ -80,15 +81,22 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener, S
 
         swipe.setOnRefreshListener(mSwipeListener);
 
+        Context cnt = getActivity();
+
         mAdapter = new AllGistAdapter(getContext(), this);
         recycler.setAdapter(mAdapter);
-        LinearLayoutManager lm = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager lm = new LinearLayoutManager(cnt, LinearLayoutManager.VERTICAL, false);
         recycler.setLayoutManager(lm);
 
-        ItemDecoration divider = new ItemDecoration(getActivity(), R.drawable.divider,
-                ItemDecoration.VERTICAL, false);
+        DividerDecorator divider = new DividerDecorator(
+                cnt,
+                R.drawable.divider,
+                DividerDecorator.VERTICAL,
+                DividerDecorator.TOP_DIVIDER
+        );
         recycler.addItemDecoration(divider);
-        SpaceDecorator space = new SpaceDecorator(getActivity(), R.dimen.activity_horizontal_margin, R.dimen.half_margin);
+        SpaceDecorator space = new SpaceDecorator(cnt, R.dimen.activity_horizontal_margin,
+                R.dimen.half_margin);
         recycler.addItemDecoration(space);
 
         RecyclerView.OnScrollListener scroller = new SimpleScrollListener(this);
