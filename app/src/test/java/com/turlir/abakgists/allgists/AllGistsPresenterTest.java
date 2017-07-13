@@ -146,7 +146,7 @@ public class AllGistsPresenterTest {
         List<GistModel> list = new ArrayList<>();
         list.add(new GistModel("id", "url", "created", "desc"));
         Observable<List<GistModel>> resultObs = Observable.just(list);
-        Mockito.when(mock.loadGistsFromCache(Mockito.anyInt())).thenReturn(resultObs);
+        Mockito.when(mock.loadGistsFromCache()).thenReturn(resultObs);
 
         AllGistsPresenter presenter = new AllGistsPresenter(mock);
 
@@ -155,7 +155,7 @@ public class AllGistsPresenterTest {
 
         presenter.loadPublicGists(0);
 
-        verify(mock).loadGistsFromCache(0);
+        verify(mock).loadGistsFromCache();
 
         verify(mockView).onGistLoaded(list);
     }

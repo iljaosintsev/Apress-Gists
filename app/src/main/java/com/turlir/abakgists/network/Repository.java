@@ -47,13 +47,12 @@ public class Repository {
                 });
     }
 
-    public Observable<List<GistModel>> loadGistsFromCache(int currentSize) {
+    public Observable<List<GistModel>> loadGistsFromCache() {
         return mDatabase.get()
                 .listOfObjects(GistModel.class)
                 .withQuery(
                         Query.builder()
                                 .table(GistsTable.GISTS)
-                                .limit(currentSize, (int) PAGE_SIZE)
                                 .build()
                 )
                 .prepare()

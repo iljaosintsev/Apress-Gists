@@ -33,7 +33,7 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
     void loadPublicGists(final int currentSize) {
         removeCacheSubs();
         Subscription subs = mRepo
-                .loadGistsFromCache(currentSize)
+                .loadGistsFromCache()
                 .distinctUntilChanged(new CycleRepeatingBreaker())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Handler<List<GistModel>>() {
@@ -41,7 +41,7 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
                     public void onNext(List<GistModel> value) {
                         Timber.d("onNext %d", value.size());
                         if (getView() != null) {
-                            if (value.size() > 0) {
+                            if (value.size() > currentSize) {
                                 getView().onGistLoaded(value);
                             } else {
                                 loadFromServer(currentSize);

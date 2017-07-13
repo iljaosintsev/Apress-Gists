@@ -172,10 +172,10 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener, S
 
     @Override
     public void loadNextPage() {
+        _presenter.loadPublicGists(mAdapter.getItemCount());
         if (!isEmpty()) {
             mAdapter.addLoading();
         }
-        _presenter.loadPublicGists(mAdapter.getItemCount());
     }
 
     @Override
