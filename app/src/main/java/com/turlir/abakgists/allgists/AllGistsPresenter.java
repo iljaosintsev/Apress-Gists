@@ -3,7 +3,6 @@ package com.turlir.abakgists.allgists;
 
 import android.support.annotation.NonNull;
 
-import com.pushtorefresh.storio.sqlite.operations.delete.DeleteResult;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
 import com.turlir.abakgists.base.BasePresenter;
 import com.turlir.abakgists.base.TroubleSelector;
@@ -12,10 +11,8 @@ import com.turlir.abakgists.network.Repository;
 
 import java.util.List;
 
-import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.functions.Func2;
 import timber.log.Timber;
 
@@ -57,24 +54,7 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
 
     void updateGist() {
         removeCacheSubs();
-        Subscription subs = mRepo.loadGistsFromServer(0)
-                .flatMap(new Func1<List<GistModel>, Observable<DeleteResult>>() {
-                    @Override
-                    public Observable<DeleteResult> call(List<GistModel> gistModels) {
-                        return mRepo.clearCache();
-                    }
-                }, new Func2<List<GistModel>, DeleteResult, List<GistModel>>() {
-                    @Override
-                    public List<GistModel> call(List<GistModel> gistModels, DeleteResult o) {
-                        return gistModels;
-                    }
-                })
-                .flatMap(new Func1<List<GistModel>, Observable<PutResults<GistModel>>>() {
-                    @Override
-                    public Observable<PutResults<GistModel>> call(List<GistModel> gistModels) {
-                        return mRepo.putGistsToCache(gistModels);
-                    }
-                })
+        Subscription subs = mRepo.reloadGist()
                 .compose(this.<PutResults<GistModel>>defaultScheduler())
                 .subscribe(new GistDownloadHandler<PutResults<GistModel>>() {
 

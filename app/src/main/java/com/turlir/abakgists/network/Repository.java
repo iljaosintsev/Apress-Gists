@@ -11,7 +11,6 @@ import com.turlir.abakgists.model.GistsTable;
 
 import java.util.List;
 
-import rx.Completable;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -30,13 +29,14 @@ public class Repository {
         mDatabase = base;
     }
 
-    public Observable<List<GistModel>> loadGistsFromServer(int currentSize) {
-        int page = Math.round(currentSize / PAGE_SIZE) + 1;
-        return mClient
-                .publicGist(page)
-                .doOnNext(new LagSideEffect(2500))
-                .subscribeOn(Schedulers.io())
-                .map(new ListGistToModelMapper());
+    public Observable<PutResults<GistModel>> reloadGist() {
+        return loadGistsFromServer(0)
+                .flatMap(new Func1<List<GistModel>, Observable<PutResults<GistModel>>>() {
+                    @Override
+                    public Observable<PutResults<GistModel>> call(List<GistModel> gistModels) {
+                        return clearCacheAndPut(gistModels);
+                    }
+                });
     }
 
     public Observable<PutResults<GistModel>> loadGistsFromServerAndPutCache(int currentSize) {
@@ -47,13 +47,6 @@ public class Repository {
                         return putGistsToCache(gists);
                     }
                 });
-    }
-
-    public Observable<PutResults<GistModel>> putGistsToCache(List<GistModel> gists) {
-        return mDatabase.put()
-                .objects(gists)
-                .prepare()
-                .asRxObservable();
     }
 
     public Observable<List<GistModel>> loadGistsFromCache(int currentSize) {
@@ -69,7 +62,27 @@ public class Repository {
                 .asRxObservable();
     }
 
-    public Observable<DeleteResult> clearCache() {
+    ///
+    /// private
+    ///
+
+    private Observable<List<GistModel>> loadGistsFromServer(int currentSize) {
+        int page = Math.round(currentSize / PAGE_SIZE) + 1;
+        return mClient
+                .publicGist(page)
+                .doOnNext(new LagSideEffect(2500))
+                .subscribeOn(Schedulers.io())
+                .map(new ListGistToModelMapper());
+    }
+
+    private Observable<PutResults<GistModel>> putGistsToCache(List<GistModel> gists) {
+        return mDatabase.put()
+                .objects(gists)
+                .prepare()
+                .asRxObservable();
+    }
+
+    private Observable<PutResults<GistModel>> clearCacheAndPut(final List<GistModel> gists) {
         return mDatabase.delete()
                 .byQuery(
                         DeleteQuery
@@ -78,7 +91,13 @@ public class Repository {
                                 .build()
                 )
                 .prepare()
-                .asRxObservable();
+                .asRxObservable()
+                .flatMap(new Func1<DeleteResult, Observable<PutResults<GistModel>>>() {
+                    @Override
+                    public Observable<PutResults<GistModel>> call(DeleteResult deleteResult) {
+                        return putGistsToCache(gists);
+                    }
+                });
     }
 
     /**
