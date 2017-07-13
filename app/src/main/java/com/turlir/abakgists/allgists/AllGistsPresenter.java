@@ -28,7 +28,6 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
     /**
      * из локального кеша или сетевого запроса
      *
-     * @param currentSize текущий размер списка (для пагинации)
      */
     void loadPublicGists(final int currentSize) {
         removeCacheSubs();
@@ -36,16 +35,16 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
                 .loadGistsFromCache(currentSize)
                 .distinctUntilChanged(new CycleRepeatingBreaker())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Handler<List<GistModel>>() {
+                .compose(this.<List<GistModel>>safeFiltering())
+                .subscribe(new GistDownloadHandler<List<GistModel>>() {
                     @Override
                     public void onNext(List<GistModel> value) {
                         Timber.d("onNext %d", value.size());
-                        if (getView() != null) {
-                            if (value.size() > 0) {
-                                getView().onGistLoaded(value);
-                            } else {
-                                loadFromServer(currentSize);
-                            }
+                        if (value.size() > 0) {
+                            //noinspection ConstantConditions
+                            getView().onGistLoaded(value);
+                        } else {
+                            loadFromServer(currentSize);
                         }
                     }
                 });
@@ -57,13 +56,6 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
         Subscription subs = mRepo.reloadGist()
                 .compose(this.<PutResults<GistModel>>defaultScheduler())
                 .subscribe(new GistDownloadHandler<PutResults<GistModel>>() {
-
-                    @NonNull
-                    @Override
-                    protected TroubleSelector.ErrorSituation[] additionalSituation() {
-                        return new TroubleSelector.ErrorSituation[] { new RepeatingError() };
-                    }
-
                     @Override
                     public void onNext(PutResults<GistModel> gistModelPutResults) {
                         if (getView() != null) {
@@ -115,6 +107,12 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
     }
     private abstract class GistDownloadHandler<E> extends ErrorHandler<E> {
 
+        @NonNull
+        @Override
+        protected TroubleSelector.ErrorSituation[] additionalSituation() {
+            return new TroubleSelector.ErrorSituation[] { new RepeatingError() };
+        }
+
         @Override
         protected boolean isError() {
             return getView() != null && getView().isError();
@@ -142,4 +140,5 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
             v.blockingError("Увы, попытайтесь снова через некоторое время");
         }
     }
+
 }
