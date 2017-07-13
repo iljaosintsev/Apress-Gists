@@ -16,7 +16,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import timber.log.Timber;
 
 public class DividerDecorator extends RecyclerView.ItemDecoration  {
 
@@ -114,7 +113,6 @@ public class DividerDecorator extends RecyclerView.ItemDecoration  {
         }
 
         final int childCount = maxChildIndex(parent);
-        Timber.d("recycler item decoration in range %d - %d", 0, childCount);
         for (int i = 0; i < childCount; i++) {
             final View child = parent.getChildAt(i);
             parent.getDecoratedBoundsWithMargins(child, mBounds);
