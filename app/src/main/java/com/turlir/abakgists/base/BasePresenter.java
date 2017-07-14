@@ -72,7 +72,7 @@ public abstract class BasePresenter<T extends BaseView> {
         }
     }
 
-    protected abstract class ErrorHandler<E> extends Subscriber<E> {
+    protected abstract class ErrorHandler<E> extends Handler<E> {
 
         private final TroubleSelector mRobot;
 
@@ -82,30 +82,27 @@ public abstract class BasePresenter<T extends BaseView> {
         }
 
         @Override
-        public void onCompleted() {
-
-        }
-
-        @Override
         public void onError(Throwable throwable) {
-            if (throwable instanceof Exception) {
-                TroubleSelector.ErrorSituation callback =
+            ErrorInterpreter interpreter = interpreter();
+            if (throwable instanceof Exception && interpreter != null) {
+                ErrorSituation callback =
                         mRobot.select((Exception) throwable, isDataAvailable(), isError());
 
-                callback.perform(interpreter(), (Exception) throwable);
+                callback.perform(interpreter, (Exception) throwable);
             }
         }
 
         @NonNull
-        protected TroubleSelector.ErrorSituation[] additionalSituation() {
-            return new TroubleSelector.ErrorSituation[0];
+        protected ErrorSituation[] additionalSituation() {
+            return new ErrorSituation[0];
         }
 
         protected abstract boolean isError();
 
         protected abstract boolean isDataAvailable();
 
-        protected abstract TroubleSelector.ErrorInterpreter interpreter();
+        @Nullable
+        protected abstract ErrorInterpreter interpreter();
     }
 
     protected abstract class Handler<E> extends Subscriber<E> {

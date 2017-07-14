@@ -5,7 +5,8 @@ import android.support.annotation.NonNull;
 
 import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
 import com.turlir.abakgists.base.BasePresenter;
-import com.turlir.abakgists.base.TroubleSelector;
+import com.turlir.abakgists.base.ErrorInterpreter;
+import com.turlir.abakgists.base.ErrorSituation;
 import com.turlir.abakgists.model.GistModel;
 import com.turlir.abakgists.network.Repository;
 
@@ -105,12 +106,13 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
         }
 
     }
+
     private abstract class GistDownloadHandler<E> extends ErrorHandler<E> {
 
         @NonNull
         @Override
-        protected TroubleSelector.ErrorSituation[] additionalSituation() {
-            return new TroubleSelector.ErrorSituation[] { new RepeatingError() };
+        protected ErrorSituation[] additionalSituation() {
+            return new ErrorSituation[] { new RepeatingError() };
         }
 
         @Override
@@ -124,19 +126,19 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
         }
 
         @Override
-        protected TroubleSelector.ErrorInterpreter interpreter() {
+        protected ErrorInterpreter interpreter() {
             return getView();
         }
 
     }
 
-    private static final class RepeatingError implements TroubleSelector.ErrorSituation {
+    private static final class RepeatingError implements ErrorSituation {
         @Override
         public boolean should(Exception ex, boolean dataAvailable, boolean isErrorNow) {
             return isErrorNow;
         }
         @Override
-        public void perform(TroubleSelector.ErrorInterpreter v, Exception e) {
+        public void perform(ErrorInterpreter v, Exception e) {
             v.blockingError("Увы, попытайтесь снова через некоторое время");
         }
     }

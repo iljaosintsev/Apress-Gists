@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 
 import java.io.IOException;
 
-public class TroubleSelector {
+class TroubleSelector {
 
     private final ErrorSituation mTrueTrue = new CommonError() { // 3
         @Override
@@ -41,12 +41,12 @@ public class TroubleSelector {
 
     private final ErrorSituation[] mCallbacks;
 
-    public TroubleSelector(ErrorSituation[] callbacks) {
+    TroubleSelector(ErrorSituation[] callbacks) {
         mCallbacks = callbacks;
     }
 
     @NonNull
-    public ErrorSituation select(Exception throwable, boolean dataAvailable, boolean isError) {
+    ErrorSituation select(Exception throwable, boolean dataAvailable, boolean isError) {
         for (ErrorSituation item : mCallbacks) {
             boolean should = item.should(throwable, dataAvailable, isError);
             if (should) {
@@ -68,34 +68,6 @@ public class TroubleSelector {
         if (isNetwork) index = index | (1 << 1);
         if (dataAvailable) index = index | 1;
         return index;
-    }
-
-    public interface ErrorSituation {
-
-        boolean should(Exception ex, boolean dataAvailable, boolean isErrorNow);
-
-        void perform(ErrorInterpreter v, Exception e);
-    }
-
-    public interface ErrorInterpreter {
-
-        /**
-         * Не блокирующая ошибка, когда контент уже есть
-         * @param msg описание ситуации
-         */
-        void nonBlockingError(String msg);
-
-        /**
-         * Случайная ошибка, когда определить дальнейшие действия нельзя. Например NPE
-         * @param msg описание ситуации
-         */
-        void alertError(String msg);
-
-        /**
-         * Блокирующая, когда данных нет или дальнейшая работа невозможна
-         * @param msg описание ситуации
-         */
-        void blockingError(String msg);
     }
 
     private abstract static class CommonError implements ErrorSituation {

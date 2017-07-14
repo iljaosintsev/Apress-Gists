@@ -19,7 +19,7 @@ import android.widget.Toast;
 import com.turlir.abakgists.R;
 import com.turlir.abakgists.base.App;
 import com.turlir.abakgists.base.BaseFragment;
-import com.turlir.abakgists.base.TroubleSelector;
+import com.turlir.abakgists.base.ErrorInterpreter;
 import com.turlir.abakgists.base.ItemDecoration;
 import com.turlir.abakgists.base.OnClickListener;
 import com.turlir.abakgists.base.SpaceDecorator;
@@ -37,7 +37,7 @@ import butterknife.BindView;
 
 public class AllGistsFragment
         extends BaseFragment
-        implements OnClickListener, SimpleScrollListener.Paginator, TroubleSelector.ErrorInterpreter {
+        implements OnClickListener, SimpleScrollListener.Paginator, ErrorInterpreter {
 
     private static final int MIN_COUNT = 2;
 
