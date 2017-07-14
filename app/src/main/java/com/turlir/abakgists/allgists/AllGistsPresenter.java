@@ -5,10 +5,10 @@ import android.support.annotation.NonNull;
 
 import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
 import com.turlir.abakgists.base.BasePresenter;
-import com.turlir.abakgists.base.ErrorInterpreter;
-import com.turlir.abakgists.base.ErrorSituation;
+import com.turlir.abakgists.base.erroring.ErrorInterpreter;
+import com.turlir.abakgists.base.erroring.ErrorSituation;
 import com.turlir.abakgists.model.GistModel;
-import com.turlir.abakgists.network.Repository;
+import com.turlir.abakgists.data.Repository;
 
 import java.util.List;
 

@@ -10,8 +10,8 @@ import com.turlir.abakgists.DatabaseMocking;
 import com.turlir.abakgists.di.AppComponent;
 import com.turlir.abakgists.model.Gist;
 import com.turlir.abakgists.model.GistModel;
-import com.turlir.abakgists.network.ApiClient;
-import com.turlir.abakgists.network.Repository;
+import com.turlir.abakgists.data.ApiClient;
+import com.turlir.abakgists.data.Repository;
 
 import org.junit.Before;
 import org.junit.BeforeClass;

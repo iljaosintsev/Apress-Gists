@@ -5,6 +5,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.turlir.abakgists.R;
+import com.turlir.abakgists.base.erroring.ErrorInterpreter;
+import com.turlir.abakgists.base.erroring.ErrorSelector;
+import com.turlir.abakgists.base.erroring.ErrorSituation;
+import com.turlir.abakgists.base.erroring.TroubleSelector;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -74,7 +78,7 @@ public abstract class BasePresenter<T extends BaseView> {
 
     protected abstract class ErrorHandler<E> extends Handler<E> {
 
-        private final TroubleSelector mRobot;
+        private final ErrorSelector mRobot;
 
         protected ErrorHandler() {
             super();

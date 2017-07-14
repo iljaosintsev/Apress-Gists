@@ -1,4 +1,4 @@
-package com.turlir.abakgists.base;
+package com.turlir.abakgists.widgets;
 
 
 import android.annotation.SuppressLint;

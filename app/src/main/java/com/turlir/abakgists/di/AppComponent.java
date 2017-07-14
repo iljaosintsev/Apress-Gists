@@ -7,7 +7,7 @@ import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.turlir.abakgists.allgists.AllGistsFragment;
 import com.turlir.abakgists.allgists.AllGistsPresenter;
 import com.turlir.abakgists.gist.GistActivity;
-import com.turlir.abakgists.network.Repository;
+import com.turlir.abakgists.data.Repository;
 import com.turlir.abakgists.notes.NotesFragment;
 
 import javax.inject.Singleton;

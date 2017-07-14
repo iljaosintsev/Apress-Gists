@@ -15,12 +15,10 @@ import com.turlir.abakgists.model.GistModel;
 import com.turlir.abakgists.model.GistModelStorIOSQLiteDeleteResolver;
 import com.turlir.abakgists.model.GistModelStorIOSQLiteGetResolver;
 import com.turlir.abakgists.model.GistsTable;
-import com.turlir.abakgists.network.ApiClient;
-import com.turlir.abakgists.network.GistDatabaseHelper;
-import com.turlir.abakgists.network.GistModelStorIoLogPutResolver;
-import com.turlir.abakgists.network.Repository;
+import com.turlir.abakgists.data.ApiClient;
+import com.turlir.abakgists.data.GistDatabaseHelper;
+import com.turlir.abakgists.data.GistModelStorIoLogPutResolver;
 
-import org.mockito.Mockito;
 import org.robolectric.RuntimeEnvironment;
 
 import java.io.File;

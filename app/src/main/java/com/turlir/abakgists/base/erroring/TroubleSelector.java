@@ -1,13 +1,11 @@
-package com.turlir.abakgists.base;
+package com.turlir.abakgists.base.erroring;
 
 
 import android.support.annotation.NonNull;
 
 import java.io.IOException;
 
-import timber.log.Timber;
-
-class TroubleSelector {
+public class TroubleSelector implements ErrorSelector {
 
     private final ErrorSituation mTrueTrue = new CommonError() { // 3
         @Override
@@ -43,12 +41,13 @@ class TroubleSelector {
 
     private final ErrorSituation[] mCallbacks;
 
-    TroubleSelector(ErrorSituation[] callbacks) {
+    public TroubleSelector(ErrorSituation[] callbacks) {
         mCallbacks = callbacks;
     }
 
+    @Override
     @NonNull
-    ErrorSituation select(Exception ex, boolean dataAvailable, boolean isError) {
+    public ErrorSituation select(Exception ex, boolean dataAvailable, boolean isError) {
         for (ErrorSituation item : mCallbacks) {
             boolean should = item.should(ex, dataAvailable, isError);
             if (should) {
@@ -70,23 +69,6 @@ class TroubleSelector {
         if (isNetwork) index = index | (1 << 1);
         if (dataAvailable) index = index | 1;
         return index;
-    }
-
-    private abstract static class CommonError implements ErrorSituation {
-
-        @Override
-        public boolean should(Exception ex, boolean dataAvailable, boolean isErrorNow) {
-            return false;
-        }
-
-        @Override
-        public void perform(ErrorInterpreter v, Exception ex) {
-            Timber.e(ex);
-        }
-
-        static String getErrorName(Exception ex) {
-            return ex.getClass().getSimpleName();
-        }
     }
 
 }

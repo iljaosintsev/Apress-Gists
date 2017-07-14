@@ -10,8 +10,8 @@ import com.pushtorefresh.storio.sqlite.impl.DefaultStorIOSQLite;
 import com.turlir.abakgists.model.GistModel;
 import com.turlir.abakgists.model.GistModelStorIOSQLiteDeleteResolver;
 import com.turlir.abakgists.model.GistModelStorIOSQLiteGetResolver;
-import com.turlir.abakgists.network.GistDatabaseHelper;
-import com.turlir.abakgists.network.GistModelStorIoLogPutResolver;
+import com.turlir.abakgists.data.GistDatabaseHelper;
+import com.turlir.abakgists.data.GistModelStorIoLogPutResolver;
 
 import javax.inject.Singleton;
 

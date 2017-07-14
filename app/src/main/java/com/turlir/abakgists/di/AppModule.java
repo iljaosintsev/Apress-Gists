@@ -4,9 +4,9 @@ package com.turlir.abakgists.di;
 import android.content.Context;
 
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
-import com.turlir.abakgists.network.ApiClient;
-import com.turlir.abakgists.network.LogInterceptor;
-import com.turlir.abakgists.network.Repository;
+import com.turlir.abakgists.data.ApiClient;
+import com.turlir.abakgists.data.LogInterceptor;
+import com.turlir.abakgists.data.Repository;
 
 import java.util.concurrent.TimeUnit;
 

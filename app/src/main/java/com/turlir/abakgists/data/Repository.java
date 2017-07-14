@@ -1,4 +1,4 @@
-package com.turlir.abakgists.network;
+package com.turlir.abakgists.data;
 
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.operations.delete.DeleteResult;

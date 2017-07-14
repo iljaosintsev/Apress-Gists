@@ -1,4 +1,4 @@
-package com.turlir.abakgists.network;
+package com.turlir.abakgists.data;
 
 import java.io.IOException;
 

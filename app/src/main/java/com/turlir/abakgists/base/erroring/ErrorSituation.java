@@ -1,4 +1,4 @@
-package com.turlir.abakgists.base;
+package com.turlir.abakgists.base.erroring;
 
 public interface ErrorSituation {
 

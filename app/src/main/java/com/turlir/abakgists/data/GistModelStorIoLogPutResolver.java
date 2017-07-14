@@ -1,4 +1,4 @@
-package com.turlir.abakgists.network;
+package com.turlir.abakgists.data;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteConstraintException;
