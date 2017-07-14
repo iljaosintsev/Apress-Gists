@@ -14,6 +14,7 @@ import java.util.List;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
+import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
 
@@ -29,7 +30,12 @@ public class Repository {
         mDatabase = base;
     }
 
-    public Observable<PutResults<GistModel>> reloadGist() {
+    /**
+     * Перезагрузить данные с сервера
+     * При этом очищается локальная БД
+     * @return количество вновь добавленных элементов (может быть проигнорировано)
+     */
+    public Observable<PutResults<GistModel>> reloadGists() {
         return loadGistsFromServer(0)
                 .flatMap(new Func1<List<GistModel>, Observable<PutResults<GistModel>>>() {
                     @Override
@@ -39,17 +45,12 @@ public class Repository {
                 });
     }
 
-    public Observable<PutResults<GistModel>> loadGistsFromServerAndPutCache(int currentSize) {
-        return loadGistsFromServer(currentSize)
-                .flatMap(new Func1<List<GistModel>, Observable<PutResults<GistModel>>>() {
-                    @Override
-                    public Observable<PutResults<GistModel>> call(List<GistModel> gists) {
-                        return putGistsToCache(gists);
-                    }
-                });
-    }
-
-    public Observable<List<GistModel>> loadGistsFromCache() {
+    /**
+     * Получить данные с сервера или локальной базы (приоритетнее)
+     * @param size количество элементов, добавленных в список (для пагинации) >= 0
+     * @return список элементов
+     */
+    public Observable<List<GistModel>> loadGists(final int size) {
         return mDatabase.get()
                 .listOfObjects(GistModel.class)
                 .withQuery(
@@ -58,12 +59,37 @@ public class Repository {
                                 .build()
                 )
                 .prepare()
-                .asRxObservable();
+                .asRxObservable()
+                .switchMap(new Func1<List<GistModel>, Observable<List<GistModel>>>() {
+                    @Override
+                    public Observable<List<GistModel>> call(List<GistModel> gistModels) {
+                        if (gistModels.size() < size + 1) {
+                            return loadGistsFromServerAndPutCache(size);
+                        } else {
+                            return Observable.just(gistModels);
+                        }
+                    }
+                });
     }
 
     ///
     /// private
     ///
+
+    private Observable<List<GistModel>> loadGistsFromServerAndPutCache(int currentSize) {
+        return loadGistsFromServer(currentSize)
+                .flatMap(new Func1<List<GistModel>, Observable<PutResults<GistModel>>>() {
+                    @Override
+                    public Observable<PutResults<GistModel>> call(List<GistModel> gists) {
+                        return putGistsToCache(gists);
+                    }
+                }, new Func2<List<GistModel>, PutResults<GistModel>, List<GistModel>>() {
+                    @Override
+                    public List<GistModel> call(List<GistModel> gistModels, PutResults<GistModel> gistModelPutResults) {
+                        return gistModels;
+                    }
+                });
+    }
 
     private Observable<List<GistModel>> loadGistsFromServer(int currentSize) {
         int page = Math.round(currentSize / PAGE_SIZE) + 1;

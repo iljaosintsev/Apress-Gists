@@ -127,6 +127,10 @@ public abstract class BasePresenter<T extends BaseView> {
         }
     }
 
+    /**
+     * Действительна ли сейчас ссылка на вью
+     * @param <B> тип последовательности
+     */
     private class SafeFiltering<B> implements Observable.Transformer<B, B> {
 
         @Override
@@ -140,6 +144,10 @@ public abstract class BasePresenter<T extends BaseView> {
         }
     }
 
+    /**
+     * Тоже что и {@code SafeFiltering} плюс проверка на то, что список не пустой и не null
+     * @param <V> тип элементов списка последовательности
+     */
     private class SafeListFiltering<V> implements Observable.Transformer<List<V>, List<V>> {
         @Override
         public Observable<List<V>> call(Observable<List<V>> obs) {
@@ -147,8 +155,8 @@ public abstract class BasePresenter<T extends BaseView> {
                     .compose(new SafeFiltering<List<V>>())
                     .filter(new Func1<List<V>, Boolean>() {
                         @Override
-                        public Boolean call(List<V> gistModels) {
-                            return gistModels.size() > 0;
+                        public Boolean call(List<V> data) {
+                            return data != null && data.size() > 0;
                         }
                     });
         }

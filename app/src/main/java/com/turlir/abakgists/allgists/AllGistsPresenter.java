@@ -33,20 +33,16 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
     void loadPublicGists(final int currentSize) {
         removeCacheSubs();
         Subscription subs = mRepo
-                .loadGistsFromCache()
+                .loadGists(currentSize)
                 .distinctUntilChanged(new CycleRepeatingBreaker())
                 .observeOn(AndroidSchedulers.mainThread())
-                .compose(this.<List<GistModel>>safeFiltering())
+                .compose(this.<GistModel>safeListFiltering())
                 .subscribe(new GistDownloadHandler<List<GistModel>>() {
                     @Override
                     public void onNext(List<GistModel> value) {
                         Timber.d("onNext %d", value.size());
-                        if (value.size() > 0) {
-                            //noinspection ConstantConditions
-                            getView().onGistLoaded(value);
-                        } else {
-                            loadFromServer(currentSize);
-                        }
+                        //noinspection ConstantConditions
+                        getView().onGistLoaded(value);
                     }
                 });
         addCacheSubs(subs);
@@ -54,7 +50,7 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
 
     void updateGist() {
         removeCacheSubs();
-        Subscription subs = mRepo.reloadGist()
+        Subscription subs = mRepo.reloadGists()
                 .compose(this.<PutResults<GistModel>>defaultScheduler())
                 .subscribe(new GistDownloadHandler<PutResults<GistModel>>() {
                     @Override
@@ -66,19 +62,6 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
                     }
                 });
         addSubscription(subs);
-    }
-
-    private void loadFromServer(int currentSize) {
-        Subscription subsToServer = mRepo
-                .loadGistsFromServerAndPutCache(currentSize)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new GistDownloadHandler<PutResults<GistModel>>() {
-                    @Override
-                    public void onNext(PutResults<GistModel> result) {
-                        Timber.d("fromServer obs %d", result.results().size());
-                    }
-                });
-        addSubscription(subsToServer);
     }
 
     private void removeCacheSubs() {
