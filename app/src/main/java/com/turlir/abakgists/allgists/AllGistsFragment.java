@@ -22,7 +22,6 @@ import com.turlir.abakgists.base.App;
 import com.turlir.abakgists.base.BaseFragment;
 import com.turlir.abakgists.base.DividerDecorator;
 import com.turlir.abakgists.base.ErrorInterpreter;
-import com.turlir.abakgists.base.ItemDecoration;
 import com.turlir.abakgists.base.OnClickListener;
 import com.turlir.abakgists.base.SpaceDecorator;
 import com.turlir.abakgists.gist.GistActivity;
