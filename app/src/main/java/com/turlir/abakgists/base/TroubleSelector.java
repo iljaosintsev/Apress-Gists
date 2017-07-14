@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 
 import java.io.IOException;
 
+import timber.log.Timber;
+
 class TroubleSelector {
 
     private final ErrorSituation mTrueTrue = new CommonError() { // 3
@@ -46,14 +48,14 @@ class TroubleSelector {
     }
 
     @NonNull
-    ErrorSituation select(Exception throwable, boolean dataAvailable, boolean isError) {
+    ErrorSituation select(Exception ex, boolean dataAvailable, boolean isError) {
         for (ErrorSituation item : mCallbacks) {
-            boolean should = item.should(throwable, dataAvailable, isError);
+            boolean should = item.should(ex, dataAvailable, isError);
             if (should) {
                 return item;
             }
         }
-        int i = index(throwable instanceof IOException, dataAvailable);
+        int i = index(ex instanceof IOException, dataAvailable);
         return mVariants[i];
     }
 
@@ -75,6 +77,11 @@ class TroubleSelector {
         @Override
         public boolean should(Exception ex, boolean dataAvailable, boolean isErrorNow) {
             return false;
+        }
+
+        @Override
+        public void perform(ErrorInterpreter v, Exception ex) {
+            Timber.e(ex);
         }
 
         static String getErrorName(Exception ex) {
