@@ -119,9 +119,9 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
         notifyItemRemoved(index);
     }
 
-    void addError() {
+    void addError(String desc) {
         int s = mContent.size();
-        mContent.add(new ErrorModel());
+        mContent.add(new ErrorModel(desc));
         notifyItemInserted(s + 1);
     }
 

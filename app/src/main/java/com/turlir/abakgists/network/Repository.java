@@ -1,6 +1,7 @@
 package com.turlir.abakgists.network;
 
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
+import com.pushtorefresh.storio.sqlite.operations.delete.DeleteResult;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
 import com.pushtorefresh.storio.sqlite.queries.DeleteQuery;
 import com.pushtorefresh.storio.sqlite.queries.Query;
@@ -10,7 +11,6 @@ import com.turlir.abakgists.model.GistsTable;
 
 import java.util.List;
 
-import rx.Completable;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -29,20 +29,22 @@ public class Repository {
         mDatabase = base;
     }
 
+    public Observable<PutResults<GistModel>> reloadGist() {
+        return loadGistsFromServer(0)
+                .flatMap(new Func1<List<GistModel>, Observable<PutResults<GistModel>>>() {
+                    @Override
+                    public Observable<PutResults<GistModel>> call(List<GistModel> gistModels) {
+                        return clearCacheAndPut(gistModels);
+                    }
+                });
+    }
+
     public Observable<PutResults<GistModel>> loadGistsFromServerAndPutCache(int currentSize) {
-        int page = Math.round(currentSize / PAGE_SIZE) + 1;
-        return mClient
-                .publicGist(page)
-                .doOnNext(new LagSideEffect(2500))
-                .subscribeOn(Schedulers.io())
-                .map(new ListGistToModelMapper())
+        return loadGistsFromServer(currentSize)
                 .flatMap(new Func1<List<GistModel>, Observable<PutResults<GistModel>>>() {
                     @Override
                     public Observable<PutResults<GistModel>> call(List<GistModel> gists) {
-                        return mDatabase.put()
-                                .objects(gists)
-                                .prepare()
-                                .asRxObservable();
+                        return putGistsToCache(gists);
                     }
                 });
     }
@@ -59,7 +61,27 @@ public class Repository {
                 .asRxObservable();
     }
 
-    public Completable clearCache() {
+    ///
+    /// private
+    ///
+
+    private Observable<List<GistModel>> loadGistsFromServer(int currentSize) {
+        int page = Math.round(currentSize / PAGE_SIZE) + 1;
+        return mClient
+                .publicGist(page)
+                .doOnNext(new LagSideEffect(2500))
+                .subscribeOn(Schedulers.io())
+                .map(new ListGistToModelMapper());
+    }
+
+    private Observable<PutResults<GistModel>> putGistsToCache(List<GistModel> gists) {
+        return mDatabase.put()
+                .objects(gists)
+                .prepare()
+                .asRxObservable();
+    }
+
+    private Observable<PutResults<GistModel>> clearCacheAndPut(final List<GistModel> gists) {
         return mDatabase.delete()
                 .byQuery(
                         DeleteQuery
@@ -68,7 +90,13 @@ public class Repository {
                                 .build()
                 )
                 .prepare()
-                .asRxCompletable();
+                .asRxObservable()
+                .flatMap(new Func1<DeleteResult, Observable<PutResults<GistModel>>>() {
+                    @Override
+                    public Observable<PutResults<GistModel>> call(DeleteResult deleteResult) {
+                        return putGistsToCache(gists);
+                    }
+                });
     }
 
     /**

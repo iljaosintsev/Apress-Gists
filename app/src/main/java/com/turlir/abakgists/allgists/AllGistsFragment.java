@@ -7,6 +7,7 @@ import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,11 +15,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.turlir.abakgists.R;
 import com.turlir.abakgists.base.App;
 import com.turlir.abakgists.base.BaseFragment;
 import com.turlir.abakgists.base.DividerDecorator;
+import com.turlir.abakgists.base.ErrorInterpreter;
+import com.turlir.abakgists.base.ItemDecoration;
 import com.turlir.abakgists.base.OnClickListener;
 import com.turlir.abakgists.base.SpaceDecorator;
 import com.turlir.abakgists.gist.GistActivity;
@@ -33,7 +37,9 @@ import javax.inject.Inject;
 import butterknife.BindView;
 
 
-public class AllGistsFragment extends BaseFragment implements OnClickListener, SimpleScrollListener.Paginator {
+public class AllGistsFragment
+        extends BaseFragment
+        implements OnClickListener, SimpleScrollListener.Paginator, ErrorInterpreter {
 
     private static final int MIN_COUNT = 2;
 
@@ -55,15 +61,7 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener, S
             = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
         public void onRefresh() {
-            root.toLoading();
-
-            swipe.setRefreshing(false);
-            mAdapter.clearAll();
-            _presenter.resetGist();
-
-            recycler.clearOnScrollListeners();
-            RecyclerView.OnScrollListener scroller = new SimpleScrollListener(AllGistsFragment.this);
-            recycler.addOnScrollListener(scroller);
+            _presenter.updateGist();
         }
     };
 
@@ -130,14 +128,9 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener, S
         _presenter.detach();
     }
 
-    public void onGistLoaded(List<GistModel> value) {
-        root.toContent();
-        if (!isEmpty()) {
-            mAdapter.removeLastIfLoading();
-            swipe.setRefreshing(false);
-        }
-        mAdapter.addGist(value);
-    }
+    ///
+    /// View
+    ///
 
     @Override
     public void onListItemClick(int position) {
@@ -148,16 +141,26 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener, S
         }
     }
 
-    @Override
-    public void showError(String msg) {
-        swipe.setRefreshing(false);
+    ///
+    /// Presenter
+    ///
+
+    public void onGistLoaded(List<GistModel> value) {
+        root.toContent();
         if (!isEmpty()) {
-            super.showError(msg);
-        } else {
-            root.toContent();
-            mAdapter.clearAll();
-            mAdapter.addError();
+            mAdapter.removeLastIfLoading();
+            swipe.setRefreshing(false);
         }
+        mAdapter.addGist(value);
+    }
+
+    public void onUpdateSuccessful() {
+        mAdapter.clearAll();
+        swipe.setRefreshing(false);
+    }
+
+    public boolean isError() {
+        return mAdapter.getItemCount() == 1 && mAdapter.getGistByPosition(0) == null;
     }
 
     ////
@@ -183,9 +186,32 @@ public class AllGistsFragment extends BaseFragment implements OnClickListener, S
         return mAdapter.getItemCount() < MIN_COUNT;
     }
 
+    ///
+    /// Error interpreter
+    ///
+
+    @Override
+    public void nonBlockingError(String msg) {
+        swipe.setRefreshing(false);
+        mAdapter.removeLastIfLoading();
+        Snackbar.make(recycler, msg, Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void alertError(String msg) {
+        Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void blockingError(String msg) {
+        swipe.setRefreshing(false);
+        root.toContent();
+        mAdapter.clearAll(); // что бы ошибки не накапливались с обновлением
+        mAdapter.addError(msg);
+    }
+
     @Override
     public String toString() {
         return "All Gists";
     }
-
 }
