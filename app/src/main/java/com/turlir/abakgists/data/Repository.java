@@ -3,11 +3,9 @@ package com.turlir.abakgists.data;
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.operations.delete.DeleteResult;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
-import com.pushtorefresh.storio.sqlite.queries.DeleteQuery;
-import com.pushtorefresh.storio.sqlite.queries.Query;
 import com.turlir.abakgists.model.GistModel;
-import com.turlir.abakgists.model.ListGistToModelMapper;
 import com.turlir.abakgists.model.GistsTable;
+import com.turlir.abakgists.model.ListGistToModelMapper;
 
 import java.util.List;
 
@@ -15,7 +13,6 @@ import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.functions.Func2;
-import rx.schedulers.Schedulers;
 
 
 public class Repository {
@@ -33,6 +30,7 @@ public class Repository {
     /**
      * Перезагрузить данные с сервера
      * При этом очищается локальная БД
+     *
      * @return количество вновь добавленных элементов (может быть проигнорировано)
      */
     public Observable<PutResults<GistModel>> reloadGists() {
@@ -47,17 +45,14 @@ public class Repository {
 
     /**
      * Получить данные с сервера или локальной базы (приоритетнее)
+     *
      * @param size количество элементов, добавленных в список (для пагинации) >= 0
      * @return список элементов
      */
     public Observable<List<GistModel>> loadGists(final int size) {
         return mDatabase.get()
                 .listOfObjects(GistModel.class)
-                .withQuery(
-                        Query.builder()
-                                .table(GistsTable.GISTS)
-                                .build()
-                )
+                .withQuery(GistsTable.REQUEST_ALL)
                 .prepare()
                 .asRxObservable()
                 .switchMap(new Func1<List<GistModel>, Observable<List<GistModel>>>() {
@@ -96,7 +91,6 @@ public class Repository {
         return mClient
                 .publicGist(page)
                 .doOnNext(new LagSideEffect(2500))
-                .subscribeOn(Schedulers.io())
                 .map(new ListGistToModelMapper());
     }
 
@@ -109,12 +103,7 @@ public class Repository {
 
     private Observable<PutResults<GistModel>> clearCacheAndPut(final List<GistModel> gists) {
         return mDatabase.delete()
-                .byQuery(
-                        DeleteQuery
-                                .builder()
-                                .table(GistsTable.GISTS)
-                                .build()
-                )
+                .byQuery(GistsTable.DELETE_ALL)
                 .prepare()
                 .asRxObservable()
                 .flatMap(new Func1<DeleteResult, Observable<PutResults<GistModel>>>() {

@@ -41,8 +41,12 @@ public abstract class BasePresenter<T extends BaseView> {
         subs.clear();
     }
 
+    ///
+    /// internal usage only
+    ///
+
     @Nullable
-    public final T getView() {
+    protected final T getView() {
         return view.get();
     }
 
@@ -58,22 +62,12 @@ public abstract class BasePresenter<T extends BaseView> {
         return STANDARD_SCHEDULER;
     }
 
-    protected <E> Observable.Transformer<List<E>, List<E>> safeListFiltering() {
+    protected <E> Observable.Transformer<List<E>, List<E>> safeSubscribingWithList() {
         return SAFE_LIST_FILTERING;
     }
 
-    protected <B> Observable.Transformer<B, B> safeFiltering() {
+    protected <B> Observable.Transformer<B, B> safeSubscribing() {
         return SAFE_FILTERING;
-    }
-
-    private static final class ObservableSchedulersTransformer<T>
-            implements Observable.Transformer<T, T> {
-        @Override
-        public Observable<T> call(Observable<T> upstream) {
-            return upstream
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread());
-        }
     }
 
     protected abstract class ErrorHandler<E> extends Handler<E> {
@@ -118,18 +112,28 @@ public abstract class BasePresenter<T extends BaseView> {
 
         @Override
         public void onError(Throwable e) {
-            processError(e);
+            e.printStackTrace();
+            T view = getView();
+            if (view != null) {
+                CharSequence msg = view.getContext().getString(R.string.error_general);
+                view.showError(msg.toString());
+            }
         }
     }
 
-    private void processError(Throwable e) {
-        e.printStackTrace();
-        T view = getView();
-        if (view != null) {
-            CharSequence msg = view.getContext().getString(R.string.error_general);
-            view.showError(msg.toString());
+    private static final class ObservableSchedulersTransformer<T>
+            implements Observable.Transformer<T, T> {
+        @Override
+        public Observable<T> call(Observable<T> upstream) {
+            return upstream
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread());
         }
     }
+
+    ///
+    /// private inner classes
+    ///
 
     /**
      * Действительна ли сейчас ссылка на вью
@@ -155,8 +159,7 @@ public abstract class BasePresenter<T extends BaseView> {
     private class SafeListFiltering<V> implements Observable.Transformer<List<V>, List<V>> {
         @Override
         public Observable<List<V>> call(Observable<List<V>> obs) {
-            return obs
-                    .compose(new SafeFiltering<List<V>>())
+            return obs.compose(new SafeFiltering<List<V>>())
                     .filter(new Func1<List<V>, Boolean>() {
                         @Override
                         public Boolean call(List<V> data) {
