@@ -81,12 +81,16 @@ public abstract class BasePresenter<T extends BaseView> {
 
         @Override
         public void onError(Throwable throwable) {
-            ErrorInterpreter interpreter = interpreter();
-            if (throwable instanceof Exception && interpreter != null) {
-                ErrorSituation callback =
-                        mRobot.select((Exception) throwable, isDataAvailable(), isError());
+            if (throwable instanceof Exception) {
+                ErrorInterpreter interpreter = interpreter();
+                if (interpreter != null) {
+                    ErrorSituation callback =
+                            mRobot.select((Exception) throwable, isDataAvailable(), isError());
 
-                callback.perform(interpreter, (Exception) throwable);
+                    callback.perform(interpreter, (Exception) throwable);
+                }
+            } else {
+                throw new RuntimeException(throwable);
             }
         }
 
