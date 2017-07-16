@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.os.Build;
 
+import com.pushtorefresh.storio.sqlite.operations.put.PutResult;
+import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
 import com.turlir.abakgists.BuildConfig;
 import com.turlir.abakgists.Data;
 import com.turlir.abakgists.DatabaseMocking;
@@ -19,6 +21,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -26,6 +29,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -109,7 +113,7 @@ public class AllGistsPresenterTest {
 
         _presenter.loadPublicGists(0); // what ?
 
-        verify(mView).onGistLoaded(mListCaptor.capture());
+        verify(mView, atLeastOnce()).onGistLoaded(mListCaptor.capture());
         assertEquals(2, mListCaptor.getValue().size());
     }
 
@@ -125,17 +129,17 @@ public class AllGistsPresenterTest {
 
         _presenter.loadPublicGists(1);
 
-        verify(mView).showError("string res message");
+        verify(mView).alertError("Произошла ошибка\nIllegalStateException");
     }
 
     @Test
     public void resetGistTest() {
         mockServerRequest();
 
-        _presenter.resetGist();
-        _presenter.loadPublicGists(0); // what ?
+        _presenter.updateGist();
+        _presenter.loadPublicGists(0);
 
-        verify(mView).onGistLoaded(mListCaptor.capture());
+        verify(mView, atLeastOnce()).onGistLoaded(mListCaptor.capture());
         assertEquals("id", mListCaptor.getValue().get(0).id);
     }
 
@@ -146,7 +150,7 @@ public class AllGistsPresenterTest {
         List<GistModel> list = new ArrayList<>();
         list.add(new GistModel("id", "url", "created", "desc"));
         Observable<List<GistModel>> resultObs = Observable.just(list);
-        Mockito.when(mock.loadGists()).thenReturn(resultObs);
+        Mockito.when(mock.loadGists(0)).thenReturn(resultObs);
 
         AllGistsPresenter presenter = new AllGistsPresenter(mock);
 
@@ -155,7 +159,7 @@ public class AllGistsPresenterTest {
 
         presenter.loadPublicGists(0);
 
-        verify(mock).loadGists();
+        verify(mock).loadGists(eq(0));
 
         verify(mockView).onGistLoaded(list);
     }

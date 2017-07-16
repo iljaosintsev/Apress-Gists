@@ -95,7 +95,7 @@ public class RepositoryTest {
 
     @Test
     public void successFromCache() {
-        Observable<List<GistModel>> cacheObs = mRepo.loadGists();
+        Observable<List<GistModel>> cacheObs = mRepo.loadGists(0);
         TestSubscriber<List<GistModel>> subs = new TestSubscriber<>();
         cacheObs.subscribe(subs);
 
@@ -112,24 +112,23 @@ public class RepositoryTest {
 
     @Test
     public void clearCacheTest() {
-        Completable obs = mRepo.clearCache();
-        TestSubscriber subs = new TestSubscriber();
-        obs.subscribe(subs);
+        GistOwner owner = new GistOwner("login", "avatarurl");
+        Gist gist = new Gist("id", "url", "created", "desc", owner);
+        List<Gist> serverList = Collections.singletonList(gist);
 
-        subs.assertNoErrors();
-        subs.assertCompleted();
+        Observable<List<Gist>> serverObs = Observable.just(serverList);
+        Mockito.when(mockApi.publicGist(1)).thenReturn(serverObs);
 
-        Observable<List<GistModel>> server = mRepo.loadGists();
-        TestSubscriber<List<GistModel>> test = new TestSubscriber<>();
+        Observable<PutResults<GistModel>> server = mRepo.reloadGists();
+        TestSubscriber<PutResults<GistModel>> test = new TestSubscriber<>();
         server.subscribe(test);
 
         test.assertNoErrors();
         test.assertValueCount(1);
-        test.assertNotCompleted();
-        List<List<GistModel>> events = test.getOnNextEvents();
-        assertEquals(1, events.size()); // единственный вызов onNext
-        List<GistModel> first = events.get(0);
-        assertEquals(0, first.size()); // с пустым списком
+        test.assertCompleted();
+        List<PutResults<GistModel>> events = test.getOnNextEvents();
+        Set<GistModel> first = events.get(0).results().keySet();
+        assertEquals(serverList.size(), first.size()); // с пустым списком
     }
 
     @Test
@@ -141,13 +140,13 @@ public class RepositoryTest {
         Observable<List<Gist>> serverObs = Observable.just(serverList);
         Mockito.when(mockApi.publicGist(1)).thenReturn(serverObs);
 
-        Observable<List<GistModel>> cacheObs = mRepo.loadGists();
-        TestSubscriber<List<GistModel>> cacheSubs = new TestSubscriber<>();
-        cacheObs.subscribe(cacheSubs);
-
-        Observable<PutResults<GistModel>> obs = mRepo.loadGistsFromServerAndPutCache(0);
+        Observable<PutResults<GistModel>> obs = mRepo.reloadGists();
         TestSubscriber<PutResults<GistModel>> serverSubs = new TestSubscriber<>();
         obs.subscribe(serverSubs);
+
+        Observable<List<GistModel>> cacheObs = mRepo.loadGists(0);
+        TestSubscriber<List<GistModel>> cacheSubs = new TestSubscriber<>();
+        cacheObs.subscribe(cacheSubs);
 
         serverSubs.assertNoErrors();
         serverSubs.assertCompleted();
@@ -158,10 +157,10 @@ public class RepositoryTest {
         // в cacheSubs пришел новый набор результатов (второй)
         // содержащий уже два обекта Gist, последний из которых - новый с сервера
         cacheSubs.assertNotCompleted();
-        cacheSubs.assertValueCount(2);
+        cacheSubs.assertValueCount(1);
         List<List<GistModel>> cacheEvents = cacheSubs.getOnNextEvents();
-        List<GistModel> second = cacheEvents.get(1);
-        GistModel now = second.get(1);
+        List<GistModel> first = cacheEvents.get(0);
+        GistModel now = first.get(0);
         GistModel stub = new GistModel("id", "url", "created", "desc", "login", "avatarurl");
         assertEquals(stub, now);
     }
@@ -176,8 +175,8 @@ public class RepositoryTest {
         Mockito.when(mockApi.publicGist(3)).thenReturn(serverObs);
 
         int s = 30 + 24; // 54
-        Observable<PutResults<GistModel>> obs = mRepo.loadGistsFromServerAndPutCache(s);
-        TestSubscriber<PutResults<GistModel>> subs = new TestSubscriber<>();
+        Observable<List<GistModel>> obs = mRepo.loadGists(s);
+        TestSubscriber<List<GistModel>> subs = new TestSubscriber<>();
         obs.subscribe(subs);
 
         subs.assertNoErrors();
@@ -194,11 +193,11 @@ public class RepositoryTest {
         Observable<List<Gist>> serverObs = Observable.just(serverList);
         Mockito.when(mockApi.publicGist(1)).thenReturn(serverObs);
 
-        Observable<List<GistModel>> cacheObs = mRepo.loadGists();
+        Observable<List<GistModel>> cacheObs = mRepo.loadGists(0);
         TestSubscriber<List<GistModel>> cacheSubs = new TestSubscriber<>();
         cacheObs.subscribe(cacheSubs);
 
-        Observable<PutResults<GistModel>> obs = mRepo.loadGistsFromServerAndPutCache(0);
+        Observable<PutResults<GistModel>> obs = mRepo.reloadGists();
         TestSubscriber<PutResults<GistModel>> serverSubs = new TestSubscriber<>();
         obs.subscribe(serverSubs);
 
