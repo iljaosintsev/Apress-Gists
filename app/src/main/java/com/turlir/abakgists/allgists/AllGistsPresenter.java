@@ -55,7 +55,7 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
                     public void onNext(PutResults<GistModel> gistModelPutResults) {
                         //noinspection ConstantConditions
                         getView().onUpdateSuccessful();
-                        loadPublicGists(0);
+                        loadPublicGists(-1);
                     }
                 });
         addSubscription(subs);

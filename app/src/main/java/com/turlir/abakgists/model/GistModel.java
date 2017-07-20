@@ -43,7 +43,7 @@ public class GistModel extends ViewModel implements Parcelable {
     @Nullable
     public String note;
 
-    public /*final*/ boolean isLocal;
+    public boolean isLocal = true;
 
     public static final Creator<GistModel> CREATOR = new Creator<GistModel>() {
         @Override
@@ -112,6 +112,7 @@ public class GistModel extends ViewModel implements Parcelable {
         note = in.readString();
         ownerLogin = in.readString();
         ownerAvatarUrl = in.readString();
+        isLocal = in.readInt() == 1;
     }
 
     @Override

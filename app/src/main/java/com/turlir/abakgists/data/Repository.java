@@ -22,6 +22,8 @@ public class Repository {
     private ApiClient mClient;
     private StorIOSQLite mDatabase;
 
+    private boolean gistIsLocal = true;
+
     public Repository(ApiClient client, StorIOSQLite base) {
         mClient = client;
         mDatabase = base;
@@ -50,6 +52,9 @@ public class Repository {
      * @return список элементов
      */
     public Observable<List<GistModel>> loadGists(final int size) {
+        if (size == 0) {
+            gistIsLocal = true;
+        }
         return mDatabase.get()
                 .listOfObjects(GistModel.class)
                 .withQuery(GistsTable.REQUEST_ALL)
@@ -62,6 +67,15 @@ public class Repository {
                             return loadGistsFromServerAndPutCache(size);
                         } else {
                             return Observable.just(gistModels);
+                        }
+                    }
+                })
+                .doOnNext(new Action1<List<GistModel>>() {
+                    @Override
+                    public void call(List<GistModel> gistModels) {
+                        for (int i = Math.max(0, size); i < gistModels.size(); i++) {
+                            GistModel item = gistModels.get(i);
+                            item.isLocal = gistIsLocal;
                         }
                     }
                 });
@@ -91,7 +105,13 @@ public class Repository {
         return mClient
                 .publicGist(page)
                 .doOnNext(new LagSideEffect(2500))
-                .map(new ListGistToModelMapper());
+                .map(new ListGistToModelMapper())
+                .doOnNext(new Action1<List<GistModel>>() {
+                    @Override
+                    public void call(List<GistModel> gistModels) {
+                        gistIsLocal = false;
+                    }
+                });
     }
 
     private Observable<PutResults<GistModel>> putGistsToCache(List<GistModel> gists) {
