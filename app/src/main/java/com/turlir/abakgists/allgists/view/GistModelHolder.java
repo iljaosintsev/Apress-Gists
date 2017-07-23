@@ -32,7 +32,7 @@ class GistModelHolder extends ModelViewHolder<GistModel> {
     GistModelHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
-        Timber.i("new holder created");
+        Timber.v("new holder created");
     }
 
     @Override
