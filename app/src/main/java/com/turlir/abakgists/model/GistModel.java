@@ -4,48 +4,32 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
 
-import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteColumn;
-import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteType;
 import com.turlir.abakgists.allgists.view.TypesFactory;
 import com.turlir.abakgists.allgists.view.ViewModel;
+import com.turlir.abakgists.api.data.GistLocal;
 
-@StorIOSQLiteType(table = GistsTable.GISTS)
-public class GistModel extends ViewModel implements Parcelable {
+public class GistModel
+        extends ViewModel
+        implements Parcelable {
 
-    @StorIOSQLiteColumn(name = GistsTable.ID, key = true)
-    @NonNull
     public String id;
 
-    @StorIOSQLiteColumn(name = GistsTable.URL)
-    @NonNull
     public String url;
 
-    @StorIOSQLiteColumn(name = GistsTable.CREATED)
-    @NonNull
     public String created;
 
-    @StorIOSQLiteColumn(name = GistsTable.DESC)
-    @Nullable
     public String description;
 
-    @StorIOSQLiteColumn(name = GistsTable.OWNER_LOGIN)
-    @Nullable
     public String ownerLogin;
 
-    @StorIOSQLiteColumn(name = GistsTable.OWNER_AVATAR)
-    @Nullable
     public String ownerAvatarUrl;
 
-    @StorIOSQLiteColumn(name = GistsTable.NOTE)
-    @Nullable
     public String note;
 
-    public boolean isLocal = true;
+    public boolean isLocal;
 
-    public static final Creator<GistModel> CREATOR = new Creator<GistModel>() {
+    public static final Parcelable.Creator<GistModel> CREATOR = new Parcelable.Creator<GistModel>() {
         @Override
         public GistModel createFromParcel(Parcel in) {
             return new GistModel(in);
@@ -57,51 +41,27 @@ public class GistModel extends ViewModel implements Parcelable {
         }
     };
 
-    public GistModel() {
-        // for storio, don`t use
-    }
-
-    public GistModel(@NonNull String id, @NonNull String url, @NonNull String created,
-                     @Nullable String description) {
-        this(id, url, created, description, null, null);
-    }
-
-    public GistModel(@NonNull String id, @NonNull String url, @NonNull String created,
-                     @Nullable String description, @Nullable String ownerLogin, @Nullable String ownerAvatarUrl) {
-        this(id, url, created, description, null, ownerLogin, ownerAvatarUrl);
-    }
-
-    public GistModel(@NonNull String id, @NonNull String url, @NonNull String created,
-                     @Nullable String description, @Nullable String note, @Nullable String ownerLogin,
-                     @Nullable String ownerAvatarUrl) {
-        this.id = id;
-        this.url = url;
-        this.created = created;
-        this.description = description;
-        this.note = note;
-        overrideOwnerLogin(ownerLogin);
-        this.ownerAvatarUrl = ownerAvatarUrl;
+    public GistModel(GistLocal local, boolean isLocal) {
+        id = local.id;
+        url = local.url;
+        created = local.created;
+        description = local.description;
+        ownerLogin = local.ownerLogin;
+        ownerAvatarUrl = local.ownerAvatarUrl;
+        note = local.note;
+        this.isLocal = isLocal;
     }
 
     public GistModel(GistModel other, @NonNull String desc, @NonNull String note) {
-        this(other.id, other.url, other.created, other.description, other.note,
-                other.ownerLogin, other.ownerAvatarUrl);
-        description = desc;
-        this.note = note;
-    }
+        id = other.id;
+        url = other.url;
+        created = other.created;
+        ownerLogin = other.ownerLogin;
+        ownerAvatarUrl = other.ownerAvatarUrl;
+        isLocal = other.isLocal;
 
-    @VisibleForTesting
-    public GistModel(GistModel other) {
-        this(other.id, other.url, other.created, other.description);
-        if (other.note != null) {
-            note = other.note;
-        }
-        if (other.ownerLogin != null) {
-            ownerLogin = other.ownerLogin;
-        }
-        if (other.ownerAvatarUrl != null) {
-            ownerAvatarUrl = other.ownerAvatarUrl;
-        }
+        this.description = desc;
+        this.note = note;
     }
 
     private GistModel(Parcel in) {
@@ -112,16 +72,27 @@ public class GistModel extends ViewModel implements Parcelable {
         note = in.readString();
         ownerLogin = in.readString();
         ownerAvatarUrl = in.readString();
-        isLocal = in.readInt() == 1;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(url);
+        dest.writeString(id);
+        dest.writeString(description);
+        dest.writeString(created);
+        dest.writeString(note);
+        dest.writeString(ownerLogin);
+        dest.writeString(ownerAvatarUrl);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     @Override
     public int type(TypesFactory factory) {
         return factory.type(this);
-    }
-
-    public boolean doesOwnerLogin(GistModel item) {
-        return !"anonymous".equals(item.ownerLogin);
     }
 
     /**
@@ -137,29 +108,20 @@ public class GistModel extends ViewModel implements Parcelable {
         return Uri.parse(String.format("http://gist.github.com/%s/%s", ownerLogin, id));
     }
 
-    private void overrideOwnerLogin(@Nullable String ownerLogin) {
-        if (ownerLogin != null) {
-            this.ownerLogin = ownerLogin;
-        } else {
-            this.ownerLogin = "anonymous";
-        }
+    public boolean doesOwnerLogin(GistModel item) {
+        return !"anonymous".equals(item.ownerLogin);
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(url);
-        dest.writeString(id);
-        dest.writeString(description);
-        dest.writeString(created);
-        dest.writeString(note);
-        dest.writeString(ownerLogin);
-        dest.writeString(ownerAvatarUrl);
-        dest.writeInt(isLocal ? 1 : 0);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 113 * result + url.hashCode();
+        result = 113 * result + created.hashCode();
+        result = 113 * result + (description != null ? description.hashCode() : 0);
+        result = 113 * result + (ownerLogin != null ? ownerLogin.hashCode() : 0);
+        result = 113 * result + (ownerAvatarUrl != null ? ownerAvatarUrl.hashCode() : 0);
+        result = 113 * result + (note != null ? note.hashCode() : 0);
+        return result;
     }
 
     @Override
@@ -199,15 +161,4 @@ public class GistModel extends ViewModel implements Parcelable {
         }
     }
 
-    @Override
-    public int hashCode() {
-        int result = id.hashCode();
-        result = 113 * result + url.hashCode();
-        result = 113 * result + created.hashCode();
-        result = 113 * result + (description != null ? description.hashCode() : 0);
-        result = 113 * result + (ownerLogin != null ? ownerLogin.hashCode() : 0);
-        result = 113 * result + (ownerAvatarUrl != null ? ownerAvatarUrl.hashCode() : 0);
-        result = 113 * result + (note != null ? note.hashCode() : 0);
-        return result;
-    }
 }

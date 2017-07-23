@@ -1,4 +1,4 @@
-package com.turlir.abakgists.data;
+package com.turlir.abakgists.api;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

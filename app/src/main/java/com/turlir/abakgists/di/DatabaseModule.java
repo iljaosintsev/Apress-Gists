@@ -7,11 +7,11 @@ import android.support.annotation.NonNull;
 import com.pushtorefresh.storio.sqlite.SQLiteTypeMapping;
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.impl.DefaultStorIOSQLite;
-import com.turlir.abakgists.model.GistModel;
-import com.turlir.abakgists.model.GistModelStorIOSQLiteDeleteResolver;
-import com.turlir.abakgists.model.GistModelStorIOSQLiteGetResolver;
-import com.turlir.abakgists.data.GistDatabaseHelper;
-import com.turlir.abakgists.data.GistModelStorIoLogPutResolver;
+import com.turlir.abakgists.api.GistDatabaseHelper;
+import com.turlir.abakgists.api.GistLocalStorIoLogPutResolver;
+import com.turlir.abakgists.api.data.GistLocal;
+import com.turlir.abakgists.api.data.GistLocalStorIOSQLiteDeleteResolver;
+import com.turlir.abakgists.api.data.GistLocalStorIOSQLiteGetResolver;
 
 import javax.inject.Singleton;
 
@@ -31,15 +31,15 @@ public class DatabaseModule {
     @Provides
     @Singleton
     public StorIOSQLite provideStorIOSQLite(@NonNull SQLiteOpenHelper sqLiteOpenHelper) {
-        SQLiteTypeMapping<GistModel> typeMapping = SQLiteTypeMapping.<GistModel>builder()
-                .putResolver(new GistModelStorIoLogPutResolver()) // logger
-                .getResolver(new GistModelStorIOSQLiteGetResolver())
-                .deleteResolver(new GistModelStorIOSQLiteDeleteResolver())
+        SQLiteTypeMapping<GistLocal> typeMapping = SQLiteTypeMapping.<GistLocal>builder()
+                .putResolver(new GistLocalStorIoLogPutResolver()) // logger
+                .getResolver(new GistLocalStorIOSQLiteGetResolver())
+                .deleteResolver(new GistLocalStorIOSQLiteDeleteResolver())
                 .build();
 
         return DefaultStorIOSQLite.builder()
                 .sqliteOpenHelper(sqLiteOpenHelper)
-                .addTypeMapping(GistModel.class, typeMapping)
+                .addTypeMapping(GistLocal.class, typeMapping)
                 .build();
     }
 

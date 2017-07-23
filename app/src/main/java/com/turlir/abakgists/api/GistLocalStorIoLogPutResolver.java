@@ -1,4 +1,4 @@
-package com.turlir.abakgists.data;
+package com.turlir.abakgists.api;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteConstraintException;
@@ -8,16 +8,16 @@ import android.support.annotation.NonNull;
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResult;
 import com.pushtorefresh.storio.sqlite.queries.InsertQuery;
-import com.turlir.abakgists.model.GistModel;
-import com.turlir.abakgists.model.GistModelStorIOSQLitePutResolver;
+import com.turlir.abakgists.api.data.GistLocal;
+import com.turlir.abakgists.api.data.GistLocalStorIOSQLitePutResolver;
 
 import timber.log.Timber;
 
-public class GistModelStorIoLogPutResolver extends GistModelStorIOSQLitePutResolver {
+public class GistLocalStorIoLogPutResolver extends GistLocalStorIOSQLitePutResolver {
 
     @NonNull
     @Override
-    public PutResult performPut(@NonNull StorIOSQLite storIOSQLite, @NonNull GistModel object) {
+    public PutResult performPut(@NonNull StorIOSQLite storIOSQLite, @NonNull GistLocal object) {
         StorIOSQLite.LowLevel lowLevel = storIOSQLite.lowLevel();
 
         ContentValues contentValues = mapToContentValues(object);

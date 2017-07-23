@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 
 import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
 import com.turlir.abakgists.allgists.view.AllGistsFragment;
+import com.turlir.abakgists.api.data.GistLocal;
 import com.turlir.abakgists.base.BasePresenter;
 import com.turlir.abakgists.base.erroring.ErrorInterpreter;
 import com.turlir.abakgists.base.erroring.ErrorSituation;
@@ -47,11 +48,11 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
     public void updateGist() {
         removeCacheSubs();
         Subscription subs = mReq.update()
-                .compose(this.<PutResults<GistModel>>defaultScheduler())
-                .compose(this.<PutResults<GistModel>>safeSubscribing())
-                .subscribe(new GistDownloadHandler<PutResults<GistModel>>() {
+                .compose(this.<PutResults<GistLocal>>defaultScheduler())
+                .compose(this.<PutResults<GistLocal>>safeSubscribing())
+                .subscribe(new GistDownloadHandler<PutResults<GistLocal>>() {
                     @Override
-                    public void onNext(PutResults<GistModel> gistModelPutResults) {
+                    public void onNext(PutResults<GistLocal> gistModelPutResults) {
                         //noinspection ConstantConditions
                         getView().onUpdateSuccessful();
                         loadPublicGists(-1);

@@ -16,9 +16,10 @@ import android.widget.TextView;
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.squareup.picasso.Picasso;
 import com.turlir.abakgists.R;
+import com.turlir.abakgists.api.data.GistLocal;
+import com.turlir.abakgists.api.data.GistLocalStorIOSQLitePutResolver;
 import com.turlir.abakgists.base.App;
 import com.turlir.abakgists.model.GistModel;
-import com.turlir.abakgists.model.GistModelStorIOSQLitePutResolver;
 
 import javax.inject.Inject;
 
@@ -31,8 +32,8 @@ public class GistActivity extends AppCompatActivity {
 
     private static final String EXTRA_GIST = "EXTRA_GIST";
 
-    private static final GistModelStorIOSQLitePutResolver UPDATE_RESOLVER
-            = new GistModelStorIOSQLitePutResolver();
+    private static final GistLocalStorIOSQLitePutResolver UPDATE_RESOLVER
+            = new GistLocalStorIOSQLitePutResolver();
 
     public static Intent getStartIntent(Context cnt, GistModel data) {
         Intent i = new Intent(cnt, GistActivity.class);
@@ -76,8 +77,10 @@ public class GistActivity extends AppCompatActivity {
         if (member.isChange()) {
             Timber.i("Внесены изменения, обновление БД");
             GistModel now = member.createContent();
+            GistLocal local = new GistLocal(now.id, now.url, now.created, now.description, now.note,
+                    now.ownerLogin, now.ownerAvatarUrl);
             _database.put()
-                    .object(now)
+                    .object(local)
                     .withPutResolver(UPDATE_RESOLVER)
                     .prepare()
                     .executeAsBlocking();

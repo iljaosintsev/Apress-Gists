@@ -1,5 +1,7 @@
 package com.turlir.abakgists.model;
 
+import com.turlir.abakgists.api.data.GistLocal;
+
 import org.junit.Test;
 
 
@@ -7,7 +9,7 @@ public class GistModelTest {
 
     @Test
     public void testEqualsTrue() {
-        GistModel one = new GistModel();
+        GistLocal one = new GistLocal();
         one.url = "url";
         one.note = null;
         one.description = null;
@@ -16,7 +18,7 @@ public class GistModelTest {
         one.ownerAvatarUrl = null;
         one.ownerLogin = "login";
 
-        GistModel two = new GistModel();
+        GistLocal two = new GistLocal();
         two.url = "url";
         two.note = null;
         two.description = null;
@@ -30,7 +32,7 @@ public class GistModelTest {
 
     @Test
     public void testEqualsDifferentNote() {
-        GistModel one = new GistModel();
+        GistLocal one = new GistLocal();
         one.url = "url";
         one.note = null;
         one.description = null;
@@ -39,7 +41,7 @@ public class GistModelTest {
         one.ownerAvatarUrl = null;
         one.ownerLogin = "login";
 
-        GistModel two = new GistModel();
+        GistLocal two = new GistLocal();
         two.url = "url";
         two.note = "note"; // alarm
         two.description = null;

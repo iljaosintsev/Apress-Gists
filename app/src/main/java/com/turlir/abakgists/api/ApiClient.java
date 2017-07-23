@@ -1,7 +1,7 @@
-package com.turlir.abakgists.data;
+package com.turlir.abakgists.api;
 
 
-import com.turlir.abakgists.model.Gist;
+import com.turlir.abakgists.api.data.GistJson;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ public class ApiClient {
         mApi = retrofit.create(GitHubService.class);
     }
 
-    public Observable<List<Gist>> publicGist(int page) {
+    public Observable<List<GistJson>> publicGist(int page) {
         return mApi.publicGist(page);
     }
 

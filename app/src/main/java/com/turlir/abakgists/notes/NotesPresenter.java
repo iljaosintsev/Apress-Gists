@@ -2,8 +2,8 @@ package com.turlir.abakgists.notes;
 
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.queries.Query;
+import com.turlir.abakgists.api.data.GistLocal;
 import com.turlir.abakgists.base.BasePresenter;
-import com.turlir.abakgists.model.GistModel;
 import com.turlir.abakgists.model.GistsTable;
 import com.turlir.abakgists.notes.view.NotesFragment;
 
@@ -26,7 +26,7 @@ public class NotesPresenter extends BasePresenter<NotesFragment> {
 
     public void loadNotes() {
         addSubscription(mDatabase.get()
-                .listOfObjects(GistModel.class)
+                .listOfObjects(GistLocal.class)
                 .withQuery(
                         Query.builder()
                                 .table(GistsTable.GISTS)
@@ -35,11 +35,13 @@ public class NotesPresenter extends BasePresenter<NotesFragment> {
                 )
                 .prepare()
                 .asRxObservable()
-                .compose(this.<List<GistModel>>defaultScheduler())
-                .subscribe(new Handler<List<GistModel>>() {
+                .compose(this.<List<GistLocal>>defaultScheduler())
+                .subscribe(new Handler<List<GistLocal>>() {
                     @Override
-                    public void onNext(final List<GistModel> gist) {
-                        if (getView() == null) return;
+                    public void onNext(final List<GistLocal> gist) {
+                        // TODO
+
+                        /*if (getView() == null) return;
 
                         if (gist.size() > 0) {
                             if (gist.size() > mLastSize) { // больше
@@ -59,7 +61,7 @@ public class NotesPresenter extends BasePresenter<NotesFragment> {
 
                         } else if (mLastSize != 0) {
                             getView().onNotesDeleted();
-                        }
+                        }*/
 
                     }
                 }));
