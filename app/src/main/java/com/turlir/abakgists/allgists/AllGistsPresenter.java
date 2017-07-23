@@ -8,7 +8,6 @@ import com.turlir.abakgists.base.BasePresenter;
 import com.turlir.abakgists.base.erroring.ErrorInterpreter;
 import com.turlir.abakgists.base.erroring.ErrorSituation;
 import com.turlir.abakgists.model.GistModel;
-import com.turlir.abakgists.data.Repository;
 
 import java.util.List;
 
@@ -17,11 +16,11 @@ import timber.log.Timber;
 
 public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
 
-    private final Repository mRepo;
+    private final ModelRequester mReq;
     private Subscription mCacheSubs;
 
-    public AllGistsPresenter(Repository repo) {
-        mRepo = repo;
+    public AllGistsPresenter(ModelRequester repo) {
+        mReq = repo;
     }
 
     /**
@@ -30,8 +29,7 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
      */
     void loadPublicGists(final int currentSize) {
         removeCacheSubs();
-        Subscription subs = mRepo
-                .loadGists(currentSize)
+        Subscription subs = mReq.request(currentSize)
                 .compose(this.<List<GistModel>>defaultScheduler())
                 .compose(this.<GistModel>safeSubscribingWithList())
                 .subscribe(new GistDownloadHandler<List<GistModel>>() {
@@ -47,7 +45,7 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
 
     void updateGist() {
         removeCacheSubs();
-        Subscription subs = mRepo.reloadGists()
+        Subscription subs = mReq.update()
                 .compose(this.<PutResults<GistModel>>defaultScheduler())
                 .compose(this.<PutResults<GistModel>>safeSubscribing())
                 .subscribe(new GistDownloadHandler<PutResults<GistModel>>() {
@@ -103,7 +101,7 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
             return isErrorNow;
         }
         @Override
-        public void perform(ErrorInterpreter v, Exception e) {
+        public void perform(@NonNull ErrorInterpreter v, Exception e) {
             v.blockingError("Увы, попытайтесь снова через некоторое время");
         }
     }

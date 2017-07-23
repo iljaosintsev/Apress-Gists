@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import rx.Completable;
 import rx.Observable;
 import rx.Scheduler;
 import rx.android.plugins.RxAndroidPlugins;
@@ -95,7 +94,7 @@ public class RepositoryTest {
 
     @Test
     public void successFromCache() {
-        Observable<List<GistModel>> cacheObs = mRepo.loadGists(0);
+        Observable<List<GistModel>> cacheObs = mRepo.loadGists();
         TestSubscriber<List<GistModel>> subs = new TestSubscriber<>();
         cacheObs.subscribe(subs);
 
@@ -144,7 +143,7 @@ public class RepositoryTest {
         TestSubscriber<PutResults<GistModel>> serverSubs = new TestSubscriber<>();
         obs.subscribe(serverSubs);
 
-        Observable<List<GistModel>> cacheObs = mRepo.loadGists(0);
+        Observable<List<GistModel>> cacheObs = mRepo.loadGists();
         TestSubscriber<List<GistModel>> cacheSubs = new TestSubscriber<>();
         cacheObs.subscribe(cacheSubs);
 
@@ -175,7 +174,7 @@ public class RepositoryTest {
         Mockito.when(mockApi.publicGist(3)).thenReturn(serverObs);
 
         int s = 30 + 24; // 54
-        Observable<List<GistModel>> obs = mRepo.loadGists(s);
+        Observable<List<GistModel>> obs = mRepo.loadGists();
         TestSubscriber<List<GistModel>> subs = new TestSubscriber<>();
         obs.subscribe(subs);
 
@@ -193,7 +192,7 @@ public class RepositoryTest {
         Observable<List<Gist>> serverObs = Observable.just(serverList);
         Mockito.when(mockApi.publicGist(1)).thenReturn(serverObs);
 
-        Observable<List<GistModel>> cacheObs = mRepo.loadGists(0);
+        Observable<List<GistModel>> cacheObs = mRepo.loadGists();
         TestSubscriber<List<GistModel>> cacheSubs = new TestSubscriber<>();
         cacheObs.subscribe(cacheSubs);
 

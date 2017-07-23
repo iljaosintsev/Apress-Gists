@@ -61,6 +61,10 @@ public class AllGistsFragment
         @Override
         public void onRefresh() {
             _presenter.updateGist();
+
+            recycler.clearOnScrollListeners();
+            RecyclerView.OnScrollListener scroller = new SimpleScrollListener(AllGistsFragment.this);
+            recycler.addOnScrollListener(scroller);
         }
     };
 

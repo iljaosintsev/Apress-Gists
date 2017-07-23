@@ -22,8 +22,6 @@ public class Repository {
     private ApiClient mClient;
     private StorIOSQLite mDatabase;
 
-    private boolean gistIsLocal = true;
-
     public Repository(ApiClient client, StorIOSQLite base) {
         mClient = client;
         mDatabase = base;
@@ -48,44 +46,17 @@ public class Repository {
     /**
      * Получить данные с сервера или локальной базы (приоритетнее)
      *
-     * @param size количество элементов, добавленных в список (для пагинации) >= 0
      * @return список элементов
      */
-    public Observable<List<GistModel>> loadGists(final int size) {
-        if (size == 0) {
-            gistIsLocal = true;
-        }
+    public Observable<List<GistModel>> loadGists() {
         return mDatabase.get()
                 .listOfObjects(GistModel.class)
                 .withQuery(GistsTable.REQUEST_ALL)
                 .prepare()
-                .asRxObservable()
-                .switchMap(new Func1<List<GistModel>, Observable<List<GistModel>>>() {
-                    @Override
-                    public Observable<List<GistModel>> call(List<GistModel> gistModels) {
-                        if (gistModels.size() < size + 1) {
-                            return loadGistsFromServerAndPutCache(size);
-                        } else {
-                            return Observable.just(gistModels);
-                        }
-                    }
-                })
-                .doOnNext(new Action1<List<GistModel>>() {
-                    @Override
-                    public void call(List<GistModel> gistModels) {
-                        for (int i = Math.max(0, size); i < gistModels.size(); i++) {
-                            GistModel item = gistModels.get(i);
-                            item.isLocal = gistIsLocal;
-                        }
-                    }
-                });
+                .asRxObservable();
     }
 
-    ///
-    /// private
-    ///
-
-    private Observable<List<GistModel>> loadGistsFromServerAndPutCache(int currentSize) {
+    public Observable<List<GistModel>> loadGistsFromServerAndPutCache(int currentSize) {
         return loadGistsFromServer(currentSize)
                 .flatMap(new Func1<List<GistModel>, Observable<PutResults<GistModel>>>() {
                     @Override
@@ -100,6 +71,10 @@ public class Repository {
                 });
     }
 
+    ///
+    /// private
+    ///
+
     private Observable<List<GistModel>> loadGistsFromServer(int currentSize) {
         int page = Math.round(currentSize / PAGE_SIZE) + 1;
         return mClient
@@ -109,7 +84,6 @@ public class Repository {
                 .doOnNext(new Action1<List<GistModel>>() {
                     @Override
                     public void call(List<GistModel> gistModels) {
-                        gistIsLocal = false;
                     }
                 });
     }
