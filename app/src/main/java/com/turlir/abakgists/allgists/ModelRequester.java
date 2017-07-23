@@ -10,6 +10,7 @@ import java.util.List;
 
 import rx.Observable;
 import rx.functions.Func1;
+import timber.log.Timber;
 
 public class ModelRequester {
 
@@ -57,6 +58,7 @@ public class ModelRequester {
                                         (!cache.description.equals(item.description) ||
                                                 !cache.note.equals(item.note))
                                         ) {
+                                    Timber.d("%s recreated", cache);
                                     mData.set(i, new GistModel(item, cache.isLocal));
                                     isSingleChangeDetected = true;
                                 }

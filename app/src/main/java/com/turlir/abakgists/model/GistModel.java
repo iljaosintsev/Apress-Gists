@@ -113,6 +113,14 @@ public class GistModel
     }
 
     @Override
+    public String toString() {
+        return "GistModel{" +
+                "id='" + id + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
+
+    @Override
     public int hashCode() {
         int result = id.hashCode();
         result = 113 * result + url.hashCode();
