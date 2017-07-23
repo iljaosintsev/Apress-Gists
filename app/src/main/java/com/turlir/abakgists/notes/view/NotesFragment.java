@@ -1,4 +1,4 @@
-package com.turlir.abakgists.notes;
+package com.turlir.abakgists.notes.view;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,14 +11,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.turlir.abakgists.R;
-import com.turlir.abakgists.allgists.AllGistAdapter;
+import com.turlir.abakgists.allgists.view.AllGistAdapter;
 import com.turlir.abakgists.base.App;
 import com.turlir.abakgists.base.BaseFragment;
-import com.turlir.abakgists.widgets.DividerDecorator;
 import com.turlir.abakgists.base.OnClickListener;
-import com.turlir.abakgists.widgets.SpaceDecorator;
 import com.turlir.abakgists.gist.GistActivity;
 import com.turlir.abakgists.model.GistModel;
+import com.turlir.abakgists.notes.NotesPresenter;
+import com.turlir.abakgists.widgets.DividerDecorator;
+import com.turlir.abakgists.widgets.SpaceDecorator;
 
 import java.util.List;
 
@@ -88,11 +89,11 @@ public class NotesFragment extends BaseFragment implements OnClickListener {
         startActivity(i);
     }
 
-    void onNotesLoaded(List<GistModel> gistDiff) {
+    public void onNotesLoaded(List<GistModel> gistDiff) {
         mAdapter.addGist(gistDiff);
     }
 
-    void onNotesDeleted() {
+    public void onNotesDeleted() {
         if (mAdapter.getItemCount() > 0) {
             mAdapter.removeLastItem();
         }

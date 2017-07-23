@@ -6,13 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:init="content"
-    tools:context=".allgists.AllGistsFragment">
+    tools:context=".allgists.view.AllGistsFragment">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".allgists.AllGistsFragment">
+        tools:context=".allgists.view.AllGistsFragment">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler"

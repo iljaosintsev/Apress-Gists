@@ -5,6 +5,7 @@ import com.pushtorefresh.storio.sqlite.queries.Query;
 import com.turlir.abakgists.base.BasePresenter;
 import com.turlir.abakgists.model.GistModel;
 import com.turlir.abakgists.model.GistsTable;
+import com.turlir.abakgists.notes.view.NotesFragment;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class NotesPresenter extends BasePresenter<NotesFragment> {
         mLastSize = 0;
     }
 
-    void loadNotes() {
+    public void loadNotes() {
         addSubscription(mDatabase.get()
                 .listOfObjects(GistModel.class)
                 .withQuery(

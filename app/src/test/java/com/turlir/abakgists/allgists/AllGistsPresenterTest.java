@@ -7,11 +7,12 @@ import android.os.Build;
 import com.turlir.abakgists.BuildConfig;
 import com.turlir.abakgists.Data;
 import com.turlir.abakgists.DatabaseMocking;
+import com.turlir.abakgists.allgists.view.AllGistsFragment;
+import com.turlir.abakgists.data.ApiClient;
+import com.turlir.abakgists.data.Repository;
 import com.turlir.abakgists.di.AppComponent;
 import com.turlir.abakgists.model.Gist;
 import com.turlir.abakgists.model.GistModel;
-import com.turlir.abakgists.data.ApiClient;
-import com.turlir.abakgists.data.Repository;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -41,7 +42,12 @@ import rx.schedulers.Schedulers;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = Build.VERSION_CODES.LOLLIPOP, packageName = "com.turlir.abakgists")

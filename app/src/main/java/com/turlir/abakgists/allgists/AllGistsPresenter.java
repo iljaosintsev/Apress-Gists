@@ -4,6 +4,7 @@ package com.turlir.abakgists.allgists;
 import android.support.annotation.NonNull;
 
 import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
+import com.turlir.abakgists.allgists.view.AllGistsFragment;
 import com.turlir.abakgists.base.BasePresenter;
 import com.turlir.abakgists.base.erroring.ErrorInterpreter;
 import com.turlir.abakgists.base.erroring.ErrorSituation;
@@ -27,7 +28,7 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
      * из локального кеша или сетевого запроса
      *
      */
-    void loadPublicGists(final int currentSize) {
+    public void loadPublicGists(final int currentSize) {
         removeCacheSubs();
         Subscription subs = mReq.request(currentSize)
                 .compose(this.<List<GistModel>>defaultScheduler())
@@ -43,7 +44,7 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
         addCacheSubs(subs);
     }
 
-    void updateGist() {
+    public void updateGist() {
         removeCacheSubs();
         Subscription subs = mReq.update()
                 .compose(this.<PutResults<GistModel>>defaultScheduler())

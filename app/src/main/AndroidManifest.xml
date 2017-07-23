@@ -20,11 +20,15 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".allgists.AllGistsActivity" android:label="@string/all_gists"/>
+        <activity
+            android:name=".allgists.view.AllGistsActivity"
+            android:label="@string/all_gists"/>
 
         <activity android:name=".gist.GistActivity" android:label="@string/gist"/>
 
-        <activity android:name=".notes.NotesActivity" android:label="@string/notes"/>
+        <activity
+            android:name=".notes.view.NotesActivity"
+            android:label="@string/notes"/>
 
         <activity android:name=".AllInOneActivity" android:theme="@style/AllInOneTheme"
             android:label="@string/all_in_one"/>

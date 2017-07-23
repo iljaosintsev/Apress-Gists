@@ -9,8 +9,8 @@ import android.support.annotation.VisibleForTesting;
 
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteColumn;
 import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteType;
-import com.turlir.abakgists.allgists.TypesFactory;
-import com.turlir.abakgists.allgists.ViewModel;
+import com.turlir.abakgists.allgists.view.TypesFactory;
+import com.turlir.abakgists.allgists.view.ViewModel;
 
 @StorIOSQLiteType(table = GistsTable.GISTS)
 public class GistModel extends ViewModel implements Parcelable {

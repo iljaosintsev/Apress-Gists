@@ -11,8 +11,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-import com.turlir.abakgists.allgists.AllGistsFragment;
-import com.turlir.abakgists.notes.NotesFragment;
+import com.turlir.abakgists.allgists.view.AllGistsFragment;
+import com.turlir.abakgists.notes.view.NotesFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
