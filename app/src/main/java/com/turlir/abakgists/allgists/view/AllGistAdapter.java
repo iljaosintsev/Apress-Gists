@@ -147,7 +147,7 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
         }
     }
 
-    private static class GistDiffCallback extends DiffUtil.Callback {
+    private /*static*/ class GistDiffCallback extends DiffUtil.Callback {
 
         private final List<ViewModel> mOldList;
         private final List<GistModel> mNowList;
@@ -170,9 +170,14 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
         @Override
         public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
             Timber.v("itemsTheSame %d -%d", oldItemPosition, newItemPosition);
-            GistModel old = (GistModel) mOldList.get(oldItemPosition);
-            GistModel now = mNowList.get(newItemPosition);
-            return !now.isDifferent(old);
+            ViewModel old = mOldList.get(oldItemPosition);
+            GistModel oldModel = mFactory.instance(old);
+            if (oldModel != null) {
+                GistModel now = mNowList.get(newItemPosition);
+                return !now.isDifferent(oldModel);
+            } else {
+                return false;
+            }
         }
 
         @Override
