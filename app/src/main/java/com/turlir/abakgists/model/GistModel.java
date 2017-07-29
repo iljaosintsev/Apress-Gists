@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.turlir.abakgists.allgists.view.TypesFactory;
 import com.turlir.abakgists.allgists.view.ViewModel;
@@ -13,21 +14,23 @@ public class GistModel
         extends ViewModel
         implements Parcelable {
 
-    public String id;
+    public final String id;
 
-    public String url;
+    public final String url;
 
-    public String created;
+    public final String created;
 
-    public String description;
+    @NonNull
+    public final String description;
 
-    public String ownerLogin;
+    public final String ownerLogin;
 
-    public String ownerAvatarUrl;
+    public final String ownerAvatarUrl;
 
-    public String note;
+    @NonNull
+    public final String note;
 
-    public boolean isLocal;
+    public final boolean isLocal;
 
     public static final Parcelable.Creator<GistModel> CREATOR = new Parcelable.Creator<GistModel>() {
         @Override
@@ -45,11 +48,20 @@ public class GistModel
         id = local.id;
         url = local.url;
         created = local.created;
-        description = local.description;
+        description = safeAssign(local.description);
         ownerLogin = local.ownerLogin;
         ownerAvatarUrl = local.ownerAvatarUrl;
-        note = local.note;
+        note = safeAssign(local.note);
         this.isLocal = isLocal;
+    }
+
+    @NonNull
+    private static String safeAssign(@Nullable String value) {
+        if (value == null) {
+            return "";
+        } else {
+            return value;
+        }
     }
 
     public GistModel(GistModel other, @NonNull String desc, @NonNull String note) {
@@ -72,6 +84,7 @@ public class GistModel
         note = in.readString();
         ownerLogin = in.readString();
         ownerAvatarUrl = in.readString();
+        isLocal = in.readInt() == 1;
     }
 
     @Override
@@ -83,6 +96,7 @@ public class GistModel
         dest.writeString(note);
         dest.writeString(ownerLogin);
         dest.writeString(ownerAvatarUrl);
+        dest.writeInt(isLocal ? 1 : 0);
     }
 
     @Override
@@ -125,10 +139,10 @@ public class GistModel
         int result = id.hashCode();
         result = 113 * result + url.hashCode();
         result = 113 * result + created.hashCode();
-        result = 113 * result + (description != null ? description.hashCode() : 0);
+        result = 113 * result + description.hashCode();
         result = 113 * result + (ownerLogin != null ? ownerLogin.hashCode() : 0);
         result = 113 * result + (ownerAvatarUrl != null ? ownerAvatarUrl.hashCode() : 0);
-        result = 113 * result + (note != null ? note.hashCode() : 0);
+        result = 113 * result + note.hashCode();
         return result;
     }
 
@@ -143,11 +157,7 @@ public class GistModel
         if (!url.equals(gistModel.url)) return false;
         if (!created.equals(gistModel.created)) return false;
 
-        if (description != null) {
-            if (!description.equals(gistModel.description)) return false;
-        } else {
-            if (gistModel.description != null) return false;
-        }
+        if (!description.equals(gistModel.description)) return false;
 
         if (ownerLogin != null) {
             if (!ownerLogin.equals(gistModel.ownerLogin)) return false;
@@ -161,12 +171,7 @@ public class GistModel
             if (gistModel.ownerAvatarUrl != null) return false;
         }
 
-        if (note != null) {
-            return note.equals(gistModel.note);
-        }
-        else {
-            return gistModel.note == null;
-        }
+        return note.equals(gistModel.note);
     }
 
 }

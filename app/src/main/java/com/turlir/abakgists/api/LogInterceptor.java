@@ -36,7 +36,7 @@ public class LogInterceptor implements Interceptor {
         String bodyString = response.body().string();
         if ("application/json; charset=utf-8".equals(response.headers().get("Content-Type"))) {
             Timber.i("Response (%d)", response.code());
-            prettyJsonLog(bodyString);
+            //prettyJsonLog(bodyString);
         } else {
             Timber.i("Response (%d): %s", response.code(), bodyString);
         }

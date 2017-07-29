@@ -25,7 +25,7 @@ public class ModelRequester {
         mData = new ArrayList<>();
     }
 
-    public Observable<List<GistModel>> request(final int size) {
+    Observable<List<GistModel>> request(final int size) {
         if (size == 0) {
             mData.clear();
             isLocal = true;
@@ -47,38 +47,40 @@ public class ModelRequester {
                     public List<GistModel> call(List<GistLocal> gistLocals) {
                         final int originCacheSize = mData.size();
                         boolean isSingleChangeDetected = false;
+
                         for (int i = 0; i < gistLocals.size(); i++) {
-                            GistLocal item = gistLocals.get(i);
+                            final GistLocal item = gistLocals.get(i);
+
                             if (i + 1 > originCacheSize) {
                                 GistModel m = new GistModel(item, isLocal);
                                 mData.add(m);
+
                             } else {
                                 GistModel cache = mData.get(i);
-                                if (!isSingleChangeDetected &&
-                                        (!cache.description.equals(item.description) ||
-                                                !cache.note.equals(item.note))
-                                        ) {
+                                boolean changed = !isSingleChangeDetected &&
+                                                  (!cache.description.equals(item.description) ||
+                                                   !cache.note.equals(item.note));
+                                if (changed) {
                                     Timber.d("%s recreated", cache);
                                     mData.set(i, new GistModel(item, cache.isLocal));
                                     isSingleChangeDetected = true;
                                 }
                             }
                         }
+
                         return mData;
                     }
                 });
     }
 
-    public Observable<PutResults<GistLocal>> update() {
+    Observable<PutResults<GistLocal>> update() {
         isLocal = false;
         mData.clear();
-
         return mRepo.reloadGists();
     }
 
     private Observable<List<GistLocal>> server(int size) {
         isLocal = false;
-
         return mRepo.loadGistsFromServerAndPutCache(size);
     }
 

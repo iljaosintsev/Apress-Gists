@@ -20,6 +20,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
 public abstract class BasePresenter<T extends BaseView> {
 
@@ -75,20 +76,23 @@ public abstract class BasePresenter<T extends BaseView> {
         private final ErrorSelector mRobot;
 
         protected ErrorHandler() {
-            super();
             mRobot = new TroubleSelector(additionalSituation());
         }
 
         @Override
         public void onError(Throwable throwable) {
             if (throwable instanceof Exception) {
+                Exception exception = (Exception) throwable;
+                Timber.e(exception);
+
                 ErrorInterpreter interpreter = interpreter();
                 if (interpreter != null) {
                     ErrorSituation callback =
-                            mRobot.select((Exception) throwable, isDataAvailable(), isError());
+                            mRobot.select(exception, isDataAvailable(), isError());
 
-                    callback.perform(interpreter, (Exception) throwable);
+                    callback.perform(interpreter, exception);
                 }
+
             } else {
                 throw new RuntimeException(throwable);
             }
@@ -116,7 +120,7 @@ public abstract class BasePresenter<T extends BaseView> {
 
         @Override
         public void onError(Throwable e) {
-            e.printStackTrace();
+            Timber.e(e);
             T view = getView();
             if (view != null) {
                 CharSequence msg = view.getContext().getString(R.string.error_general);

@@ -77,15 +77,9 @@ public class Repository {
 
     private Observable<List<GistLocal>> loadGistsFromServer(int currentSize) {
         int page = Math.round(currentSize / PAGE_SIZE) + 1;
-        return mClient
-                .publicGist(page)
+        return mClient.publicGist(page)
                 .doOnNext(new LagSideEffect(2500))
-                .map(new ListGistJsonToLocalMapper())
-                .doOnNext(new Action1<List<GistLocal>>() {
-                    @Override
-                    public void call(List<GistLocal> gistModels) {
-                    }
-                });
+                .map(new ListGistJsonToLocalMapper());
     }
 
     private Observable<PutResults<GistLocal>> putGistsToCache(List<GistLocal> gists) {

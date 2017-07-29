@@ -19,9 +19,6 @@ import com.turlir.abakgists.model.GistModel;
 class EqualsSolver {
 
     boolean solveModel(GistModel old, GistModel now) {
-        if (now.description == null || now.note == null) {
-            throw new IllegalStateException("after ui field desc and note not be null");
-        }
         return solveDescAndNote(
                 old.description, now.description,
                 old.note, now.note
