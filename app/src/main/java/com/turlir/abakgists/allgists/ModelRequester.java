@@ -3,6 +3,7 @@ package com.turlir.abakgists.allgists;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
 import com.turlir.abakgists.api.Repository;
 import com.turlir.abakgists.api.data.GistLocal;
+import com.turlir.abakgists.api.data.GistMapper;
 import com.turlir.abakgists.model.GistModel;
 
 import java.util.ArrayList;
@@ -19,13 +20,12 @@ public class ModelRequester {
 
     private final Repository mRepo;
     private final List<GistModel> mData;
-
-    private boolean isLocal;
+    private final GistMapper.Local mTransformer;
 
     public ModelRequester(Repository repo) {
         mRepo = repo;
-        isLocal = true;
         mData = new ArrayList<>();
+        mTransformer = new GistMapper.Local();
     }
 
     /**
@@ -37,7 +37,7 @@ public class ModelRequester {
     Observable<List<GistModel>> request(final int size) {
         if (size == 0) {
             mData.clear();
-            isLocal = true;
+            mTransformer.setLocal(true);
         }
 
         return mRepo.load()
@@ -45,7 +45,7 @@ public class ModelRequester {
                     @Override
                     public Observable<List<GistLocal>> call(List<GistLocal> gistModels) {
                         if (gistModels.size() < size + 1) {
-                            isLocal = false;
+                            mTransformer.setLocal(false);
                             int page = Math.round(size / PAGE_SIZE) + 1;
                             return mRepo.server(page);
                         } else {
@@ -62,7 +62,7 @@ public class ModelRequester {
                             final GistLocal item = gistLocals.get(i);
 
                             if (i + 1 > originCacheSize) { // новые данные в БД
-                                GistModel m = new GistModel(item, isLocal);
+                                GistModel m = mTransformer.call(item);
                                 mData.add(m);
 
                             } else { // обновление БД
@@ -74,7 +74,7 @@ public class ModelRequester {
 
                                 if (changed) {
                                     Timber.d("%s recreated", cache);
-                                    mData.set(i, new GistModel(item, cache.isLocal));
+                                    mData.set(i, mTransformer.call(item));
                                     // только один элемент из набора может измениться с обновлением
                                     i = originCacheSize;
                                 }
@@ -88,14 +88,16 @@ public class ModelRequester {
 
     /**
      * Обнвляет данные. Скачивает свежие данные с сервра, перезаписывает локальную базу
+     *
      * @return сведения о записанных элементах
      */
     Observable<PutResults<GistLocal>> update() {
-        isLocal = false;
+        mTransformer.setLocal(false);
         return mRepo.reload()
                 .doOnNext(new Action1<PutResults<GistLocal>>() {
                     @Override
                     public void call(PutResults<GistLocal> gistLocalPutResults) {
+                        // сохраняем кеш в RAM до успешного завершения сетевого запроса
                         mData.clear();
                     }
                 });

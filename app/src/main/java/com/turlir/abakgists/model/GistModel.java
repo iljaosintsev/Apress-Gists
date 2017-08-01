@@ -4,11 +4,9 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.turlir.abakgists.allgists.view.TypesFactory;
 import com.turlir.abakgists.allgists.view.ViewModel;
-import com.turlir.abakgists.api.data.GistLocal;
 
 public class GistModel
         extends ViewModel
@@ -44,24 +42,16 @@ public class GistModel
         }
     };
 
-    public GistModel(GistLocal local, boolean isLocal) {
-        id = local.id;
-        url = local.url;
-        created = local.created;
-        description = safeAssign(local.description);
-        ownerLogin = local.ownerLogin;
-        ownerAvatarUrl = local.ownerAvatarUrl;
-        note = safeAssign(local.note);
+    public GistModel(String id, String url, String created, @NonNull String description,
+                     String ownerLogin, String ownerAvatarUrl, @NonNull String note, boolean isLocal) {
+        this.id = id;
+        this.url = url;
+        this.created = created;
+        this.description = description;
+        this.ownerLogin = ownerLogin;
+        this.ownerAvatarUrl = ownerAvatarUrl;
+        this.note = note;
         this.isLocal = isLocal;
-    }
-
-    @NonNull
-    private static String safeAssign(@Nullable String value) {
-        if (value == null) {
-            return "";
-        } else {
-            return value;
-        }
     }
 
     public GistModel(GistModel other, @NonNull String desc, @NonNull String note) {

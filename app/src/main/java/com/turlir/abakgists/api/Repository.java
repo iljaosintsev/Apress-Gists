@@ -4,7 +4,8 @@ import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.operations.delete.DeleteResult;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
 import com.turlir.abakgists.api.data.GistLocal;
-import com.turlir.abakgists.api.data.ListGistJsonToLocalMapper;
+import com.turlir.abakgists.api.data.GistMapper;
+import com.turlir.abakgists.api.data.ListGistMapper;
 import com.turlir.abakgists.model.GistsTable;
 
 import java.util.List;
@@ -14,15 +15,18 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.functions.Func2;
 
-
 public class Repository {
 
-    private ApiClient mClient;
-    private StorIOSQLite mDatabase;
+    private final ApiClient mClient;
+    private final StorIOSQLite mDatabase;
+
+    private final ListGistMapper.Json mTransformer;
 
     public Repository(ApiClient client, StorIOSQLite base) {
         mClient = client;
         mDatabase = base;
+
+        mTransformer = new ListGistMapper.Json(new GistMapper.Json());
     }
 
     /**
@@ -83,7 +87,7 @@ public class Repository {
         if (page < 1) throw new IllegalArgumentException();
         return mClient.publicGist(page)
                 .doOnNext(new LagSideEffect(2500))
-                .map(new ListGistJsonToLocalMapper());
+                .map(mTransformer);
     }
 
     private Observable<PutResults<GistLocal>> putToCache(List<GistLocal> gists) {

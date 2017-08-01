@@ -24,7 +24,7 @@ public class GistLocal {
     public String created;
 
     @StorIOSQLiteColumn(name = GistsTable.DESC)
-    @Nullable
+    @NonNull
     public String description;
 
     @StorIOSQLiteColumn(name = GistsTable.OWNER_LOGIN)
@@ -36,7 +36,7 @@ public class GistLocal {
     public String ownerAvatarUrl;
 
     @StorIOSQLiteColumn(name = GistsTable.NOTE)
-    @Nullable
+    @NonNull
     public String note;
 
 
@@ -45,13 +45,13 @@ public class GistLocal {
     }
 
     public GistLocal(@NonNull String id, @NonNull String url, @NonNull String created,
-                     @Nullable String description) {
-        this(id, url, created, description, null, null);
+                     @NonNull String description) {
+        this(id, url, created, description, "", null);
     }
 
     public GistLocal(@NonNull String id, @NonNull String url, @NonNull String created,
-                     @Nullable String description, @Nullable String ownerLogin, @Nullable String ownerAvatarUrl) {
-        this(id, url, created, description, null, ownerLogin, ownerAvatarUrl);
+                     @NonNull String description, @Nullable String ownerLogin, @Nullable String ownerAvatarUrl) {
+        this(id, url, created, description, "", ownerLogin, ownerAvatarUrl);
     }
 
     public GistLocal(@NonNull String id, @NonNull String url, @NonNull String created,
@@ -60,8 +60,8 @@ public class GistLocal {
         this.id = id;
         this.url = url;
         this.created = created;
-        this.description = description;
-        this.note = note;
+        this.description = safeAssign(description);
+        this.note = safeAssign(note);
         overrideOwnerLogin(ownerLogin);
         this.ownerAvatarUrl = ownerAvatarUrl;
     }
@@ -69,14 +69,21 @@ public class GistLocal {
     @VisibleForTesting
     public GistLocal(GistLocal other) {
         this(other.id, other.url, other.created, other.description);
-        if (other.note != null) {
-            note = other.note;
-        }
+        note = other.note;
         if (other.ownerLogin != null) {
             ownerLogin = other.ownerLogin;
         }
         if (other.ownerAvatarUrl != null) {
             ownerAvatarUrl = other.ownerAvatarUrl;
+        }
+    }
+
+    @NonNull
+    private static String safeAssign(@Nullable String value) {
+        if (value == null) {
+            return "";
+        } else {
+            return value;
         }
     }
 
