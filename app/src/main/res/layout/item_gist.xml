@@ -42,8 +42,8 @@
 
         <ImageView
             android:id="@+id/item_gist_source_indicator"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
             tools:background="@android:color/holo_green_light"/>
 
         <TextView
