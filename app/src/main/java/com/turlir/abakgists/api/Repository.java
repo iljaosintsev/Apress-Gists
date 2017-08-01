@@ -17,8 +17,6 @@ import rx.functions.Func2;
 
 public class Repository {
 
-    private static final float PAGE_SIZE = 30;
-
     private ApiClient mClient;
     private StorIOSQLite mDatabase;
 
@@ -31,10 +29,10 @@ public class Repository {
      * Перезагрузить данные с сервера
      * При этом очищается локальная БД
      *
-     * @return количество вновь добавленных элементов (может быть проигнорировано)
+     * @return сведения о вновь добавленных элементах
      */
-    public Observable<PutResults<GistLocal>> reloadGists() {
-        return loadGistsFromServer(0)
+    public Observable<PutResults<GistLocal>> reload() {
+        return loadFromServer(0)
                 .flatMap(new Func1<List<GistLocal>, Observable<PutResults<GistLocal>>>() {
                     @Override
                     public Observable<PutResults<GistLocal>> call(List<GistLocal> gistModels) {
@@ -44,11 +42,11 @@ public class Repository {
     }
 
     /**
-     * Получить данные с сервера или локальной базы (приоритетнее)
+     * Получить данные из локальной базы
      *
      * @return список элементов
      */
-    public Observable<List<GistLocal>> loadGists() {
+    public Observable<List<GistLocal>> load() {
         return mDatabase.get()
                 .listOfObjects(GistLocal.class)
                 .withQuery(GistsTable.REQUEST_ALL)
@@ -56,12 +54,18 @@ public class Repository {
                 .asRxObservable();
     }
 
-    public Observable<List<GistLocal>> loadGistsFromServerAndPutCache(int currentSize) {
-        return loadGistsFromServer(currentSize)
+    /**
+     * Скачивает очередную страницу с сервера и сохраняет ее в БД
+     *
+     * @param page номер загружаемой страницы, больше 1
+     * @return сохраненные в БД элементы
+     */
+    public Observable<List<GistLocal>> server(int page) {
+        return loadFromServer(page)
                 .flatMap(new Func1<List<GistLocal>, Observable<PutResults<GistLocal>>>() {
                     @Override
                     public Observable<PutResults<GistLocal>> call(List<GistLocal> gists) {
-                        return putGistsToCache(gists);
+                        return putToCache(gists);
                     }
                 }, new Func2<List<GistLocal>, PutResults<GistLocal>, List<GistLocal>>() {
                     @Override
@@ -75,14 +79,14 @@ public class Repository {
     /// private
     ///
 
-    private Observable<List<GistLocal>> loadGistsFromServer(int currentSize) {
-        int page = Math.round(currentSize / PAGE_SIZE) + 1;
+    private Observable<List<GistLocal>> loadFromServer(int page) {
+        if (page < 1) throw new IllegalArgumentException();
         return mClient.publicGist(page)
                 .doOnNext(new LagSideEffect(2500))
                 .map(new ListGistJsonToLocalMapper());
     }
 
-    private Observable<PutResults<GistLocal>> putGistsToCache(List<GistLocal> gists) {
+    private Observable<PutResults<GistLocal>> putToCache(List<GistLocal> gists) {
         return mDatabase.put()
                 .objects(gists)
                 .prepare()
@@ -97,13 +101,13 @@ public class Repository {
                 .flatMap(new Func1<DeleteResult, Observable<PutResults<GistLocal>>>() {
                     @Override
                     public Observable<PutResults<GistLocal>> call(DeleteResult deleteResult) {
-                        return putGistsToCache(gists);
+                        return putToCache(gists);
                     }
                 });
     }
 
     /**
-     * Like a network lag in {@code millis} millisecond
+     * Эффект задержки сети на {@code millis} миллисекунд
      */
     private static class LagSideEffect implements Action1<Object> {
 
