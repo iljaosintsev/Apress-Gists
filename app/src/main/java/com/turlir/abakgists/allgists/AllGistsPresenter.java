@@ -9,6 +9,7 @@ import com.turlir.abakgists.api.data.GistLocal;
 import com.turlir.abakgists.base.BasePresenter;
 import com.turlir.abakgists.base.erroring.ErrorInterpreter;
 import com.turlir.abakgists.base.erroring.ErrorSituation;
+import com.turlir.abakgists.base.erroring.RepeatingError;
 import com.turlir.abakgists.model.GistModel;
 
 import java.util.List;
@@ -95,17 +96,6 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
             return getView();
         }
 
-    }
-
-    private static final class RepeatingError implements ErrorSituation {
-        @Override
-        public boolean should(Exception ex, boolean dataAvailable, boolean isErrorNow) {
-            return isErrorNow;
-        }
-        @Override
-        public void perform(@NonNull ErrorInterpreter v, Exception e) {
-            v.blockingError("Увы, попытайтесь снова через некоторое время");
-        }
     }
 
 }

@@ -129,8 +129,18 @@ public abstract class BasePresenter<T extends BaseView> {
         }
     }
 
+    ///
+    /// private inner classes
+    ///
+
+    /**
+     * Подписка на безопасных потоках
+     *
+     * @param <T> тип последовательности
+     */
     private static final class ObservableSchedulersTransformer<T>
             implements Observable.Transformer<T, T> {
+
         @Override
         public Observable<T> call(Observable<T> upstream) {
             return upstream
@@ -138,10 +148,6 @@ public abstract class BasePresenter<T extends BaseView> {
                     .observeOn(AndroidSchedulers.mainThread());
         }
     }
-
-    ///
-    /// private inner classes
-    ///
 
     /**
      * Действительна ли сейчас ссылка на вью
