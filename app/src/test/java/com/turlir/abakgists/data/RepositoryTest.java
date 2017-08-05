@@ -115,7 +115,7 @@ public class RepositoryTest {
     }
 
     @Test
-    public void clearCacheTest() {
+    public void reloadTest() {
         GistOwnerJson owner = new GistOwnerJson("login", "avatarurl");
         GistJson gist = new GistJson("id", "url", "created", "desc", owner);
         List<GistJson> serverList = Collections.singletonList(gist);
@@ -136,42 +136,7 @@ public class RepositoryTest {
     }
 
     @Test
-    public void loadNewGistsFromServerAndPutCacheTest() {
-        GistOwnerJson owner = new GistOwnerJson("login", "avatarurl");
-        GistJson gist = new GistJson("id", "url", "created", "desc", owner);
-        List<GistJson> serverList = Collections.singletonList(gist);
-
-        Observable<List<GistJson>> serverObs = Observable.just(serverList);
-        Mockito.when(mockApi.publicGist(1)).thenReturn(serverObs);
-
-        Observable<PutResults<GistLocal>> obs = mRepo.reload();
-        TestSubscriber<PutResults<GistLocal>> reloadSubs = new TestSubscriber<>();
-        obs.subscribe(reloadSubs);
-
-        Observable<PutResults<GistLocal>> cacheObs = mRepo.reload();
-        TestSubscriber<PutResults<GistLocal>> cacheSubs = new TestSubscriber<>();
-        cacheObs.subscribe(cacheSubs);
-
-        reloadSubs.assertNoErrors();
-        reloadSubs.assertCompleted();
-        reloadSubs.assertValueCount(1);
-        List<PutResults<GistLocal>> putEvents = reloadSubs.getOnNextEvents();
-        assertEquals(1, putEvents.size());
-
-        // в cacheSubs пришел новый набор результатов (второй)
-        // содержащий уже два обекта Gist, последний из которых - новый с сервера
-        cacheSubs.assertCompleted();
-        cacheSubs.assertValueCount(1);
-        List<PutResults<GistLocal>> cacheEvents = cacheSubs.getOnNextEvents();
-        PutResults<GistLocal> first = cacheEvents.get(0);
-        Set<GistLocal> keys = first.results().keySet();
-        GistLocal now = keys.toArray(new GistLocal[keys.size()])[0];
-        GistLocal stub = new GistLocal("id", "url", "created", "desc", "login", "avatarurl");
-        assertEquals(stub, now);
-    }
-
-    @Test
-    public void loadOldGistsFromServerAndPutCacheTest() {
+    public void reloadAfterLoadTest() {
         Observable<List<GistLocal>> cacheObs = mRepo.load();
         TestSubscriber<List<GistLocal>> cacheSubs = new TestSubscriber<>();
         cacheObs.subscribe(cacheSubs);
@@ -213,6 +178,40 @@ public class RepositoryTest {
         old.note = "";
         old.description = "new desc";
         assertEquals(old, three.get(0));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void zeroPageExceptionTest() {
+        mRepo.server(0);
+    }
+
+    @Test
+    public void successFromServerTest() {
+        GistJson stub = new GistJson(Data.SERVER_STUB);
+        List<GistJson> serverList = Collections.singletonList(stub);
+        Observable<List<GistJson>> serverObs = Observable.just(serverList);
+        Mockito.when(mockApi.publicGist(1)).thenReturn(serverObs);
+
+        Observable<List<GistLocal>> obs = mRepo.server(1);
+        TestSubscriber<List<GistLocal>> subscriber = new TestSubscriber<>();
+        obs.subscribe(subscriber);
+
+        subscriber.assertCompleted();
+        subscriber.assertValueCount(1);
+        List<List<GistLocal>> events = subscriber.getOnNextEvents();
+        List<GistLocal> first = events.get(0);
+        assertEquals(1, first.size());
+
+        GistLocal local = new GistLocal(
+                "85547e4878dd9a573215cd905650f284",
+                "https://api.github.com/gists/85547e4878dd9a573215cd905650f284",
+                "2017-04-27T21:54:24Z",
+                "Part of setTextByParts",
+                "",
+                "iljaosintsev",
+                "https://avatars1.githubusercontent.com/u/3526847?v=3"
+        );
+        assertEquals(local, first.get(0));
     }
 
     private GistDatabaseHelper makeHelper(final String name) {
