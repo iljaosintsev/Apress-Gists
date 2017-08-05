@@ -47,7 +47,8 @@ public class ModelRequester {
                         if (gistModels.size() < size + 1) {
                             mTransformer.setLocal(false);
                             int page = Math.round(size / PAGE_SIZE) + 1;
-                            return mRepo.server(page);
+                            return mRepo.server(page)
+                                    .skip(1);
                         } else {
                             return Observable.just(gistModels);
                         }
