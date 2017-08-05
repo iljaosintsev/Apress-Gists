@@ -78,4 +78,42 @@ public class GistLocal {
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GistLocal gistLocal = (GistLocal) o;
+
+        if (!id.equals(gistLocal.id)) return false;
+        if (!url.equals(gistLocal.url)) return false;
+        if (!created.equals(gistLocal.created)) return false;
+        if (!description.equals(gistLocal.description)) return false;
+
+        if (ownerLogin != null) {
+            if (!ownerLogin.equals(gistLocal.ownerLogin)) return false;
+        } else {
+            if (gistLocal.ownerLogin != null) return false;
+        }
+
+        if (ownerAvatarUrl != null) {
+            if (!ownerAvatarUrl.equals(gistLocal.ownerAvatarUrl)) return false;
+        } else {
+            if (gistLocal.ownerAvatarUrl != null) return false;
+        }
+
+        return note.equals(gistLocal.note);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 229 * result + url.hashCode();
+        result = 229 * result + created.hashCode();
+        result = 229 * result + description.hashCode();
+        result = 229 * result + (ownerLogin != null ? ownerLogin.hashCode() : 0);
+        result = 229 * result + (ownerAvatarUrl != null ? ownerAvatarUrl.hashCode() : 0);
+        result = 229 * result + note.hashCode();
+        return result;
+    }
 }

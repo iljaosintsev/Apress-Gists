@@ -36,7 +36,7 @@ public class Repository {
      * @return сведения о вновь добавленных элементах
      */
     public Observable<PutResults<GistLocal>> reload() {
-        return loadFromServer(0)
+        return loadFromServer(1)
                 .flatMap(new Func1<List<GistLocal>, Observable<PutResults<GistLocal>>>() {
                     @Override
                     public Observable<PutResults<GistLocal>> call(List<GistLocal> gistModels) {

@@ -36,6 +36,7 @@ public class GistJson {
     @VisibleForTesting
     public GistJson(GistJson other) {
         this(other.id, other.url, other.created, other.description);
+        this.owner = other.owner;
     }
 
     @VisibleForTesting

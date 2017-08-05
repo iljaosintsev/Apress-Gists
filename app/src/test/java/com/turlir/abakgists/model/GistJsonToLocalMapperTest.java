@@ -1,8 +1,8 @@
 package com.turlir.abakgists.model;
 
-import com.turlir.abakgists.api.GistJsonToLocalMapper;
 import com.turlir.abakgists.api.data.GistJson;
 import com.turlir.abakgists.api.data.GistLocal;
+import com.turlir.abakgists.api.data.GistMapper;
 import com.turlir.abakgists.api.data.GistOwnerJson;
 
 import org.junit.Before;
@@ -12,11 +12,11 @@ import static org.junit.Assert.assertEquals;
 
 public class GistJsonToLocalMapperTest {
 
-    private GistJsonToLocalMapper mapper;
+    private GistMapper.Json mapper;
 
     @Before
     public void setup() {
-        mapper = new GistJsonToLocalMapper();
+        mapper = new GistMapper.Json();
     }
 
     @Test
@@ -31,7 +31,7 @@ public class GistJsonToLocalMapperTest {
     public void callWithoutOwnerTest() throws Exception {
         GistJson gist = new GistJson("id", "url", "created", "desc");
         GistLocal model = mapper.call(gist);
-        GistLocal expected = new GistLocal("id", "url", "created", "desc");
+        GistLocal expected = new GistLocal("id", "url", "created", "desc", "", null, null);
         assertEquals(expected, model);
     }
 

@@ -11,12 +11,12 @@ import com.turlir.abakgists.api.ApiClient;
 import com.turlir.abakgists.api.GistDatabaseHelper;
 import com.turlir.abakgists.api.GistLocalStorIoLogPutResolver;
 import com.turlir.abakgists.api.data.GistLocal;
+import com.turlir.abakgists.api.data.GistLocalStorIOSQLiteDeleteResolver;
+import com.turlir.abakgists.api.data.GistLocalStorIOSQLiteGetResolver;
 import com.turlir.abakgists.di.AppComponent;
 import com.turlir.abakgists.di.AppModule;
 import com.turlir.abakgists.di.DatabaseModule;
 import com.turlir.abakgists.di.PresenterModule;
-import com.turlir.abakgists.model.GistModelStorIOSQLiteDeleteResolver;
-import com.turlir.abakgists.model.GistModelStorIOSQLiteGetResolver;
 import com.turlir.abakgists.model.GistsTable;
 
 import org.robolectric.RuntimeEnvironment;
@@ -42,8 +42,8 @@ public class DatabaseMocking extends DaggerMockRule<AppComponent> {
         GistDatabaseHelper helper = makeHelper("/test.sql");
         SQLiteTypeMapping<GistLocal> typeMapping = SQLiteTypeMapping.<GistLocal>builder()
                 .putResolver(new GistLocalStorIoLogPutResolver()) // logger
-                .getResolver(new GistModelStorIOSQLiteGetResolver())
-                .deleteResolver(new GistModelStorIOSQLiteDeleteResolver())
+                .getResolver(new GistLocalStorIOSQLiteGetResolver())
+                .deleteResolver(new GistLocalStorIOSQLiteDeleteResolver())
                 .build();
         DefaultStorIOSQLite instance = DefaultStorIOSQLite.builder()
                 .sqliteOpenHelper(helper)
@@ -58,7 +58,6 @@ public class DatabaseMocking extends DaggerMockRule<AppComponent> {
         substitutionDatabase(name, GistsTable.BASE_NAME);
         return new GistDatabaseHelper(RuntimeEnvironment.application);
     }
-
 
     private void substitutionDatabase(final String file, final String basename) {
         String filePath = getClass().getResource(file).getFile();

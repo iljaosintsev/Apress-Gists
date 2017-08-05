@@ -14,8 +14,8 @@ public class GistMapper {
         @Override
         public GistLocal call(GistJson item) {
             String desc = safeAssign(item.description);
-            GistOwnerJson o;
-            if ((o = item.owner) != null) {
+            GistOwnerJson o = item.owner;
+            if (o != null) {
                 return new GistLocal(item.id, item.url, item.created, desc, o.login, o.avatarUrl);
             } else {
                 return new GistLocal(item.id, item.url, item.created, desc, null, null);
