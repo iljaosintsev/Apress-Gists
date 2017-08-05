@@ -75,6 +75,7 @@ public class ModelRequester {
 
                                 if (changed) {
                                     Timber.d("%s recreated", cache);
+                                    mTransformer.setLocal(mData.get(i).isLocal);
                                     mData.set(i, mTransformer.call(item));
                                     // только один элемент из набора может измениться с обновлением
                                     i = originCacheSize;
