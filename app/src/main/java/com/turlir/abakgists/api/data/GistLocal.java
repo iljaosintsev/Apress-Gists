@@ -55,14 +55,14 @@ public class GistLocal {
     }
 
     public GistLocal(@NonNull String id, @NonNull String url, @NonNull String created,
-                     @Nullable String description, @Nullable String note, @Nullable String ownerLogin,
+                     @NonNull String description, @NonNull String note, @Nullable String ownerLogin,
                      @Nullable String ownerAvatarUrl) {
         this.id = id;
         this.url = url;
         this.created = created;
-        this.description = safeAssign(description);
-        this.note = safeAssign(note);
-        overrideOwnerLogin(ownerLogin);
+        this.description = description;
+        this.note = note;
+        this.ownerLogin = ownerLogin;
         this.ownerAvatarUrl = ownerAvatarUrl;
     }
 
@@ -75,23 +75,6 @@ public class GistLocal {
         }
         if (other.ownerAvatarUrl != null) {
             ownerAvatarUrl = other.ownerAvatarUrl;
-        }
-    }
-
-    @NonNull
-    private static String safeAssign(@Nullable String value) {
-        if (value == null) {
-            return "";
-        } else {
-            return value;
-        }
-    }
-
-    private void overrideOwnerLogin(@Nullable String ownerLogin) {
-        if (ownerLogin != null) {
-            this.ownerLogin = ownerLogin;
-        } else {
-            this.ownerLogin = "anonymous";
         }
     }
 

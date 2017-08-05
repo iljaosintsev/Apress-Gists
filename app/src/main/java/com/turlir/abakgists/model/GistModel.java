@@ -112,10 +112,6 @@ public class GistModel
         return Uri.parse(String.format("http://gist.github.com/%s/%s", ownerLogin, id));
     }
 
-    public boolean doesOwnerLogin(GistModel item) {
-        return !"anonymous".equals(item.ownerLogin);
-    }
-
     @Override
     public String toString() {
         return "GistModel{" +
@@ -127,12 +123,12 @@ public class GistModel
     @Override
     public int hashCode() {
         int result = id.hashCode();
-        result = 113 * result + url.hashCode();
-        result = 113 * result + created.hashCode();
-        result = 113 * result + description.hashCode();
-        result = 113 * result + (ownerLogin != null ? ownerLogin.hashCode() : 0);
-        result = 113 * result + (ownerAvatarUrl != null ? ownerAvatarUrl.hashCode() : 0);
-        result = 113 * result + note.hashCode();
+        result = 167 * result + url.hashCode();
+        result = 167 * result + created.hashCode();
+        result = 167 * result + description.hashCode();
+        result = 167 * result + (ownerLogin != null ? ownerLogin.hashCode() : 0);
+        result = 167 * result + (ownerAvatarUrl != null ? ownerAvatarUrl.hashCode() : 0);
+        result = 167 * result + note.hashCode();
         return result;
     }
 

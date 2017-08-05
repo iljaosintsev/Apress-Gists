@@ -45,7 +45,7 @@ public class GistActivity extends AppCompatActivity {
     StorIOSQLite _database;
 
     @BindView(R.id.tv_login)
-    TextView login;
+    TextView tvLogin;
 
     @BindView(R.id.iv_avatar)
     ImageView avatar;
@@ -137,7 +137,15 @@ public class GistActivity extends AppCompatActivity {
 
         void applyContent() {
             loadAvatar(mContent.ownerAvatarUrl);
-            login.setText(mContent.ownerLogin);
+
+            final String login;
+            if (mContent.ownerLogin != null) {
+                login = mContent.ownerLogin;
+            } else {
+                login = getString(R.string.anonymous);
+            }
+            tvLogin.setText(login);
+
             desc.setText(mContent.description);
             note.setText(mContent.note);
         }

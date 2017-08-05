@@ -56,5 +56,4 @@ public class GistMapper {
             return value;
         }
     }
-    
 }

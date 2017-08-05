@@ -37,7 +37,7 @@ class GistModelHolder extends ModelViewHolder<GistModel> {
 
     @Override
     void bind(GistModel item) {
-        if (!item.doesOwnerLogin(item)) {
+        if (item.ownerLogin == null) {
             tvId.setText(String.valueOf(item.id));
         } else {
             tvId.setText(item.ownerLogin);
