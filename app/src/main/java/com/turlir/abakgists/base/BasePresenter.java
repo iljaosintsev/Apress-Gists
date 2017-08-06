@@ -39,6 +39,7 @@ public abstract class BasePresenter<T extends BaseView> {
 
     public void detach() {
         subs.clear();
+        view.clear();
     }
 
     ///
