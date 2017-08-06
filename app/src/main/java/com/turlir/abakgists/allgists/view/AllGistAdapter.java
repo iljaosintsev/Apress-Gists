@@ -1,4 +1,4 @@
-package com.turlir.abakgists.allgists;
+package com.turlir.abakgists.allgists.view;
 
 
 import android.content.Context;
@@ -32,22 +32,22 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
     private final ListUpdateCallback mLoggerAdapterOperations = new ListUpdateCallback() {
         @Override
         public void onInserted(int position, int count) {
-            Timber.i("onInserted %d %d", position, count);
+            Timber.v("onInserted %d %d", position, count);
         }
 
         @Override
         public void onRemoved(int position, int count) {
-            Timber.i("onRemoved %d %d", position, count);
+            Timber.v("onRemoved %d %d", position, count);
         }
 
         @Override
         public void onMoved(int fromPosition, int toPosition) {
-            Timber.i("onMoved %d %d", fromPosition, toPosition);
+            Timber.v("onMoved %d %d", fromPosition, toPosition);
         }
 
         @Override
         public void onChanged(int position, int count, Object payload) {
-            Timber.i("onChanged %d %d", position, count);
+            Timber.v("onChanged %d %d", position, count);
         }
     };
 
@@ -147,7 +147,7 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
         }
     }
 
-    private static class GistDiffCallback extends DiffUtil.Callback {
+    private /*static*/ class GistDiffCallback extends DiffUtil.Callback {
 
         private final List<ViewModel> mOldList;
         private final List<GistModel> mNowList;
@@ -169,13 +169,20 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
 
         @Override
         public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-            GistModel old = (GistModel) mOldList.get(oldItemPosition);
-            GistModel now = mNowList.get(newItemPosition);
-            return !now.isDifferent(old);
+            Timber.v("itemsTheSame %d -%d", oldItemPosition, newItemPosition);
+            ViewModel old = mOldList.get(oldItemPosition);
+            GistModel oldModel = mFactory.instance(old);
+            if (oldModel != null) {
+                GistModel now = mNowList.get(newItemPosition);
+                return !now.isDifferent(oldModel);
+            } else {
+                return false;
+            }
         }
 
         @Override
         public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+            Timber.v("contentsTheSame %d -%d", oldItemPosition, newItemPosition);
             ViewModel old = mOldList.get(oldItemPosition);
             ViewModel now = mNowList.get(newItemPosition);
             return old.equals(now);

@@ -4,11 +4,11 @@ package com.turlir.abakgists.di;
 import android.support.annotation.VisibleForTesting;
 
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
-import com.turlir.abakgists.allgists.AllGistsFragment;
 import com.turlir.abakgists.allgists.AllGistsPresenter;
+import com.turlir.abakgists.allgists.view.AllGistsFragment;
+import com.turlir.abakgists.api.Repository;
 import com.turlir.abakgists.gist.GistActivity;
-import com.turlir.abakgists.data.Repository;
-import com.turlir.abakgists.notes.NotesFragment;
+import com.turlir.abakgists.notes.view.NotesFragment;
 
 import javax.inject.Singleton;
 

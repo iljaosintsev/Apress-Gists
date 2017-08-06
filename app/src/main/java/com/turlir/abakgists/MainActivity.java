@@ -4,8 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.turlir.abakgists.allgists.AllGistsActivity;
-import com.turlir.abakgists.notes.NotesActivity;
+import com.turlir.abakgists.allgists.view.AllGistsActivity;
+import com.turlir.abakgists.notes.view.NotesActivity;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;

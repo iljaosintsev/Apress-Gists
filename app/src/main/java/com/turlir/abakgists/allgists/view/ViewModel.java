@@ -1,4 +1,4 @@
-package com.turlir.abakgists.allgists;
+package com.turlir.abakgists.allgists.view;
 
 
 public abstract class ViewModel {

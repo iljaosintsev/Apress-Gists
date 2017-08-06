@@ -1,4 +1,4 @@
-package com.turlir.abakgists.model;
+package com.turlir.abakgists.api.data;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -6,7 +6,7 @@ import android.support.annotation.VisibleForTesting;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Gist {
+public class GistJson {
 
     @SerializedName("id")
     @NonNull
@@ -26,19 +26,21 @@ public class Gist {
 
     @SerializedName("owner")
     @Nullable
-    public GistOwner owner;
+    public GistOwnerJson owner;
 
-    public Gist() {
+    @SuppressWarnings("unused")
+    public GistJson() {
         // for gson, don`t use
     }
 
     @VisibleForTesting
-    public Gist(Gist other) {
+    public GistJson(GistJson other) {
         this(other.id, other.url, other.created, other.description);
+        this.owner = other.owner;
     }
 
     @VisibleForTesting
-    public Gist(@NonNull String id, @NonNull String url, @NonNull String created, @Nullable String desc) {
+    public GistJson(@NonNull String id, @NonNull String url, @NonNull String created, @Nullable String desc) {
         this.id = id;
         this.url = url;
         this.created = created;
@@ -46,8 +48,8 @@ public class Gist {
     }
 
     @VisibleForTesting
-    public Gist(@NonNull String id, @NonNull String url, @NonNull String created, @Nullable String desc,
-                @NonNull GistOwner owner) {
+    public GistJson(@NonNull String id, @NonNull String url, @NonNull String created, @Nullable String desc,
+                    @NonNull GistOwnerJson owner) {
         this(id, url, created,desc);
         this.owner = owner;
     }

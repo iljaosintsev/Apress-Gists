@@ -1,8 +1,8 @@
 package com.turlir.abakgists.model;
 
 
-import com.turlir.abakgists.allgists.TypesFactory;
-import com.turlir.abakgists.allgists.ViewModel;
+import com.turlir.abakgists.allgists.view.TypesFactory;
+import com.turlir.abakgists.allgists.view.ViewModel;
 
 public class LoadingModel extends ViewModel {
 

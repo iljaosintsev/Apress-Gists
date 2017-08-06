@@ -4,16 +4,16 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.os.Build;
 
-import com.pushtorefresh.storio.sqlite.operations.put.PutResult;
-import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
+import com.google.common.collect.Lists;
 import com.turlir.abakgists.BuildConfig;
-import com.turlir.abakgists.Data;
 import com.turlir.abakgists.DatabaseMocking;
+import com.turlir.abakgists.allgists.view.AllGistsFragment;
+import com.turlir.abakgists.api.ApiClient;
+import com.turlir.abakgists.api.Repository;
+import com.turlir.abakgists.api.data.GistJson;
+import com.turlir.abakgists.api.data.GistLocal;
 import com.turlir.abakgists.di.AppComponent;
-import com.turlir.abakgists.model.Gist;
 import com.turlir.abakgists.model.GistModel;
-import com.turlir.abakgists.data.ApiClient;
-import com.turlir.abakgists.data.Repository;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -21,7 +21,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.ArgumentMatchers;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -29,7 +28,6 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -45,7 +43,12 @@ import rx.schedulers.Schedulers;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = Build.VERSION_CODES.LOLLIPOP, packageName = "com.turlir.abakgists")
@@ -100,7 +103,17 @@ public class AllGistsPresenterTest {
     @Test
     public void successFirstLoadFromCacheTest() {
         _presenter.loadPublicGists(0);
-        verify(mView).onGistLoaded(Collections.singletonList(Data.LOCAL_STUB));
+        GistModel model = new GistModel(
+                "85547e4878dd9a573215cd905650f284",
+                "https://api.github.com/gists/85547e4878dd9a573215cd905650f284",
+                "2017-04-27T21:54:24Z",
+                "Part of setTextByParts",
+                "iljaosintsev",
+                "https://avatars1.githubusercontent.com/u/3526847?v=3",
+                "note",
+                true
+        );
+        verify(mView).onGistLoaded(Lists.newArrayList(model));
     }
 
     @Test
@@ -119,7 +132,7 @@ public class AllGistsPresenterTest {
 
     @Test
     public void failureLoadFromServerTest() {
-        Observable<List<Gist>> obs = Observable.error(new IllegalStateException("message"));
+        Observable<List<GistJson>> obs = Observable.error(new IllegalStateException("message"));
 
         when(_mockClient.publicGist(1)).thenReturn(obs);
 
@@ -137,7 +150,7 @@ public class AllGistsPresenterTest {
         mockServerRequest();
 
         _presenter.updateGist();
-        _presenter.loadPublicGists(0);
+        _presenter.loadPublicGists(1);
 
         verify(mView, atLeastOnce()).onGistLoaded(mListCaptor.capture());
         assertEquals("id", mListCaptor.getValue().get(0).id);
@@ -147,27 +160,26 @@ public class AllGistsPresenterTest {
     public void successFromCache() {
         Repository mock = mock(Repository.class);
 
-        List<GistModel> list = new ArrayList<>();
-        list.add(new GistModel("id", "url", "created", "desc"));
-        Observable<List<GistModel>> resultObs = Observable.just(list);
-        Mockito.when(mock.loadGists(0)).thenReturn(resultObs);
+        List<GistLocal> list = new ArrayList<>();
+        list.add(new GistLocal("id", "url", "created", "desc"));
+        Observable<List<GistLocal>> resultObs = Observable.just(list);
+        Mockito.when(mock.load()).thenReturn(resultObs);
 
-        AllGistsPresenter presenter = new AllGistsPresenter(mock);
+        //AllGistsPresenter presenter = new AllGistsPresenter(null);
 
-        AllGistsFragment mockView = mock(AllGistsFragment.class);
-        presenter.attach(mockView);
+        _presenter.loadPublicGists(0);
 
-        presenter.loadPublicGists(0);
+        verify(mock).load();
 
-        verify(mock).loadGists(eq(0));
-
-        verify(mockView).onGistLoaded(list);
+        GistModel mocked = new GistModel("id", "url", "created", "desc", null, null, "", false);
+        List<GistModel> value = Collections.singletonList(mocked);
+        verify(mView).onGistLoaded(value);
     }
 
     private void mockServerRequest() {
-        Gist stub = new Gist("id", "url", "created", "desc");
-        List<Gist> serverList = Collections.singletonList(stub);
-        Observable<List<Gist>> serverObs = Observable.just(serverList);
+        GistJson stub = new GistJson("id", "url", "created", "desc");
+        List<GistJson> serverList = Collections.singletonList(stub);
+        Observable<List<GistJson>> serverObs = Observable.just(serverList);
         when(_mockClient.publicGist(eq(1))).thenReturn(serverObs);
     }
 

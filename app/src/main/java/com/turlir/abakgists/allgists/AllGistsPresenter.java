@@ -4,11 +4,13 @@ package com.turlir.abakgists.allgists;
 import android.support.annotation.NonNull;
 
 import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
+import com.turlir.abakgists.allgists.view.AllGistsFragment;
+import com.turlir.abakgists.api.data.GistLocal;
 import com.turlir.abakgists.base.BasePresenter;
 import com.turlir.abakgists.base.erroring.ErrorInterpreter;
 import com.turlir.abakgists.base.erroring.ErrorSituation;
+import com.turlir.abakgists.base.erroring.RepeatingError;
 import com.turlir.abakgists.model.GistModel;
-import com.turlir.abakgists.data.Repository;
 
 import java.util.List;
 
@@ -17,21 +19,20 @@ import timber.log.Timber;
 
 public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
 
-    private final Repository mRepo;
+    private final ModelRequester mReq;
     private Subscription mCacheSubs;
 
-    public AllGistsPresenter(Repository repo) {
-        mRepo = repo;
+    public AllGistsPresenter(ModelRequester repo) {
+        mReq = repo;
     }
 
     /**
      * из локального кеша или сетевого запроса
      *
      */
-    void loadPublicGists(final int currentSize) {
+    public void loadPublicGists(final int currentSize) {
         removeCacheSubs();
-        Subscription subs = mRepo
-                .loadGists(currentSize)
+        Subscription subs = mReq.request(currentSize)
                 .compose(this.<List<GistModel>>defaultScheduler())
                 .compose(this.<GistModel>safeSubscribingWithList())
                 .subscribe(new GistDownloadHandler<List<GistModel>>() {
@@ -45,17 +46,17 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
         addCacheSubs(subs);
     }
 
-    void updateGist() {
+    public void updateGist() {
         removeCacheSubs();
-        Subscription subs = mRepo.reloadGists()
-                .compose(this.<PutResults<GistModel>>defaultScheduler())
-                .compose(this.<PutResults<GistModel>>safeSubscribing())
-                .subscribe(new GistDownloadHandler<PutResults<GistModel>>() {
+        Subscription subs = mReq.update()
+                .compose(this.<PutResults<GistLocal>>defaultScheduler())
+                .compose(this.<PutResults<GistLocal>>safeSubscribing())
+                .subscribe(new GistDownloadHandler<PutResults<GistLocal>>() {
                     @Override
-                    public void onNext(PutResults<GistModel> gistModelPutResults) {
+                    public void onNext(PutResults<GistLocal> gistModelPutResults) {
                         //noinspection ConstantConditions
                         getView().onUpdateSuccessful();
-                        loadPublicGists(0);
+                        loadPublicGists(-1);
                     }
                 });
         addSubscription(subs);
@@ -95,17 +96,6 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
             return getView();
         }
 
-    }
-
-    private static final class RepeatingError implements ErrorSituation {
-        @Override
-        public boolean should(Exception ex, boolean dataAvailable, boolean isErrorNow) {
-            return isErrorNow;
-        }
-        @Override
-        public void perform(ErrorInterpreter v, Exception e) {
-            v.blockingError("Увы, попытайтесь снова через некоторое время");
-        }
     }
 
 }

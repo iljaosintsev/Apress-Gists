@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
     <fragment
-        class="com.turlir.abakgists.notes.NotesFragment"
+        class="com.turlir.abakgists.notes.view.NotesFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:tag="notesFragment" />

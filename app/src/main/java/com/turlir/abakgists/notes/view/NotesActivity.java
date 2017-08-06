@@ -1,4 +1,4 @@
-package com.turlir.abakgists.notes;
+package com.turlir.abakgists.notes.view;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

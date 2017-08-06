@@ -1,4 +1,4 @@
-package com.turlir.abakgists.allgists;
+package com.turlir.abakgists.allgists.view;
 
 
 import android.content.Context;
@@ -18,15 +18,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.turlir.abakgists.R;
+import com.turlir.abakgists.allgists.AllGistsPresenter;
 import com.turlir.abakgists.base.App;
 import com.turlir.abakgists.base.BaseFragment;
-import com.turlir.abakgists.widgets.DividerDecorator;
-import com.turlir.abakgists.base.erroring.ErrorInterpreter;
 import com.turlir.abakgists.base.OnClickListener;
-import com.turlir.abakgists.widgets.SpaceDecorator;
+import com.turlir.abakgists.base.erroring.ErrorInterpreter;
 import com.turlir.abakgists.gist.GistActivity;
 import com.turlir.abakgists.model.GistModel;
+import com.turlir.abakgists.widgets.DividerDecorator;
 import com.turlir.abakgists.widgets.SimpleScrollListener;
+import com.turlir.abakgists.widgets.SpaceDecorator;
 import com.turlir.abakgists.widgets.SwitchLayout;
 
 import java.util.List;
@@ -61,6 +62,10 @@ public class AllGistsFragment
         @Override
         public void onRefresh() {
             _presenter.updateGist();
+
+            recycler.clearOnScrollListeners();
+            RecyclerView.OnScrollListener scroller = new SimpleScrollListener(AllGistsFragment.this);
+            recycler.addOnScrollListener(scroller);
         }
     };
 

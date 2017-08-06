@@ -1,13 +1,13 @@
 package com.turlir.abakgists;
 
 
-import com.turlir.abakgists.model.Gist;
-import com.turlir.abakgists.model.GistModel;
-import com.turlir.abakgists.model.GistOwner;
+import com.turlir.abakgists.api.data.GistJson;
+import com.turlir.abakgists.api.data.GistLocal;
+import com.turlir.abakgists.api.data.GistOwnerJson;
 
 public interface Data {
 
-    GistModel LOCAL_STUB = new GistModel(
+    GistLocal LOCAL_STUB = new GistLocal(
             "85547e4878dd9a573215cd905650f284",
             "https://api.github.com/gists/85547e4878dd9a573215cd905650f284",
             "2017-04-27T21:54:24Z",
@@ -17,12 +17,12 @@ public interface Data {
             "https://avatars1.githubusercontent.com/u/3526847?v=3"
     );
 
-    Gist SERVER_STUB = new Gist(
+    GistJson SERVER_STUB = new GistJson(
             "85547e4878dd9a573215cd905650f284",
             "https://api.github.com/gists/85547e4878dd9a573215cd905650f284",
             "2017-04-27T21:54:24Z",
             "Part of setTextByParts",
-            new GistOwner("iljaosintsev", "https://avatars1.githubusercontent.com/u/3526847?v=3")
+            new GistOwnerJson("iljaosintsev", "https://avatars1.githubusercontent.com/u/3526847?v=3")
     );
 
 }
