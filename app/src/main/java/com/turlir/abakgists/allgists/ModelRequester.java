@@ -4,6 +4,7 @@ import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
 import com.turlir.abakgists.api.Repository;
 import com.turlir.abakgists.api.data.GistLocal;
 import com.turlir.abakgists.api.data.GistMapper;
+import com.turlir.abakgists.api.data.ListGistMapper;
 import com.turlir.abakgists.model.GistModel;
 
 import java.util.ArrayList;
@@ -26,6 +27,13 @@ public class ModelRequester {
         mRepo = repo;
         mData = new ArrayList<>();
         mTransformer = new GistMapper.Local();
+    }
+
+    public Observable<List<GistModel>> requestWithNotes() {
+        ListGistMapper.Local mapper = new ListGistMapper.Local(new GistMapper.Local());
+        mapper.setLocal(true);
+        return mRepo.loadWithNotes()
+                .map(mapper);
     }
 
     /**

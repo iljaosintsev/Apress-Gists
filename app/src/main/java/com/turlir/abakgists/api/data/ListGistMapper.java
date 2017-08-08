@@ -1,5 +1,7 @@
 package com.turlir.abakgists.api.data;
 
+import com.turlir.abakgists.model.GistModel;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,5 +26,31 @@ public class ListGistMapper {
             return res;
         }
     }
+
+    public static class Local
+            implements Func1<List<GistLocal>, List<GistModel>> {
+
+        private final GistMapper.Local mapper;
+
+        public Local(GistMapper.Local mapper) {
+            this.mapper = mapper;
+        }
+
+        @Override
+        public List<GistModel> call(List<GistLocal> gistJsons) {
+            List<GistModel> res = new ArrayList<>(gistJsons.size());
+            for (GistLocal item : gistJsons) {
+                res.add(mapper.call(item));
+            }
+            return res;
+        }
+
+        public void setLocal(boolean local) {
+            mapper.setLocal(local);
+        }
+
+    }
+
+
 
 }

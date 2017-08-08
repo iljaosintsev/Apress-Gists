@@ -93,12 +93,6 @@ public class NotesFragment extends BaseFragment implements OnClickListener {
         mAdapter.addGist(gistDiff);
     }
 
-    public void onNotesDeleted() {
-        if (mAdapter.getItemCount() > 0) {
-            mAdapter.removeLastItem();
-        }
-    }
-
     @Override
     public String toString() {
         return "Notes";

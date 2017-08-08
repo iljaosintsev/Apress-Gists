@@ -3,6 +3,7 @@ package com.turlir.abakgists.api;
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.pushtorefresh.storio.sqlite.operations.delete.DeleteResult;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
+import com.pushtorefresh.storio.sqlite.queries.Query;
 import com.turlir.abakgists.api.data.GistLocal;
 import com.turlir.abakgists.api.data.GistMapper;
 import com.turlir.abakgists.api.data.ListGistMapper;
@@ -54,6 +55,19 @@ public class Repository {
         return mDatabase.get()
                 .listOfObjects(GistLocal.class)
                 .withQuery(GistsTable.REQUEST_ALL)
+                .prepare()
+                .asRxObservable();
+    }
+
+    public Observable<List<GistLocal>> loadWithNotes() {
+        return mDatabase.get()
+                .listOfObjects(GistLocal.class)
+                .withQuery(
+                        Query.builder()
+                                .table(GistsTable.GISTS)
+                                .where(GistsTable.NOTE + " NOT NULL AND " + GistsTable.NOTE + " != \"\"")
+                                .build()
+                )
                 .prepare()
                 .asRxObservable();
     }
