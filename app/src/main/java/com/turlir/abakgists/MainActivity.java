@@ -12,8 +12,8 @@ import com.turlir.abakgists.notes.view.NotesActivity;
 import com.turlir.abakgists.view.anim.base.Factory;
 import com.turlir.abakgists.view.anim.creator.Setting;
 import com.turlir.abakgists.view.anim.factor.ButtonAnimFactory;
+import com.turlir.abakgists.view.anim.factor.Params;
 
-import butterknife.BindDimen;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -31,9 +31,6 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.btn_all_in_one)
     View btnAll;
 
-    @BindDimen(R.dimen.activity_vertical_margin)
-    float margin;
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -43,35 +40,26 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_all_gists)
     public void onClickAllGists(View v) {
-        ButtonAnimFactory.Params params = new ButtonAnimFactory.Params()
-                .alpha(1, 0, 0)
-                .addit(margin, 0, 0)
-                .multi(1, 1, 1);
-        animateButton(params, AllGistsActivity.class);
+        buttonClick(btnAllGists, AllGistsActivity.class);
     }
 
     @OnClick(R.id.btn_notes)
     public void onClickNotes() {
-        ButtonAnimFactory.Params params = new ButtonAnimFactory.Params()
-                .alpha(0, 1, 0)
-                .addit(0, 0, 0)
-                .multi(-1, 0, 1);
-        animateButton(params, NotesActivity.class);
+        buttonClick(btnNotes, NotesActivity.class);
     }
 
     @OnClick(R.id.btn_all_in_one)
     public void clickAllInOne() {
-        ButtonAnimFactory.Params params = new ButtonAnimFactory.Params()
-                .alpha(0, 0, 1)
-                .addit(0, 0, -margin)
-                .multi(-1, -1, -1);
-        animateButton(params, AllInOneActivity.class);
+        buttonClick(btnAll, AllInOneActivity.class);
     }
 
-    private void animateButton(final ButtonAnimFactory.Params params, final Class clazz) {
-        Setting common = new Setting(0, DURATION, 0);
-        Factory factory = new ButtonAnimFactory(params, common);
-        AnimatorSet set = factory.animate(btnAllGists, btnNotes, btnAll);
+    private void buttonClick(View clicked, final Class clazz) {
+        Params params = new Params.Builder(clicked)
+                .up(btnAllGists)
+                .center(btnNotes)
+                .down(btnAll)
+                .compute();
+        AnimatorSet set = animateButton(params);
         set.start();
         set.addListener(new AnimatorListenerAdapter() {
             @Override
@@ -80,6 +68,12 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+    }
+
+    private AnimatorSet animateButton(final Params params) {
+        Setting common = new Setting(0, DURATION, 0);
+        Factory factory = new ButtonAnimFactory(params, common);
+        return factory.animate(btnAllGists, btnNotes, btnAll);
     }
 
 
