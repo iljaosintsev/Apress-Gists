@@ -4,6 +4,9 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
@@ -31,11 +34,22 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.btn_all_in_one)
     View btnAll;
 
+    private Pair<Params, Params> animateParams;
+
+    @Override
+    protected void onCreate(@Nullable Bundle state) {
+        super.onCreate(state);
+        setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+        if (animateParams != null) {
+            AnimatorSet set = animateButton(animateParams.second);
+            set.start();
+        }
     }
 
     @OnClick(R.id.btn_all_gists)
@@ -54,12 +68,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void buttonClick(View clicked, final Class clazz) {
-        Params params = new Params.Builder(clicked)
+        animateParams = new Params.TwoWayBuilder(clicked)
                 .up(btnAllGists)
                 .center(btnNotes)
                 .down(btnAll)
                 .compute();
-        AnimatorSet set = animateButton(params);
+        AnimatorSet set = animateButton(animateParams.first);
         set.start();
         set.addListener(new AnimatorListenerAdapter() {
             @Override
