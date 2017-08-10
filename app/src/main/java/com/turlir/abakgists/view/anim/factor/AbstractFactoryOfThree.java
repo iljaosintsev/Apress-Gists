@@ -8,31 +8,29 @@ import com.turlir.abakgists.view.anim.base.Factory;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractFactoryOfThree
+abstract class AbstractFactoryOfThree
         extends Factory {
+
+    private static final int LENGTH = 3;
 
     @Override
     protected List<AnimationCreator> create(View... views) {
-        if (views.length > 3) {
+        if (views == null || views.length != 3) {
             throw new IllegalArgumentException();
         }
 
-        List<AnimationCreator> res = new ArrayList<>(3);
-        for (int i = 0; i < 3; i++) {
-            if (views.length > i) {
-                switch (i) {
-                    case 0:
-                        res.add(first(views[i]));
-                        break;
-                    case 1:
-                        res.add(second(views[i]));
-                        break;
-                    case 2:
-                        res.add(three(views[i]));
-                        break;
-                }
-            } else {
-                break;
+        List<AnimationCreator> res = new ArrayList<>(LENGTH);
+        for (int i = 0; i < LENGTH; i++) {
+            switch (i) {
+                case 0:
+                    res.add(first(views[i]));
+                    break;
+                case 1:
+                    res.add(second(views[i]));
+                    break;
+                case 2:
+                    res.add(three(views[i]));
+                    break;
             }
         }
         return res;
