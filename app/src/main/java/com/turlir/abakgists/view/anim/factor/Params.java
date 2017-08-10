@@ -90,20 +90,20 @@ public class Params {
                 back.alpha(1f);
                 back.additional(0);
 
-                if (item == mSelected) { // я выбранный
-                    float distance = Math.abs(mSelected.getY() - mViews[1].getY()) - item.getHeight(); // на сколько
-                    int sign = compare(mViews[1].getY(), mSelected.getY()); //  в какую сторону
-                    there.additional(distance * sign); // двигаться
+                if (item == mSelected) {
+                    float distance = Math.abs(mSelected.getY() - mViews[1].getY()) - item.getHeight();
+                    int sign = compare(mViews[1].getY(), mSelected.getY());
+                    there.additional(distance * sign);
 
-                    there.multi(compare(mViews[1].getY(), item.getY())); // я относительно центра
+                    there.multi(compare(mViews[1].getY(), item.getY()));
 
                     back.multi(compare(item.getY(), mViews[1].getY()) / 2);
 
                 } else {
-                    there.additional(0f); // дополнительно никуда не двигаться
-                    there.multi(compare(item.getY(), mSelected.getY())); // я относительно выбранного
+                    there.additional(0f);
+                    there.multi(compare(item.getY(), mSelected.getY()));
 
-                    back.multi(compare(mSelected.getY(), mViews[1].getY()) / 2); // я относительно выбранного
+                    back.multi(compare(mSelected.getY(), mViews[1].getY()) / 2);
                 }
             }
 
