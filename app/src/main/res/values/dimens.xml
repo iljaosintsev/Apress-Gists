@@ -3,7 +3,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
-    <dimen name="board_button_margin">64dp</dimen>
+    <dimen name="board_button_margin">72dp</dimen>
     <dimen name="half_margin">8dp</dimen>
     <dimen name="divider_height">2dp</dimen>
 </resources>
