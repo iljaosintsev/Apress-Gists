@@ -12,6 +12,7 @@
     android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/head_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp">
@@ -49,12 +50,10 @@
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/tv_owner_hint"
-            android:layout_alignStart="@+id/tv_owner_hint"
-            android:layout_below="@+id/tv_login"
-            android:layout_marginTop="8dp"
+            android:layout_alignBaseline="@+id/tv_login"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:drawablePadding="4dp"
-            android:fontFamily="sans-serif"
             android:gravity="center_vertical"
             android:text="@string/web_link"
             android:textAllCaps="false"
@@ -64,6 +63,7 @@
     </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/desc_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
