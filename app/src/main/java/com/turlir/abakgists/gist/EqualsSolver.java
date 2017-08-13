@@ -16,7 +16,7 @@ import com.turlir.abakgists.model.GistModel;
  * Старое значение по-умолчанию null, а новое пустая строка.
  * В этом случае считается, что изменения внесены не были.
  */
-class EqualsSolver {
+public class EqualsSolver {
 
     boolean solveModel(GistModel old, GistModel now) {
         return solveDescAndNote(
