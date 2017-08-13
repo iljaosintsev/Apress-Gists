@@ -17,7 +17,7 @@
     <string name="inline_download" formatted="false">You looked at %d items already. Do not worry, we download next part of data</string>
     <string name="owner">Owner</string>
     <string name="anonymous">Anonymous</string>
-    <string name="web_link">view it on Github.com</string>
+    <string name="web_link">link</string>
 
     <string name="there_changes">There are changes</string>
     <string name="save_quest">Do you want to save the changes?</string>

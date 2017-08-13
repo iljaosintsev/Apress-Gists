@@ -9,10 +9,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
@@ -28,7 +26,6 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnFocusChange;
 import timber.log.Timber;
 
 public class GistActivity extends AppCompatActivity {
@@ -46,12 +43,6 @@ public class GistActivity extends AppCompatActivity {
 
     @Inject
     StorIOSQLite _database;
-
-    @BindView(R.id.head_container)
-    View headContainer;
-
-    @BindView(R.id.desc_container)
-    View descContainer;
 
     @BindView(R.id.tv_login)
     TextView tvLogin;
@@ -105,19 +96,6 @@ public class GistActivity extends AppCompatActivity {
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setData(link);
         startActivity(i);
-    }
-
-    @OnFocusChange(R.id.et_note)
-    public void onNoteFocusing(boolean focus) {
-        headContainer.setVisibility(focus ? View.GONE : View.VISIBLE);
-        LinearLayout.LayoutParams lp = ((LinearLayout.LayoutParams) descContainer.getLayoutParams());
-        if (focus) {
-            lp.weight = 0;
-            lp.height = 100 * 3;
-        } else {
-            lp.weight = 1;
-            lp.height = 0;
-        }
     }
 
     @Override

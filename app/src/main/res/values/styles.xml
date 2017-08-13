@@ -13,7 +13,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
     </style>
 
-    <style name="TitleTextAppearance" parent="TextAppearance.AppCompat.Title" />
+    <style name="TitleTextAppearance" parent="TextAppearance.AppCompat.Caption" />
 
     <style name="FieldTextAppearance" parent="TextAppearance.AppCompat.Subhead" />
 
