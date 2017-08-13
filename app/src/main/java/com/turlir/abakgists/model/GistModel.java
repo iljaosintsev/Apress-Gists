@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.turlir.abakgists.allgists.view.TypesFactory;
 import com.turlir.abakgists.allgists.view.ViewModel;
@@ -21,8 +22,10 @@ public class GistModel
     @NonNull
     public final String description;
 
+    @Nullable
     public final String ownerLogin;
 
+    @Nullable
     public final String ownerAvatarUrl;
 
     @NonNull
@@ -43,7 +46,7 @@ public class GistModel
     };
 
     public GistModel(String id, String url, String created, @NonNull String description,
-                     String ownerLogin, String ownerAvatarUrl, @NonNull String note, boolean isLocal) {
+                     @Nullable String ownerLogin, @Nullable String ownerAvatarUrl, @NonNull String note, boolean isLocal) {
         this.id = id;
         this.url = url;
         this.created = created;
@@ -108,16 +111,26 @@ public class GistModel
         return !other.id.equals(this.id);
     }
 
+    /**
+     * формирует ссылку на github.com
+     * @return ссылка на этот гист
+     */
     public Uri insteadWebLink() {
-        return Uri.parse(String.format("http://gist.github.com/%s/%s", ownerLogin, id));
+        if (ownerLogin != null) {
+            return Uri.parse(String.format("http://gist.github.com/%s/%s", ownerLogin, id));
+        } else {
+            return Uri.parse(String.format("http://gist.github.com/%s", id));
+        }
     }
 
     @Override
     public String toString() {
         return "GistModel{" +
-                "id='" + id + '\'' +
-                ", description='" + description + '\'' +
-                '}';
+               "id='" + id + '\'' +
+               ", description='" + description + '\'' +
+               ", note='" + note + '\'' +
+               ", isLocal=" + isLocal +
+               '}';
     }
 
     @Override
