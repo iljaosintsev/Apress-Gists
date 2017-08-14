@@ -24,7 +24,7 @@ public class PresenterModule {
     }
 
     @Provides
-    @Singleton
+    // @Singleton
     public AllGistsPresenter provideAllGistsPresenter(ModelRequester req) {
         return new AllGistsPresenter(req);
     }

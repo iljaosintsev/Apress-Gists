@@ -17,6 +17,7 @@ import timber.log.Timber;
 
 public class ModelRequester {
 
+    static final int IGNORE_SIZE = -1;
     private static final float PAGE_SIZE = 30;
 
     private final Repository mRepo;
@@ -36,6 +37,16 @@ public class ModelRequester {
                 .map(mapper);
     }
 
+    List<GistModel> state() {
+        return mData;
+    }
+
+    List<GistModel> state(List<GistModel> array) {
+        mData.addAll(array);
+        mTransformer.setLocal(mData.get(mData.size() - 1).isLocal);
+        return mData;
+    }
+
     /**
      * Извлекает данные из кеша, при необходимости загружает их с сервера
      *
@@ -44,7 +55,6 @@ public class ModelRequester {
      */
     Observable<List<GistModel>> request(final int size) {
         if (size == 0) {
-            mData.clear();
             mTransformer.setLocal(true);
         }
 
@@ -112,5 +122,4 @@ public class ModelRequester {
                     }
                 });
     }
-
 }

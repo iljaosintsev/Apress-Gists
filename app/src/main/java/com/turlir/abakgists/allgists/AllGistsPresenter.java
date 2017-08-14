@@ -1,6 +1,7 @@
 package com.turlir.abakgists.allgists;
 
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
@@ -12,6 +13,7 @@ import com.turlir.abakgists.base.erroring.ErrorSituation;
 import com.turlir.abakgists.base.erroring.RepeatingError;
 import com.turlir.abakgists.model.GistModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import rx.Subscription;
@@ -19,11 +21,19 @@ import timber.log.Timber;
 
 public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
 
+    private static final String DATA_STATE = "DATA_STATE";
+
     private final ModelRequester mReq;
     private Subscription mCacheSubs;
 
     public AllGistsPresenter(ModelRequester repo) {
         mReq = repo;
+    }
+
+    @Override
+    public void detach() {
+        super.detach();
+        mReq.state().clear();
     }
 
     /**
@@ -56,10 +66,34 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
                     public void onNext(PutResults<GistLocal> gistModelPutResults) {
                         //noinspection ConstantConditions
                         getView().onUpdateSuccessful();
-                        loadPublicGists(-1);
+                        loadPublicGists(ModelRequester.IGNORE_SIZE);
                     }
                 });
         addSubscription(subs);
+    }
+
+    public void saveState(Bundle state) {
+        if (state != null) {
+            state.putParcelableArrayList(DATA_STATE, (ArrayList<GistModel>) mReq.state());
+        }
+    }
+
+    public void restoreState(Bundle state) {
+        if (state != null) {
+            ArrayList<GistModel> models = state.getParcelableArrayList(DATA_STATE);
+            mReq.state(models);
+        }
+    }
+
+    public void first() {
+        if (mReq.state().size() < 1) {
+            loadPublicGists(0);
+        } else {
+            if (getView() != null) {
+                getView().onGistLoaded(mReq.state());
+            }
+            loadPublicGists(ModelRequester.IGNORE_SIZE);
+        }
     }
 
     private void removeCacheSubs() {
