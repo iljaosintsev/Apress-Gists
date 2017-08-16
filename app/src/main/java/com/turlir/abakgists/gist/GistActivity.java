@@ -50,8 +50,6 @@ public class GistActivity extends BaseActivity {
     @BindView(R.id.et_note)
     EditText note;
 
-    private GistModel mContent;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,27 +58,28 @@ public class GistActivity extends BaseActivity {
 
         ButterKnife.bind(this);
 
+        final GistModel content;
         if (savedInstanceState == null) {
-            mContent = getIntent().getParcelableExtra(EXTRA_GIST);
+            content = getIntent().getParcelableExtra(EXTRA_GIST);
         } else {
-            mContent = savedInstanceState.getParcelable(EXTRA_GIST);
+            content = savedInstanceState.getParcelable(EXTRA_GIST);
         }
-        _presenter.attach(this, mContent);
+        _presenter.attach(this, content);
 
-        applyContent();
+        applyContent(content);
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(EXTRA_GIST, mContent);
+        outState.putParcelable(EXTRA_GIST, _presenter.content);
     }
 
     @OnClick(R.id.btn_save)
     public void onClickSave() {
         if (_presenter.isChange(desc.getText().toString(), note.getText().toString())) {
             Timber.i("Внесены изменения, обновление БД");
-            mContent = _presenter.transact(desc.getText().toString(), note.getText().toString());
+            _presenter.transact(desc.getText().toString(), note.getText().toString());
         } else {
             Timber.i("Изменения не внесены");
         }
@@ -88,7 +87,7 @@ public class GistActivity extends BaseActivity {
 
     @OnClick(R.id.btn_web)
     public void onClickWeb() {
-        Uri link = mContent.insteadWebLink();
+        Uri link = _presenter.content.insteadWebLink();
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setData(link);
         startActivity(i);
@@ -122,23 +121,23 @@ public class GistActivity extends BaseActivity {
         }
     }
 
-    private void applyContent() {
+    private void applyContent(GistModel content) {
         Picasso.with(GistActivity.this)
-                .load(mContent.ownerAvatarUrl)
+                .load(content.ownerAvatarUrl)
                 .fit()
                 .error(R.drawable.ic_github)
                 .placeholder(R.drawable.ic_github)
                 .into(avatar);
 
         final String login;
-        if (mContent.ownerLogin != null) {
-            login = mContent.ownerLogin;
+        if (content.ownerLogin != null) {
+            login = content.ownerLogin;
         } else {
             login = getString(R.string.anonymous);
         }
         tvLogin.setText(login);
 
-        desc.setText(mContent.description);
-        note.setText(mContent.note);
+        desc.setText(content.description);
+        note.setText(content.note);
     }
 }

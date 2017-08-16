@@ -14,7 +14,7 @@ public class GistPresenter extends BasePresenter<GistActivity> {
     private final StorIOSQLite mDatabase;
     private final EqualsSolver mSolver;
 
-    private GistModel mContent;
+    public GistModel content;
 
     public GistPresenter(StorIOSQLite database, EqualsSolver solver) {
         mDatabase = database;
@@ -23,16 +23,16 @@ public class GistPresenter extends BasePresenter<GistActivity> {
 
     void attach(GistActivity view, GistModel model) {
         super.attach(view);
-        mContent = model;
+        content = model;
     }
 
     boolean isChange(String desc, String note) {
-        GistModel now = new GistModel(mContent, desc, note);
-        return mSolver.solveModel(mContent, now);
+        GistModel now = new GistModel(content, desc, note);
+        return mSolver.solveModel(content, now);
     }
 
     GistModel transact(String desc, String note) {
-        GistModel now = new GistModel(mContent, desc, note);
+        GistModel now = new GistModel(content, desc, note);
         GistLocal local = new GistLocal(now.id, now.url, now.created, now.description, now.note,
                 now.ownerLogin, now.ownerAvatarUrl);
         mDatabase.put()
@@ -40,7 +40,7 @@ public class GistPresenter extends BasePresenter<GistActivity> {
                 .withPutResolver(UPDATE_RESOLVER)
                 .prepare()
                 .executeAsBlocking();
-        mContent = now;
+        content = now;
         return now;
     }
 
