@@ -33,9 +33,14 @@
             android:label="@string/notes"/>
 
         <activity
-            android:name=".AllInOneActivity"
+            android:name=".allinone.AllInOneActivity"
             android:label="@string/all_in_one"
-            android:theme="@style/AllInOneTheme"/>
+            android:theme="@style/AllInOneTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
 
     </application>
 

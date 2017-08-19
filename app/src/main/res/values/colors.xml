@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
+    <color name="search_color">#673AB7</color>
+
     <color name="textColorPrimary">#FFF</color>
     <color name="textColorPrimaryInverse">#FFF</color>
 

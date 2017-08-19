@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -13,10 +14,12 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:background="@color/colorPrimary"
-            android:layout_height="56dp"
-            android:title="@string/all_in_one"
-            app:layout_scrollFlags="scroll|enterAlways"
+            android:layout_height="?attr/actionBarSize"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:contentInsetLeft="0dp"
+            app:contentInsetStart="0dp"
+            app:navigationIcon="@drawable/ic_menu"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:title="@string/all_in_one"/>
 
         <android.support.design.widget.TabLayout
@@ -26,11 +29,26 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/viewpager"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        android:layout_height="match_parent">
 
-</android.support.design.widget.CoordinatorLayout>
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:background="@android:color/holo_green_light"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/search_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="192dp"
+            android:background="@color/search_color"
+            android:visibility="gone"
+            tools:listitem="@layout/toolbar_search_item"
+            tools:visibility="visible"/>
+
+    </FrameLayout>
+
+</LinearLayout>
 

@@ -6,6 +6,7 @@ import android.support.annotation.VisibleForTesting;
 import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.turlir.abakgists.allgists.AllGistsPresenter;
 import com.turlir.abakgists.allgists.view.AllGistsFragment;
+import com.turlir.abakgists.allinone.AllInOneActivity;
 import com.turlir.abakgists.api.Repository;
 import com.turlir.abakgists.gist.GistActivity;
 import com.turlir.abakgists.notes.view.NotesFragment;
@@ -24,6 +25,8 @@ public interface AppComponent {
 
     void inject(NotesFragment fragment);
 
+    void inject(AllInOneActivity activity);
+
     @VisibleForTesting
     Repository provideRepository();
 
@@ -32,5 +35,4 @@ public interface AppComponent {
 
     @VisibleForTesting
     AllGistsPresenter provideAllGistsPresenter();
-
 }
