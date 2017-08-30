@@ -37,14 +37,12 @@ public class ModelRequester {
                 .map(mapper);
     }
 
-    List<GistModel> state() {
-        return mData;
+    List<GistModel> accumulator() {
+        return new ArrayList<>(mData); // shadow copy
     }
 
-    List<GistModel> state(List<GistModel> array) {
-        mData.addAll(array);
-        mTransformer.setLocal(mData.get(mData.size() - 1).isLocal);
-        return mData;
+    void resetAccumulator() {
+        mData.clear();
     }
 
     /**

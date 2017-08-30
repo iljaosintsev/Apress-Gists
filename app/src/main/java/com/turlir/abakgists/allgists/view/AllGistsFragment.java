@@ -77,7 +77,6 @@ public class AllGistsFragment
         super.onCreate(savedInstanceState);
         App.getComponent().inject(this);
         _presenter.attach(this);
-        _presenter.restoreState(savedInstanceState);
     }
 
     @Override
@@ -110,7 +109,7 @@ public class AllGistsFragment
 
         // start
         this.root.toLoading();
-        TextView tv = (TextView) root.findViewById(R.id.in_loading_tv);
+        TextView tv = root.findViewById(R.id.in_loading_tv);
         Drawable[] pd = tv.getCompoundDrawables();
         for (Drawable drawable : pd) {
             if (drawable instanceof Animatable) {
@@ -124,10 +123,12 @@ public class AllGistsFragment
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        _presenter.first();
         if (savedInstanceState != null) {
+            _presenter.again();
             Parcelable s = savedInstanceState.getParcelable(SCROLL_STATE);
             recycler.getLayoutManager().onRestoreInstanceState(s);
+        } else {
+            _presenter.first();
         }
     }
 
@@ -141,7 +142,6 @@ public class AllGistsFragment
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        _presenter.saveState(outState);
         outState.putParcelable(SCROLL_STATE, recycler.getLayoutManager().onSaveInstanceState());
     }
 
