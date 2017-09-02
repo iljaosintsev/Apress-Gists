@@ -19,30 +19,30 @@ import dagger.Provides;
 public class PresenterModule {
 
     @Provides
-    GistListInteractor provideGistListInteractor(Repository repo) {
+    public GistListInteractor provideGistListInteractor(Repository repo) {
         return new GistListInteractor(repo);
     }
 
     @Provides
-    NotesInteractor provideNotesInteractor(Repository repo) {
+    public NotesInteractor provideNotesInteractor(Repository repo) {
         return new NotesInteractor(repo);
     }
 
     @Provides
     @Singleton
-    AllGistsPresenter provideAllGistsPresenter() {
+    public AllGistsPresenter provideAllGistsPresenter() {
         return new AllGistsPresenter();
     }
 
     @Provides
     @Singleton
-    NotesPresenter provideNotesPresenter() {
+    public NotesPresenter provideNotesPresenter() {
         return new NotesPresenter();
     }
 
     @Provides
     @Singleton
-    GistPresenter provideGistPresenter(StorIOSQLite base) {
+    public GistPresenter provideGistPresenter(StorIOSQLite base) {
         return new GistPresenter(base, new EqualsSolver());
     }
 
