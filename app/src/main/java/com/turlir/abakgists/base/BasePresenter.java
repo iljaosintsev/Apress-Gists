@@ -73,6 +73,8 @@ public abstract class BasePresenter<T extends BaseView> {
 
         @Override
         public void onError(Throwable throwable) {
+            if (getView() == null) return;
+
             if (throwable instanceof Exception) {
                 Exception exception = (Exception) throwable;
                 Timber.e(exception);
