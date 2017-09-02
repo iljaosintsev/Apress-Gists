@@ -9,7 +9,7 @@ import com.turlir.abakgists.view.anim.creator.VerticalMove;
 public class ThreeFactory
         extends AbstractFactoryOfThree {
 
-    private Setting mSetting;
+    private final Setting mSetting;
 
     public ThreeFactory(Setting setting) {
         mSetting = setting;

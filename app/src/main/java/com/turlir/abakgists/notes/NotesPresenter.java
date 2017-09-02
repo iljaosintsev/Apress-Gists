@@ -10,7 +10,7 @@ import java.util.List;
 
 public class NotesPresenter extends BasePresenter<NotesFragment> {
 
-    private ModelRequester mRequester;
+    private final ModelRequester mRequester;
 
     public NotesPresenter(Repository repo) {
         mRequester = new ModelRequester(repo);

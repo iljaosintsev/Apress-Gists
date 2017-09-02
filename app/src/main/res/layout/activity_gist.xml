@@ -77,7 +77,7 @@
             android:textAppearance="@style/FieldTextAppearance"/>
 
         <EditText
-            android:id="@+id/et_edsc"
+            android:id="@+id/et_desc"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="8dp"

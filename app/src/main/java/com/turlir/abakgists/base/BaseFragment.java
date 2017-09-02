@@ -14,7 +14,7 @@ import butterknife.Unbinder;
 
 public class BaseFragment extends Fragment implements BaseView {
 
-    private List<Unbinder> mUnbinders = new ArrayList<>();
+    private final List<Unbinder> mUnbinders = new ArrayList<>();
 
     protected Unbinder butterKnifeBind(View view) {
         Unbinder unbinder = ButterKnife.bind(this, view);

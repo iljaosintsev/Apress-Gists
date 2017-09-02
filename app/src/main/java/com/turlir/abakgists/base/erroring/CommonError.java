@@ -1,5 +1,7 @@
 package com.turlir.abakgists.base.erroring;
 
+import android.support.annotation.NonNull;
+
 import timber.log.Timber;
 
 abstract class CommonError implements ErrorSituation {
@@ -10,7 +12,7 @@ abstract class CommonError implements ErrorSituation {
     }
 
     @Override
-    public void perform(ErrorInterpreter v, Exception ex) {
+    public void perform(@NonNull ErrorInterpreter v, Exception ex) {
         Timber.e(ex);
     }
 

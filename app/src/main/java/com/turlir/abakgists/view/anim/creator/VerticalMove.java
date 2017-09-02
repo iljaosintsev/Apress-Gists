@@ -11,7 +11,7 @@ public class VerticalMove
         implements AnimationCreator {
 
     private final Setting mSetting;
-    private float mDistance;
+    private final float mDistance;
 
     public VerticalMove(Setting setting, View v) {
         this(setting, v.getHeight());

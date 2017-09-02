@@ -2,7 +2,6 @@ package com.turlir.abakgists.base;
 
 
 import android.app.Application;
-import android.os.Build;
 import android.os.StrictMode;
 
 import com.squareup.leakcanary.LeakCanary;

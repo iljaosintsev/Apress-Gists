@@ -36,9 +36,9 @@ abstract class AbstractFactoryOfThree
         return res;
     }
 
-    public abstract AnimationCreator first(View v);
+    protected abstract AnimationCreator first(View v);
 
-    public abstract AnimationCreator second(View v);
+    protected abstract AnimationCreator second(View v);
 
-    public abstract AnimationCreator three(View v);
+    protected abstract AnimationCreator three(View v);
 }

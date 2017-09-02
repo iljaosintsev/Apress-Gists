@@ -31,7 +31,7 @@ public class GistPresenter extends BasePresenter<GistActivity> {
         return mSolver.solveModel(content, now);
     }
 
-    GistModel transact(String desc, String note) {
+    void transact(String desc, String note) {
         GistModel now = new GistModel(content, desc, note);
         GistLocal local = new GistLocal(now.id, now.url, now.created, now.description, now.note,
                 now.ownerLogin, now.ownerAvatarUrl);
@@ -41,7 +41,6 @@ public class GistPresenter extends BasePresenter<GistActivity> {
                 .prepare()
                 .executeAsBlocking();
         content = now;
-        return now;
     }
 
 }

@@ -26,11 +26,6 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
         mReq = repo;
     }
 
-    @Override
-    public void detach() {
-        super.detach();
-    }
-
     /**
      * из локального кеша или сетевого запроса
      *

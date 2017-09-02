@@ -44,7 +44,7 @@ public class GistActivity extends BaseActivity {
     @BindView(R.id.iv_avatar)
     ImageView avatar;
 
-    @BindView(R.id.et_edsc)
+    @BindView(R.id.et_desc)
     EditText desc;
 
     @BindView(R.id.et_note)

@@ -10,7 +10,7 @@ public class HorizontalMove
         implements AnimationCreator {
 
     private final Setting mSetting;
-    private float mDistance;
+    private final float mDistance;
 
     public HorizontalMove(Setting setting, View v) {
         this(setting, v.getWidth());

@@ -34,26 +34,13 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         tools:text="note"/>
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/item_gist_created"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/item_gist_source_indicator"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
-            tools:background="@android:color/holo_green_light"/>
-
-        <TextView
-            android:id="@+id/item_gist_created"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-            tools:text="2017-04-01T19:30:18Z"/>
-
-    </LinearLayout>
+        android:gravity="right"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+        tools:drawableLeft="@drawable/indicator_online"
+        tools:text="2017-04-01T19:30:18Z"/>
 
 </LinearLayout>

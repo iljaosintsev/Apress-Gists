@@ -9,8 +9,8 @@ import com.turlir.abakgists.view.anim.creator.VerticalMove;
 public class ButtonAnimFactory
         extends AbstractFactoryOfThree {
 
-    private Params mParams;
-    private Setting mCommon;
+    private final Params mParams;
+    private final Setting mCommon;
 
     public ButtonAnimFactory(Params specific, Setting common) {
         mParams = specific;
