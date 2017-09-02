@@ -18,26 +18,25 @@ import dagger.Provides;
 public class PresenterModule {
 
     @Provides
-    // @Singleton
-    public ModelRequester provideModelRequester(Repository repo) {
+    ModelRequester provideModelRequester(Repository repo) {
         return new ModelRequester(repo);
     }
 
     @Provides
     @Singleton
-    public AllGistsPresenter provideAllGistsPresenter(ModelRequester req) {
-        return new AllGistsPresenter(req);
+    AllGistsPresenter provideAllGistsPresenter() {
+        return new AllGistsPresenter();
     }
 
     @Provides
     @Singleton
-    public NotesPresenter provideNotesPresenter(Repository repo) {
-        return new NotesPresenter(repo);
+    NotesPresenter provideNotesPresenter() {
+        return new NotesPresenter();
     }
 
     @Provides
     @Singleton
-    public GistPresenter provideGistPresenter(StorIOSQLite base) {
+    GistPresenter provideGistPresenter(StorIOSQLite base) {
         return new GistPresenter(base, new EqualsSolver());
     }
 

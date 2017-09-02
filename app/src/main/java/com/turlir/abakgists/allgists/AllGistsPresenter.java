@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
 import com.turlir.abakgists.allgists.view.AllGistsFragment;
 import com.turlir.abakgists.api.data.GistLocal;
+import com.turlir.abakgists.base.App;
 import com.turlir.abakgists.base.BasePresenter;
 import com.turlir.abakgists.base.erroring.ErrorInterpreter;
 import com.turlir.abakgists.base.erroring.ErrorSituation;
@@ -14,16 +15,20 @@ import com.turlir.abakgists.model.GistModel;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import rx.Subscription;
 import timber.log.Timber;
 
 public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
 
-    private final ModelRequester mReq;
+    @Inject
+    ModelRequester _interactor;
+
     private Subscription mCacheSubs;
 
-    public AllGistsPresenter(ModelRequester repo) {
-        mReq = repo;
+    public AllGistsPresenter() {
+        App.getComponent().inject(this);
     }
 
     /**
@@ -32,7 +37,7 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
      */
     public void loadPublicGists(final int currentSize) {
         removeCacheSubs();
-        Subscription subs = mReq.request(currentSize)
+        Subscription subs = _interactor.request(currentSize)
                 .compose(this.<List<GistModel>>defaultScheduler())
                 .subscribe(new GistDownloadHandler<List<GistModel>>() {
                     @Override
@@ -48,7 +53,7 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
 
     public void updateGist() {
         removeCacheSubs();
-        Subscription subs = mReq.update()
+        Subscription subs = _interactor.update()
                 .compose(this.<PutResults<GistLocal>>defaultScheduler())
                 .subscribe(new GistDownloadHandler<PutResults<GistLocal>>() {
                     @Override
@@ -63,13 +68,13 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
     }
 
     public void first() {
-        mReq.resetAccumulator();
+        App.getComponent().inject(this);
         loadPublicGists(0);
     }
 
     public void again() {
         if (getView() != null) {
-            getView().onGistLoaded(mReq.accumulator());
+            getView().onGistLoaded(_interactor.accumulator());
         }
         loadPublicGists(ModelRequester.IGNORE_SIZE);
     }

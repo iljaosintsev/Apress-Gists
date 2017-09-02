@@ -41,10 +41,6 @@ public class ModelRequester {
         return new ArrayList<>(mData); // shadow copy
     }
 
-    void resetAccumulator() {
-        mData.clear();
-    }
-
     /**
      * Извлекает данные из кеша, при необходимости загружает их с сервера
      *
