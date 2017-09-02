@@ -1,6 +1,6 @@
 package com.turlir.abakgists.notes;
 
-import com.turlir.abakgists.allgists.ModelRequester;
+import com.turlir.abakgists.allgists.GistListInteractor;
 import com.turlir.abakgists.base.App;
 import com.turlir.abakgists.base.BasePresenter;
 import com.turlir.abakgists.model.GistModel;
@@ -13,7 +13,7 @@ import javax.inject.Inject;
 public class NotesPresenter extends BasePresenter<NotesFragment> {
 
     @Inject
-    ModelRequester _interactor;
+    GistListInteractor _interactor;
 
     public NotesPresenter() {
         App.getComponent().inject(this);

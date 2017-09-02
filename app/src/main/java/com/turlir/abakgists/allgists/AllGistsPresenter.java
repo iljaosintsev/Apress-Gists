@@ -23,7 +23,7 @@ import timber.log.Timber;
 public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
 
     @Inject
-    ModelRequester _interactor;
+    GistListInteractor _interactor;
 
     private Subscription mCacheSubs;
 
@@ -60,7 +60,7 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
                     public void onNext(PutResults<GistLocal> gistModelPutResults) {
                         if (getView() != null) {
                             getView().onUpdateSuccessful();
-                            loadPublicGists(ModelRequester.IGNORE_SIZE);
+                            loadPublicGists(GistListInteractor.IGNORE_SIZE);
                         }
                     }
                 });
@@ -76,7 +76,7 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
         if (getView() != null) {
             getView().onGistLoaded(_interactor.accumulator());
         }
-        loadPublicGists(ModelRequester.IGNORE_SIZE);
+        loadPublicGists(GistListInteractor.IGNORE_SIZE);
     }
 
     private void removeCacheSubs() {

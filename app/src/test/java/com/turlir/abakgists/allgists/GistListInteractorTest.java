@@ -36,7 +36,7 @@ import static org.junit.Assert.assertNotNull;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = Build.VERSION_CODES.LOLLIPOP, packageName = "com.turlir.abakgists")
-public class ModelRequesterTest {
+public class GistListInteractorTest {
 
     @Rule
     public final DaggerMockRule<AppComponent> rule = new DatabaseMocking();
@@ -47,7 +47,7 @@ public class ModelRequesterTest {
     @Mock
     private ApiClient _client;
 
-    private ModelRequester mRequester;
+    private GistListInteractor mRequester;
 
     @BeforeClass
     public static void setupRx() {
@@ -70,7 +70,7 @@ public class ModelRequesterTest {
 
     @Before
     public void setup() {
-        mRequester = new ModelRequester(_repo);
+        mRequester = new GistListInteractor(_repo);
         assertNotNull(mRequester);
     }
 

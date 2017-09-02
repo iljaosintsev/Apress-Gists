@@ -15,7 +15,7 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 import timber.log.Timber;
 
-public class ModelRequester {
+public class GistListInteractor {
 
     static final int IGNORE_SIZE = -1;
     private static final float PAGE_SIZE = 30;
@@ -24,7 +24,7 @@ public class ModelRequester {
     private final List<GistModel> mData;
     private final GistMapper.Local mTransformer;
 
-    public ModelRequester(Repository repo) {
+    public GistListInteractor(Repository repo) {
         mRepo = repo;
         mData = new ArrayList<>();
         mTransformer = new GistMapper.Local();
