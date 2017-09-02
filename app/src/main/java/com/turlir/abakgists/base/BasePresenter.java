@@ -11,13 +11,11 @@ import com.turlir.abakgists.base.erroring.ErrorSituation;
 import com.turlir.abakgists.base.erroring.TroubleSelector;
 
 import java.lang.ref.WeakReference;
-import java.util.List;
 
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
@@ -26,9 +24,6 @@ public abstract class BasePresenter<T extends BaseView> {
 
     private static final ObservableSchedulersTransformer STANDARD_SCHEDULER
             = new ObservableSchedulersTransformer();
-
-    private final SafeListFiltering SAFE_LIST_FILTERING = new SafeListFiltering();
-    private final SafeFiltering SAFE_FILTERING = new SafeFiltering();
 
     private final CompositeSubscription subs = new CompositeSubscription();
 
@@ -64,13 +59,9 @@ public abstract class BasePresenter<T extends BaseView> {
         return STANDARD_SCHEDULER;
     }
 
-    protected <E> Observable.Transformer<List<E>, List<E>> safeSubscribingWithList() {
-        return SAFE_LIST_FILTERING;
-    }
-
-    protected <B> Observable.Transformer<B, B> safeSubscribing() {
-        return SAFE_FILTERING;
-    }
+    ///
+    /// classes
+    ///
 
     protected abstract class ErrorHandler<E> extends Handler<E> {
 
@@ -150,37 +141,4 @@ public abstract class BasePresenter<T extends BaseView> {
         }
     }
 
-    /**
-     * Действительна ли сейчас ссылка на вью
-     * @param <B> тип последовательности
-     */
-    private class SafeFiltering<B> implements Observable.Transformer<B, B> {
-
-        @Override
-        public Observable<B> call(Observable<B> obs) {
-            return obs.filter(new Func1<B, Boolean>() {
-                @Override
-                public Boolean call(B v) {
-                    return getView() != null;
-                }
-            });
-        }
-    }
-
-    /**
-     * Тоже что и {@code SafeFiltering} плюс проверка на то, что список не пустой и не null
-     * @param <V> тип элементов списка последовательности
-     */
-    private class SafeListFiltering<V> implements Observable.Transformer<List<V>, List<V>> {
-        @Override
-        public Observable<List<V>> call(Observable<List<V>> obs) {
-            return obs.compose(new SafeFiltering<List<V>>())
-                    .filter(new Func1<List<V>, Boolean>() {
-                        @Override
-                        public Boolean call(List<V> data) {
-                            return data != null && data.size() > 0;
-                        }
-                    });
-        }
-    }
 }

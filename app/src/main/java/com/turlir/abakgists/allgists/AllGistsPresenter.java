@@ -34,13 +34,13 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
         removeCacheSubs();
         Subscription subs = mReq.request(currentSize)
                 .compose(this.<List<GistModel>>defaultScheduler())
-                .compose(this.<GistModel>safeSubscribingWithList())
                 .subscribe(new GistDownloadHandler<List<GistModel>>() {
                     @Override
                     public void onNext(List<GistModel> value) {
-                        Timber.d("onNext %d", value.size());
-                        //noinspection ConstantConditions
-                        getView().onGistLoaded(value);
+                        if (getView() != null) {
+                            Timber.d("onNext %d", value.size());
+                            getView().onGistLoaded(value);
+                        }
                     }
                 });
         addCacheSubs(subs);
@@ -50,13 +50,13 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
         removeCacheSubs();
         Subscription subs = mReq.update()
                 .compose(this.<PutResults<GistLocal>>defaultScheduler())
-                .compose(this.<PutResults<GistLocal>>safeSubscribing())
                 .subscribe(new GistDownloadHandler<PutResults<GistLocal>>() {
                     @Override
                     public void onNext(PutResults<GistLocal> gistModelPutResults) {
-                        //noinspection ConstantConditions
-                        getView().onUpdateSuccessful();
-                        loadPublicGists(ModelRequester.IGNORE_SIZE);
+                        if (getView() != null) {
+                            getView().onUpdateSuccessful();
+                            loadPublicGists(ModelRequester.IGNORE_SIZE);
+                        }
                     }
                 });
         addSubscription(subs);
