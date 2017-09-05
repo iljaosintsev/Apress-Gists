@@ -36,6 +36,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 
 
 public class AllGistsFragment
@@ -106,6 +107,8 @@ public class AllGistsFragment
 
         RecyclerView.OnScrollListener scroller = new SimpleScrollListener(this);
         recycler.addOnScrollListener(scroller);
+
+        recycler.setItemAnimator(new SlideInLeftAnimator());
 
         // start
         this.root.toLoading();

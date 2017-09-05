@@ -94,6 +94,15 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
         return mContent.size();
     }
 
+    @Override
+    public long getItemId(int position) {
+        GistModel maybeGist = getGistByPosition(position);
+        if (maybeGist != null) {
+            return Long.parseLong(maybeGist.id);
+        } else {
+            return position;
+        }
+    }
     private ViewModel getItemByPosition(int p) {
         return mContent.get(p);
     }
