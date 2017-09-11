@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
 import com.turlir.abakgists.allgists.view.AllGistsFragment;
 import com.turlir.abakgists.api.data.GistLocal;
-import com.turlir.abakgists.base.App;
 import com.turlir.abakgists.base.BasePresenter;
 import com.turlir.abakgists.base.erroring.ErrorInterpreter;
 import com.turlir.abakgists.base.erroring.ErrorSituation;
@@ -15,20 +14,17 @@ import com.turlir.abakgists.model.GistModel;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import rx.Subscription;
 import timber.log.Timber;
 
 public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
 
-    @Inject
-    GistListInteractor _interactor;
+    private final GistListInteractor mInteractor;
 
     private Subscription mCacheSubs;
 
-    public AllGistsPresenter() {
-        App.getComponent().inject(this);
+    public AllGistsPresenter(GistListInteractor interactor) {
+        mInteractor = interactor;
     }
 
     /**
@@ -37,7 +33,7 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
      */
     public void loadPublicGists(final int currentSize) {
         removeCacheSubs();
-        Subscription subs = _interactor.request(currentSize)
+        Subscription subs = mInteractor.request(currentSize)
                 .compose(this.<List<GistModel>>defaultScheduler())
                 .subscribe(new GistDownloadHandler<List<GistModel>>() {
                     @Override
@@ -53,7 +49,7 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
 
     public void updateGist() {
         removeCacheSubs();
-        Subscription subs = _interactor.update()
+        Subscription subs = mInteractor.update()
                 .compose(this.<PutResults<GistLocal>>defaultScheduler())
                 .subscribe(new GistDownloadHandler<PutResults<GistLocal>>() {
                     @Override
@@ -68,13 +64,13 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
     }
 
     public void first() {
-        App.getComponent().inject(this);
+        mInteractor.resetAccumulator();
         loadPublicGists(0);
     }
 
     public void again() {
         if (getView() != null) {
-            getView().onGistLoaded(_interactor.accumulator());
+            getView().onGistLoaded(mInteractor.accumulator());
         }
         loadPublicGists(GistListInteractor.IGNORE_SIZE);
     }

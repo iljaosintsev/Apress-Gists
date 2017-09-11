@@ -8,7 +8,6 @@ import com.turlir.abakgists.allgists.AllGistsPresenter;
 import com.turlir.abakgists.allgists.view.AllGistsFragment;
 import com.turlir.abakgists.api.Repository;
 import com.turlir.abakgists.gist.GistActivity;
-import com.turlir.abakgists.notes.NotesPresenter;
 import com.turlir.abakgists.notes.view.NotesFragment;
 
 import javax.inject.Singleton;
@@ -24,10 +23,6 @@ public interface AppComponent {
     void inject(GistActivity fragment);
 
     void inject(NotesFragment fragment);
-
-    void inject(AllGistsPresenter target);
-
-    void inject(NotesPresenter target);
 
     @VisibleForTesting
     Repository provideRepository();

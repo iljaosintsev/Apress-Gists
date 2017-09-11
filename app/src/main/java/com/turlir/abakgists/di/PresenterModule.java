@@ -30,14 +30,14 @@ public class PresenterModule {
 
     @Provides
     @Singleton
-    public AllGistsPresenter provideAllGistsPresenter() {
-        return new AllGistsPresenter();
+    public AllGistsPresenter provideAllGistsPresenter(GistListInteractor interactor) {
+        return new AllGistsPresenter(interactor);
     }
 
     @Provides
     @Singleton
-    public NotesPresenter provideNotesPresenter() {
-        return new NotesPresenter();
+    public NotesPresenter provideNotesPresenter(NotesInteractor interactor) {
+        return new NotesPresenter(interactor);
     }
 
     @Provides

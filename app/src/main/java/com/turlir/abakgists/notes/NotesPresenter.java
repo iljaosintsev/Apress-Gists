@@ -1,25 +1,21 @@
 package com.turlir.abakgists.notes;
 
-import com.turlir.abakgists.base.App;
 import com.turlir.abakgists.base.BasePresenter;
 import com.turlir.abakgists.model.GistModel;
 import com.turlir.abakgists.notes.view.NotesFragment;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 public class NotesPresenter extends BasePresenter<NotesFragment> {
 
-    @Inject
-    NotesInteractor _interactor;
+    private final NotesInteractor mInteractor;
 
-    public NotesPresenter() {
-        App.getComponent().inject(this);
+    public NotesPresenter(NotesInteractor interactor) {
+        mInteractor = interactor;
     }
 
     public void loadNotes() {
-        addSubscription(_interactor.requestWithNotes()
+        addSubscription(mInteractor.requestWithNotes()
                 .compose(this.<List<GistModel>>defaultScheduler())
                 .subscribe(new Handler<List<GistModel>>() {
                     @Override
