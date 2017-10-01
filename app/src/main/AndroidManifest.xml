@@ -38,7 +38,7 @@
             android:theme="@style/AllInOneTheme"/>
 
         <activity
-            android:name=".TemplateActivity"
+            android:name=".template.TemplateActivity"
             android:exported="true"
             android:label="@string/template">
             <intent-filter>

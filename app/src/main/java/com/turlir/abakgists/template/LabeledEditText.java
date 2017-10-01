@@ -1,4 +1,4 @@
-package com.turlir.abakgists.templater;
+package com.turlir.abakgists.template;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.turlir.abakgists.R;
+import com.turlir.abakgists.templater.base.FormWidget;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

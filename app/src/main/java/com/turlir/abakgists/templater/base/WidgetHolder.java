@@ -1,38 +1,38 @@
-package com.turlir.abakgists.templater;
+package com.turlir.abakgists.templater.base;
 
 import android.view.View;
 import android.view.ViewGroup;
 
-public class WidgetHolder<T extends View & FormWidget<V>, V> {
+class WidgetHolder<T extends View & FormWidget<V>, V> {
 
     private final T mWidget;
     private final V mContent;
-    private final Callback<T> mCallback;
+    private final Interceptor<T> mCallback;
     private final Checker<V> mChecker;
 
     private String mLastError;
 
-    public WidgetHolder(T widget, V content, Checker<V> checker, Callback<T> callback) {
+    WidgetHolder(T widget, V content, Checker<V> checker, Interceptor<T> callback) {
         mWidget= widget;
         mContent = content;
         mChecker = checker;
         mCallback = callback;
     }
 
-    public void connect(ViewGroup group) {
+    void connect(ViewGroup group) {
         group.addView(mWidget);
-        mCallback.added(mWidget);
+        mCallback.add(mWidget);
     }
 
-    public void bind() {
+    void bind() {
         mWidget.bind(mContent);
     }
 
-    public V content() {
+    private V content() {
         return mWidget.content();
     }
 
-    public boolean verify() {
+    boolean verify() {
         V value = content();
         boolean result = mChecker.check(value);
         if (!result) {
@@ -43,14 +43,14 @@ public class WidgetHolder<T extends View & FormWidget<V>, V> {
         }
     }
 
-    public void showError() {
+    void showError() {
         if (mLastError == null) {
             throw new RuntimeException("showing before verify");
         }
         mWidget.showError(mLastError);
     }
 
-    public void hideError() {
+    void hideError() {
         mWidget.showError(null);
     }
 }
