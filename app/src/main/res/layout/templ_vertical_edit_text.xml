@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/templ_labeled_et_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="72dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        tools:text="Label name" />
+
+    <EditText
+        android:id="@+id/templ_labeled_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:inputType="textAutoComplete"
+        tools:text="text content" />
+
+    <TextView
+        android:id="@+id/templ_labeled_error"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:maxLines="1"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        tools:text="Error" />
+
+</LinearLayout>

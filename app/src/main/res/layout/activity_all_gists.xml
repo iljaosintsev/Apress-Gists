@@ -3,11 +3,11 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              tools:context="com.turlir.abakgists.allgists.view.AllGistsActivity">
+              tools:context="com.turlir.abakgists.allgists.content.AllGistsActivity">
 
     <fragment
         android:id="@+id/fragment"
-        class="com.turlir.abakgists.allgists.view.AllGistsFragment"
+        class="com.turlir.abakgists.allgists.content.AllGistsFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:tag="AllGistsFragment"

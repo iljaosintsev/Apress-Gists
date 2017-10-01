@@ -67,6 +67,12 @@ public class MainActivity extends AppCompatActivity {
         buttonClick(btnAll, AllInOneActivity.class);
     }
 
+    @OnClick(R.id.btn_template)
+    public void clickTemplate() {
+        Intent i = new Intent(this, TemplateActivity.class);
+        startActivity(i);
+    }
+
     private void buttonClick(View clicked, final Class clazz) {
         animateParams = new Params.TwoWayBuilder(clicked)
                 .up(btnAllGists)
