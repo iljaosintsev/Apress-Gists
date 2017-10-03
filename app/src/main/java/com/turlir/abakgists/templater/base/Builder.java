@@ -18,12 +18,12 @@ public class Builder {
         mHolders = new ArrayList<>();
     }
 
-    public Builder addField(String label, String content, Interceptor<LabeledEditText> callback) {
+    public Builder addField(String label, String hint, Interceptor<LabeledEditText, String> callback) {
         LabeledEditText widget = new LabeledEditText(mContext);
         widget.setTitle(label);
+        widget.setHint(hint);
         WidgetHolder<LabeledEditText, String> h = new WidgetHolder<>(
                 widget,
-                content,
                 new Template.NotEmpty(),
                 callback
         );
@@ -31,12 +31,12 @@ public class Builder {
         return this;
     }
 
-    public Builder addVerticalField(String label, String content, Interceptor<VerticalEditText> callback) {
+    public Builder addVerticalField(String label, String hint, Interceptor<VerticalEditText, String> callback) {
         VerticalEditText widget = new VerticalEditText(mContext);
         widget.setTitle(label);
+        widget.setHint(hint);
         WidgetHolder<VerticalEditText, String> h = new WidgetHolder<>(
                 widget,
-                content,
                 new Template.MinLimit(5),
                 callback
         );

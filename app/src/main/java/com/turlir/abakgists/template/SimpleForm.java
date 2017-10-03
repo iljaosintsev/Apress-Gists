@@ -22,25 +22,37 @@ class SimpleForm extends DynamicForm<SimpleForm.ComplexValue> {
     @Override
     protected Template createTemplate() {
         return new Builder(getContext())
-                .addField("Label", "Content", new Interceptor<LabeledEditText>() {
+                .addField("Label 1", "hint 1", new Interceptor<LabeledEditText, String>() {
+                    @Override
+                    public String bind() {
+                        return value().first;
+                    }
+
                     @Override
                     public void add(LabeledEditText view) {
+                        super.add(view);
                         mFirst = view;
                     }
                 })
-                .addVerticalField("Label 2", "Static content", new Interceptor<VerticalEditText>() {
-                    @Override
-                    public void add(VerticalEditText view) {
-                        mSecond = view;
-                    }
+                .addVerticalField("Label 2", "hint 2",
+                        new Interceptor<VerticalEditText, String>() {
+                            @Override
+                            public String bind() {
+                                return value().second;
+                            }
+
+                            @Override
+                            public void add(VerticalEditText view) {
+                                super.add(view);
+                                mSecond = view;
+                            }
                 })
                 .build();
     }
 
     @Override
-    public void bind(@NonNull ComplexValue value) {
-        mFirst.et.setText(value.first);
-        mSecond.et.setText(value.second);
+    protected void interact() {
+        // dynamic widget usage
     }
 
     @Override

@@ -6,15 +6,13 @@ import android.view.ViewGroup;
 class WidgetHolder<T extends View & FormWidget<V>, V> {
 
     private final T mWidget;
-    private final V mContent;
-    private final Interceptor<T> mCallback;
+    private final Interceptor<T, V> mCallback;
     private final Checker<V> mChecker;
 
     private String mLastError;
 
-    WidgetHolder(T widget, V content, Checker<V> checker, Interceptor<T> callback) {
+    WidgetHolder(T widget, Checker<V> checker, Interceptor<T, V> callback) {
         mWidget= widget;
-        mContent = content;
         mChecker = checker;
         mCallback = callback;
     }
@@ -25,7 +23,8 @@ class WidgetHolder<T extends View & FormWidget<V>, V> {
     }
 
     void bind() {
-        mWidget.bind(mContent);
+        V add = mCallback.bind();
+        mWidget.bind(add);
     }
 
     private V content() {

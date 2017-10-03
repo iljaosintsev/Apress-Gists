@@ -36,6 +36,10 @@ public class LabeledEditText extends LinearLayout implements FormWidget<String> 
         tv.setText(title);
     }
 
+    public void setHint(String hint) {
+        et.setHint(hint);
+    }
+
     @Override
     public void bind(String origin) {
         et.setText(origin);
@@ -50,4 +54,5 @@ public class LabeledEditText extends LinearLayout implements FormWidget<String> 
     public void showError(String msg) {
         error.setText(msg);
     }
+
 }

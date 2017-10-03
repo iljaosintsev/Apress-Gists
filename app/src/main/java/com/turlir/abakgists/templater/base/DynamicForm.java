@@ -11,6 +11,8 @@ public abstract class DynamicForm<T> implements Form<T> {
 
     private Template mTemplate;
 
+    protected T value;
+
     public DynamicForm(@NonNull ViewGroup group) {
         mGroup = group;
         mContext = group.getContext();
@@ -27,17 +29,19 @@ public abstract class DynamicForm<T> implements Form<T> {
             throw new IllegalStateException("connect() before create()");
         }
         mTemplate.connect(mGroup);
-        mTemplate.bind();
     }
 
     @Override
-    public void bind(@NonNull T value) {
+    public final void bind(@NonNull T value) {
         if (mTemplate == null) {
-            throw new IllegalStateException("connect() before create()");
+            throw new IllegalStateException("bind() before create()");
         }
         if (mGroup.getChildCount() < 1) {
             throw new IllegalStateException("bind() before connect()");
         }
+        this.value = value;
+        mTemplate.bind();
+        interact();
     }
 
     @Override
@@ -48,7 +52,16 @@ public abstract class DynamicForm<T> implements Form<T> {
         return mTemplate.verify();
     }
 
+    protected final T value() {
+        if (value == null) {
+            throw new IllegalStateException();
+        }
+        return value;
+    }
+
     protected abstract Template createTemplate();
+
+    protected abstract void interact();
 
     protected final Context getContext() {
         return mContext;

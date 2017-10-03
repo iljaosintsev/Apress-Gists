@@ -36,6 +36,10 @@ public class VerticalEditText extends LinearLayout implements FormWidget<String>
         tv.setText(title);
     }
 
+    public void setHint(String hint) {
+        et.setHint(hint);
+    }
+
     @Override
     public void bind(String origin) {
         et.setText(origin);

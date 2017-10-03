@@ -27,6 +27,7 @@ public class TemplateActivity extends BaseActivity {
         mForm = new SimpleForm(root);
         mForm.create();
         mForm.connect();
+        //mForm.bind(new SimpleForm.ComplexValue("", ""));
     }
 
     @Override
