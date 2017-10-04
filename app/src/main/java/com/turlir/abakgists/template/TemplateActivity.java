@@ -27,23 +27,17 @@ public class TemplateActivity extends BaseActivity {
         mForm = new SimpleForm(root);
         mForm.create();
         mForm.connect();
-        //mForm.bind(new SimpleForm.ComplexValue("", ""));
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelable("", mForm.collect());
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        SimpleForm.ComplexValue job = savedInstanceState.getParcelable("");
-        if (job != null) {
-            String meta = " restored";
-            mForm.bind(new SimpleForm.ComplexValue(job.first + meta, job.second + meta));
-        }
+        EditableProfile profile = new EditableProfile(
+                "Илья",
+                "vk.com/turlir",
+                "Программист",
+                "",
+                "@turlir",
+                "iljaosincev@gmail.com",
+                true,
+                ""
+        );
+        mForm.bind(profile);
     }
 
     @OnClick(R.id.template_act_btn_save)

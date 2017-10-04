@@ -8,6 +8,4 @@ public interface FormWidget<T> {
 
     void showError(String error);
 
-    // View view();
-
 }

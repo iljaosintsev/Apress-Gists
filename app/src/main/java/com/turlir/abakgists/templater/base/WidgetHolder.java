@@ -9,8 +9,6 @@ class WidgetHolder<T extends View & FormWidget<V>, V> {
     private final Interceptor<T, V> mCallback;
     private final Checker<V> mChecker;
 
-    private String mLastError;
-
     WidgetHolder(T widget, Checker<V> checker, Interceptor<T, V> callback) {
         mWidget= widget;
         mChecker = checker;
@@ -33,20 +31,14 @@ class WidgetHolder<T extends View & FormWidget<V>, V> {
 
     boolean verify() {
         V value = content();
-        boolean result = mChecker.check(value);
-        if (!result) {
-            mLastError = mChecker.error();
-            return false;
-        } else {
-            return true;
-        }
+        return mChecker.check(value);
     }
 
     void showError() {
-        if (mLastError == null) {
+        if (mChecker.error() == null) {
             throw new RuntimeException("showing before verify");
         }
-        mWidget.showError(mLastError);
+        mWidget.showError(mChecker.error());
     }
 
     void hideError() {

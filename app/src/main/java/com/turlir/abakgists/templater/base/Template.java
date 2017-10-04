@@ -49,36 +49,4 @@ public class Template {
         return !error;
     }
 
-    static class NotEmpty implements Checker<String> {
-
-        @Override
-        public boolean check(String actual) {
-            return actual != null && actual.trim().length() > 0;
-        }
-
-        @Override
-        public String error() {
-            return "Can not be empty";
-        }
-    }
-
-    static class MinLimit implements Checker<String> {
-
-        private final int minimum;
-
-        MinLimit(int minimum) {
-            this.minimum = minimum - 1;
-        }
-
-        @Override
-        public boolean check(String actual) {
-            return actual != null && actual.trim().length() > minimum;
-        }
-
-        @Override
-        public String error() {
-            return "Minimum " + (minimum + 1) + " symbol(s)";
-        }
-    }
-
 }

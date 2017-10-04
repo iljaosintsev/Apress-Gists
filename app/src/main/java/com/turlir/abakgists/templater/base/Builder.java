@@ -1,8 +1,10 @@
 package com.turlir.abakgists.templater.base;
 
 import android.content.Context;
+import android.view.View;
 
 import com.turlir.abakgists.template.LabeledEditText;
+import com.turlir.abakgists.template.MaterialField;
 import com.turlir.abakgists.template.VerticalEditText;
 
 import java.util.ArrayList;
@@ -22,29 +24,32 @@ public class Builder {
         LabeledEditText widget = new LabeledEditText(mContext);
         widget.setTitle(label);
         widget.setHint(hint);
-        WidgetHolder<LabeledEditText, String> h = new WidgetHolder<>(
-                widget,
-                new Template.NotEmpty(),
-                callback
-        );
-        mHolders.add(h);
+        add(new NotEmpty(), callback, widget);
         return this;
     }
 
-    public Builder addVerticalField(String label, String hint, Interceptor<VerticalEditText, String> callback) {
+    public Builder addVerticalField(String label, String hint,  Checker<String> rule, Interceptor<VerticalEditText, String> callback) {
         VerticalEditText widget = new VerticalEditText(mContext);
         widget.setTitle(label);
         widget.setHint(hint);
-        WidgetHolder<VerticalEditText, String> h = new WidgetHolder<>(
-                widget,
-                new Template.MinLimit(5),
-                callback
-        );
-        mHolders.add(h);
+        add(rule, callback, widget);
+        return this;
+    }
+
+    public Builder addMaterialField(String hint, Checker<String> rule, Interceptor<MaterialField, String> callback) {
+        MaterialField field = new MaterialField(mContext);
+        field.setHint(hint);
+        field.setId(mHolders.size());
+        add(rule, callback, field);
         return this;
     }
 
     public Template build() {
         return new Template(mHolders);
+    }
+
+    private <V extends View & FormWidget<T>, T> void add(Checker<T> rule, Interceptor<V, T> callback, V field) {
+        WidgetHolder<V, T> h = new WidgetHolder<>(field, rule, callback);
+        mHolders.add(h);
     }
 }

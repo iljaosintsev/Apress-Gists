@@ -1,0 +1,55 @@
+package com.turlir.abakgists.template;
+
+import android.content.Context;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
+import android.view.inputmethod.EditorInfo;
+
+import com.turlir.abakgists.R;
+import com.turlir.abakgists.templater.base.FormWidget;
+
+import butterknife.BindDimen;
+import butterknife.ButterKnife;
+
+public class MaterialField extends TextInputLayout implements FormWidget<String> {
+
+    @BindDimen(R.dimen.half_margin)
+    int half;
+
+    public MaterialField(Context context) {
+        super(context);
+        ButterKnife.bind(this);
+
+        setHintEnabled(true);
+        setPadding(0, half, 0, half);
+
+        TextInputEditText et = new TextInputEditText(context);
+        et.setMaxLines(1);
+        et.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+        et.setInputType(EditorInfo.TYPE_CLASS_TEXT);
+        addView(et);
+    }
+
+    @Override
+    public void bind(String origin) {
+        if (getEditText() != null) {
+            boolean tmp = isHintAnimationEnabled();
+            setHintAnimationEnabled(false);
+            getEditText().setText(origin);
+            setHintEnabled(tmp);
+        }
+    }
+
+    @Override
+    public String content() {
+        if (getEditText() != null) {
+            return getEditText().getText().toString();
+        }
+        return null;
+    }
+
+    @Override
+    public void showError(String error) {
+        setError(error);
+    }
+}

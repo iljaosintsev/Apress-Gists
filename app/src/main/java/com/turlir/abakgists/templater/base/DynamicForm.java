@@ -11,7 +11,7 @@ public abstract class DynamicForm<T> implements Form<T> {
 
     private Template mTemplate;
 
-    protected T value;
+    private T value;
 
     public DynamicForm(@NonNull ViewGroup group) {
         mGroup = group;
@@ -20,11 +20,12 @@ public abstract class DynamicForm<T> implements Form<T> {
 
     @Override
     public final void create() {
+        mGroup.removeAllViews();
         mTemplate = createTemplate();
     }
 
     @Override
-    public final void connect() {
+    public /*final*/ void connect() {
         if (mTemplate == null) {
             throw new IllegalStateException("connect() before create()");
         }
