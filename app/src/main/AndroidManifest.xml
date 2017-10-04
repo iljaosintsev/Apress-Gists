@@ -40,6 +40,7 @@
         <activity
             android:name=".template.TemplateActivity"
             android:exported="true"
+            android:theme="@style/WhiteActivityTheme"
             android:label="@string/template">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER"/>

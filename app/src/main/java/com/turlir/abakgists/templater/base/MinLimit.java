@@ -15,6 +15,6 @@ public class MinLimit implements Checker<String> {
 
     @Override
     public String error() {
-        return "Minimum " + (minimum + 1) + " symbol(s)";
+        return "Минимум " + (minimum + 1) + " символ(ов)";
     }
 }

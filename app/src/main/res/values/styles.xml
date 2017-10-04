@@ -13,6 +13,12 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
     </style>
 
+    <style name="WhiteActivityTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
     <style name="TitleTextAppearance" parent="TextAppearance.AppCompat.Caption" />
 
     <style name="FieldTextAppearance" parent="TextAppearance.AppCompat.Subhead" />

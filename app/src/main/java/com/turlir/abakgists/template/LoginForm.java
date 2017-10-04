@@ -5,23 +5,23 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 
-import com.turlir.abakgists.templater.base.Builder;
 import com.turlir.abakgists.templater.base.DynamicForm;
 import com.turlir.abakgists.templater.base.Interceptor;
+import com.turlir.abakgists.templater.base.LoginBuilder;
 import com.turlir.abakgists.templater.base.MinLimit;
 import com.turlir.abakgists.templater.base.NotEmpty;
 import com.turlir.abakgists.templater.base.Template;
 import com.turlir.abakgists.templater.base.TrueCheck;
 
-class SimpleForm extends DynamicForm<EditableProfile> {
+class LoginForm extends DynamicForm<EditableProfile> {
 
-    SimpleForm(ViewGroup group) {
+    LoginForm(ViewGroup group) {
         super(group);
     }
 
     @Override
     protected Template createTemplate() {
-        return new Builder(getContext())
+        return new LoginBuilder(getContext())
                 .addMaterialField("Имя", new NotEmpty(), new Interceptor<MaterialField, String>() {
                     @Override
                     public String bind() {

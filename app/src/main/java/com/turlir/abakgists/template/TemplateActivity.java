@@ -16,7 +16,7 @@ public class TemplateActivity extends BaseActivity {
     @BindView(R.id.template_act_root)
     LinearLayout root;
 
-    private SimpleForm mForm;
+    private LoginForm mForm;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -24,7 +24,7 @@ public class TemplateActivity extends BaseActivity {
         setContentView(R.layout.activity_template);
         ButterKnife.bind(this);
 
-        mForm = new SimpleForm(root);
+        mForm = new LoginForm(root);
         mForm.create();
         mForm.connect();
         EditableProfile profile = new EditableProfile(
