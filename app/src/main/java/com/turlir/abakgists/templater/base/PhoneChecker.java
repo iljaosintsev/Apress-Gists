@@ -1,8 +1,8 @@
 package com.turlir.abakgists.templater.base;
 
-class PhoneChecker extends MinLimit {
+public class PhoneChecker extends MinLimit {
 
-    PhoneChecker() {
+    public PhoneChecker() {
         super(18);
     }
 

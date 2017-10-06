@@ -6,13 +6,18 @@ import android.view.ViewGroup;
 class WidgetHolder<T extends View & FormWidget<V>, V> {
 
     private final T mWidget;
-    private final Interceptor<T, V> mCallback;
+    private Interceptor<T, V> mCallback;
     private final Checker<V> mChecker;
 
     WidgetHolder(T widget, Checker<V> checker, Interceptor<T, V> callback) {
         mWidget= widget;
         mChecker = checker;
         mCallback = callback;
+    }
+
+    WidgetHolder(T field, Checker<V> rule) {
+        mWidget = field;
+        mChecker = rule;
     }
 
     void connect(ViewGroup group) {
@@ -23,6 +28,10 @@ class WidgetHolder<T extends View & FormWidget<V>, V> {
     void bind() {
         V add = mCallback.bind();
         mWidget.bind(add);
+    }
+
+    void setCallback(Interceptor<T, V> value) {
+        mCallback = value;
     }
 
     private V content() {
