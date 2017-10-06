@@ -4,12 +4,14 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
-public class Template {
+public class Template<T>{
 
     private final List<WidgetHolder> mHolders;
+    private final List<Out<T>> mOuts;
 
-    Template(List<WidgetHolder> holders) {
+    Template(List<WidgetHolder> holders, List<Out<T>> outs) {
         mHolders = holders;
+        mOuts = outs;
     }
 
     void connect(ViewGroup group) {
@@ -49,4 +51,14 @@ public class Template {
         return !error;
     }
 
+    void collect(T value) {
+        for (int i = 0; i < mOuts.size(); i++) {
+            Out<T> o = mOuts.get(i);
+            if (o != null) {
+                WidgetHolder h = mHolders.get(i);
+                String tmp = h.value();
+                o.call(tmp, value);
+            }
+        }
+    }
 }

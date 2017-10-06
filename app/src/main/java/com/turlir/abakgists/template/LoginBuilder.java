@@ -7,19 +7,13 @@ import com.turlir.abakgists.templater.base.BaseBuilder;
 import com.turlir.abakgists.templater.base.Checker;
 import com.turlir.abakgists.templater.base.FormWidget;
 import com.turlir.abakgists.templater.base.Interceptor;
+import com.turlir.abakgists.templater.base.Out;
 import com.turlir.abakgists.templater.base.PhoneChecker;
 
-class LoginBuilder extends BaseBuilder {
+class LoginBuilder extends BaseBuilder<EditableProfile> {
 
     LoginBuilder(Context cnt) {
         super(cnt);
-    }
-
-    LoginBuilder addMaterialField(String hint, Checker<String> rule, Interceptor<MaterialField, String> callback) {
-        MaterialField field = new MaterialField(getContext());
-        field.setHint(hint);
-        add(rule, callback, field);
-        return this;
     }
 
     LoginBuilder addMaterialField(String hint, Checker<String> rule) {
@@ -29,15 +23,20 @@ class LoginBuilder extends BaseBuilder {
         return this;
     }
 
-    LoginBuilder addPhone(String hint, Interceptor<MaterialField, String> callback) {
+    LoginBuilder addPhone(String hint) {
         PhoneField field = new PhoneField(getContext());
         field.setHint(hint);
-        add(new PhoneChecker(), callback, field);
+        add(new PhoneChecker(), field);
         return this;
     }
 
-    public <V extends View & FormWidget<T>, T> LoginBuilder context(Interceptor<V, T> callback) {
+    <V extends View & FormWidget<T>, T> LoginBuilder in(Interceptor<V, T> callback) {
         super.interceptor(callback);
+        return this;
+    }
+
+    LoginBuilder out(Out<EditableProfile> o) {
+        super.interceptor(o);
         return this;
     }
 

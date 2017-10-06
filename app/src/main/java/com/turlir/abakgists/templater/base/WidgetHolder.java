@@ -34,6 +34,10 @@ class WidgetHolder<T extends View & FormWidget<V>, V> {
         mCallback = value;
     }
 
+    boolean isCallback() {
+        return mCallback != null;
+    }
+
     private V content() {
         return mWidget.content();
     }
@@ -52,5 +56,9 @@ class WidgetHolder<T extends View & FormWidget<V>, V> {
 
     void hideError() {
         mWidget.showError(null);
+    }
+
+    public String value() {
+        return mWidget.content().toString();
     }
 }

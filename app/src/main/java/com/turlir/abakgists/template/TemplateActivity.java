@@ -42,7 +42,10 @@ public class TemplateActivity extends BaseActivity {
 
     @OnClick(R.id.template_act_btn_save)
     void clickSave() {
-        mForm.verify();
+        boolean verify = mForm.verify();
+        if (verify) {
+            EditableProfile nowProfile = mForm.collect();
+        }
     }
 
 }

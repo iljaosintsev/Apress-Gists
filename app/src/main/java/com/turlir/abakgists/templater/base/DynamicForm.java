@@ -9,7 +9,7 @@ public abstract class DynamicForm<T> implements Form<T> {
     private final ViewGroup mGroup;
     private final Context mContext;
 
-    private Template mTemplate;
+    private Template<T> mTemplate;
 
     private T value;
 
@@ -60,7 +60,14 @@ public abstract class DynamicForm<T> implements Form<T> {
         return value;
     }
 
-    protected abstract Template createTemplate();
+    @NonNull
+    @Override
+    public T collect() {
+        mTemplate.collect(value);
+        return value;
+    }
+
+    protected abstract Template<T> createTemplate();
 
     protected abstract void interact();
 
