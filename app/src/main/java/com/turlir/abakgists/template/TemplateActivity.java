@@ -31,7 +31,7 @@ public class TemplateActivity extends BaseActivity {
                 "Илья",
                 "vk.com/turlir",
                 "Программист",
-                "",
+                "+7 953 820 77-55",
                 "@turlir",
                 "iljaosincev@gmail.com",
                 true,

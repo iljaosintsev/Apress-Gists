@@ -3,6 +3,7 @@ package com.turlir.abakgists.templater.base;
 import android.content.Context;
 
 import com.turlir.abakgists.template.MaterialField;
+import com.turlir.abakgists.template.PhoneField;
 
 public class LoginBuilder extends BaseBuilder {
 
@@ -14,6 +15,13 @@ public class LoginBuilder extends BaseBuilder {
         MaterialField field = new MaterialField(getContext());
         field.setHint(hint);
         add(rule, callback, field);
+        return this;
+    }
+
+    public LoginBuilder addPhone(String hint, Interceptor<MaterialField, String> callback) {
+        PhoneField field = new PhoneField(getContext());
+        field.setHint(hint);
+        add(new PhoneChecker(), callback, field);
         return this;
     }
 

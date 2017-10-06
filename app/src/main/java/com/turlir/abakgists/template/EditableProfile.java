@@ -32,7 +32,9 @@ class EditableProfile {
     }
 
     public String phone() {
-        return contacts; // TODO
+        return contacts
+                .replaceAll("\\D+", "")
+                .replaceFirst("^8", "+7");
     }
 
     public boolean urlCorrect() {
