@@ -34,7 +34,7 @@ class LoginForm extends DynamicForm<EditableProfile> {
                     }
                 })
 
-                .addMaterialField("Должность", new NotEmpty())
+                .addMaterialField("Должность", new TrueCheck<String>())
                 .in(new Interceptor<MaterialField, String>() {
                     @Override
                     public String bind() {

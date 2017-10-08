@@ -13,15 +13,16 @@ import butterknife.ButterKnife;
 
 public class MaterialField extends TextInputLayout implements FormWidget<String> {
 
-    @BindDimen(R.dimen.half_margin)
-    int half;
+    @BindDimen(R.dimen.four_margin)
+    int four;
 
     public MaterialField(Context context) {
         super(context);
         ButterKnife.bind(this);
 
         setHintEnabled(true);
-        setPadding(0, half, 0, half);
+        setPadding(0, four, 0, four);
+        setErrorEnabled(true);
 
         TextInputEditText et = new TextInputEditText(context);
         et.setMaxLines(1);
