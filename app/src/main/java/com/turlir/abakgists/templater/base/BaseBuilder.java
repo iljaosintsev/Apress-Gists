@@ -6,7 +6,7 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BaseBuilder<M> {
+public abstract class BaseBuilder<M> {
 
     private final List<WidgetHolder> mHolders;
     private final List<Out<M>> mOuts;
