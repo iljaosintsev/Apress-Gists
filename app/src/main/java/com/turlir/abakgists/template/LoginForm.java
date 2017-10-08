@@ -42,7 +42,7 @@ class LoginForm extends DynamicForm<EditableProfile> {
                     }
                 })
 
-                .addPhone("Контактный телефон")
+                .addPhone("Контактный телефон", false)
                 .in(new Interceptor<MaterialField, String>() {
                     @Override
                     public String bind() {

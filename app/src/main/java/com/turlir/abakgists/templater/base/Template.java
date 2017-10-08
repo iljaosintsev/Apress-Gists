@@ -10,6 +10,9 @@ public class Template<T>{
     private final List<Out<T>> mOuts;
 
     Template(List<WidgetHolder> holders, List<Out<T>> outs) {
+        if (holders.size() != outs.size()) {
+            throw new IllegalArgumentException();
+        }
         mHolders = holders;
         mOuts = outs;
     }

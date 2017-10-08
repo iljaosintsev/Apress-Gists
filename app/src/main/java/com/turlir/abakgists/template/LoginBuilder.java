@@ -23,10 +23,10 @@ class LoginBuilder extends BaseBuilder<EditableProfile> {
         return this;
     }
 
-    LoginBuilder addPhone(String hint) {
+    LoginBuilder addPhone(String hint, boolean required) {
         PhoneField field = new PhoneField(getContext());
         field.setHint(hint);
-        add(new PhoneChecker(), field);
+        add(new PhoneChecker(required), field);
         return this;
     }
 
