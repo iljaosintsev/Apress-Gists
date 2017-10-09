@@ -37,6 +37,18 @@ public abstract class DynamicForm<T> implements Form<T> {
         interact();
     }
 
+    public final void showError(String tag, String message) {
+        mTemplate.showError(tag, message); // simple proxy, it`s bad ?
+    }
+
+    public final void enabled(String tag, boolean state) {
+        mTemplate.enabled(tag, state);
+    }
+
+    public final void visibility(String tag, int visibility) {
+        mTemplate.visibility(tag, visibility);
+    }
+
     @Override
     public /*final*/ void connect() {
         if (mTemplate == null) {
@@ -67,23 +79,11 @@ public abstract class DynamicForm<T> implements Form<T> {
         return value;
     }
 
-    protected final void showError(String tag, String message) {
-        mTemplate.showError(tag, message); // simple proxy, it`s bad ?
-    }
-
-    protected final void enabled(String tag, boolean state) {
-        mTemplate.enabled(tag, state);
-    }
-
-    protected void visibility(String tag, int visibility) {
-        mTemplate.visibility(tag, visibility);
+    protected final Context getContext() {
+        return mContext;
     }
 
     protected abstract Template<T> createTemplate();
 
     protected abstract void interact();
-
-    protected final Context getContext() {
-        return mContext;
-    }
 }

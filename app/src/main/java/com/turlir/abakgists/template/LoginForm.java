@@ -75,10 +75,6 @@ class LoginForm extends DynamicForm<EditableProfile> {
         // dynamic widget usage
     }
 
-    void phoneError(String msg) { // concrete widget
-        showError("phone", msg);
-    }
-
     /*@Override
     @NonNull
     public EditableProfile collect() {

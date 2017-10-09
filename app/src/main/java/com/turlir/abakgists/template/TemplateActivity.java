@@ -50,7 +50,7 @@ public class TemplateActivity extends BaseActivity {
 
     @OnClick(R.id.template_act_btn_phone_error)
     void clickErrorPhone() {
-        mForm.phoneError("Example target error");
+        mForm.showError("phone", "Example target error");
     }
 
 }
