@@ -19,6 +19,7 @@ public abstract class BaseBuilder<M> {
     }
 
     public Template<M> build() {
+        checkLastHolder();
         return new Template<>(mHolders, mOuts);
     }
 
@@ -49,14 +50,17 @@ public abstract class BaseBuilder<M> {
     }
 
     private void privateAdd(WidgetHolder h) {
+        checkLastHolder();
+        mHolders.add(h);
+        mOuts.add(null);
+    }
+
+    private void checkLastHolder() {
         if (mHolders.size() > 0) {
             WidgetHolder last = mHolders.get(mHolders.size() - 1);
             if (!last.isCallback()) {
                 throw new IllegalStateException();
             }
         }
-        mHolders.add(h);
-
-        mOuts.add(null);
     }
 }

@@ -56,11 +56,11 @@ class LoginForm extends DynamicForm<EditableProfile> {
 
                 .addMaterialField("Дополнительный телефон, ICQ, Skype", new TrueCheck<String>())
                 .in(new Interceptor<MaterialField, String>() {
-                        @Override
-                        public String bind() {
-                            return value().additionalContact;
-                        }
-                    })
+                    @Override
+                    public String bind() {
+                        return value().additionalContact;
+                    }
+                })
                 .out(new Out<EditableProfile>() {
                     @Override
                     public void call(String value, EditableProfile object) {
