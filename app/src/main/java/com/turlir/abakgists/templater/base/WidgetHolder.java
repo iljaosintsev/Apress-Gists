@@ -7,20 +7,23 @@ class WidgetHolder<T extends View & FormWidget<V>, V> {
 
     private final T mWidget;
     private final Checker<V> mChecker;
+    private final String mTag;
     private final int mPosition;
 
     private Interceptor<T, V> mCallback;
 
-    WidgetHolder(T widget, Checker<V> checker, Interceptor<T, V> callback, int position) {
+    WidgetHolder(T widget, Checker<V> checker, Interceptor<T, V> callback, String tag, int position) {
         mWidget= widget;
         mChecker = checker;
         mCallback = callback;
+        mTag = tag;
         mPosition = position;
     }
 
-    WidgetHolder(T field, Checker<V> rule, int position) {
+    WidgetHolder(T field, Checker<V> rule, String tag, int position) {
         mWidget = field;
         mChecker = rule;
+        mTag = tag;
         mPosition = position;
     }
 
@@ -71,5 +74,13 @@ class WidgetHolder<T extends View & FormWidget<V>, V> {
 
     public String value() {
         return mWidget.content().toString();
+    }
+
+    String tag() {
+        return mTag;
+    }
+
+    public void showError(String message) {
+        mWidget.showError(message);
     }
 }

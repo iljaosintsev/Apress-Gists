@@ -65,4 +65,13 @@ public class Template<T>{
             }
         }
     }
+
+    public void showError(String tag, String message) {
+        for (WidgetHolder holder : mHolders) {
+            if (holder.toString() != null && tag.equals(holder.tag())) {
+                holder.showError(message);
+                return;
+            }
+        } // also warning logging
+    }
 }

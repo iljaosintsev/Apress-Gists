@@ -16,17 +16,17 @@ class LoginBuilder extends BaseBuilder<EditableProfile> {
         super(cnt);
     }
 
-    LoginBuilder addMaterialField(String hint, Checker<String> rule) {
+    LoginBuilder addMaterialField(String hint, Checker<String> rule, String tag) {
         MaterialField field = new MaterialField(getContext());
         field.setHint(hint);
-        add(rule, field);
+        add(rule, field, tag);
         return this;
     }
 
-    LoginBuilder addPhone(String hint, boolean required) {
+    LoginBuilder addPhone(String hint, boolean required, String tag) {
         PhoneField field = new PhoneField(getContext());
         field.setHint(hint);
-        add(new PhoneChecker(required), field);
+        add(new PhoneChecker(required), field, tag);
         return this;
     }
 

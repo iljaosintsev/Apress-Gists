@@ -22,10 +22,27 @@
 
     </ScrollView>
 
-    <Button
-        android:id="@+id/template_act_btn_save"
+    <LinearLayout
+        style="?android:attr/buttonBarStyle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/save" />
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/template_act_btn_save"
+            style="@style/Widget.AppCompat.Button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/save" />
+
+        <Button
+            android:id="@+id/template_act_btn_phone_error"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/phone_error" />
+
+    </LinearLayout>
 
 </LinearLayout>

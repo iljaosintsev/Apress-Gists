@@ -23,13 +23,13 @@ public abstract class BaseBuilder<M> {
         return new Template<>(mHolders, mOuts);
     }
 
-    protected <V extends View & FormWidget<T>, T> void add(Checker<T> rule, Interceptor<V, T> callback, V field) {
-        WidgetHolder<V, T> h = new WidgetHolder<>(field, rule, callback, mHolders.size());
+    protected <V extends View & FormWidget<T>, T> void add(Checker<T> rule, Interceptor<V, T> callback, V field, String tag) {
+        WidgetHolder<V, T> h = new WidgetHolder<>(field, rule, callback, tag, mHolders.size());
         privateAdd(h);
     }
 
-    protected <V extends View & FormWidget<T>, T> void add(Checker<T> rule, V field) {
-        WidgetHolder<V, T> h = new WidgetHolder<>(field, rule, mHolders.size());
+    protected <V extends View & FormWidget<T>, T> void add(Checker<T> rule, V field, String tag) {
+        WidgetHolder<V, T> h = new WidgetHolder<>(field, rule, tag, mHolders.size());
         privateAdd(h);
     }
 

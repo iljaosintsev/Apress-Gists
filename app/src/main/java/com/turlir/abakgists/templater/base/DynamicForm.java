@@ -67,6 +67,10 @@ public abstract class DynamicForm<T> implements Form<T> {
         return value;
     }
 
+    protected final void showError(String tag, String message) {
+        mTemplate.showError(tag, message); // simple proxy, it`s bad ?
+    }
+
     protected abstract Template<T> createTemplate();
 
     protected abstract void interact();

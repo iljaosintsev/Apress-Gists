@@ -18,7 +18,7 @@ class LoginForm extends DynamicForm<EditableProfile> {
     @Override
     protected Template<EditableProfile> createTemplate() {
         return new LoginBuilder(getContext())
-                .addMaterialField("Имя", new NotEmpty())
+                .addMaterialField("Имя", new NotEmpty(), "name")
                 .in(new Interceptor<MaterialField, String>() {
                     @Override
                     public String bind() {
@@ -32,7 +32,7 @@ class LoginForm extends DynamicForm<EditableProfile> {
                     }
                 })
 
-                .addMaterialField("Должность", new TrueCheck<String>())
+                .addMaterialField("Должность", new TrueCheck<String>(), "position")
                 .in(new Interceptor<MaterialField, String>() {
                     @Override
                     public String bind() {
@@ -40,7 +40,7 @@ class LoginForm extends DynamicForm<EditableProfile> {
                     }
                 })
 
-                .addPhone("Контактный телефон", false)
+                .addPhone("Контактный телефон", false, "phone")
                 .in(new Interceptor<MaterialField, String>() {
                     @Override
                     public String bind() {
@@ -54,7 +54,7 @@ class LoginForm extends DynamicForm<EditableProfile> {
                     }
                 })
 
-                .addMaterialField("Дополнительный телефон, ICQ, Skype", new TrueCheck<String>())
+                .addMaterialField("Дополнительный телефон, ICQ, Skype", new TrueCheck<String>(), "additional")
                 .in(new Interceptor<MaterialField, String>() {
                     @Override
                     public String bind() {
@@ -73,6 +73,10 @@ class LoginForm extends DynamicForm<EditableProfile> {
     @Override
     protected void interact() {
         // dynamic widget usage
+    }
+
+    void phoneError(String msg) { // concrete widget
+        showError("phone", msg);
     }
 
     /*@Override
