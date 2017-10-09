@@ -54,4 +54,9 @@ public class VerticalEditText extends LinearLayout implements FormWidget<String>
     public void showError(String msg) {
         error.setText(msg);
     }
+
+    @Override
+    public void position(@Position int position) {
+        //
+    }
 }

@@ -55,4 +55,9 @@ public class LabeledEditText extends LinearLayout implements FormWidget<String> 
         error.setText(msg);
     }
 
+    @Override
+    public void position(@Position int position) {
+        //
+    }
+
 }

@@ -26,7 +26,6 @@ public class MaterialField extends TextInputLayout implements FormWidget<String>
 
         TextInputEditText et = new TextInputEditText(context);
         et.setMaxLines(1);
-        et.setImeOptions(EditorInfo.IME_ACTION_NEXT);
         et.setInputType(EditorInfo.TYPE_CLASS_TEXT);
         addView(et);
     }
@@ -52,5 +51,19 @@ public class MaterialField extends TextInputLayout implements FormWidget<String>
     @Override
     public void showError(String error) {
         setError(error);
+    }
+
+    @Override
+    public void position(@Position int position) {
+        if (getEditText() == null) return;
+        switch (position) {
+            case FIRST:
+            case MIDDLE:
+                getEditText().setImeOptions(EditorInfo.IME_ACTION_NEXT);
+                break;
+            case LAST:
+                getEditText().setImeOptions(EditorInfo.IME_ACTION_DONE);
+                break;
+        }
     }
 }

@@ -1,8 +1,6 @@
 package com.turlir.abakgists.template;
 
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
 
 import com.turlir.abakgists.templater.base.DynamicForm;
 import com.turlir.abakgists.templater.base.Interceptor;
@@ -62,16 +60,7 @@ class LoginForm extends DynamicForm<EditableProfile> {
                         public String bind() {
                             return value().additionalContact;
                         }
-
-                        @Override
-                        public void add(MaterialField view) {
-                            EditText et = view.getEditText();
-                            if (et != null) {
-                                et.setImeOptions(EditorInfo.IME_ACTION_DONE);
-                            }
-                        }
-                    }
-                )
+                    })
                 .out(new Out<EditableProfile>() {
                     @Override
                     public void call(String value, EditableProfile object) {

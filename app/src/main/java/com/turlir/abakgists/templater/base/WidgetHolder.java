@@ -20,8 +20,15 @@ class WidgetHolder<T extends View & FormWidget<V>, V> {
         mChecker = rule;
     }
 
-    void connect(ViewGroup group) {
+    void connect(ViewGroup group, int position, int size) {
         group.addView(mWidget);
+        if (position == 0) {
+            mWidget.position(FormWidget.FIRST);
+        } else if (position == size) {
+            mWidget.position(FormWidget.MIDDLE);
+        } else {
+            mWidget.position(FormWidget.LAST);
+        }
         mCallback.add(mWidget);
     }
 

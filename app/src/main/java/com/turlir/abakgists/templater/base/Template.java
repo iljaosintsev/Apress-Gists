@@ -18,8 +18,9 @@ public class Template<T>{
     }
 
     void connect(ViewGroup group) {
-        for (WidgetHolder holder : mHolders) {
-            holder.connect(group);
+        for (int i = 0, size = mHolders.size(); i < size; i++) {
+            WidgetHolder holder = mHolders.get(i);
+            holder.connect(group, i, size);
         }
     }
 
