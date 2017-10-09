@@ -25,14 +25,6 @@ public abstract class DynamicForm<T> implements Form<T> {
     }
 
     @Override
-    public /*final*/ void connect() {
-        if (mTemplate == null) {
-            throw new IllegalStateException("connect() before create()");
-        }
-        mTemplate.connect(mGroup);
-    }
-
-    @Override
     public final void bind(@NonNull T value) {
         if (mTemplate == null) {
             throw new IllegalStateException("bind() before create()");
@@ -46,6 +38,14 @@ public abstract class DynamicForm<T> implements Form<T> {
     }
 
     @Override
+    public /*final*/ void connect() {
+        if (mTemplate == null) {
+            throw new IllegalStateException("connect() before create()");
+        }
+        mTemplate.connect(mGroup);
+    }
+
+    @Override
     public boolean verify() {
         if (mTemplate == null) {
             throw new IllegalStateException("verify() before create()");
@@ -53,17 +53,17 @@ public abstract class DynamicForm<T> implements Form<T> {
         return mTemplate.verify();
     }
 
-    protected final T value() {
-        if (value == null) {
-            throw new IllegalStateException();
-        }
-        return value;
-    }
-
     @NonNull
     @Override
     public T collect() {
         mTemplate.collect(value);
+        return value;
+    }
+
+    protected final T value() {
+        if (value == null) {
+            throw new IllegalStateException();
+        }
         return value;
     }
 
