@@ -17,6 +17,12 @@ public interface FormWidget<T> {
 
     void position(@Position int position);
 
+    //
+
+    void setEnabled(boolean state);
+
+    void setVisibility(int visibility);
+
     @IntDef(flag=true, value={
             FIRST,
             MIDDLE,

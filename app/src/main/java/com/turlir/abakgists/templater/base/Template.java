@@ -1,5 +1,6 @@
 package com.turlir.abakgists.templater.base;
 
+import android.support.annotation.Nullable;
 import android.view.ViewGroup;
 
 import java.util.List;
@@ -66,12 +67,34 @@ public class Template<T>{
         }
     }
 
-    public void showError(String tag, String message) {
+    void showError(String tag, String message) {
+        WidgetHolder holder = findHolder(tag);
+        if (holder != null) {
+            holder.showError(message);
+        }
+    }
+
+    void enabled(String tag, boolean state) {
+        WidgetHolder holder = findHolder(tag);
+        if (holder != null) {
+            holder.enabled(state);
+        }
+    }
+
+    void visibility(String tag, int visibility) {
+        WidgetHolder holder = findHolder(tag);
+        if (holder != null) {
+            holder.visibility(visibility);
+        }
+    }
+
+    @Nullable
+    private WidgetHolder findHolder(String tag) {
         for (WidgetHolder holder : mHolders) {
             if (holder.toString() != null && tag.equals(holder.tag())) {
-                holder.showError(message);
-                return;
+                return holder;
             }
-        } // also warning logging
+        }
+        return null; // also warning logging
     }
 }

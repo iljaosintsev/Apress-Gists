@@ -83,4 +83,12 @@ class WidgetHolder<T extends View & FormWidget<V>, V> {
     public void showError(String message) {
         mWidget.showError(message);
     }
+
+    void enabled(boolean state) {
+        mWidget.setEnabled(state);
+    }
+
+    void visibility(int visibility) {
+        mWidget.setVisibility(visibility);
+    }
 }

@@ -36,6 +36,8 @@ public abstract class BaseBuilder<M> {
     protected final void interceptor(Out<M> o) {
         if (mHolders.size() > 0) {
             mOuts.set(mHolders.size() - 1, o);
+        } else {
+            throw new IllegalStateException();
         }
     }
 
