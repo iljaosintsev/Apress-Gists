@@ -45,6 +45,10 @@ public abstract class DynamicForm<T> implements Form<T> {
         mTemplate.enabled(tag, state);
     }
 
+    public final void enabledAll(boolean state) {
+        mTemplate.enabledAll(state);
+    }
+
     public final void visibility(String tag, int visibility) {
         mTemplate.visibility(tag, visibility);
     }

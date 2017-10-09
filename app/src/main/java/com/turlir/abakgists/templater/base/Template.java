@@ -81,6 +81,12 @@ public class Template<T>{
         }
     }
 
+    void enabledAll(boolean state) {
+        for (WidgetHolder holder : mHolders) {
+            holder.enabled(state);
+        }
+    }
+
     void visibility(String tag, int visibility) {
         WidgetHolder holder = findHolder(tag);
         if (holder != null) {
