@@ -23,12 +23,12 @@ public abstract class BaseBuilder<M> {
     }
 
     protected <V extends View & FormWidget<T>, T> void add(Checker<T> rule, Interceptor<V, T> callback, V field) {
-        WidgetHolder<V, T> h = new WidgetHolder<>(field, rule, callback);
+        WidgetHolder<V, T> h = new WidgetHolder<>(field, rule, callback, mHolders.size());
         privateAdd(h);
     }
 
     protected <V extends View & FormWidget<T>, T> void add(Checker<T> rule, V field) {
-        WidgetHolder<V, T> h = new WidgetHolder<>(field, rule);
+        WidgetHolder<V, T> h = new WidgetHolder<>(field, rule, mHolders.size());
         privateAdd(h);
     }
 

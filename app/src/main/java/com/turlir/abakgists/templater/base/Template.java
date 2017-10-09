@@ -10,7 +10,7 @@ public class Template<T>{
     private final List<Out<T>> mOuts;
 
     Template(List<WidgetHolder> holders, List<Out<T>> outs) {
-        if (holders.size() != outs.size()) {
+        if (holders.size() != outs.size() || holders.size() < 1) {
             throw new IllegalArgumentException();
         }
         mHolders = holders;
@@ -20,7 +20,7 @@ public class Template<T>{
     void connect(ViewGroup group) {
         for (int i = 0, size = mHolders.size(); i < size; i++) {
             WidgetHolder holder = mHolders.get(i);
-            holder.connect(group, i, size);
+            holder.connect(group, size - 1);
         }
     }
 

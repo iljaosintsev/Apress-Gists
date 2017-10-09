@@ -6,25 +6,29 @@ import android.view.ViewGroup;
 class WidgetHolder<T extends View & FormWidget<V>, V> {
 
     private final T mWidget;
-    private Interceptor<T, V> mCallback;
     private final Checker<V> mChecker;
+    private final int mPosition;
 
-    WidgetHolder(T widget, Checker<V> checker, Interceptor<T, V> callback) {
+    private Interceptor<T, V> mCallback;
+
+    WidgetHolder(T widget, Checker<V> checker, Interceptor<T, V> callback, int position) {
         mWidget= widget;
         mChecker = checker;
         mCallback = callback;
+        mPosition = position;
     }
 
-    WidgetHolder(T field, Checker<V> rule) {
+    WidgetHolder(T field, Checker<V> rule, int position) {
         mWidget = field;
         mChecker = rule;
+        mPosition = position;
     }
 
-    void connect(ViewGroup group, int position, int size) {
+    void connect(ViewGroup group, int size) {
         group.addView(mWidget);
-        if (position == 0) {
+        if (mPosition == 0) {
             mWidget.position(FormWidget.FIRST);
-        } else if (position == size) {
+        } else if (mPosition < size) {
             mWidget.position(FormWidget.MIDDLE);
         } else {
             mWidget.position(FormWidget.LAST);
