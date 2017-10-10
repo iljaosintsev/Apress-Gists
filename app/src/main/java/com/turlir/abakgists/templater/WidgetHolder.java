@@ -1,7 +1,11 @@
-package com.turlir.abakgists.templater.base;
+package com.turlir.abakgists.templater;
 
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.turlir.abakgists.templater.base.Interceptor;
+import com.turlir.abakgists.templater.check.Checker;
+import com.turlir.abakgists.templater.widget.FormWidget;
 
 class WidgetHolder<T extends View & FormWidget<V>, V> {
 
@@ -25,6 +29,14 @@ class WidgetHolder<T extends View & FormWidget<V>, V> {
         mChecker = rule;
         mTag = tag;
         mPosition = position;
+    }
+
+    public String value() {
+        return mWidget.content().toString();
+    }
+
+    public void showError(String message) {
+        mWidget.showError(message);
     }
 
     void connect(ViewGroup group, int size) {
@@ -72,16 +84,8 @@ class WidgetHolder<T extends View & FormWidget<V>, V> {
         mWidget.showError(null);
     }
 
-    public String value() {
-        return mWidget.content().toString();
-    }
-
     String tag() {
         return mTag;
-    }
-
-    public void showError(String message) {
-        mWidget.showError(message);
     }
 
     void enabled(boolean state) {

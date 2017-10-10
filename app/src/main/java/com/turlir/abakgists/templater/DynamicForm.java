@@ -1,8 +1,10 @@
-package com.turlir.abakgists.templater.base;
+package com.turlir.abakgists.templater;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.ViewGroup;
+
+import com.turlir.abakgists.templater.base.Form;
 
 public abstract class DynamicForm<T> implements Form<T> {
 

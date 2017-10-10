@@ -1,4 +1,4 @@
-package com.turlir.abakgists.templater.base;
+package com.turlir.abakgists.templater.widget;
 
 import android.support.annotation.IntDef;
 

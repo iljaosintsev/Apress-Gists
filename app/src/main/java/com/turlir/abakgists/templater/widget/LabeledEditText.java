@@ -1,4 +1,4 @@
-package com.turlir.abakgists.template;
+package com.turlir.abakgists.templater.widget;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,12 +8,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.turlir.abakgists.R;
-import com.turlir.abakgists.templater.base.FormWidget;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class VerticalEditText extends LinearLayout implements FormWidget<String> {
+public class LabeledEditText extends LinearLayout implements FormWidget<String> {
 
     @BindView(R.id.templ_labeled_et_tv)
     TextView tv;
@@ -24,11 +23,11 @@ public class VerticalEditText extends LinearLayout implements FormWidget<String>
     @BindView(R.id.templ_labeled_error)
     TextView error;
 
-    public VerticalEditText(Context context) {
+    public LabeledEditText(Context context) {
         super(context);
 
         LayoutInflater inf = LayoutInflater.from(context);
-        View root = inf.inflate(R.layout.templ_vertical_edit_text, this, true);
+        View root = inf.inflate(R.layout.templ_labeled_edit_text, this, true);
         ButterKnife.bind(this, root);
     }
 
@@ -59,4 +58,5 @@ public class VerticalEditText extends LinearLayout implements FormWidget<String>
     public void position(@Position int position) {
         //
     }
+
 }

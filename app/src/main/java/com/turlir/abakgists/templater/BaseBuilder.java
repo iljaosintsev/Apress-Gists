@@ -1,7 +1,12 @@
-package com.turlir.abakgists.templater.base;
+package com.turlir.abakgists.templater;
 
 import android.content.Context;
 import android.view.View;
+
+import com.turlir.abakgists.templater.base.Interceptor;
+import com.turlir.abakgists.templater.base.Out;
+import com.turlir.abakgists.templater.check.Checker;
+import com.turlir.abakgists.templater.widget.FormWidget;
 
 import java.util.ArrayList;
 import java.util.List;

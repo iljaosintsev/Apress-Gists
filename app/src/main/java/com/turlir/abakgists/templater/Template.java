@@ -1,7 +1,9 @@
-package com.turlir.abakgists.templater.base;
+package com.turlir.abakgists.templater;
 
 import android.support.annotation.Nullable;
 import android.view.ViewGroup;
+
+import com.turlir.abakgists.templater.base.Out;
 
 import java.util.List;
 

@@ -2,7 +2,7 @@ package com.turlir.abakgists.templater.base;
 
 import android.support.annotation.NonNull;
 
-interface Form<T> {
+public interface Form<T> {
 
     void create();
 

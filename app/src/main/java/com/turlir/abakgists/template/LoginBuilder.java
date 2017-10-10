@@ -3,12 +3,14 @@ package com.turlir.abakgists.template;
 import android.content.Context;
 import android.view.View;
 
-import com.turlir.abakgists.templater.base.BaseBuilder;
-import com.turlir.abakgists.templater.base.Checker;
-import com.turlir.abakgists.templater.base.FormWidget;
+import com.turlir.abakgists.templater.BaseBuilder;
 import com.turlir.abakgists.templater.base.Interceptor;
 import com.turlir.abakgists.templater.base.Out;
-import com.turlir.abakgists.templater.base.PhoneChecker;
+import com.turlir.abakgists.templater.check.Checker;
+import com.turlir.abakgists.templater.check.PhoneChecker;
+import com.turlir.abakgists.templater.widget.FormWidget;
+import com.turlir.abakgists.templater.widget.MaterialField;
+import com.turlir.abakgists.templater.widget.PhoneField;
 
 class LoginBuilder extends BaseBuilder<EditableProfile> {
 

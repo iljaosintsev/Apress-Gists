@@ -2,12 +2,13 @@ package com.turlir.abakgists.template;
 
 import android.view.ViewGroup;
 
-import com.turlir.abakgists.templater.base.DynamicForm;
+import com.turlir.abakgists.templater.DynamicForm;
+import com.turlir.abakgists.templater.Template;
 import com.turlir.abakgists.templater.base.Interceptor;
-import com.turlir.abakgists.templater.base.NotEmpty;
 import com.turlir.abakgists.templater.base.Out;
-import com.turlir.abakgists.templater.base.Template;
-import com.turlir.abakgists.templater.base.TrueCheck;
+import com.turlir.abakgists.templater.check.NotEmpty;
+import com.turlir.abakgists.templater.check.TrueCheck;
+import com.turlir.abakgists.templater.widget.MaterialField;
 
 class LoginForm extends DynamicForm<EditableProfile> {
 

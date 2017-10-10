@@ -1,4 +1,4 @@
-package com.turlir.abakgists.templater.base;
+package com.turlir.abakgists.templater.check;
 
 public interface Checker<V> {
 

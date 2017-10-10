@@ -1,4 +1,4 @@
-package com.turlir.abakgists.template;
+package com.turlir.abakgists.templater.widget;
 
 import android.content.Context;
 import android.support.design.widget.TextInputEditText;
@@ -6,7 +6,6 @@ import android.support.design.widget.TextInputLayout;
 import android.view.inputmethod.EditorInfo;
 
 import com.turlir.abakgists.R;
-import com.turlir.abakgists.templater.base.FormWidget;
 
 import butterknife.BindDimen;
 import butterknife.ButterKnife;

@@ -1,4 +1,4 @@
-package com.turlir.abakgists.template;
+package com.turlir.abakgists.templater.widget;
 
 import android.content.Context;
 import android.view.inputmethod.EditorInfo;
