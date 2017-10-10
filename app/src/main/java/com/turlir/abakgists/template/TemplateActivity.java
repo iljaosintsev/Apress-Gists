@@ -2,6 +2,7 @@ package com.turlir.abakgists.template;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.widget.LinearLayout;
 
 import com.turlir.abakgists.R;
@@ -45,6 +46,12 @@ public class TemplateActivity extends BaseActivity {
         boolean verify = mForm.verify();
         if (verify) {
             EditableProfile nowProfile = mForm.collect();
+            new AlertDialog.Builder(this)
+                    .setTitle("Profile")
+                    .setMessage(nowProfile.toString())
+                    .setNeutralButton(android.R.string.ok, null)
+                    .create()
+                    .show();
         }
     }
 

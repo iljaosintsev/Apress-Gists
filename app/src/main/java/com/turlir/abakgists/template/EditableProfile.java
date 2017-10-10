@@ -16,7 +16,7 @@ class EditableProfile {
     final boolean showEmail;
 
     EditableProfile(String name, @Nullable String url, String position, String contacts, String additionalContact,
-                           @Nullable String regEmail, boolean showEmail, @Nullable String regPhone) {
+                            @Nullable String regEmail, boolean showEmail, @Nullable String regPhone) {
         this.name = name;
         this.url = url;
         this.position = position;
@@ -25,6 +25,19 @@ class EditableProfile {
         this.regEmail = regEmail;
         this.regPhone = regPhone;
         this.showEmail = showEmail;
+    }
+
+    EditableProfile clone(String name, String position, String phone, String additionalContact) {
+        return new EditableProfile(
+                name,
+                url,
+                position,
+                phone,
+                additionalContact,
+                regEmail,
+                showEmail,
+                regPhone
+        );
     }
 
     public String letter() {
@@ -41,4 +54,13 @@ class EditableProfile {
         return url != null && url.trim().length() > 0;
     }
 
+    @Override
+    public String toString() {
+        return "EditableProfile { \n" +
+               "    name = " + name + ",\n" +
+               "    position = " + position + ",\n" +
+               "    contacts = " + contacts + ",\n" +
+               "    additionalContact = " + additionalContact + '\n' +
+               '}';
+    }
 }

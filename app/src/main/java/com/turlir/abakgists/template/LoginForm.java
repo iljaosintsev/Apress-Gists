@@ -1,16 +1,18 @@
 package com.turlir.abakgists.template;
 
+import android.support.annotation.NonNull;
 import android.view.ViewGroup;
 
 import com.turlir.abakgists.templater.DynamicForm;
 import com.turlir.abakgists.templater.Template;
 import com.turlir.abakgists.templater.base.Interceptor;
-import com.turlir.abakgists.templater.base.Out;
 import com.turlir.abakgists.templater.check.NotEmpty;
 import com.turlir.abakgists.templater.check.TrueCheck;
 import com.turlir.abakgists.templater.widget.MaterialField;
 
 class LoginForm extends DynamicForm<EditableProfile> {
+
+    private MaterialField mName, mPosition, mPhone, mAdd;
 
     LoginForm(ViewGroup group) {
         super(group);
@@ -25,11 +27,10 @@ class LoginForm extends DynamicForm<EditableProfile> {
                     public String bind() {
                         return value().name;
                     }
-                })
-                .out(new Out<EditableProfile>() {
+
                     @Override
-                    public void call(String value, EditableProfile object) {
-                        int l = value.length();
+                    public void add(MaterialField view) {
+                        mName = view;
                     }
                 })
 
@@ -39,6 +40,11 @@ class LoginForm extends DynamicForm<EditableProfile> {
                     public String bind() {
                         return value().position;
                     }
+
+                    @Override
+                    public void add(MaterialField view) {
+                        mPosition = view;
+                    }
                 })
 
                 .addPhone("Контактный телефон", false, "phone")
@@ -47,11 +53,10 @@ class LoginForm extends DynamicForm<EditableProfile> {
                     public String bind() {
                         return value().phone();
                     }
-                })
-                .out(new Out<EditableProfile>() {
+
                     @Override
-                    public void call(String value, EditableProfile object) {
-                        int l = value.length();
+                    public void add(MaterialField view) {
+                        mPhone = view;
                     }
                 })
 
@@ -65,12 +70,7 @@ class LoginForm extends DynamicForm<EditableProfile> {
                     @Override
                     public void add(MaterialField view) {
                         view.setOnEditorActionListener(doneVerifierListener());
-                    }
-                })
-                .out(new Out<EditableProfile>() {
-                    @Override
-                    public void call(String value, EditableProfile object) {
-                        int l = value.length();
+                        mAdd = view;
                     }
                 })
                 .build();
@@ -81,10 +81,15 @@ class LoginForm extends DynamicForm<EditableProfile> {
         // dynamic widget usage
     }
 
-    /*@Override
+    @Override
     @NonNull
     public EditableProfile collect() {
-        return value();
-    }*/
+        return value().clone(
+                mName.content(),
+                mPosition.content(),
+                mPhone.content(),
+                mAdd.content()
+        );
+    }
 
 }
