@@ -1,18 +1,14 @@
 package com.turlir.abakgists.template;
 
 import android.content.Context;
-import android.view.View;
 
 import com.turlir.abakgists.templater.BaseBuilder;
-import com.turlir.abakgists.templater.base.Interceptor;
-import com.turlir.abakgists.templater.base.Out;
 import com.turlir.abakgists.templater.check.Checker;
 import com.turlir.abakgists.templater.check.PhoneChecker;
-import com.turlir.abakgists.templater.widget.FormWidget;
 import com.turlir.abakgists.templater.widget.MaterialField;
 import com.turlir.abakgists.templater.widget.PhoneField;
 
-class LoginBuilder extends BaseBuilder<EditableProfile> {
+class LoginBuilder extends BaseBuilder<EditableProfile, LoginBuilder> {
 
     LoginBuilder(Context cnt) {
         super(cnt);
@@ -32,13 +28,8 @@ class LoginBuilder extends BaseBuilder<EditableProfile> {
         return this;
     }
 
-    <V extends View & FormWidget<T>, T> LoginBuilder in(Interceptor<V, T> callback) {
-        super.interceptor(callback);
-        return this;
-    }
-
-    LoginBuilder out(Out<EditableProfile> o) {
-        super.interceptor(o);
+    @Override
+    protected LoginBuilder getThis() {
         return this;
     }
 
