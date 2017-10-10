@@ -41,12 +41,18 @@ public abstract class DynamicForm<T> implements Form<T> {
 
     @Override
     public final void showError(String tag, String message) {
-        mTemplate.showError(tag, message); // simple proxy, it`s bad ?
+        WidgetHolder h = mTemplate.findHolder(tag);
+        if (h != null) {
+            h.showError(message);
+        }
     }
 
     @Override
     public final void enabled(String tag, boolean state) {
-        mTemplate.enabled(tag, state);
+        WidgetHolder h = mTemplate.findHolder(tag);
+        if (h != null) {
+            h.enabled(state);
+        }
     }
 
     @Override
@@ -56,7 +62,10 @@ public abstract class DynamicForm<T> implements Form<T> {
 
     @Override
     public final void visibility(String tag, int visibility) {
-        mTemplate.visibility(tag, visibility);
+        WidgetHolder h = mTemplate.findHolder(tag);
+        if (h != null) {
+            h.visibility(visibility);
+        }
     }
 
     @Override
@@ -82,6 +91,10 @@ public abstract class DynamicForm<T> implements Form<T> {
         return value;
     }
 
+    protected abstract Template<T> createTemplate();
+
+    protected abstract void interact();
+
     protected final T value() {
         if (value == null) {
             throw new IllegalStateException();
@@ -92,8 +105,4 @@ public abstract class DynamicForm<T> implements Form<T> {
     protected final Context getContext() {
         return mContext;
     }
-
-    protected abstract Template<T> createTemplate();
-
-    protected abstract void interact();
 }

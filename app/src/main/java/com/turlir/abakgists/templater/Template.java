@@ -69,35 +69,14 @@ public class Template<T>{
         }
     }
 
-    void showError(String tag, String message) {
-        WidgetHolder holder = findHolder(tag);
-        if (holder != null) {
-            holder.showError(message);
-        }
-    }
-
-    void enabled(String tag, boolean state) {
-        WidgetHolder holder = findHolder(tag);
-        if (holder != null) {
-            holder.enabled(state);
-        }
-    }
-
     void enabledAll(boolean state) {
         for (WidgetHolder holder : mHolders) {
             holder.enabled(state);
         }
     }
 
-    void visibility(String tag, int visibility) {
-        WidgetHolder holder = findHolder(tag);
-        if (holder != null) {
-            holder.visibility(visibility);
-        }
-    }
-
     @Nullable
-    private WidgetHolder findHolder(String tag) {
+    WidgetHolder findHolder(String tag) {
         for (WidgetHolder holder : mHolders) {
             if (holder.toString() != null && tag.equals(holder.tag())) {
                 return holder;
