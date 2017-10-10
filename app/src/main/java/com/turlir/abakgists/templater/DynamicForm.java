@@ -39,18 +39,22 @@ public abstract class DynamicForm<T> implements Form<T> {
         interact();
     }
 
+    @Override
     public final void showError(String tag, String message) {
         mTemplate.showError(tag, message); // simple proxy, it`s bad ?
     }
 
+    @Override
     public final void enabled(String tag, boolean state) {
         mTemplate.enabled(tag, state);
     }
 
+    @Override
     public final void enabledAll(boolean state) {
         mTemplate.enabledAll(state);
     }
 
+    @Override
     public final void visibility(String tag, int visibility) {
         mTemplate.visibility(tag, visibility);
     }

@@ -14,4 +14,14 @@ public interface Form<T> {
 
     @NonNull T collect();
 
+    ////
+
+    void showError(String tag, String message);
+
+    void enabled(String tag, boolean state);
+
+    void enabledAll(boolean state);
+
+    void visibility(String tag, int visibility);
+
 }
