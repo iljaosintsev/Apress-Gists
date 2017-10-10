@@ -61,6 +61,11 @@ class LoginForm extends DynamicForm<EditableProfile> {
                     public String bind() {
                         return value().additionalContact;
                     }
+
+                    @Override
+                    public void add(MaterialField view) {
+                        view.setOnEditorActionListener(doneVerifierListener());
+                    }
                 })
                 .out(new Out<EditableProfile>() {
                     @Override

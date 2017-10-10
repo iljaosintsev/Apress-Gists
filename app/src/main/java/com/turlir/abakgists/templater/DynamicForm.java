@@ -2,7 +2,10 @@ package com.turlir.abakgists.templater;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.view.KeyEvent;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.TextView;
 
 import com.turlir.abakgists.templater.base.Form;
 
@@ -92,6 +95,18 @@ public abstract class DynamicForm<T> implements Form<T> {
     }
 
     protected abstract Template<T> createTemplate();
+
+    protected TextView.OnEditorActionListener doneVerifierListener() {
+        return new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+                if (id == EditorInfo.IME_ACTION_DONE) {
+                    verify();
+                }
+                return false;
+            }
+        };
+    }
 
     protected abstract void interact();
 

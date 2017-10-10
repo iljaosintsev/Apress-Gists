@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.view.inputmethod.EditorInfo;
+import android.widget.TextView;
 
 import com.turlir.abakgists.R;
 
@@ -63,6 +64,12 @@ public class MaterialField extends TextInputLayout implements FormWidget<String>
             case LAST:
                 getEditText().setImeOptions(EditorInfo.IME_ACTION_DONE);
                 break;
+        }
+    }
+
+    public void setOnEditorActionListener(TextView.OnEditorActionListener listener) {
+        if (getEditText() != null) {
+            getEditText().setOnEditorActionListener(listener);
         }
     }
 }
