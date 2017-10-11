@@ -5,7 +5,7 @@
     android:id="@+id/all_gist_switch"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:init="content"
+    app:init="loading"
     tools:context=".allgists.view.AllGistsFragment">
 
     <android.support.v4.widget.SwipeRefreshLayout

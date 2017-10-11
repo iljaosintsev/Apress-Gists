@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -42,8 +41,6 @@ import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 public class AllGistsFragment
         extends BaseFragment
         implements OnClickListener, SimpleScrollListener.Paginator, ErrorInterpreter {
-
-    private static final String SCROLL_STATE = "SCROLL_STATE";
 
     private static final int MIN_COUNT = 2;
 
@@ -101,8 +98,7 @@ public class AllGistsFragment
                 DividerDecorator.TOP_DIVIDER
         );
         recycler.addItemDecoration(divider);
-        SpaceDecorator space = new SpaceDecorator(cnt, R.dimen.activity_horizontal_margin,
-                R.dimen.half_margin);
+        SpaceDecorator space = new SpaceDecorator(cnt, R.dimen.activity_horizontal_margin, R.dimen.half_margin);
         recycler.addItemDecoration(space);
 
         RecyclerView.OnScrollListener scroller = new SimpleScrollListener(this);
@@ -128,8 +124,6 @@ public class AllGistsFragment
         super.onViewCreated(view, savedInstanceState);
         if (savedInstanceState != null) {
             _presenter.again();
-            Parcelable s = savedInstanceState.getParcelable(SCROLL_STATE);
-            recycler.getLayoutManager().onRestoreInstanceState(s);
         } else {
             _presenter.first();
         }
@@ -140,12 +134,6 @@ public class AllGistsFragment
         recycler.clearOnScrollListeners();
         swipe.setOnRefreshListener(null);
         super.onDestroyView();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelable(SCROLL_STATE, recycler.getLayoutManager().onSaveInstanceState());
     }
 
     @Override
