@@ -48,12 +48,14 @@ public abstract class TokenizeLayout extends FrameLayout
      * @param index индекс потомка
      * @return принадлежит ли токен указанному потомку
      */
+    @Override
     public abstract boolean doesViewToToken(int token, int index);
 
     /**
      * @param token токен потомка
      * @return индекс потомка, имеющего этот токен или {@link #INVALID_INDEX}
      */
+    @Override
     public abstract int getChildIndexByToken(int token);
 
     /**
@@ -176,7 +178,7 @@ public abstract class TokenizeLayout extends FrameLayout
 
             TypedArray ta = c.obtainStyledAttributes(attrs, R.styleable.TokenizeLayout_Layout, 0, 0);
             try {
-                mHided = ta.getInteger(R.styleable.TokenizeLayout_Layout_hided, View.INVISIBLE); // default
+                mHided = ta.getInteger(R.styleable.TokenizeLayout_Layout_layout_hided, View.INVISIBLE); // default
             } finally {
                 ta.recycle();
             }
@@ -193,10 +195,12 @@ public abstract class TokenizeLayout extends FrameLayout
         public static final Parcelable.Creator<TokenizeLayoutState> CREATOR
                 = new Parcelable.Creator<TokenizeLayoutState>() {
 
+            @Override
             public TokenizeLayoutState createFromParcel(Parcel in) {
                 return new TokenizeLayoutState(in);
             }
 
+            @Override
             public TokenizeLayoutState[] newArray(int size) {
                 return new TokenizeLayoutState[size];
             }
