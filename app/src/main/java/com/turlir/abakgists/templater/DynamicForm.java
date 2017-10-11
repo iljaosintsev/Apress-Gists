@@ -39,7 +39,7 @@ public abstract class DynamicForm<T> implements Form<T> {
         }
         this.value = value;
         mTemplate.bind();
-        interact();
+        ready();
     }
 
     @Override
@@ -96,6 +96,19 @@ public abstract class DynamicForm<T> implements Form<T> {
 
     protected abstract Template<T> createTemplate();
 
+    protected abstract void interact();
+
+    protected final T value() {
+        if (value == null) {
+            throw new IllegalStateException();
+        }
+        return value;
+    }
+
+    protected final Context getContext() {
+        return mContext;
+    }
+
     protected TextView.OnEditorActionListener doneVerifierListener() {
         return new TextView.OnEditorActionListener() {
             @Override
@@ -108,16 +121,8 @@ public abstract class DynamicForm<T> implements Form<T> {
         };
     }
 
-    protected abstract void interact();
-
-    protected final T value() {
-        if (value == null) {
-            throw new IllegalStateException();
-        }
-        return value;
-    }
-
-    protected final Context getContext() {
-        return mContext;
+    private void ready() {
+        mTemplate.processEmptyValues();
+        interact();
     }
 }

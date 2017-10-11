@@ -84,4 +84,12 @@ public class Template<T>{
         }
         return null; // also warning logging
     }
+
+    void processEmptyValues() {
+        for (WidgetHolder holder : mHolders) {
+            if (holder.value() == null || holder.value().isEmpty()) {
+                holder.handleEmpty();
+            }
+        }
+    }
 }

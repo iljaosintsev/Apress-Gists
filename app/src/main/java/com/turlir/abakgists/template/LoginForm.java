@@ -5,6 +5,7 @@ import android.view.ViewGroup;
 
 import com.turlir.abakgists.templater.DynamicForm;
 import com.turlir.abakgists.templater.Template;
+import com.turlir.abakgists.templater.base.HideEmptyHandler;
 import com.turlir.abakgists.templater.base.Interceptor;
 import com.turlir.abakgists.templater.check.NotEmpty;
 import com.turlir.abakgists.templater.check.TrueCheck;
@@ -34,7 +35,7 @@ class LoginForm extends DynamicForm<EditableProfile> {
                     }
                 })
 
-                .addMaterialField("Должность", new TrueCheck<String>(), "position")
+                .addMaterialField("Должность", new TrueCheck<String>(), new HideEmptyHandler(), "position")
                 .in(new Interceptor<MaterialField, String>() {
                     @Override
                     public String bind() {

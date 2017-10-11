@@ -3,11 +3,12 @@ package com.turlir.abakgists.templater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.turlir.abakgists.templater.base.EmptyHandler;
 import com.turlir.abakgists.templater.base.Interceptor;
 import com.turlir.abakgists.templater.check.Checker;
 import com.turlir.abakgists.templater.widget.FormWidget;
 
-class WidgetHolder<T extends View & FormWidget<V>, V> {
+public class WidgetHolder<T extends View & FormWidget<V>, V> {
 
     private final T mWidget;
     private final Checker<V> mChecker;
@@ -16,17 +17,22 @@ class WidgetHolder<T extends View & FormWidget<V>, V> {
 
     private Interceptor<T, V> mCallback;
 
-    WidgetHolder(T widget, Checker<V> checker, Interceptor<T, V> callback, String tag, int position) {
+    private final EmptyHandler mEmpty;
+
+    WidgetHolder(T widget, Checker<V> checker, Interceptor<T, V> callback, EmptyHandler handler,
+                 String tag, int position) {
         mWidget= widget;
         mChecker = checker;
         mCallback = callback;
+        mEmpty = handler;
         mTag = tag;
         mPosition = position;
     }
 
-    WidgetHolder(T field, Checker<V> rule, String tag, int position) {
+    WidgetHolder(T field, Checker<V> rule, EmptyHandler handler, String tag, int position) {
         mWidget = field;
         mChecker = rule;
+        mEmpty = handler;
         mTag = tag;
         mPosition = position;
     }
@@ -88,11 +94,17 @@ class WidgetHolder<T extends View & FormWidget<V>, V> {
         return mTag;
     }
 
-    void enabled(boolean state) {
+    /*public*/ void enabled(boolean state) {
         mWidget.setEnabled(state);
     }
 
-    void visibility(int visibility) {
+    public void visibility(int visibility) {
         mWidget.setVisibility(visibility);
+    }
+
+    void handleEmpty() {
+        if (mEmpty != null) {
+            mEmpty.process(this);
+        }
     }
 }

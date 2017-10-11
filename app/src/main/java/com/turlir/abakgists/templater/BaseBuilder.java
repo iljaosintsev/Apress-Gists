@@ -3,6 +3,7 @@ package com.turlir.abakgists.templater;
 import android.content.Context;
 import android.view.View;
 
+import com.turlir.abakgists.templater.base.EmptyHandler;
 import com.turlir.abakgists.templater.base.Interceptor;
 import com.turlir.abakgists.templater.base.Out;
 import com.turlir.abakgists.templater.check.Checker;
@@ -51,13 +52,13 @@ public abstract class BaseBuilder<M, B extends BaseBuilder<M, B>> {
     }
 
     protected final <V extends View & FormWidget<T>, T> void add(Checker<T> rule, Interceptor<V, T> callback,
-                                                                 V field, String tag) {
-        WidgetHolder<V, T> h = new WidgetHolder<>(field, rule, callback, tag, mHolders.size());
+                                                                 V field, EmptyHandler handler, String tag) {
+        WidgetHolder<V, T> h = new WidgetHolder<>(field, rule, callback, handler, tag, mHolders.size());
         privateAdd(h);
     }
 
-    protected final <V extends View & FormWidget<T>, T> void add(Checker<T> rule, V field, String tag) {
-        WidgetHolder<V, T> h = new WidgetHolder<>(field, rule, tag, mHolders.size());
+    protected final <V extends View & FormWidget<T>, T> void add(Checker<T> rule, V field, EmptyHandler handler, String tag) {
+        WidgetHolder<V, T> h = new WidgetHolder<>(field, rule, handler, tag, mHolders.size());
         privateAdd(h);
     }
 
