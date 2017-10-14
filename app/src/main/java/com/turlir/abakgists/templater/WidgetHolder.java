@@ -37,7 +37,6 @@ public class WidgetHolder<T extends View & FormWidget> {
         mPosition = position;
     }
 
-    @Deprecated
     public String value() {
         return mWidget.content();
     }
@@ -71,12 +70,8 @@ public class WidgetHolder<T extends View & FormWidget> {
         return mCallback != null;
     }
 
-    private String content() {
-        return mWidget.content();
-    }
-
     boolean verify() {
-        String value = content();
+        String value = value();
         return mChecker.check(value);
     }
 
