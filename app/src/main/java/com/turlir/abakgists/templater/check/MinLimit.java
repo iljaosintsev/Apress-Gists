@@ -1,6 +1,6 @@
 package com.turlir.abakgists.templater.check;
 
-public class MinLimit implements Checker<String> {
+public class MinLimit implements Checker {
 
     private final int minimum;
 

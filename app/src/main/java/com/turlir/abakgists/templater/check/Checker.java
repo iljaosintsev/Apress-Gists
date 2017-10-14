@@ -1,8 +1,8 @@
 package com.turlir.abakgists.templater.check;
 
-public interface Checker<V> {
+public interface Checker {
 
-    boolean check(V value);
+    boolean check(String value);
 
     String error();
 

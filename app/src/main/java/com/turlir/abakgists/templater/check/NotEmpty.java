@@ -1,6 +1,6 @@
 package com.turlir.abakgists.templater.check;
 
-public class NotEmpty implements Checker<String> {
+public class NotEmpty implements Checker {
 
     @Override
     public boolean check(String actual) {

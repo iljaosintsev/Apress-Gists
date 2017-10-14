@@ -11,7 +11,7 @@ import com.turlir.abakgists.R;
 import butterknife.BindDimen;
 import butterknife.ButterKnife;
 
-public class MaterialField extends TextInputLayout implements FormWidget<String> {
+public class MaterialField extends TextInputLayout implements FormWidget {
 
     @BindDimen(R.dimen.four_margin)
     int four;

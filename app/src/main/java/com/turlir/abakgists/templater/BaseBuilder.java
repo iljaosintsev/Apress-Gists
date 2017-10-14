@@ -24,7 +24,7 @@ public abstract class BaseBuilder<M, B extends BaseBuilder<M, B>> {
         mOuts = new ArrayList<>();
     }
 
-    public final <V extends View & FormWidget<T>, T> B in(Interceptor<V, T> callback) {
+    public final <V extends View & FormWidget> B in(Interceptor<V> callback) {
         WidgetHolder h = mHolders.get(mHolders.size() - 1);
         //noinspection unchecked
         h.setCallback(callback);
@@ -51,14 +51,14 @@ public abstract class BaseBuilder<M, B extends BaseBuilder<M, B>> {
         return mContext;
     }
 
-    protected final <V extends View & FormWidget<T>, T> void add(Checker<T> rule, Interceptor<V, T> callback,
-                                                                 V field, EmptyHandler handler, String tag) {
-        WidgetHolder<V, T> h = new WidgetHolder<>(field, rule, callback, handler, tag, mHolders.size());
+    protected final <V extends View & FormWidget> void add(Checker rule, Interceptor<V> callback,
+                                                           V field, EmptyHandler handler, String tag) {
+        WidgetHolder<V> h = new WidgetHolder<>(field, rule, callback, handler, tag, mHolders.size());
         privateAdd(h);
     }
 
-    protected final <V extends View & FormWidget<T>, T> void add(Checker<T> rule, V field, EmptyHandler handler, String tag) {
-        WidgetHolder<V, T> h = new WidgetHolder<>(field, rule, handler, tag, mHolders.size());
+    protected final <V extends View & FormWidget> void add(Checker rule, V field, EmptyHandler handler, String tag) {
+        WidgetHolder<V> h = new WidgetHolder<>(field, rule, handler, tag, mHolders.size());
         privateAdd(h);
     }
 

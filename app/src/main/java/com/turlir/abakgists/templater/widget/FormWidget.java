@@ -5,13 +5,13 @@ import android.support.annotation.IntDef;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-public interface FormWidget<T> {
+public interface FormWidget {
 
     int FIRST = 0, LAST = 1, MIDDLE = 1 << 1;
 
-    void bind(T origin);
+    void bind(String origin);
 
-    T content();
+    String content();
 
     void showError(String error);
 

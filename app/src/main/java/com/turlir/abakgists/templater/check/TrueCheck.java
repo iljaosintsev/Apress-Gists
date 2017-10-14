@@ -1,9 +1,9 @@
 package com.turlir.abakgists.templater.check;
 
-public class TrueCheck<T> implements Checker<T> {
+public class TrueCheck<T> implements Checker {
 
     @Override
-    public boolean check(Object value) {
+    public boolean check(String value) {
         return true;
     }
 

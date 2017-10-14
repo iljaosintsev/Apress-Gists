@@ -15,14 +15,14 @@ class LoginBuilder extends BaseBuilder<EditableProfile, LoginBuilder> {
         super(cnt);
     }
 
-    LoginBuilder addMaterialField(String hint, Checker<String> rule, EmptyHandler handler, String tag) {
+    LoginBuilder addMaterialField(String hint, Checker rule, EmptyHandler handler, String tag) {
         MaterialField field = new MaterialField(getContext());
         field.setHint(hint);
         add(rule, field, handler, tag);
         return this;
     }
 
-    LoginBuilder addMaterialField(String hint, Checker<String> rule, String tag) {
+    LoginBuilder addMaterialField(String hint, Checker rule, String tag) {
         MaterialField field = new MaterialField(getContext());
         field.setHint(hint);
         add(rule, field, null, tag);

@@ -8,18 +8,18 @@ import com.turlir.abakgists.templater.base.Interceptor;
 import com.turlir.abakgists.templater.check.Checker;
 import com.turlir.abakgists.templater.widget.FormWidget;
 
-public class WidgetHolder<T extends View & FormWidget<V>, V> {
+public class WidgetHolder<T extends View & FormWidget> {
 
     private final T mWidget;
-    private final Checker<V> mChecker;
+    private final Checker mChecker;
     private final String mTag;
     private final int mPosition;
 
-    private Interceptor<T, V> mCallback;
+    private Interceptor<T> mCallback;
 
     private final EmptyHandler mEmpty;
 
-    WidgetHolder(T widget, Checker<V> checker, Interceptor<T, V> callback, EmptyHandler handler,
+    WidgetHolder(T widget, Checker checker, Interceptor<T> callback, EmptyHandler handler,
                  String tag, int position) {
         mWidget= widget;
         mChecker = checker;
@@ -29,7 +29,7 @@ public class WidgetHolder<T extends View & FormWidget<V>, V> {
         mPosition = position;
     }
 
-    WidgetHolder(T field, Checker<V> rule, EmptyHandler handler, String tag, int position) {
+    WidgetHolder(T field, Checker rule, EmptyHandler handler, String tag, int position) {
         mWidget = field;
         mChecker = rule;
         mEmpty = handler;
@@ -37,8 +37,9 @@ public class WidgetHolder<T extends View & FormWidget<V>, V> {
         mPosition = position;
     }
 
+    @Deprecated
     public String value() {
-        return mWidget.content().toString();
+        return mWidget.content();
     }
 
     public void showError(String message) {
@@ -58,11 +59,11 @@ public class WidgetHolder<T extends View & FormWidget<V>, V> {
     }
 
     void bind() {
-        V add = mCallback.bind();
+        String add = mCallback.bind();
         mWidget.bind(add);
     }
 
-    void setCallback(Interceptor<T, V> value) {
+    void setCallback(Interceptor<T> value) {
         mCallback = value;
     }
 
@@ -70,12 +71,12 @@ public class WidgetHolder<T extends View & FormWidget<V>, V> {
         return mCallback != null;
     }
 
-    private V content() {
+    private String content() {
         return mWidget.content();
     }
 
     boolean verify() {
-        V value = content();
+        String value = content();
         return mChecker.check(value);
     }
 

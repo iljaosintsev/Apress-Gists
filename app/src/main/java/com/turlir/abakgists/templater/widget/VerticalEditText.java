@@ -12,7 +12,7 @@ import com.turlir.abakgists.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class VerticalEditText extends LinearLayout implements FormWidget<String> {
+public class VerticalEditText extends LinearLayout implements FormWidget {
 
     @BindView(R.id.templ_labeled_et_tv)
     TextView tv;

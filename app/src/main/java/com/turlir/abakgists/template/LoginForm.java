@@ -23,7 +23,7 @@ class LoginForm extends DynamicForm<EditableProfile> {
     protected Template<EditableProfile> createTemplate() {
         return new LoginBuilder(getContext())
                 .addMaterialField("Имя", new NotEmpty(), "name")
-                .in(new Interceptor<MaterialField, String>() {
+                .in(new Interceptor<MaterialField>() {
                     @Override
                     public String bind() {
                         return value().name;
@@ -36,7 +36,7 @@ class LoginForm extends DynamicForm<EditableProfile> {
                 })
 
                 .addMaterialField("Должность", new TrueCheck<String>(), new HideEmptyHandler(), "position")
-                .in(new Interceptor<MaterialField, String>() {
+                .in(new Interceptor<MaterialField>() {
                     @Override
                     public String bind() {
                         return value().position;
@@ -49,7 +49,7 @@ class LoginForm extends DynamicForm<EditableProfile> {
                 })
 
                 .addPhone("Контактный телефон", false, "phone")
-                .in(new Interceptor<MaterialField, String>() {
+                .in(new Interceptor<MaterialField>() {
                     @Override
                     public String bind() {
                         return value().phone();
@@ -62,7 +62,7 @@ class LoginForm extends DynamicForm<EditableProfile> {
                 })
 
                 .addMaterialField("Дополнительный телефон, ICQ, Skype", new TrueCheck<String>(), "additional")
-                .in(new Interceptor<MaterialField, String>() {
+                .in(new Interceptor<MaterialField>() {
                     @Override
                     public String bind() {
                         return value().additionalContact;
