@@ -1,40 +1,28 @@
 package com.turlir.abakgists.templater;
 
-import android.view.View;
+import android.support.annotation.Nullable;
 import android.view.ViewGroup;
 
-import com.turlir.abakgists.templater.base.EmptyHandler;
 import com.turlir.abakgists.templater.base.Interceptor;
 import com.turlir.abakgists.templater.check.Checker;
 import com.turlir.abakgists.templater.widget.FormWidget;
 
-public class WidgetHolder<T extends View & FormWidget> {
+public class WidgetHolder {
 
-    private final T mWidget;
+    private final FormWidget mWidget;
+
+    @Nullable
+    private final Interceptor mCallback;
+
     private final Checker mChecker;
-    private final String mTag;
-    private final int mPosition;
 
-    private Interceptor<T> mCallback;
+    private final Node mNode;
 
-    private final EmptyHandler mEmpty;
-
-    WidgetHolder(T widget, Checker checker, Interceptor<T> callback, EmptyHandler handler,
-                 String tag, int position) {
+    WidgetHolder(FormWidget widget, Checker checker, @Nullable Interceptor callback, Node node) {
         mWidget= widget;
         mChecker = checker;
         mCallback = callback;
-        mEmpty = handler;
-        mTag = tag;
-        mPosition = position;
-    }
-
-    WidgetHolder(T field, Checker rule, EmptyHandler handler, String tag, int position) {
-        mWidget = field;
-        mChecker = rule;
-        mEmpty = handler;
-        mTag = tag;
-        mPosition = position;
+        mNode = node;
     }
 
     public String value() {
@@ -46,28 +34,28 @@ public class WidgetHolder<T extends View & FormWidget> {
     }
 
     void connect(ViewGroup group, int size) {
-        group.addView(mWidget);
-        if (mPosition == 0) {
+        group.addView(mWidget.view());
+        final int position = mNode.position;
+        if (position == 0) {
             mWidget.position(FormWidget.FIRST);
-        } else if (mPosition < size) {
+        } else if (position < size) {
             mWidget.position(FormWidget.MIDDLE);
         } else {
             mWidget.position(FormWidget.LAST);
         }
-        mCallback.add(mWidget);
+        if (mCallback != null) {
+            mCallback.add(mWidget.view());
+        }
     }
 
     void bind() {
-        String add = mCallback.bind();
-        mWidget.bind(add);
-    }
-
-    void setCallback(Interceptor<T> value) {
-        mCallback = value;
-    }
-
-    boolean isCallback() {
-        return mCallback != null;
+        if (mCallback != null) {
+            String add = mCallback.bind();
+            mWidget.bind(add);
+        }
+        mWidget.setName(mNode.name);
+        mWidget.setHint(mNode.hint);
+        mWidget.setExample(mNode.example);
     }
 
     boolean verify() {
@@ -87,7 +75,7 @@ public class WidgetHolder<T extends View & FormWidget> {
     }
 
     String tag() {
-        return mTag;
+        return mNode.tag;
     }
 
     /*public*/ void enabled(boolean state) {
@@ -98,9 +86,4 @@ public class WidgetHolder<T extends View & FormWidget> {
         mWidget.setVisibility(visibility);
     }
 
-    void handleEmpty() {
-        if (mEmpty != null) {
-            mEmpty.process(this);
-        }
-    }
 }

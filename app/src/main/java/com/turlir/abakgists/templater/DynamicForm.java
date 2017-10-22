@@ -8,38 +8,50 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
 import com.turlir.abakgists.templater.base.Form;
+import com.turlir.abakgists.templater.widget.WidgetFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class DynamicForm<T> implements Form<T> {
 
     private final ViewGroup mGroup;
-    private final Context mContext;
+
+    private final Structure<T> mStructure;
+    private final WidgetFactory mFactory;
+
+    private T mValue;
 
     private Template<T> mTemplate;
 
-    private T value;
-
     public DynamicForm(@NonNull ViewGroup group) {
         mGroup = group;
-        mContext = group.getContext();
+        mStructure = createTemplate();
+        mFactory = new WidgetFactory(group.getContext());
     }
 
     @Override
     public final void create() {
         mGroup.removeAllViews();
-        mTemplate = createTemplate();
+        List<WidgetHolder> holders = new ArrayList<>(mStructure.count());
+        while (mStructure.hasNext()) {
+            WidgetHolder h = mStructure.next(mFactory);
+            holders.add(h);
+        }
+        mTemplate = new Template<>(holders, mStructure.outs());
     }
 
     @Override
     public final void bind(@NonNull T value) {
         if (mTemplate == null) {
-            throw new IllegalStateException("bind() before create()");
+            throw new IllegalStateException("bind() before widget()");
         }
         if (mGroup.getChildCount() < 1) {
             throw new IllegalStateException("bind() before connect()");
         }
-        this.value = value;
+        mValue = value;
         mTemplate.bind();
-        ready();
+        interact();
     }
 
     @Override
@@ -74,7 +86,7 @@ public abstract class DynamicForm<T> implements Form<T> {
     @Override
     public /*final*/ void connect() {
         if (mTemplate == null) {
-            throw new IllegalStateException("connect() before create()");
+            throw new IllegalStateException("connect() before widget()");
         }
         mTemplate.connect(mGroup);
     }
@@ -82,7 +94,7 @@ public abstract class DynamicForm<T> implements Form<T> {
     @Override
     public boolean verify() {
         if (mTemplate == null) {
-            throw new IllegalStateException("verify() before create()");
+            throw new IllegalStateException("verify() before widget()");
         }
         return mTemplate.verify();
     }
@@ -90,23 +102,23 @@ public abstract class DynamicForm<T> implements Form<T> {
     @NonNull
     @Override
     public T collect() {
-        mTemplate.collect(value);
-        return value;
+        mTemplate.collect(mValue);
+        return mValue;
     }
 
-    protected abstract Template<T> createTemplate();
+    protected abstract Structure<T> createTemplate();
 
     protected abstract void interact();
 
     protected final T value() {
-        if (value == null) {
+        if (mValue == null) {
             throw new IllegalStateException();
         }
-        return value;
+        return mValue;
     }
 
-    protected final Context getContext() {
-        return mContext;
+    protected final Context context() {
+        return mGroup.getContext();
     }
 
     protected TextView.OnEditorActionListener doneVerifierListener() {
@@ -121,8 +133,4 @@ public abstract class DynamicForm<T> implements Form<T> {
         };
     }
 
-    private void ready() {
-        mTemplate.processEmptyValues();
-        interact();
-    }
 }

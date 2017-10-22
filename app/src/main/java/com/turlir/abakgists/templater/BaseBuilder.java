@@ -1,79 +1,104 @@
 package com.turlir.abakgists.templater;
 
-import android.content.Context;
-import android.view.View;
-
-import com.turlir.abakgists.templater.base.EmptyHandler;
 import com.turlir.abakgists.templater.base.Interceptor;
 import com.turlir.abakgists.templater.base.Out;
 import com.turlir.abakgists.templater.check.Checker;
-import com.turlir.abakgists.templater.widget.FormWidget;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class BaseBuilder<M, B extends BaseBuilder<M, B>> {
+public abstract class BaseBuilder<T, B extends BaseBuilder<T, B>>  {
 
-    private final List<WidgetHolder> mHolders;
-    private final List<Out<M>> mOuts;
-    private final Context mContext;
+    private final List<Node> mNodes;
+    private final List<Interceptor> mInterceptors;
+    private final List<Out<T>> mOuts;
 
-    public BaseBuilder(Context cnt) {
-        mContext = cnt;
-        mHolders = new ArrayList<>();
+    public BaseBuilder() {
+        mNodes = new ArrayList<>();
+        mInterceptors = new ArrayList<>();
         mOuts = new ArrayList<>();
     }
 
-    public final <V extends View & FormWidget> B in(Interceptor<V> callback) {
-        WidgetHolder h = mHolders.get(mHolders.size() - 1);
-        //noinspection unchecked
-        h.setCallback(callback);
+    //
+
+    public final B add(String type, String name, String hint, String example, String tag, Interceptor inter) {
+        return add(type, name, hint, example, tag, false, inter);
+    }
+
+    //
+
+    public final B add(String type, String name, String hint, String example, String tag, boolean required,
+                       Interceptor interceptor) {
+        Node n = new Node(type, name, hint, example, tag, mNodes.size(), required);
+        privateAdd(interceptor, n);
         return getThis();
     }
 
-    public final B out(Out<M> o) {
-        if (mHolders.size() > 0) {
-            mOuts.set(mHolders.size() - 1, o);
+    public final B add(String type, String name, String hint, String example, String tag, int min, int max,
+                       Interceptor interceptor) {
+        Node n = new Node(type, name, hint, example, tag, mNodes.size(), min, max);
+        privateAdd(interceptor, n);
+        return getThis();
+    }
+
+    public final B add(String type, String name, String hint, String example, String tag, String regexp,
+                       Interceptor interceptor) {
+        Node n = new Node(type, name, hint, example, tag, mNodes.size(), regexp);
+        privateAdd(interceptor, n);
+        return getThis();
+    }
+
+    public final B add(String type, String name, String hint, String example, String tag, Checker checker,
+                       Interceptor interceptor) {
+        Node n = new Node(type, name, hint, example, tag, mNodes.size(), checker);
+        privateAdd(interceptor, n);
+        return getThis();
+    }
+
+    //
+
+    public final B add(String type, String name, String tag, boolean required, Interceptor interceptor) {
+        return add(type, name, null, null, tag, required, interceptor);
+    }
+
+    public final B add(String type, String name, String tag, int min, int max, Interceptor interceptor) {
+        return add(type, name, null, null, tag, min, max, interceptor);
+    }
+
+    public final B add(String type, String name, String tag, String regexp, Interceptor interceptor) {
+        return add(type, name, null, null, tag, regexp, interceptor);
+    }
+
+    public final B add(String type, String name, String tag, Checker checker, Interceptor interceptor) {
+        return add(type, name, null, null, tag, checker, interceptor);
+    }
+
+    //
+
+    public final B out(Out<T> o) {
+        if (mNodes.size() > 0) {
+            mOuts.set(mNodes.size() - 1, o);
         } else {
             throw new IllegalStateException();
         }
         return getThis();
     }
 
-    public final Template<M> build() {
-        checkLastHolder();
-        return new Template<>(mHolders, mOuts);
+    public final B in(Interceptor callback) {
+        int last = Math.max(mInterceptors.size() - 1, 0);
+        mInterceptors.set(last, callback);
+        return getThis();
+    }
+
+    public final Structure<T> build() {
+        return new Structure<>(mNodes, mInterceptors, mOuts);
     }
 
     protected abstract B getThis();
 
-    protected final Context getContext() {
-        return mContext;
-    }
-
-    protected final <V extends View & FormWidget> void add(Checker rule, Interceptor<V> callback,
-                                                           V field, EmptyHandler handler, String tag) {
-        WidgetHolder<V> h = new WidgetHolder<>(field, rule, callback, handler, tag, mHolders.size());
-        privateAdd(h);
-    }
-
-    protected final <V extends View & FormWidget> void add(Checker rule, V field, EmptyHandler handler, String tag) {
-        WidgetHolder<V> h = new WidgetHolder<>(field, rule, handler, tag, mHolders.size());
-        privateAdd(h);
-    }
-
-    private void privateAdd(WidgetHolder h) {
-        checkLastHolder();
-        mHolders.add(h);
+    private void privateAdd(Interceptor interceptor, Node n) {
+        mNodes.add(n);
+        mInterceptors.add(interceptor);
         mOuts.add(null);
-    }
-
-    private void checkLastHolder() {
-        if (mHolders.size() > 0) {
-            WidgetHolder last = mHolders.get(mHolders.size() - 1);
-            if (!last.isCallback()) {
-                throw new IllegalStateException();
-            }
-        }
     }
 }

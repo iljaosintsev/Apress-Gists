@@ -7,7 +7,7 @@ import com.turlir.abakgists.templater.base.Out;
 
 import java.util.List;
 
-public class Template<T>{
+class Template<T> {
 
     private final List<WidgetHolder> mHolders;
     private final List<Out<T>> mOuts;
@@ -85,11 +85,4 @@ public class Template<T>{
         return null; // also warning logging
     }
 
-    void processEmptyValues() {
-        for (WidgetHolder holder : mHolders) {
-            if (holder.value() == null || holder.value().isEmpty()) {
-                holder.handleEmpty();
-            }
-        }
-    }
 }

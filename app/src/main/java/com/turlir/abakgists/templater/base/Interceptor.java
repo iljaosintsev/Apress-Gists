@@ -2,11 +2,13 @@ package com.turlir.abakgists.templater.base;
 
 import android.view.View;
 
-public abstract class Interceptor<T extends View> {
+public abstract class Interceptor {
 
-    public abstract String bind();
+    public String bind() {
+        return null;
+    }
 
-    public void add(T view) {
+    public void add(View view) {
         // stub
     }
 }

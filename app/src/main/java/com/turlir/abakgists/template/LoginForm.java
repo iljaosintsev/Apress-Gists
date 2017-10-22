@@ -1,77 +1,75 @@
 package com.turlir.abakgists.template;
 
 import android.support.annotation.NonNull;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.turlir.abakgists.templater.DynamicForm;
-import com.turlir.abakgists.templater.Template;
-import com.turlir.abakgists.templater.base.HideEmptyHandler;
+import com.turlir.abakgists.templater.Structure;
 import com.turlir.abakgists.templater.base.Interceptor;
-import com.turlir.abakgists.templater.check.NotEmpty;
-import com.turlir.abakgists.templater.check.TrueCheck;
 import com.turlir.abakgists.templater.widget.MaterialField;
 
 class LoginForm extends DynamicForm<EditableProfile> {
 
     private MaterialField mName, mPosition, mPhone, mAdd;
 
-    LoginForm(ViewGroup group) {
+    LoginForm(@NonNull ViewGroup group) {
         super(group);
     }
 
     @Override
-    protected Template<EditableProfile> createTemplate() {
-        return new LoginBuilder(getContext())
-                .addMaterialField("Имя", new NotEmpty(), "name")
-                .in(new Interceptor<MaterialField>() {
+    protected Structure<EditableProfile> createTemplate() {
+        return new LoginBuilder()
+                .addMaterialField("Имя", true, "name")
+                .in(new Interceptor() {
                     @Override
                     public String bind() {
                         return value().name;
                     }
 
                     @Override
-                    public void add(MaterialField view) {
-                        mName = view;
+                    public void add(View view) {
+                        mName = (MaterialField) view;
                     }
                 })
 
-                .addMaterialField("Должность", new TrueCheck<String>(), new HideEmptyHandler(), "position")
-                .in(new Interceptor<MaterialField>() {
+                .addMaterialField("Должность", false, "position")
+                .in(new Interceptor() {
                     @Override
                     public String bind() {
                         return value().position;
                     }
 
                     @Override
-                    public void add(MaterialField view) {
-                        mPosition = view;
+                    public void add(View view) {
+                        mPosition = (MaterialField) view;
                     }
                 })
 
                 .addPhone("Контактный телефон", false, "phone")
-                .in(new Interceptor<MaterialField>() {
+                .in(new Interceptor() {
                     @Override
                     public String bind() {
                         return value().phone();
                     }
 
                     @Override
-                    public void add(MaterialField view) {
-                        mPhone = view;
+                    public void add(View view) {
+                        mPhone = (MaterialField) view;
                     }
                 })
 
-                .addMaterialField("Дополнительный телефон, ICQ, Skype", new TrueCheck<String>(), "additional")
-                .in(new Interceptor<MaterialField>() {
+                .addMaterialField("Дополнительный телефон, ICQ, Skype", false, "additional")
+                .in(new Interceptor() {
                     @Override
                     public String bind() {
                         return value().additionalContact;
                     }
 
                     @Override
-                    public void add(MaterialField view) {
-                        view.setOnEditorActionListener(doneVerifierListener());
-                        mAdd = view;
+                    public void add(View view) {
+                        mAdd = (MaterialField) view;
+                        mAdd.setOnEditorActionListener(doneVerifierListener());
                     }
                 })
                 .build();
