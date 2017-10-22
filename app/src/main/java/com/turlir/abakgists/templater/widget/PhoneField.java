@@ -1,6 +1,7 @@
 package com.turlir.abakgists.templater.widget;
 
 import android.content.Context;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 
 import ru.tinkoff.decoro.MaskDescriptor;
@@ -23,5 +24,10 @@ public class PhoneField extends MaterialField {
             watcher.installOn(getEditText());
             getEditText().setInputType(EditorInfo.TYPE_CLASS_PHONE);
         }
+    }
+
+    @Override
+    public View view() {
+        return this;
     }
 }

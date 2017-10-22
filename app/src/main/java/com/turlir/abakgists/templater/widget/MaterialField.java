@@ -3,6 +3,7 @@ package com.turlir.abakgists.templater.widget;
 import android.content.Context;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
@@ -31,12 +32,17 @@ public class MaterialField extends TextInputLayout implements FormWidget {
     }
 
     @Override
+    public View view() {
+        return this;
+    }
+
+    @Override
     public void bind(String origin) {
         if (getEditText() != null) {
             boolean tmp = isHintAnimationEnabled();
             setHintAnimationEnabled(false);
             getEditText().setText(origin);
-            setHintEnabled(tmp);
+            setHintAnimationEnabled(tmp);
         }
     }
 
@@ -45,7 +51,7 @@ public class MaterialField extends TextInputLayout implements FormWidget {
         if (getEditText() != null) {
             return getEditText().getText().toString();
         }
-        return null;
+        return "";
     }
 
     @Override
@@ -65,6 +71,21 @@ public class MaterialField extends TextInputLayout implements FormWidget {
                 getEditText().setImeOptions(EditorInfo.IME_ACTION_DONE);
                 break;
         }
+    }
+
+    @Override
+    public void setName(String name) {
+        super.setHint(name);
+    }
+
+    @Override
+    public void setHint(String hint) {
+        //
+    }
+
+    @Override
+    public void setExample(String example) {
+        // stub
     }
 
     public void setOnEditorActionListener(TextView.OnEditorActionListener listener) {

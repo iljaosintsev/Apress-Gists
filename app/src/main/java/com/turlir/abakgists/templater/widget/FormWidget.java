@@ -1,6 +1,7 @@
 package com.turlir.abakgists.templater.widget;
 
 import android.support.annotation.IntDef;
+import android.view.View;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -15,6 +16,8 @@ public interface FormWidget {
 
     void showError(String error);
 
+    View view();
+
     void position(@Position int position);
 
     //
@@ -22,6 +25,12 @@ public interface FormWidget {
     void setEnabled(boolean state);
 
     void setVisibility(int visibility);
+
+    void setName(String name);
+
+    void setHint(String hint);
+
+    void setExample(String example);
 
     @IntDef(flag=true, value={
             FIRST,
