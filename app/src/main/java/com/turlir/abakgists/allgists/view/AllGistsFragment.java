@@ -58,16 +58,12 @@ public class AllGistsFragment
 
     private AllGistAdapter mAdapter;
 
-    private final SwipeRefreshLayout.OnRefreshListener mSwipeListener
-            = new SwipeRefreshLayout.OnRefreshListener() {
-        @Override
-        public void onRefresh() {
-            _presenter.updateGist();
+    private final SwipeRefreshLayout.OnRefreshListener mSwipeListener = () -> {
+        _presenter.updateGist();
 
-            recycler.clearOnScrollListeners();
-            RecyclerView.OnScrollListener scroller = new SimpleScrollListener(AllGistsFragment.this);
-            recycler.addOnScrollListener(scroller);
-        }
+        recycler.clearOnScrollListeners();
+        RecyclerView.OnScrollListener scroller = new SimpleScrollListener(AllGistsFragment.this);
+        recycler.addOnScrollListener(scroller);
     };
 
     @Override

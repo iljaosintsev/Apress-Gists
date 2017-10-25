@@ -3,7 +3,12 @@ apply plugin: 'com.getkeepsafe.dexcount'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion '26.0.1'
+    buildToolsVersion '26.0.2'
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 
     defaultConfig {
         applicationId 'com.turlir.abakgists'
@@ -46,12 +51,12 @@ android {
 dependencies {
     compile project(path: ':tokenizelayout')
 
-    compile 'com.jakewharton:butterknife:8.2.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.2.1'
+    compile 'com.jakewharton:butterknife:8.7.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.7.0'
 
-    compile 'com.android.support:appcompat-v7:26.0.1'
-    compile 'com.android.support:recyclerview-v7:26.0.1'
-    compile 'com.android.support:design:26.0.1'
+    compile 'com.android.support:appcompat-v7:26.1.0'
+    compile 'com.android.support:recyclerview-v7:26.1.0'
+    compile 'com.android.support:design:26.1.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
 
     compile 'com.google.dagger:dagger:2.10'
@@ -75,8 +80,8 @@ dependencies {
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
     testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
 
-    compile 'com.android.support:support-vector-drawable:26.0.1'
-    compile 'com.android.support:animated-vector-drawable:26.0.1'
+    compile 'com.android.support:support-vector-drawable:26.1.0'
+    compile 'com.android.support:animated-vector-drawable:26.1.0'
     compile 'jp.wasabeef:recyclerview-animators:2.2.7'
 
     testCompile 'junit:junit:4.12'
