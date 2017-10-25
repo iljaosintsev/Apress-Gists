@@ -12,7 +12,6 @@ import java.util.List;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
-import rx.functions.Func2;
 import timber.log.Timber;
 
 public class GistListInteractor {
@@ -60,14 +59,6 @@ public class GistListInteractor {
                         } else {
                             return Observable.just(gistModels);
                         }
-                    }
-                })
-                .distinctUntilChanged(new Func2<List<GistLocal>, List<GistLocal>, Boolean>() {
-                    @Override
-                    public Boolean call(List<GistLocal> gistLocals, List<GistLocal> gistLocals2) {
-                        // предотвращаем повторное прохождение результата
-                        // учитывая что из БД возвращаются все записи, а не только новые
-                        return gistLocals.size() == gistLocals2.size();
                     }
                 })
                 .map(new Func1<List<GistLocal>, List<GistModel>>() {
