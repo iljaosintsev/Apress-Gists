@@ -8,6 +8,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
 import com.turlir.abakgists.templater.base.Form;
+import com.turlir.abakgists.templater.base.Grouper;
 import com.turlir.abakgists.templater.widget.WidgetFactory;
 
 import java.util.ArrayList;
@@ -88,7 +89,7 @@ public abstract class DynamicForm<T> implements Form<T> {
         if (mTemplate == null) {
             throw new IllegalStateException("connect() before widget()");
         }
-        mTemplate.connect(mGroup);
+        mTemplate.connect(mGroup, group());
     }
 
     @Override
@@ -105,6 +106,8 @@ public abstract class DynamicForm<T> implements Form<T> {
         mTemplate.collect(mValue);
         return mValue;
     }
+
+    protected abstract Grouper group();
 
     protected abstract Structure<T> createTemplate();
 

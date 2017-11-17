@@ -3,6 +3,7 @@ package com.turlir.abakgists.templater;
 import android.support.annotation.Nullable;
 import android.view.ViewGroup;
 
+import com.turlir.abakgists.templater.base.Grouper;
 import com.turlir.abakgists.templater.base.Out;
 
 import java.util.List;
@@ -20,10 +21,12 @@ class Template<T> {
         mOuts = outs;
     }
 
-    void connect(ViewGroup group) {
+    void connect(final ViewGroup group, Grouper hack) {
+        ViewGroup current = group;
         for (int i = 0, size = mHolders.size(); i < size; i++) {
             WidgetHolder holder = mHolders.get(i);
-            holder.connect(group, size - 1);
+            current = hack.changeRoot(holder.tag(), group, current);
+            holder.connect(current, size - 1);
         }
     }
 
