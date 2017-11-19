@@ -1,48 +1,39 @@
 package com.turlir.abakgists.data;
 
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.os.Build;
 
-import com.google.common.io.Files;
-import com.pushtorefresh.storio.sqlite.SQLiteTypeMapping;
-import com.pushtorefresh.storio.sqlite.impl.DefaultStorIOSQLite;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResult;
 import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
 import com.turlir.abakgists.BuildConfig;
 import com.turlir.abakgists.Data;
+import com.turlir.abakgists.DatabaseMocking;
 import com.turlir.abakgists.api.ApiClient;
-import com.turlir.abakgists.api.GistDatabaseHelper;
-import com.turlir.abakgists.api.GistLocalStorIoLogPutResolver;
 import com.turlir.abakgists.api.Repository;
 import com.turlir.abakgists.api.data.GistJson;
 import com.turlir.abakgists.api.data.GistLocal;
-import com.turlir.abakgists.api.data.GistLocalStorIOSQLiteDeleteResolver;
-import com.turlir.abakgists.api.data.GistLocalStorIOSQLiteGetResolver;
 import com.turlir.abakgists.api.data.GistOwnerJson;
-import com.turlir.abakgists.model.GistsTable;
+import com.turlir.abakgists.di.AppComponent;
 
-import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import it.cosenonjaviste.daggermock.DaggerMockRule;
+import it.cosenonjaviste.daggermock.InjectFromComponent;
 import rx.Observable;
 import rx.Scheduler;
 import rx.android.plugins.RxAndroidPlugins;
 import rx.android.plugins.RxAndroidSchedulersHook;
-import rx.functions.Func1;
 import rx.observers.TestSubscriber;
 import rx.plugins.RxJavaHooks;
 import rx.schedulers.Schedulers;
@@ -50,26 +41,26 @@ import rx.schedulers.Schedulers;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = Build.VERSION_CODES.LOLLIPOP, packageName = "com.turlir.abakgists")
+@Config(constants = BuildConfig.class, sdk = Build.VERSION_CODES.O, packageName = "com.turlir.abakgists")
 public class RepositoryTest {
 
-    private Repository mRepo;
-    private ApiClient mockApi;
+    @Rule
+    public final DaggerMockRule<AppComponent> rule = new DatabaseMocking();
+
+    @InjectFromComponent
+    private Repository _repo;
+
+    @Mock
+    private ApiClient _mockClient;
 
     @BeforeClass
     public static void setupRxHooks() throws Throwable {
         RxJavaHooks.reset();
         RxAndroidPlugins.getInstance().reset();
 
-        RxJavaHooks.setOnIOScheduler(new Func1<Scheduler, Scheduler>() {
-            @Override
-            public Scheduler call(Scheduler scheduler) {
-                return Schedulers.immediate();
-            }
-        });
+        RxJavaHooks.setOnIOScheduler(scheduler -> Schedulers.immediate());
         RxAndroidPlugins.getInstance().registerSchedulersHook(new RxAndroidSchedulersHook() {
             @Override
             public Scheduler getMainThreadScheduler() {
@@ -78,28 +69,9 @@ public class RepositoryTest {
         });
     }
 
-    @Before
-    public void setup() {
-        GistDatabaseHelper helper = makeHelper("/test.sql");
-
-        SQLiteTypeMapping<GistLocal> typeMapping = SQLiteTypeMapping.<GistLocal>builder()
-                .putResolver(new GistLocalStorIoLogPutResolver()) // logger
-                .getResolver(new GistLocalStorIOSQLiteGetResolver())
-                .deleteResolver(new GistLocalStorIOSQLiteDeleteResolver())
-                .build();
-
-        DefaultStorIOSQLite storio = DefaultStorIOSQLite.builder()
-                .sqliteOpenHelper(helper)
-                .addTypeMapping(GistLocal.class, typeMapping)
-                .build();
-
-        mockApi = Mockito.mock(ApiClient.class);
-        mRepo = new Repository(mockApi, storio);
-    }
-
     @Test
     public void successFromCache() {
-        Observable<List<GistLocal>> cacheObs = mRepo.load();
+        Observable<List<GistLocal>> cacheObs = _repo.load();
         TestSubscriber<List<GistLocal>> subs = new TestSubscriber<>();
         cacheObs.subscribe(subs);
 
@@ -121,9 +93,9 @@ public class RepositoryTest {
         List<GistJson> serverList = Collections.singletonList(gist);
 
         Observable<List<GistJson>> serverObs = Observable.just(serverList);
-        Mockito.when(mockApi.publicGist(1)).thenReturn(serverObs);
+        Mockito.when(_mockClient.publicGist(1)).thenReturn(serverObs);
 
-        Observable<PutResults<GistLocal>> server = mRepo.reload();
+        Observable<PutResults<GistLocal>> server = _repo.reload();
         TestSubscriber<PutResults<GistLocal>> test = new TestSubscriber<>();
         server.subscribe(test);
 
@@ -137,7 +109,7 @@ public class RepositoryTest {
 
     @Test
     public void reloadAfterLoadTest() {
-        Observable<List<GistLocal>> cacheObs = mRepo.load();
+        Observable<List<GistLocal>> cacheObs = _repo.load();
         TestSubscriber<List<GistLocal>> cacheSubs = new TestSubscriber<>();
         cacheObs.subscribe(cacheSubs);
         cacheSubs.assertValueCount(1);
@@ -146,9 +118,9 @@ public class RepositoryTest {
         stub.description = "new desc";
         List<GistJson> serverList = Collections.singletonList(stub);
         Observable<List<GistJson>> serverObs = Observable.just(serverList);
-        Mockito.when(mockApi.publicGist(1)).thenReturn(serverObs);
+        Mockito.when(_mockClient.publicGist(1)).thenReturn(serverObs);
 
-        Observable<PutResults<GistLocal>> obs = mRepo.reload();
+        Observable<PutResults<GistLocal>> obs = _repo.reload();
         TestSubscriber<PutResults<GistLocal>> serverSubs = new TestSubscriber<>();
         obs.subscribe(serverSubs);
 
@@ -182,7 +154,7 @@ public class RepositoryTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void zeroPageExceptionTest() {
-        mRepo.server(0);
+        _repo.server(0);
     }
 
     @Test
@@ -190,9 +162,9 @@ public class RepositoryTest {
         GistJson stub = new GistJson(Data.SERVER_STUB);
         List<GistJson> serverList = Collections.singletonList(stub);
         Observable<List<GistJson>> serverObs = Observable.just(serverList);
-        Mockito.when(mockApi.publicGist(1)).thenReturn(serverObs);
+        Mockito.when(_mockClient.publicGist(1)).thenReturn(serverObs);
 
-        Observable<List<GistLocal>> obs = mRepo.server(1);
+        Observable<List<GistLocal>> obs = _repo.server(1);
         TestSubscriber<List<GistLocal>> subscriber = new TestSubscriber<>();
         obs.subscribe(subscriber);
 
@@ -212,35 +184,6 @@ public class RepositoryTest {
                 "https://avatars1.githubusercontent.com/u/3526847?v=3"
         );
         assertEquals(local, first.get(0));
-    }
-
-    private GistDatabaseHelper makeHelper(final String name) {
-        substitutionDatabase(name, GistsTable.BASE_NAME);
-        return new GistDatabaseHelper(RuntimeEnvironment.application);
-    }
-
-    /**
-     * Для каждого теста подменяется файл базы данных
-     * @param file имя файла бд из ресурсов
-     * @param basename имя базы данных
-     */
-    private void substitutionDatabase(final String file, final String basename) {
-        String filePath = getClass().getResource(file).getFile();
-
-        Context cnt = RuntimeEnvironment.application.getApplicationContext();
-        String destinationPath = new ContextWrapper(cnt).getDatabasePath(basename).getAbsolutePath();
-        File to = new File(destinationPath);
-        String parent = to.getParent();
-        boolean isDirCreate = new File(parent).mkdir();
-        assertTrue(isDirCreate);
-
-        File from = new File(filePath);
-        try {
-            Files.copy(from, to);
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail(e.getMessage());
-        }
     }
 
 }

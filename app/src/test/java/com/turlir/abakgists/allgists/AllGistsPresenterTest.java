@@ -30,7 +30,6 @@ import rx.Observable;
 import rx.Scheduler;
 import rx.android.plugins.RxAndroidPlugins;
 import rx.android.plugins.RxAndroidSchedulersHook;
-import rx.functions.Func1;
 import rx.plugins.RxJavaHooks;
 import rx.schedulers.Schedulers;
 
@@ -40,7 +39,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = Build.VERSION_CODES.LOLLIPOP, packageName = "com.turlir.abakgists")
+@Config(constants = BuildConfig.class, sdk = Build.VERSION_CODES.O, packageName = "com.turlir.abakgists")
 public class AllGistsPresenterTest {
 
     @Rule
@@ -65,12 +64,7 @@ public class AllGistsPresenterTest {
         RxJavaHooks.reset();
         RxAndroidPlugins.getInstance().reset();
 
-        RxJavaHooks.setOnIOScheduler(new Func1<Scheduler, Scheduler>() {
-            @Override
-            public Scheduler call(Scheduler scheduler) {
-                return Schedulers.immediate();
-            }
-        });
+        RxJavaHooks.setOnIOScheduler(scheduler -> Schedulers.immediate());
         RxAndroidPlugins.getInstance().registerSchedulersHook(new RxAndroidSchedulersHook() {
             @Override
             public Scheduler getMainThreadScheduler() {

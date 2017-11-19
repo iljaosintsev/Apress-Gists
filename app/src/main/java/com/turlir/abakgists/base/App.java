@@ -35,6 +35,10 @@ public class App extends Application {
                         .build()
         );
 
+        tooling();
+    }
+
+    protected void tooling() {
         if (!LeakCanary.isInAnalyzerProcess(this)) {
             LeakCanary.install(this);
         }

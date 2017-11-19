@@ -66,8 +66,8 @@ public class DatabaseMocking extends DaggerMockRule<AppComponent> {
         String destinationPath = new ContextWrapper(cnt).getDatabasePath(basename).getAbsolutePath();
         File to = new File(destinationPath);
         String parent = to.getParent();
-        boolean isDirCreate = new File(parent).mkdir();
-        assertTrue(isDirCreate);
+        boolean isDirExists = new File(parent).exists();
+        assertTrue(isDirExists);
 
         File from = new File(filePath);
         try {
