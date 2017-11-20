@@ -39,7 +39,7 @@ public abstract class DynamicForm<T> implements Form<T> {
             WidgetHolder h = mStructure.next(mFactory);
             holders.add(h);
         }
-        mTemplate = new Template<>(holders, mStructure.outs());
+        mTemplate = new Template<>(holders, mStructure.outs(), mStructure.groups());
     }
 
     @Override

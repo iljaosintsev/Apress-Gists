@@ -1,10 +1,12 @@
 package com.turlir.abakgists.templater;
 
+import com.turlir.abakgists.templater.base.Group;
 import com.turlir.abakgists.templater.base.Interceptor;
 import com.turlir.abakgists.templater.base.Out;
 import com.turlir.abakgists.templater.widget.FormWidget;
 import com.turlir.abakgists.templater.widget.WidgetFactory;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -16,11 +18,15 @@ public class Structure<T> {
     private final List<Out<T>> mOuts;
     private final int mCount;
 
-    Structure(List<Node> nodes, List<Interceptor> interceptors, List<Out<T>> outs) {
+    private final HashMap<Integer, Group> mGroups;
+
+    Structure(List<Node> nodes, List<Interceptor> interceptors, List<Out<T>> outs, HashMap<Integer, Group> gr) {
         mInterceptors = interceptors.iterator();
         mIterator = nodes.listIterator();
         mOuts = outs;
         mCount = nodes.size();
+
+        mGroups = gr;
     }
 
     boolean hasNext() {
@@ -44,5 +50,9 @@ public class Structure<T> {
 
     List<Out<T>> outs() {
         return mOuts;
+    }
+
+    Mixer groups() {
+        return new Mixer(mGroups);
     }
 }

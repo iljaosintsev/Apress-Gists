@@ -24,19 +24,16 @@ class LoginForm extends DynamicForm<EditableProfile> {
     protected Grouper group() {
         return new Grouper() {
             @Override
-            public ViewGroup changeRoot(String tag, ViewGroup origin, ViewGroup current) {
-                switch (tag) {
-                    case "position":
+            public ViewGroup changeRoot(int index) {
+                switch (index) {
+                    case 0:
                         LinearLayout ll = new LinearLayout(context());
                         ll.setOrientation(LinearLayout.VERTICAL);
                         ll.setBackgroundColor(Color.parseColor("#D7CCC8"));
-                        origin.addView(ll);
                         return ll;
-                    case "phone":
-                        return current;
 
                     default:
-                        return origin;
+                        return null;
                 }
 
             }
@@ -59,6 +56,7 @@ class LoginForm extends DynamicForm<EditableProfile> {
                     }
                 })
 
+                .startGroup()
                 .addMaterialField("Должность", false, "position")
                 .in(new Interceptor() {
                     @Override
@@ -84,6 +82,7 @@ class LoginForm extends DynamicForm<EditableProfile> {
                         mPhone = (MaterialField) view;
                     }
                 })
+                .endGroup()
 
                 .addMaterialField("Дополнительный телефон, ICQ, Skype", false, "additional")
                 .in(new Interceptor() {
@@ -98,6 +97,7 @@ class LoginForm extends DynamicForm<EditableProfile> {
                         mAdd.setOnEditorActionListener(doneVerifierListener());
                     }
                 })
+
                 .build();
     }
 

@@ -1,10 +1,13 @@
 package com.turlir.abakgists.templater;
 
+import com.turlir.abakgists.templater.base.Group;
 import com.turlir.abakgists.templater.base.Interceptor;
 import com.turlir.abakgists.templater.base.Out;
 import com.turlir.abakgists.templater.check.Checker;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public abstract class BaseBuilder<T, B extends BaseBuilder<T, B>>  {
@@ -13,10 +16,14 @@ public abstract class BaseBuilder<T, B extends BaseBuilder<T, B>>  {
     private final List<Interceptor> mInterceptors;
     private final List<Out<T>> mOuts;
 
+    private final HashMap<Integer, Group> mGroups;
+
     public BaseBuilder() {
         mNodes = new ArrayList<>();
         mInterceptors = new ArrayList<>();
         mOuts = new ArrayList<>();
+
+        mGroups = new LinkedHashMap<>();
     }
 
     //
@@ -90,8 +97,31 @@ public abstract class BaseBuilder<T, B extends BaseBuilder<T, B>>  {
         return getThis();
     }
 
+    public final B startGroup() {
+        int index = mNodes.size();
+        if (mGroups.containsKey(index)) { // если такая группа уже есть
+            throw new UnsupportedOperationException();
+        }
+        Group group = new Group(mGroups.size(), mNodes.size() + 1);
+        mGroups.put(index, group);
+        return getThis();
+    }
+
+    public final B endGroup() {
+        Group lastGroup = mGroups.get(mGroups.size());
+        if (lastGroup.ending()) {
+            throw new IllegalStateException(); /// если группа уже закрыта
+        }
+        lastGroup.end = mNodes.size();
+        if (!lastGroup.valid()) {
+            throw new IllegalStateException(); /// если в группе нет элементов
+        }
+        lastGroup.shift();
+        return getThis();
+    }
+
     public final Structure<T> build() {
-        return new Structure<>(mNodes, mInterceptors, mOuts);
+        return new Structure<>(mNodes, mInterceptors, mOuts, mGroups);
     }
 
     protected abstract B getThis();

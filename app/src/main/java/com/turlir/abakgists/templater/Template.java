@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import com.turlir.abakgists.templater.base.Grouper;
 import com.turlir.abakgists.templater.base.Out;
 
+import java.util.Iterator;
 import java.util.List;
 
 class Template<T> {
@@ -13,7 +14,10 @@ class Template<T> {
     private final List<WidgetHolder> mHolders;
     private final List<Out<T>> mOuts;
 
-    Template(List<WidgetHolder> holders, List<Out<T>> outs) {
+    private final Mixer mixer;
+
+    Template(List<WidgetHolder> holders, List<Out<T>> outs, Mixer mixer) {
+        this.mixer = mixer;
         if (holders.size() != outs.size() || holders.size() < 1) {
             throw new IllegalArgumentException();
         }
@@ -22,11 +26,11 @@ class Template<T> {
     }
 
     void connect(final ViewGroup group, Grouper hack) {
-        ViewGroup current = group;
-        for (int i = 0, size = mHolders.size(); i < size; i++) {
+        Iterator<ViewGroup> iter = mixer.iterator(group, hack);
+        for (int i = 0, l = mHolders.size(), s = l - 1; i < l; i++) {
             WidgetHolder holder = mHolders.get(i);
-            current = hack.changeRoot(holder.tag(), group, current);
-            holder.connect(current, size - 1);
+            ViewGroup root = iter.next();
+            holder.connect(root, s);
         }
     }
 
