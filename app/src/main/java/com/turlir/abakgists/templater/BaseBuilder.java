@@ -109,13 +109,7 @@ public abstract class BaseBuilder<T, B extends BaseBuilder<T, B>>  {
 
     public final B endGroup() {
         Group lastGroup = mGroups.get(mGroups.size());
-        if (lastGroup.ending()) {
-            throw new IllegalStateException(); /// если группа уже закрыта
-        }
-        lastGroup.end = mNodes.size();
-        if (!lastGroup.valid()) {
-            throw new IllegalStateException(); /// если в группе нет элементов
-        }
+        lastGroup.setEnd(mNodes.size());
         lastGroup.shift();
         return getThis();
     }

@@ -3,7 +3,7 @@ package com.turlir.abakgists.templater.base;
 public class Group {
 
     public final int number;
-    public int end;
+    private int end;
 
     private int mStart;
 
@@ -18,21 +18,18 @@ public class Group {
         end--;
     }
 
-
+    public void setEnd(int value) {
+        if (value != -1 &&
+            end == -1 &&
+            value > mStart) {
+            end = value;
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
 
     public boolean does(int index) {
         return index <= end;
     }
 
-    public boolean ending() {
-        return end != -1;
-    }
-
-    public boolean valid() {
-        return end > mStart && diff() > 0;
-    }
-
-    public int diff() {
-        return end - mStart;
-    }
 }
