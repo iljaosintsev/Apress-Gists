@@ -109,7 +109,7 @@ public abstract class BaseBuilder<T, B extends BaseBuilder<T, B>>  {
 
     public final B endGroup() {
         Group lastGroup = mGroups.get(mGroups.size());
-        lastGroup.setEnd(mNodes.size());
+        lastGroup.close(mNodes.size());
         lastGroup.shift();
         return getThis();
     }
