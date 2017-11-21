@@ -102,7 +102,7 @@ public abstract class BaseBuilder<T, B extends BaseBuilder<T, B>>  {
         if (mGroups.containsKey(index)) { // если такая группа уже есть
             throw new UnsupportedOperationException();
         }
-        Group group = new Group(mGroups.size(), mNodes.size() + 1);
+        Group group = new Group(mGroups.size(), index + 1);
         mGroups.put(index, group);
         return getThis();
     }
