@@ -6,19 +6,23 @@ import android.view.ViewGroup;
 import com.turlir.abakgists.templater.base.Group;
 import com.turlir.abakgists.templater.base.Grouper;
 
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Queue;
 
 class Mixer {
 
-    private final HashMap<Integer, Group> mGroups;
+    private final Queue<Group> mGroups;
 
-    Mixer(HashMap<Integer, Group> groups) {
+    Mixer(Queue<Group> groups) {
         mGroups = groups;
     }
 
-    Iterator<ViewGroup> iterator(ViewGroup mainRoot, Grouper hack) {
-        return new RootIterator(mainRoot, hack);
+    Iterator<ViewGroup> iterator(final ViewGroup mainRoot, Grouper hack) {
+        if (mGroups.size() > 0) {
+            return new RootIterator(mainRoot, hack);
+        } else {
+            return new RootIterator(mainRoot, hack);
+        }
     }
 
     private class RootIterator implements Iterator<ViewGroup> {
@@ -32,7 +36,7 @@ class Mixer {
         private int mIndex; /// счетчик виджетов на форме
 
         private RootIterator(ViewGroup mainRoot, Grouper hack) {
-            mLastRoot = mainRoot;
+            mLastRoot = null;
             mBackup = mainRoot;
             mHack = hack;
             mIndex = 0;
@@ -40,31 +44,41 @@ class Mixer {
 
         @Override
         public boolean hasNext() {
-            return mIndex < Integer.MAX_VALUE;
+            throw new UnsupportedOperationException();
         }
 
         @Override
         public ViewGroup next() {
-            if (mGroups.size() < 1) {
-                return mBackup;
-            }
 
-            if (mGroups.containsKey(mIndex)) {
-                mLastGroup = mGroups.get(mIndex);
-                mLastRoot = mHack.changeRoot(mLastGroup.number);
-                mBackup.addView(mLastRoot); // обяз.
+            if (!mGroups.isEmpty() || mLastGroup != null) { // группы еще есть или последняя не закрыта
 
-                mIndex++;
-                return mLastRoot;
+                if (mIndex == 0) { // получение первой группы
+                    mLastGroup = mGroups.poll();
+                }
 
-            } else if (mLastGroup != null && mLastGroup.does(mIndex)) {
-                mIndex++;
-                return mLastRoot;
+                // очередной элемент НЕ входит в группу
+                // или защита от NPE
+                if (mLastGroup == null || !mLastGroup.does(mIndex) ) {
+                    mIndex++;
+                    mLastRoot = null; // забываем последнюю группу
+                    return mBackup; // оригинальный рут
+
+                } else {
+
+                    if (mLastRoot == null) { // первый раз зашли в группу
+                        mLastRoot = mHack.changeRoot(mLastGroup.number);
+                        mBackup.addView(mLastRoot); // добавляем новый рут в оригинальный
+                    }
+                    mIndex++;
+                    if (!mLastGroup.does(mIndex) ) { // если следующий элемент НЕ входит в группе
+                        mLastGroup = mGroups.poll(); // получаем следующую группу или null
+                    }
+
+                    return mLastRoot;
+                }
 
             } else {
-                mIndex++;
-                mLastGroup = null;
-                return mBackup;
+                return mBackup; // групп нет
             }
 
         }

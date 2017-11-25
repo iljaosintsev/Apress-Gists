@@ -6,7 +6,7 @@ import com.turlir.abakgists.templater.base.Out;
 import com.turlir.abakgists.templater.widget.FormWidget;
 import com.turlir.abakgists.templater.widget.WidgetFactory;
 
-import java.util.HashMap;
+import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -18,9 +18,9 @@ public class Structure<T> {
     private final List<Out<T>> mOuts;
     private final int mCount;
 
-    private final HashMap<Integer, Group> mGroups;
+    private final Deque<Group> mGroups;
 
-    Structure(List<Node> nodes, List<Interceptor> interceptors, List<Out<T>> outs, HashMap<Integer, Group> gr) {
+    Structure(List<Node> nodes, List<Interceptor> interceptors, List<Out<T>> outs, Deque<Group> gr) {
         mInterceptors = interceptors.iterator();
         mIterator = nodes.listIterator();
         mOuts = outs;

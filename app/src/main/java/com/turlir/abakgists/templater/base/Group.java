@@ -42,6 +42,10 @@ public class Group {
         }
     }
 
+    public boolean isClose() {
+        return end == -1;
+    }
+
     /**
      * Входит ли элемент в диапазон
      * @param index номер элемента

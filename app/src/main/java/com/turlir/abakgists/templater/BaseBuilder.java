@@ -6,8 +6,8 @@ import com.turlir.abakgists.templater.base.Out;
 import com.turlir.abakgists.templater.check.Checker;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.List;
 
 public abstract class BaseBuilder<T, B extends BaseBuilder<T, B>>  {
@@ -16,14 +16,14 @@ public abstract class BaseBuilder<T, B extends BaseBuilder<T, B>>  {
     private final List<Interceptor> mInterceptors;
     private final List<Out<T>> mOuts;
 
-    private final HashMap<Integer, Group> mGroups;
+    private final Deque<Group> mGroups;
 
     public BaseBuilder() {
         mNodes = new ArrayList<>();
         mInterceptors = new ArrayList<>();
         mOuts = new ArrayList<>();
 
-        mGroups = new LinkedHashMap<>();
+        mGroups = new LinkedList<>();
     }
 
     //
@@ -99,16 +99,16 @@ public abstract class BaseBuilder<T, B extends BaseBuilder<T, B>>  {
 
     public final B startGroup() {
         int index = mNodes.size();
-        if (mGroups.containsKey(index)) { // если такая группа уже есть
+        if (mGroups.size() > 0 && !mGroups.getLast().isClose()) { // если такая группа уже есть
             throw new UnsupportedOperationException();
         }
         Group group = new Group(mGroups.size(), index + 1);
-        mGroups.put(index, group);
+        mGroups.add(group);
         return getThis();
     }
 
     public final B endGroup() {
-        Group lastGroup = mGroups.get(mGroups.size());
+        Group lastGroup = mGroups.getLast();
         lastGroup.close(mNodes.size());
         lastGroup.shift();
         return getThis();
