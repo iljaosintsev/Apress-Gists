@@ -16,7 +16,7 @@ public class NotesPresenter extends BasePresenter<NotesFragment> {
 
     public void loadNotes() {
         addSubscription(mInteractor.requestWithNotes()
-                .compose(this.defaultScheduler())
+                .compose(this.<List<GistModel>>defaultScheduler())
                 .subscribe(new Handler<List<GistModel>>() {
                     @Override
                     public void onNext(final List<GistModel> gist) {

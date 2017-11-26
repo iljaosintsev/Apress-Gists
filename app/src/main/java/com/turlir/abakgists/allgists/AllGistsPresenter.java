@@ -34,7 +34,7 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
     public void loadPublicGists(final int currentSize) {
         removeCacheSubs();
         Subscription subs = mInteractor.request(currentSize)
-                .compose(this.defaultScheduler())
+                .compose(this.<List<GistModel>>defaultScheduler())
                 .subscribe(new GistDownloadHandler<List<GistModel>>() {
                     @Override
                     public void onNext(List<GistModel> value) {
@@ -50,7 +50,7 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
     public void updateGist() {
         removeCacheSubs();
         Subscription subs = mInteractor.update()
-                .compose(this.defaultScheduler())
+                .compose(this.<PutResults<GistLocal>>defaultScheduler())
                 .subscribe(new GistDownloadHandler<PutResults<GistLocal>>() {
                     @Override
                     public void onNext(PutResults<GistLocal> gistModelPutResults) {
