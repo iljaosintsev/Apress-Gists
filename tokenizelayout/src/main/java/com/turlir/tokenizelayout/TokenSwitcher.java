@@ -5,15 +5,21 @@ import android.support.annotation.NonNull;
 /**
  * Класс описывает логику переключения видимости потомков во ViewGroup
  */
-class TokenSwitcher {
+public class TokenSwitcher {
 
-    private Setting mLastItem;
+    /**
+     * Неправильный индекс потомка
+     */
+    public static final int INVALID_INDEX = -1;
+
+    private int mLastItem;
     private int mToken;
     private final TokenInformator mInformator;
 
     TokenSwitcher(int token, TokenInformator informator) {
         mToken = token;
         mInformator = informator;
+        mLastItem = INVALID_INDEX;
     }
 
     /**
@@ -29,14 +35,14 @@ class TokenSwitcher {
      * @return {@code true}, если потомка следует отобразить
      */
     boolean applyGroupByChild(int child) {
-        if (mLastItem != null) {
+        if (mLastItem != INVALID_INDEX) {
 
-            return child == mLastItem.getPosition();
+            return child == mLastItem;
 
         } else {
 
             if (mInformator.doesViewToToken(mToken, child)) {
-                mLastItem = new Setting(mToken, child);
+                mLastItem = child;
                 return true;
             } else {
                 return false;
@@ -63,19 +69,19 @@ class TokenSwitcher {
 
         ChildDiff.Builder builder = new ChildDiff.Builder();
 
-        if (mLastItem != null) { // есть настройки
+        if (mLastItem != INVALID_INDEX) { // есть настройки
 
             if (token != mToken) { // токен изменился
 
                 int cc = mInformator.getChildCount();
-                if (cc > mLastItem.getPosition() && mLastItem.getPosition() > TokenizeLayout.INVALID_INDEX) {
-                    builder.hide(mLastItem.getPosition());
+                if (cc > mLastItem && mLastItem > INVALID_INDEX) {
+                    builder.hide(mLastItem);
                 }
 
                 if (cc > 0) {
                     int index = mInformator.getChildIndexByToken(token);
-                    mLastItem = new Setting(token, index);
-                    if (index != TokenizeLayout.INVALID_INDEX) {
+                    mLastItem = index;
+                    if (index != INVALID_INDEX) {
                         builder.show(index);
                         mToken = token;
                     }
@@ -85,8 +91,8 @@ class TokenSwitcher {
         } else { // нет настроек
 
             int index = mInformator.getChildIndexByToken(token);
-            if (index != TokenizeLayout.INVALID_INDEX) {
-                mLastItem = new Setting(token, index);
+            if (index != INVALID_INDEX) {
+                mLastItem = index;
                 builder.show(index);
             }
 
@@ -115,7 +121,7 @@ class TokenSwitcher {
 
         /**
          * @param token токен
-         * @return индекс потомка для данного токена
+         * @return индекс потомка для данного токена или {@link TokenSwitcher#INVALID_INDEX}
          */
         int getChildIndexByToken(int token);
 

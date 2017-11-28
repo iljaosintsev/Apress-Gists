@@ -14,10 +14,10 @@ import static org.junit.Assert.assertTrue;
 public class TokenSwitcherTest {
 
     @Mock
-    ChildDiff.ChildManipulator man;
+    private ChildDiff.ChildManipulator man;
 
     @Mock
-    TokenSwitcher.TokenInformator inf;
+    private TokenSwitcher.TokenInformator inf;
 
     private TokenSwitcher mSwitcher;
 
@@ -79,7 +79,7 @@ public class TokenSwitcherTest {
      */
     @Test
     public void setToken_FistTime_NoChild_Test() {
-        Mockito.when(inf.getChildIndexByToken(1)).thenReturn(TokenizeLayout.INVALID_INDEX);
+        Mockito.when(inf.getChildIndexByToken(1)).thenReturn(TokenSwitcher.INVALID_INDEX);
         ChildDiff diff = mSwitcher.setToken(1); // пустой diff
 
         diff.apply(man);
@@ -158,7 +158,7 @@ public class TokenSwitcherTest {
         setTokenZero();
         //
         Mockito.when(inf.getChildCount()).thenReturn(1);
-        Mockito.when(inf.getChildIndexByToken(1)).thenReturn(TokenizeLayout.INVALID_INDEX);
+        Mockito.when(inf.getChildIndexByToken(1)).thenReturn(TokenSwitcher.INVALID_INDEX);
         ChildDiff diff = mSwitcher.setToken(1);
 
         diff.apply(man);
@@ -195,7 +195,7 @@ public class TokenSwitcherTest {
         setTokenZero();
         //
         Mockito.when(inf.getChildCount()).thenReturn(1);
-        Mockito.when(inf.getChildIndexByToken(1)).thenReturn(TokenizeLayout.INVALID_INDEX);
+        Mockito.when(inf.getChildIndexByToken(1)).thenReturn(TokenSwitcher.INVALID_INDEX);
         mSwitcher.setToken(1);
         //
 

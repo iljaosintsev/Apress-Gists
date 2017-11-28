@@ -20,8 +20,6 @@ import android.widget.FrameLayout;
 public abstract class TokenizeLayout extends FrameLayout
         implements TokenSwitcher.TokenInformator, ChildDiff.ChildManipulator {
 
-    public static final int INVALID_INDEX = -1;
-
     private final TokenSwitcher mSwitcher;
 
     public TokenizeLayout(@NonNull Context context) {
@@ -53,7 +51,7 @@ public abstract class TokenizeLayout extends FrameLayout
 
     /**
      * @param token токен потомка
-     * @return индекс потомка, имеющего этот токен или {@link #INVALID_INDEX}
+     * @return индекс потомка, имеющего этот токен или {@link TokenSwitcher#INVALID_INDEX}
      */
     @Override
     public abstract int getChildIndexByToken(int token);

@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 
 import com.turlir.abakgists.R;
+import com.turlir.tokenizelayout.TokenSwitcher;
 import com.turlir.tokenizelayout.TokenizeLayout;
 
 public class SwitchLayout extends TokenizeLayout {
@@ -54,7 +55,7 @@ public class SwitchLayout extends TokenizeLayout {
         if (getChildCount() > token) {
             return token;
         } else {
-            return INVALID_INDEX;
+            return TokenSwitcher.INVALID_INDEX;
         }
     }
 
