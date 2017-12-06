@@ -3,9 +3,7 @@ package com.turlir.abakgists.allgists;
 
 import android.support.annotation.NonNull;
 
-import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
 import com.turlir.abakgists.allgists.view.AllGistsFragment;
-import com.turlir.abakgists.api.data.GistLocal;
 import com.turlir.abakgists.base.BasePresenter;
 import com.turlir.abakgists.base.erroring.ErrorInterpreter;
 import com.turlir.abakgists.base.erroring.ErrorSituation;
@@ -14,76 +12,39 @@ import com.turlir.abakgists.model.GistModel;
 
 import java.util.List;
 
-import rx.Subscription;
-import timber.log.Timber;
-
 public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
 
-    private final GistListInteractor mInteractor;
-
-    private Subscription mCacheSubs;
+    private final GistLoader mLoader;
 
     public AllGistsPresenter(GistListInteractor interactor) {
-        mInteractor = interactor;
+        GistDownloadHandler handler = new GistDownloadHandler() {
+            @Override
+            public void onNext(Object o) {
+                // TODO why ?
+            }
+        };
+        mLoader = new GistLoader(interactor, new LoaderCallback(), handler);
     }
 
     /**
      * из локального кеша или сетевого запроса
-     *
      */
     public void loadPublicGists(final int currentSize) {
-        removeCacheSubs();
-        Subscription subs = mInteractor.request(currentSize)
-                .compose(this.<List<GistModel>>defaultScheduler())
-                .subscribe(new GistDownloadHandler<List<GistModel>>() {
-                    @Override
-                    public void onNext(List<GistModel> value) {
-                        if (getView() != null) {
-                            Timber.d("onNext %d", value.size());
-                            getView().onGistLoaded(value);
-                        }
-                    }
-                });
-        addCacheSubs(subs);
+        mLoader.loadNewPage(currentSize);
     }
 
     public void updateGist() {
-        removeCacheSubs();
-        Subscription subs = mInteractor.update()
-                .compose(this.<PutResults<GistLocal>>defaultScheduler())
-                .subscribe(new GistDownloadHandler<PutResults<GistLocal>>() {
-                    @Override
-                    public void onNext(PutResults<GistLocal> gistModelPutResults) {
-                        if (getView() != null) {
-                            getView().onUpdateSuccessful();
-                            loadPublicGists(GistListInteractor.IGNORE_SIZE);
-                        }
-                    }
-                });
-        addSubscription(subs);
+        mLoader.refresh();
     }
 
     public void first() {
-        mInteractor.resetAccumulator();
+        mLoader.resetState();
         loadPublicGists(0);
     }
 
     public void again() {
-        if (getView() != null) {
-            getView().onGistLoaded(mInteractor.accumulator());
-        }
+        mLoader.resetState();
         loadPublicGists(GistListInteractor.IGNORE_SIZE);
-    }
-
-    private void removeCacheSubs() {
-        if (mCacheSubs != null && !mCacheSubs.isUnsubscribed()) {
-            removeSubscription(mCacheSubs);
-        }
-    }
-
-    private void addCacheSubs(Subscription subs) {
-        mCacheSubs = subs;
-        addSubscription(mCacheSubs);
     }
 
     private abstract class GistDownloadHandler<E> extends ErrorHandler<E> {
@@ -111,4 +72,35 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
 
     }
 
+    private class LoaderCallback implements ListCombination.Callback<GistModel> {
+
+        @Override
+        public void blockingLoad(boolean visible) {
+            if (getView() != null) {
+                getView().toBlockingLoad(visible);
+            }
+        }
+
+        @Override
+        public void inlineLoad(boolean visible) {
+            if (getView() != null) {
+                getView().inlineLoad(visible);
+            }
+        }
+
+        @Override
+        public void renderData(List<GistModel> items) {
+            if (getView() != null) {
+                getView().onGistLoaded(items);
+            }
+
+        }
+
+        @Override
+        public void emptyData(boolean visible) {
+            if (getView() != null) {
+                // not impl
+            }
+        }
+    }
 }

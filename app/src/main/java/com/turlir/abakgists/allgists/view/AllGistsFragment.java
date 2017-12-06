@@ -103,7 +103,6 @@ public class AllGistsFragment
         recycler.setItemAnimator(new SlideInLeftAnimator());
 
         // start
-        this.root.toLoading();
         TextView tv = root.findViewById(R.id.in_loading_tv);
         Drawable[] pd = tv.getCompoundDrawables();
         for (Drawable drawable : pd) {
@@ -156,7 +155,7 @@ public class AllGistsFragment
     ///
 
     public void onGistLoaded(List<GistModel> value) {
-        root.toContent();
+        // root.toContent();
         if (!isEmpty()) {
             mAdapter.removeLastIfLoading();
             swipe.setRefreshing(false);
@@ -186,9 +185,6 @@ public class AllGistsFragment
     @Override
     public void loadNextPage() {
         _presenter.loadPublicGists(mAdapter.getItemCount());
-        if (!isEmpty()) {
-            mAdapter.addLoading();
-        }
     }
 
     @Override
@@ -203,7 +199,6 @@ public class AllGistsFragment
     @Override
     public void nonBlockingError(String msg) {
         swipe.setRefreshing(false);
-        mAdapter.removeLastIfLoading();
         Snackbar.make(recycler, msg, Snackbar.LENGTH_LONG).show();
     }
 
@@ -215,7 +210,6 @@ public class AllGistsFragment
     @Override
     public void blockingError(String msg) {
         swipe.setRefreshing(false);
-        root.toContent();
         mAdapter.clearAll(); // что бы ошибки не накапливались с обновлением
         mAdapter.addError(msg);
     }
@@ -223,5 +217,23 @@ public class AllGistsFragment
     @Override
     public String toString() {
         return "All Gists";
+    }
+
+    public void toBlockingLoad(boolean visible) {
+        if (visible) {
+            root.toLoading();
+        } else {
+            root.toContent();
+        }
+    }
+
+    public void inlineLoad(boolean visible) {
+        if (visible) {
+            if (!isEmpty()) {
+                mAdapter.addLoading();
+            }
+        } else {
+            mAdapter.removeLastIfLoading();
+        }
     }
 }

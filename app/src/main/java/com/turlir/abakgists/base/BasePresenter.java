@@ -63,7 +63,7 @@ public abstract class BasePresenter<T extends BaseView> {
     /// classes
     ///
 
-    protected abstract class ErrorHandler<E> extends Handler<E> {
+    public abstract class ErrorHandler<E> extends Handler<E> {
 
         private final ErrorSelector mRobot;
 

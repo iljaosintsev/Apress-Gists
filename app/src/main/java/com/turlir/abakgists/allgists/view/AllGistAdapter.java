@@ -148,11 +148,13 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
 
     void removeLastIfLoading() {
         int i = getItemCount() - 1;
-        ViewModel last = getItemByPosition(i);
-        int type = last.type(mFactory);
-        if (type == R.layout.inline_loading) {
-            mContent.remove(i);
-            notifyItemRemoved(i);
+        if (i > 0) {
+            ViewModel last = getItemByPosition(i);
+            int type = last.type(mFactory);
+            if (type == R.layout.inline_loading) {
+                mContent.remove(i);
+                notifyItemRemoved(i);
+            }
         }
     }
 
