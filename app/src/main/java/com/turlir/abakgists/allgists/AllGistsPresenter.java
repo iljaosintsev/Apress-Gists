@@ -17,7 +17,7 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
 
     public AllGistsPresenter(GistListInteractor interactor) {
         ErrorSelector selector = new TroubleSelector(new RepeatingError());
-        mLoader = new GistLoader(interactor, new LoaderCallback(), selector);
+        mLoader = new GistLoader(interactor, new LoaderCallback(), selector, new ErrorCallback());
     }
 
     /**
@@ -71,8 +71,9 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
                 // not impl
             }
         }
+    }
 
-        //
+    private class ErrorCallback implements ListCombination.ErrorProcessing {
 
         @Override
         public ErrorInterpreter error() {
@@ -88,5 +89,6 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
         public boolean isError() {
             return getView() != null && getView().isError();
         }
+
     }
 }

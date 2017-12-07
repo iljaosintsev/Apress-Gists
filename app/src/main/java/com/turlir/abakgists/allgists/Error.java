@@ -10,10 +10,12 @@ class Error extends ListCombination<GistModel> {
 
     private final Throwable mError;
     private final ErrorSelector mSelector;
+    private final ErrorProcessing mProcessor;
 
-    Error(Throwable error, ErrorSelector selector) {
+    Error(Throwable error, ErrorSelector selector, ErrorProcessing processor) {
         mError = error;
         mSelector = selector;
+        mProcessor = processor;
     }
 
     @Override
@@ -29,8 +31,10 @@ class Error extends ListCombination<GistModel> {
 
             Exception exception = (Exception) mError;
             Timber.e(exception);
-            ErrorSituation situation = mSelector.select(exception, call.dataAvailable(), call.isError());
-            situation.perform(call.error(), exception);
+            boolean isData = mProcessor.dataAvailable();
+            boolean isError = mProcessor.isError();
+            ErrorSituation situation = mSelector.select(exception, isData, isError);
+            situation.perform(mProcessor.error(), exception);
 
         } else {
             throw new RuntimeException(mError);

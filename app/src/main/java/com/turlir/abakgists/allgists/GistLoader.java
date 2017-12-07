@@ -21,6 +21,7 @@ class GistLoader {
     private final GistListInteractor mInteractor;
     private final ListCombination.Callback<GistModel> mCallback;
     private final ErrorSelector mSelector;
+    private final ListCombination.ErrorProcessing mErrorProcessor;
 
     @Nullable
     private Subscription mCacheSubs;
@@ -28,10 +29,12 @@ class GistLoader {
     @NonNull
     private ListCombination<GistModel> mState;
 
-    GistLoader(GistListInteractor interactor, ListCombination.Callback<GistModel> callback, ErrorSelector selector) {
+    GistLoader(GistListInteractor interactor, ListCombination.Callback<GistModel> callback,
+               ErrorSelector selector, ListCombination.ErrorProcessing errorProcessor) {
         mInteractor = interactor;
         mCallback = callback;
         mSelector = selector;
+        mErrorProcessor = errorProcessor;
 
         mState = new Start();
     }
@@ -56,7 +59,7 @@ class GistLoader {
                     }
                     @Override
                     public void onError(Throwable e) {
-                        mState = mState.error(e, mSelector);
+                        mState = mState.error(e, mSelector, mErrorProcessor);
                         mState.perform(mCallback);
                     }
                     @Override
@@ -83,7 +86,7 @@ class GistLoader {
                     }
                     @Override
                     public void onError(Throwable e) {
-                        mState = mState.error(e, mSelector);
+                        mState = mState.error(e, mSelector, mErrorProcessor);
                         mState.perform(mCallback);
                     }
                     @Override
