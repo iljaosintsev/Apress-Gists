@@ -1,13 +1,12 @@
 package com.turlir.abakgists.allgists;
 
 
-import android.support.annotation.NonNull;
-
 import com.turlir.abakgists.allgists.view.AllGistsFragment;
 import com.turlir.abakgists.base.BasePresenter;
 import com.turlir.abakgists.base.erroring.ErrorInterpreter;
-import com.turlir.abakgists.base.erroring.ErrorSituation;
+import com.turlir.abakgists.base.erroring.ErrorSelector;
 import com.turlir.abakgists.base.erroring.RepeatingError;
+import com.turlir.abakgists.base.erroring.TroubleSelector;
 import com.turlir.abakgists.model.GistModel;
 
 import java.util.List;
@@ -17,13 +16,8 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
     private final GistLoader mLoader;
 
     public AllGistsPresenter(GistListInteractor interactor) {
-        GistDownloadHandler handler = new GistDownloadHandler() {
-            @Override
-            public void onNext(Object o) {
-                // TODO why ?
-            }
-        };
-        mLoader = new GistLoader(interactor, new LoaderCallback(), handler);
+        ErrorSelector selector = new TroubleSelector(new RepeatingError());
+        mLoader = new GistLoader(interactor, new LoaderCallback(), selector);
     }
 
     /**
@@ -45,31 +39,6 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
     public void again() {
         mLoader.resetState();
         loadPublicGists(GistListInteractor.IGNORE_SIZE);
-    }
-
-    private abstract class GistDownloadHandler<E> extends ErrorHandler<E> {
-
-        @NonNull
-        @Override
-        protected ErrorSituation[] additionalSituation() {
-            return new ErrorSituation[] { new RepeatingError() };
-        }
-
-        @Override
-        protected boolean isError() {
-            return getView() != null && getView().isError();
-        }
-
-        @Override
-        protected boolean isDataAvailable() {
-            return getView() != null && !getView().isEmpty();
-        }
-
-        @Override
-        protected ErrorInterpreter interpreter() {
-            return getView();
-        }
-
     }
 
     private class LoaderCallback implements ListCombination.Callback<GistModel> {
@@ -101,6 +70,23 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
             if (getView() != null) {
                 // not impl
             }
+        }
+
+        //
+
+        @Override
+        public ErrorInterpreter error() {
+            return getView();
+        }
+
+        @Override
+        public boolean dataAvailable() {
+            return getView() != null && !getView().isEmpty();
+        }
+
+        @Override
+        public boolean isError() {
+            return getView() != null && getView().isError();
         }
     }
 }

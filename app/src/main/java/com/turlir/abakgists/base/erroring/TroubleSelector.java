@@ -41,7 +41,7 @@ public class TroubleSelector implements ErrorSelector {
 
     private final ErrorSituation[] mCallbacks;
 
-    public TroubleSelector(ErrorSituation[] callbacks) {
+    public TroubleSelector(ErrorSituation...callbacks) {
         mCallbacks = callbacks;
     }
 

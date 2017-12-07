@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 
 import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
 import com.turlir.abakgists.api.data.GistLocal;
-import com.turlir.abakgists.base.BasePresenter;
+import com.turlir.abakgists.base.erroring.ErrorSelector;
 import com.turlir.abakgists.model.GistModel;
 
 import java.util.Collections;
@@ -20,7 +20,7 @@ class GistLoader {
 
     private final GistListInteractor mInteractor;
     private final ListCombination.Callback<GistModel> mCallback;
-    private final BasePresenter.ErrorHandler mHandler;
+    private final ErrorSelector mSelector;
 
     @Nullable
     private Subscription mCacheSubs;
@@ -28,11 +28,10 @@ class GistLoader {
     @NonNull
     private ListCombination<GistModel> mState;
 
-    GistLoader(GistListInteractor interactor, ListCombination.Callback<GistModel> callback,
-                      BasePresenter.ErrorHandler handler) {
+    GistLoader(GistListInteractor interactor, ListCombination.Callback<GistModel> callback, ErrorSelector selector) {
         mInteractor = interactor;
         mCallback = callback;
-        mHandler = handler;
+        mSelector = selector;
 
         mState = new Start();
     }
@@ -57,7 +56,7 @@ class GistLoader {
                     }
                     @Override
                     public void onError(Throwable e) {
-                        mState = mState.error(e, mHandler);
+                        mState = mState.error(e, mSelector);
                         mState.perform(mCallback);
                     }
                     @Override
@@ -84,7 +83,7 @@ class GistLoader {
                     }
                     @Override
                     public void onError(Throwable e) {
-                        mState = mState.error(e, mHandler);
+                        mState = mState.error(e, mSelector);
                         mState.perform(mCallback);
                     }
                     @Override

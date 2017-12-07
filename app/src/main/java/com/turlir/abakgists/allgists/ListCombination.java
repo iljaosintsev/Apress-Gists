@@ -1,6 +1,7 @@
 package com.turlir.abakgists.allgists;
 
-import com.turlir.abakgists.base.BasePresenter;
+import com.turlir.abakgists.base.erroring.ErrorInterpreter;
+import com.turlir.abakgists.base.erroring.ErrorSelector;
 import com.turlir.abakgists.model.GistModel;
 
 import java.util.List;
@@ -15,7 +16,7 @@ abstract class ListCombination<T> {
         throw new IllegalStateException();
     }
 
-    ListCombination<GistModel> error(Throwable err, BasePresenter.ErrorHandler handler) {
+    ListCombination<GistModel> error(Throwable err, ErrorSelector selector) {
         throw new IllegalStateException();
     }
 
@@ -27,7 +28,7 @@ abstract class ListCombination<T> {
         //
     }
 
-    interface Callback<T> /*extends ErrorInterpreter*/ {
+    interface Callback<T> extends ErrorProcessing {
 
         void blockingLoad(boolean visible);
 
@@ -36,6 +37,17 @@ abstract class ListCombination<T> {
         void renderData(List<T> items);
 
         void emptyData(boolean visible);
+
+    }
+
+    interface ErrorProcessing {
+
+        ErrorInterpreter error();
+
+        boolean dataAvailable();
+
+        boolean isError();
+
     }
 
 }

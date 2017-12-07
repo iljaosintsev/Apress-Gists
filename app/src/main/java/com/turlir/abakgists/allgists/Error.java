@@ -1,16 +1,19 @@
 package com.turlir.abakgists.allgists;
 
-import com.turlir.abakgists.base.BasePresenter;
+import com.turlir.abakgists.base.erroring.ErrorSelector;
+import com.turlir.abakgists.base.erroring.ErrorSituation;
 import com.turlir.abakgists.model.GistModel;
+
+import timber.log.Timber;
 
 class Error extends ListCombination<GistModel> {
 
     private final Throwable mError;
-    private final BasePresenter.ErrorHandler mHandler;
+    private final ErrorSelector mSelector;
 
-    Error(Throwable error, BasePresenter.ErrorHandler handler) {
+    Error(Throwable error, ErrorSelector selector) {
         mError = error;
-        mHandler = handler;
+        mSelector = selector;
     }
 
     @Override
@@ -20,9 +23,19 @@ class Error extends ListCombination<GistModel> {
 
     @Override
     void perform(Callback<GistModel> call) {
-        call.inlineLoad(false);
-        call.blockingLoad(false);
+        if (mError instanceof Exception) {
+            call.inlineLoad(false);
+            call.blockingLoad(false);
 
-        mHandler.onError(mError);
+            Exception exception = (Exception) mError;
+            Timber.e(exception);
+            ErrorSituation situation = mSelector.select(exception, call.dataAvailable(), call.isError());
+            situation.perform(call.error(), exception);
+
+        } else {
+            throw new RuntimeException(mError);
+        }
+
+        // mHandler.onError(mError);
     }
 }
