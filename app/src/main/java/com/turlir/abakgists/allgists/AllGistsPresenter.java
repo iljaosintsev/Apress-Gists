@@ -11,6 +11,8 @@ import com.turlir.abakgists.model.GistModel;
 
 import java.util.List;
 
+import timber.log.Timber;
+
 public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
 
     private final GistLoader mLoader;
@@ -43,9 +45,12 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
 
     private class LoaderCallback implements ListCombination.Callback<GistModel> {
 
+        private static final String TAG = "DataCycle";
+
         @Override
         public void blockingLoad(boolean visible) {
             if (getView() != null) {
+                Timber.v(TAG, "blockingLoad %s", visible);
                 getView().toBlockingLoad(visible);
             }
         }
@@ -53,6 +58,7 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
         @Override
         public void inlineLoad(boolean visible) {
             if (getView() != null) {
+                Timber.v(TAG, "inlineLoad %s", visible);
                 getView().inlineLoad(visible);
             }
         }
@@ -60,6 +66,7 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
         @Override
         public void renderData(List<GistModel> items) {
             if (getView() != null) {
+                Timber.v(TAG, "renderData %s", items.size());
                 getView().onGistLoaded(items);
             }
 
@@ -67,10 +74,8 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
 
         @Override
         public void emptyData(boolean visible) {
-            if (getView() != null) {
-                // not impl
-            }
-        }
+            // not impl
+       }
     }
 
     private class ErrorCallback implements ListCombination.ErrorProcessing {

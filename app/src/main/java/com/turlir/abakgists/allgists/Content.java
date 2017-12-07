@@ -29,12 +29,12 @@ class Content extends ListCombination<GistModel> {
 
     @Override
     void perform(Callback<GistModel> call) {
-        call.blockingLoad(false);
-        call.inlineLoad(false);
         if (mItems.isEmpty()) {
             call.emptyData(true);
         } else {
             call.renderData(mItems);
         }
+        call.blockingLoad(false);
+        call.inlineLoad(false);
     }
 }
