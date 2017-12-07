@@ -20,6 +20,7 @@ import com.turlir.abakgists.model.GistModel;
 import com.turlir.abakgists.notes.NotesPresenter;
 import com.turlir.abakgists.widgets.DividerDecorator;
 import com.turlir.abakgists.widgets.SpaceDecorator;
+import com.turlir.abakgists.widgets.SwitchLayout;
 
 import java.util.List;
 
@@ -31,6 +32,9 @@ public class NotesFragment extends BaseFragment implements OnClickListener {
 
     @Inject
     NotesPresenter _presenter;
+
+    @BindView(R.id.all_gist_switch)
+    SwitchLayout root;
 
     @BindView(R.id.recycler)
     RecyclerView recycler;
@@ -90,6 +94,7 @@ public class NotesFragment extends BaseFragment implements OnClickListener {
     }
 
     public void onNotesLoaded(List<GistModel> gistDiff) {
+        root.toContent();
         mAdapter.addGist(gistDiff);
     }
 
