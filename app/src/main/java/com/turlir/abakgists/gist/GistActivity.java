@@ -8,6 +8,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
+import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -28,7 +32,6 @@ import timber.log.Timber;
 public class GistActivity extends BaseActivity {
 
     private static final String EXTRA_GIST = "EXTRA_GIST";
-
     public static Intent getStartIntent(Context cnt, GistModel data) {
         Intent i = new Intent(cnt, GistActivity.class);
         i.putExtra(EXTRA_GIST, data);
@@ -37,6 +40,9 @@ public class GistActivity extends BaseActivity {
 
     @Inject
     GistPresenter _presenter;
+
+    @BindView(R.id.gist_act_root)
+    View root;
 
     @BindView(R.id.tv_login)
     TextView tvLogin;
@@ -50,6 +56,26 @@ public class GistActivity extends BaseActivity {
     @BindView(R.id.et_note)
     EditText note;
 
+    @BindView(R.id.btn_save)
+    View btnSave;
+
+    private ViewTreeObserver.OnGlobalLayoutListener mKeyboardListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+        @Override
+        public void onGlobalLayout() {
+            int heightDiff = root.getRootView().getHeight() - root.getHeight();
+            if (heightDiff > dpToPx(getContext(), 200)) {
+                btnSave.setVisibility(View.GONE);
+            } else {
+                btnSave.setVisibility(View.VISIBLE);
+            }
+        }
+
+        private float dpToPx(Context context, float valueInDp) {
+            DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+            return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, valueInDp, metrics);
+        }
+    };
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +83,8 @@ public class GistActivity extends BaseActivity {
         App.getComponent().inject(this);
 
         ButterKnife.bind(this);
+
+        root.getViewTreeObserver().addOnGlobalLayoutListener(mKeyboardListener);
 
         final GistModel content;
         if (savedInstanceState == null) {
@@ -73,6 +101,13 @@ public class GistActivity extends BaseActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(EXTRA_GIST, _presenter.content);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        _presenter.detach();
+        root.getViewTreeObserver().removeOnGlobalLayoutListener(mKeyboardListener);
     }
 
     @OnClick(R.id.btn_save)

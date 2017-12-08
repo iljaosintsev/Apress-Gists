@@ -26,6 +26,7 @@
 
         <activity
             android:name=".gist.GistActivity"
+            android:windowSoftInputMode="adjustResize"
             android:label="@string/gist"/>
 
         <activity
