@@ -1,11 +1,13 @@
 package com.turlir.abakgists.model;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.turlir.abakgists.R;
 import com.turlir.abakgists.allgists.view.TypesFactory;
 import com.turlir.abakgists.allgists.view.ViewModel;
 
@@ -120,6 +122,19 @@ public class GistModel
             return Uri.parse(String.format("http://gist.github.com/%s/%s", ownerLogin, id));
         } else {
             return Uri.parse(String.format("http://gist.github.com/%s", id));
+        }
+    }
+
+    /**
+     * Формирует строковое представления автора гиста
+     * @param cnt контекст для получения ресурсов
+     * @return логин автора или строка-заглушка
+     */
+    public String login(Context cnt) {
+        if (ownerLogin == null) {
+            return cnt.getString(R.string.anonymous);
+        } else {
+            return ownerLogin;
         }
     }
 

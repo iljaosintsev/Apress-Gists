@@ -129,13 +129,7 @@ public class GistActivity extends BaseActivity {
                 .placeholder(R.drawable.ic_github)
                 .into(avatar);
 
-        final String login;
-        if (content.ownerLogin != null) {
-            login = content.ownerLogin;
-        } else {
-            login = getString(R.string.anonymous);
-        }
-        tvLogin.setText(login);
+        tvLogin.setText(content.login(getContext()));
 
         desc.setText(content.description);
         note.setText(content.note);

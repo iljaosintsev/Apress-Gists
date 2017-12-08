@@ -37,11 +37,7 @@ class GistModelHolder extends ModelViewHolder<GistModel> {
 
     @Override
     void bind(GistModel item) {
-        if (item.ownerLogin == null) {
-            tvLogin.setText(R.string.anonymous);
-        } else {
-            tvLogin.setText(item.ownerLogin);
-        }
+        tvLogin.setText(item.login(itemView.getContext()));
 
         tvCreated.setText(item.created);
         tvNote.setText(item.note);
