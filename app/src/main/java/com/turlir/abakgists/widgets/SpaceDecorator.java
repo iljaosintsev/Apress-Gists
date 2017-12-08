@@ -23,7 +23,7 @@ public class SpaceDecorator extends RecyclerView.ItemDecoration {
      * @param side отступ с боков
      * @param front отступ сверху и снизу
      */
-    public SpaceDecorator(Context cnt, int side, int front) {
+    public SpaceDecorator(Context cnt, @DimenRes int side, @DimenRes int front) {
         this(cnt, side, front, side, front);
     }
 
@@ -39,6 +39,19 @@ public class SpaceDecorator extends RecyclerView.ItemDecoration {
         mTop = (int) cnt.getResources().getDimension(top);
         mRight = (int) cnt.getResources().getDimension(right);
         mBottom = (int) cnt.getResources().getDimension(bottom);
+    }
+
+    /**
+     * @param left отступ слева
+     * @param top отступ сверху
+     * @param right отступ справа
+     * @param bottom отступ снизу
+     */
+    public SpaceDecorator(int left, int top, int right, int bottom) {
+        mLeft = left;
+        mTop = top;
+        mRight = right;
+        mBottom = bottom;
     }
 
     @Override

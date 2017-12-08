@@ -19,6 +19,7 @@ public interface GistsTable {
             BASE_NAME = "gists_db",
             GISTS = "gists",
             ID = "id",
+            NUMBER = "number",
             DESC = "desc",
             URL = "url",
             CREATED = "created",
@@ -28,6 +29,7 @@ public interface GistsTable {
 
     String CREATE =
             "CREATE TABLE IF NOT EXISTS " + GISTS + "( " +
+                    NUMBER + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     ID + " TEXT NOT NULL UNIQUE ON CONFLICT IGNORE, " +
                     DESC + " TEXT, " +
                     URL + " TEXT NOT NULL, " +

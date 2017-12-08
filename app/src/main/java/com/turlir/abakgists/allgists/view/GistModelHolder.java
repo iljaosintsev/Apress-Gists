@@ -1,7 +1,7 @@
 package com.turlir.abakgists.allgists.view;
 
 
-import android.support.annotation.DrawableRes;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
@@ -14,14 +14,17 @@ import timber.log.Timber;
 
 class GistModelHolder extends ModelViewHolder<GistModel> {
 
-    @BindView(R.id.item_gist_id)
-    TextView tvId;
+    @BindView(R.id.item_gist_nick)
+    TextView tvLogin;
 
     @BindView(R.id.item_gist_created)
     TextView tvCreated;
 
     @BindView(R.id.item_gist_desc)
     TextView tvDesc;
+
+    @BindView(R.id.item_gist_number)
+    TextView tvNumber;
 
     @BindView(R.id.item_gist_note)
     TextView tvNote;
@@ -35,21 +38,20 @@ class GistModelHolder extends ModelViewHolder<GistModel> {
     @Override
     void bind(GistModel item) {
         if (item.ownerLogin == null) {
-            tvId.setText(String.valueOf(item.id));
+            tvLogin.setText(R.string.anonymous);
         } else {
-            tvId.setText(item.ownerLogin);
+            tvLogin.setText(item.ownerLogin);
         }
+
         tvCreated.setText(item.created);
         tvNote.setText(item.note);
         tvDesc.setText(item.description);
-
-        final @DrawableRes int left;
-        if (item.isLocal) {
-            left = R.drawable.indicator_online;
+        int p = getAdapterPosition();
+        if (p != RecyclerView.NO_POSITION) {
+            tvNumber.setText(String.valueOf(p));
         } else {
-            left = R.drawable.indicator_offline;
+            tvNumber.setText(String.valueOf(0));
         }
-        tvCreated.setCompoundDrawablesWithIntrinsicBounds(left, 0, 0, 0);
     }
 
 }

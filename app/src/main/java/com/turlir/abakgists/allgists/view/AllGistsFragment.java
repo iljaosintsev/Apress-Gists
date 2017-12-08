@@ -34,6 +34,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import butterknife.BindDimen;
 import butterknife.BindView;
 import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 
@@ -55,6 +56,15 @@ public class AllGistsFragment
 
     @BindView(R.id.swipeLayout)
     SwipeRefreshLayout swipe;
+
+    @BindDimen(R.dimen.activity_horizontal_margin)
+    int sideMargin;
+
+    @BindDimen(R.dimen.activity_horizontal_margin)
+    int topMargin;
+
+    @BindDimen(R.dimen.list_item_bottom_margin)
+    int bottomMargin;
 
     private AllGistAdapter mAdapter;
 
@@ -94,7 +104,7 @@ public class AllGistsFragment
                 DividerDecorator.TOP_DIVIDER
         );
         recycler.addItemDecoration(divider);
-        SpaceDecorator space = new SpaceDecorator(cnt, R.dimen.activity_horizontal_margin, R.dimen.half_margin);
+        SpaceDecorator space = new SpaceDecorator(sideMargin, topMargin, sideMargin, bottomMargin);
         recycler.addItemDecoration(space);
 
         RecyclerView.OnScrollListener scroller = new SimpleScrollListener(this);
