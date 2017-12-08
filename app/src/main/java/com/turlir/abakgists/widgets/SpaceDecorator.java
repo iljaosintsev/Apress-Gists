@@ -14,8 +14,15 @@ public class SpaceDecorator extends RecyclerView.ItemDecoration {
      * @param cnt контекст
      * @param all отступ для всех сторон
      */
-    public SpaceDecorator(Context cnt, int all) {
+    public SpaceDecorator(Context cnt, @DimenRes int all) {
         this(cnt, all, all, all, all);
+    }
+
+    /**
+     * @param all отступ для всех сторон
+     */
+    public SpaceDecorator(int all) {
+        this(all, all, all, all);
     }
 
     /**
@@ -58,10 +65,12 @@ public class SpaceDecorator extends RecyclerView.ItemDecoration {
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
         int index = parent.getChildLayoutPosition(view);
         if (index != RecyclerView.NO_POSITION) {
-            outRect.left += mLeft;
-            outRect.top += mTop;
-            outRect.right += mRight;
-            outRect.bottom += mBottom;
+            view.setPadding(
+                    mLeft,
+                    mTop,
+                    mRight,
+                    mBottom
+            );
         }
     }
 
