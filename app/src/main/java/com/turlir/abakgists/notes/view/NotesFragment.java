@@ -93,6 +93,11 @@ public class NotesFragment extends BaseFragment implements OnClickListener {
         startActivity(i);
     }
 
+    @Override
+    public void onContinuesClick() {
+        // not impl
+    }
+
     public void onNotesLoaded(List<GistModel> gistDiff) {
         root.toContent();
         mAdapter.addGist(gistDiff);

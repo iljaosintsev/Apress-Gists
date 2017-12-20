@@ -69,13 +69,10 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
         View view = mInflater.inflate(viewType, parent, false);
 
         final ModelViewHolder holder = mFactory.holder(viewType, view);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int position = holder.getAdapterPosition();
-                if (position != RecyclerView.NO_POSITION) {
-                    mClick.onListItemClick(position);
-                }
+        holder.itemView.setOnClickListener(v -> {
+            int position = holder.getAdapterPosition();
+            if (position != RecyclerView.NO_POSITION) {
+                mClick.onListItemClick(position);
             }
         });
 
@@ -142,7 +139,7 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
 
     void addLoading() {
         int s = mContent.size();
-        mContent.add(new LoadingModel(getItemCount()));
+        mContent.add(new LoadingModel(s));
         notifyItemInserted(s + 1);
     }
 
@@ -153,6 +150,31 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
         if (type == R.layout.inline_loading) {
             mContent.remove(i);
             notifyItemRemoved(i);
+        }
+    }
+
+    void replaceLoadingToInlineError() {
+        int i = getItemCount() - 1;
+        ViewModel last = getItemByPosition(i);
+        int type = last.type(mFactory);
+        if (type == R.layout.inline_loading) {
+            View.OnClickListener listener = v -> mClick.onContinuesClick();
+            mContent.set(i, new InlineErrorModel(listener));
+            notifyItemChanged(i);
+        } else {
+            Timber.e("Illegal state: last element not loading");
+        }
+    }
+
+    void replaceInlineErrorToLoading() {
+        int i = getItemCount() - 1;
+        ViewModel last = getItemByPosition(i);
+        int type = last.type(mFactory);
+        if (type == R.layout.inline_error) {
+            mContent.set(i, new LoadingModel(i));
+            notifyItemChanged(i);
+        } else {
+            Timber.e("Illegal state: last element not error");
         }
     }
 

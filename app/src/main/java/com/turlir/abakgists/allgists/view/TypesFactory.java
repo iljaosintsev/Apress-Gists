@@ -23,6 +23,10 @@ public class TypesFactory {
         return R.layout.inline_loading;
     }
 
+    public int type(InlineErrorModel model) {
+        return R.layout.inline_error;
+    }
+
     ModelViewHolder holder(int viewType, View view) {
         switch (viewType) {
             case R.layout.item_gist:
@@ -33,6 +37,9 @@ public class TypesFactory {
 
             case R.layout.inline_loading:
                 return new LoadingModelHolder(view);
+
+            case R.layout.inline_error:
+                return new InlineErrorModelHolder(view);
 
             default:
                 return null;

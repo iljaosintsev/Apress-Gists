@@ -92,6 +92,13 @@ public class GistListInteractor {
 
                         return mData;
                     }
+                })
+                .doOnError(throwable -> {
+                    try {
+                        Thread.sleep(3500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 });
     }
     /**

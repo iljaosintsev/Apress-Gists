@@ -7,7 +7,6 @@ import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -36,7 +35,6 @@ import javax.inject.Inject;
 
 import butterknife.BindDimen;
 import butterknife.BindView;
-import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 
 
 public class AllGistsFragment
@@ -110,7 +108,7 @@ public class AllGistsFragment
         RecyclerView.OnScrollListener scroller = new SimpleScrollListener(this);
         recycler.addOnScrollListener(scroller);
 
-        recycler.setItemAnimator(new SlideInLeftAnimator());
+        recycler.setItemAnimator(new GistListItemAnimator());
 
         // start
         this.root.toLoading();
@@ -159,6 +157,12 @@ public class AllGistsFragment
             Intent i = GistActivity.getStartIntent(getActivity(), g);
             startActivity(i);
         }
+    }
+
+    @Override
+    public void onContinuesClick() {
+        mAdapter.replaceInlineErrorToLoading();
+        _presenter.loadPublicGists(mAdapter.getItemCount() - 1);
     }
 
     ///
@@ -213,8 +217,7 @@ public class AllGistsFragment
     @Override
     public void nonBlockingError(String msg) {
         swipe.setRefreshing(false);
-        mAdapter.removeLastIfLoading();
-        Snackbar.make(recycler, msg, Snackbar.LENGTH_LONG).show();
+        mAdapter.replaceLoadingToInlineError();
     }
 
     @Override

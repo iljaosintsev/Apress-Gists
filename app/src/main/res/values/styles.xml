@@ -23,4 +23,9 @@
         <item name="android:fontFamily">sans-serif-light</item>
     </style>
 
+    <style name="WhiteButtonOverlay" parent="ThemeOverlay.AppCompat.Light">
+        <item name="colorAccent">#FFF</item>
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
 </resources>
