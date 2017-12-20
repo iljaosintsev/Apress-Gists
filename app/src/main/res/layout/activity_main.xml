@@ -1,64 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
     tools:context=".MainActivity">
-
-    <ImageView
-        android:id="@+id/main_activity_logo"
-        android:layout_width="73dp"
-        android:layout_height="73dp"
-        android:layout_marginTop="24dp"
-        app:srcCompat="@drawable/ic_github"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
-        android:layout_marginTop="16dp"
-        android:text="@string/description"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/board_button_margin"
-        android:layout_marginRight="@dimen/board_button_margin"
-        android:layout_marginTop="24dp"
-        android:gravity="center"
+        android:gravity="center_horizontal"
         android:orientation="vertical">
 
-        <com.turlir.abakgists.widgets.VectorButton
-            android:id="@+id/btn_all_gists"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:text="@string/all_gists"
-            app:drawableLeftCompat="@drawable/ic_list_white_24dp"/>
+        <ImageView
+            android:id="@+id/main_activity_logo"
+            android:layout_width="73dp"
+            android:layout_height="73dp"
+            android:layout_marginTop="24dp"
+            app:srcCompat="@drawable/ic_github"/>
 
-        <com.turlir.abakgists.widgets.VectorButton
-            android:id="@+id/btn_notes"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:text="@string/notes"
-            app:drawableLeftCompat="@drawable/ic_speaker_notes_white_24dp"/>
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+            android:layout_marginTop="16dp"
+            android:text="@string/description"/>
 
-        <com.turlir.abakgists.widgets.VectorButton
-            android:id="@+id/btn_all_in_one"
-            style="@style/Widget.AppCompat.Button.Colored"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/all_in_one"
-            app:drawableLeftCompat="@drawable/ic_select_all_white_24dp"/>
+            android:layout_marginLeft="@dimen/board_button_margin"
+            android:layout_marginRight="@dimen/board_button_margin"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.turlir.abakgists.widgets.VectorButton
+                android:id="@+id/btn_all_gists"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:text="@string/all_gists"
+                app:drawableLeftCompat="@drawable/ic_list_white_24dp"/>
+
+            <com.turlir.abakgists.widgets.VectorButton
+                android:id="@+id/btn_notes"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:text="@string/notes"
+                app:drawableLeftCompat="@drawable/ic_speaker_notes_white_24dp"/>
+
+            <com.turlir.abakgists.widgets.VectorButton
+                android:id="@+id/btn_all_in_one"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/all_in_one"
+                app:drawableLeftCompat="@drawable/ic_select_all_white_24dp"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 
-
-</LinearLayout>
+</ScrollView>
