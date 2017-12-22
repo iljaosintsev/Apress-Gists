@@ -4,10 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/Widget.AppCompat.DropDownItem.Spinner"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="?attr/listPreferredItemHeight"
     android:gravity="center_vertical"
-    android:minHeight="?attr/listPreferredItemHeight"
     android:paddingEnd="72dp"
     android:paddingStart="72dp"
     tools:background="@color/search_color"
-    tools:text="Lenovo"/>
+    tools:text="Lenovo Apple Samsung Huawai "/>
