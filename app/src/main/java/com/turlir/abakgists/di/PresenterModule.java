@@ -5,6 +5,7 @@ import com.pushtorefresh.storio.sqlite.StorIOSQLite;
 import com.turlir.abakgists.allgists.AllGistsPresenter;
 import com.turlir.abakgists.allgists.GistListInteractor;
 import com.turlir.abakgists.api.Repository;
+import com.turlir.abakgists.allinone.AllInOnePresenter;
 import com.turlir.abakgists.gist.EqualsSolver;
 import com.turlir.abakgists.gist.GistPresenter;
 import com.turlir.abakgists.notes.NotesInteractor;
@@ -44,6 +45,12 @@ public class PresenterModule {
     @Singleton
     public GistPresenter provideGistPresenter(StorIOSQLite base) {
         return new GistPresenter(base, new EqualsSolver());
+    }
+
+    @Provides
+    @Singleton
+    public AllInOnePresenter provideAllInOnePresenter(StorIOSQLite base) {
+        return new AllInOnePresenter(base);
     }
 
 }
