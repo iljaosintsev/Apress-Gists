@@ -19,6 +19,8 @@ public class AllInOnePresenter extends BasePresenter<AllInOneActivity> {
     private final StorIOSQLite mRepo;
     private final Query.CompleteBuilder mSearchBuilder;
 
+    private Subscription mSearching;
+
     public AllInOnePresenter(StorIOSQLite repo) {
         mRepo = repo;
 
@@ -28,11 +30,11 @@ public class AllInOnePresenter extends BasePresenter<AllInOneActivity> {
     }
 
     void connectSearch(Observable<String> searchObs) {
-
-        Subscription subs = searchObs
+        mSearching = searchObs
                 .switchMap(new Func1<String, Observable<List<GistLocal>>>() {
                     @Override
                     public Observable<List<GistLocal>> call(String query) {
+                        query = "%" + query + "%";
                         return mRepo.get()
                                 .listOfObjects(GistLocal.class)
                                 .withQuery(mSearchBuilder.whereArgs(query, query).build())
@@ -60,6 +62,13 @@ public class AllInOnePresenter extends BasePresenter<AllInOneActivity> {
                     }
                 });
 
-        addSubscription(subs);
+        addSubscription(mSearching);
     }
+
+    void detachSearch() {
+        if (mSearching != null) {
+            removeSubscription(mSearching);
+        }
+    }
+
 }

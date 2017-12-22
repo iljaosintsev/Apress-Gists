@@ -9,9 +9,15 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.jakewharton.rxbinding.widget.RxTextView;
 import com.jakewharton.rxbinding.widget.TextViewAfterTextChangeEvent;
@@ -50,6 +56,21 @@ public class AllInOneActivity extends BaseActivity {
 
     private SearchAdapter mSearchAdapter;
 
+    private TextView.OnEditorActionListener mHideSearchKeyboard = new TextView.OnEditorActionListener() {
+        @Override
+        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            switch (actionId) {
+                case EditorInfo.IME_ACTION_DONE:
+                case EditorInfo.IME_ACTION_NEXT:
+                    InputMethodManager manager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                    if (manager != null) {
+                        manager.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    }
+            }
+            return true;
+        }
+    };
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,13 +90,26 @@ public class AllInOneActivity extends BaseActivity {
                 this,
                 R.drawable.divider,
                 DividerDecorator.VERTICAL,
-                DividerDecorator.TOP_DIVIDER
+                DividerDecorator.DOUBLE_DIVIDER
         );
         recycler.addItemDecoration(decorator);
+        recycler.setHasFixedSize(true);
         recycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
         mSearchAdapter = new SearchAdapter();
         recycler.setAdapter(mSearchAdapter);
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        invalidateOptionsMenu();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        _presenter.detachSearch();
     }
 
     @Override
@@ -93,9 +127,15 @@ public class AllInOneActivity extends BaseActivity {
     }
 
     private void setupSearch(MenuItem searchItem) {
+        final EditText searchingView = ((SearchingView) MenuItemCompat.getActionView(searchItem)).editText();
+        searchingView.setOnEditorActionListener(mHideSearchKeyboard);
+
         MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
+                Editable txt = searchingView.getText();
+                searchingView.setText(txt);
+                searchingView.setSelection(txt.length());
                 return true;
             }
 
@@ -106,11 +146,10 @@ public class AllInOneActivity extends BaseActivity {
                 return true;
             }
         });
+        searchItem.collapseActionView(); // always close after restart
 
-        SearchingView searchingView = (SearchingView) MenuItemCompat.getActionView(searchItem);
-
-        Observable<String> obs = RxTextView.afterTextChangeEvents(searchingView.editText())
-                .debounce(2, TimeUnit.SECONDS)
+        Observable<String> obs = RxTextView.afterTextChangeEvents(searchingView)
+                .debounce(1, TimeUnit.SECONDS)
                 .map(new Func1<TextViewAfterTextChangeEvent, String>() {
                     @Override
                     public String call(TextViewAfterTextChangeEvent textViewAfterTextChangeEvent) {
