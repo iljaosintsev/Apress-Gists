@@ -118,6 +118,7 @@ public class GistActivity extends BaseActivity {
         } else {
             Timber.i("Изменения не внесены");
         }
+        finish();
     }
 
     @OnClick(R.id.btn_web)

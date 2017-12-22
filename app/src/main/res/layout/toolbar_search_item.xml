@@ -5,7 +5,7 @@
     style="@style/Widget.AppCompat.DropDownItem.Spinner"
     android:layout_width="match_parent"
     android:layout_height="?attr/listPreferredItemHeight"
-    android:gravity="center_vertical"
+    android:maxLines="2"
     android:paddingEnd="72dp"
     android:paddingStart="72dp"
     tools:background="@color/search_color"

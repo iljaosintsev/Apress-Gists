@@ -12,7 +12,6 @@ import java.util.List;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 
 public class AllInOnePresenter extends BasePresenter<AllInOneActivity> {
 
@@ -31,26 +30,20 @@ public class AllInOnePresenter extends BasePresenter<AllInOneActivity> {
 
     void connectSearch(Observable<String> searchObs) {
         mSearching = searchObs
-                .switchMap(new Func1<String, Observable<List<GistLocal>>>() {
-                    @Override
-                    public Observable<List<GistLocal>> call(String query) {
-                        query = "%" + query + "%";
-                        return mRepo.get()
-                                .listOfObjects(GistLocal.class)
-                                .withQuery(mSearchBuilder.whereArgs(query, query).build())
-                                .prepare()
-                                .asRxObservable();
-                    }
+                .switchMap(query -> {
+                    query = "%" + query + "%";
+                    return mRepo.get()
+                            .listOfObjects(GistLocal.class)
+                            .withQuery(mSearchBuilder.whereArgs(query, query).build())
+                            .prepare()
+                            .asRxObservable();
                 })
-                .map(new Func1<List<GistLocal>, List<String>>() {
-                    @Override
-                    public List<String> call(List<GistLocal> gistLocals) {
-                        List<String> res = new ArrayList<>(gistLocals.size());
-                        for (GistLocal item : gistLocals) {
-                            res.add(String.format("%s\n%s", item.description, item.note));
-                        }
-                        return res;
+                .map(gistLocals -> {
+                    List<String> res = new ArrayList<>(gistLocals.size());
+                    for (GistLocal item : gistLocals) {
+                        res.add(String.format("%s\n%s", item.description, item.note));
                     }
+                    return res;
                 })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Handler<List<String>>() {
