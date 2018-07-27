@@ -14,6 +14,7 @@ import com.turlir.abakgists.model.GistModel;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -33,6 +34,7 @@ import rx.android.plugins.RxAndroidSchedulersHook;
 import rx.plugins.RxJavaHooks;
 import rx.schedulers.Schedulers;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
@@ -81,6 +83,11 @@ public class AllGistsPresenterTest {
 
         mView = mock(AllGistsFragment.class);
         _presenter.attach(mView);
+    }
+
+    @Test
+    public void demo() {
+        assertEquals(4, 2 + 2);
     }
 
     private void mockServerRequest() {

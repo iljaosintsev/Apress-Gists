@@ -1,4 +1,4 @@
--dontwarn sun.misc.**
+-dontwarn sun.misc.Unsafe
 -keep class sun.misc.Unsafe { *; }
 
 ## Rx
@@ -24,8 +24,8 @@
 # removes such information by default, so configure it to keep all of it.
 -keepattributes Signature
 
-# For using GSON @Expose annotation
--keepattributes *Annotation*
+# For Nullability annotation
+-dontwarn javax.annotation.**
 
 # Gson specific classes
 #-keep class com.google.gson.stream.** { *; }
