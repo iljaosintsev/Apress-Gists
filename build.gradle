@@ -8,7 +8,6 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.1'
         classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.7.3'
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.2.10'
     }
 }
 
@@ -22,11 +21,11 @@ allprojects {
 }
 
 ext {
-    buildTools = '27.0.0'
-    compileSdk = 27
+    buildTools = '26.0.2'
+    compileSdk = 26
     minSdk = 21
-    targetSdk = 27
-    support = '27.0.2'
+    targetSdk = 26
+    support = '26.1.0'
 }
 
 task clean(type: Delete) {
