@@ -8,6 +8,7 @@ public interface GistsTable {
     Query REQUEST_ALL = Query
             .builder()
             .table(GistsTable.GISTS)
+            .orderBy(GistsTable.NUMBER + " ASC")
             .build();
 
     DeleteQuery DELETE_ALL = DeleteQuery
