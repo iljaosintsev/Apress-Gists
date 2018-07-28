@@ -32,22 +32,22 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
     private final ListUpdateCallback mLoggerAdapterOperations = new ListUpdateCallback() {
         @Override
         public void onInserted(int position, int count) {
-            Timber.v("onInserted %d %d", position, count);
+            Timber.d("onInserted %d %d", position, count);
         }
 
         @Override
         public void onRemoved(int position, int count) {
-            Timber.v("onRemoved %d %d", position, count);
+            Timber.d("onRemoved %d %d", position, count);
         }
 
         @Override
         public void onMoved(int fromPosition, int toPosition) {
-            Timber.v("onMoved %d %d", fromPosition, toPosition);
+            Timber.d("onMoved %d %d", fromPosition, toPosition);
         }
 
         @Override
         public void onChanged(int position, int count, Object payload) {
-            Timber.v("onChanged %d %d", position, count);
+            Timber.d("onChanged %d %d", position, count);
         }
     };
 
@@ -200,23 +200,26 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
 
         @Override
         public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-            Timber.v("itemsTheSame %d -%d", oldItemPosition, newItemPosition);
             ViewModel old = mOldList.get(oldItemPosition);
             GistModel oldModel = mFactory.instance(old);
             if (oldModel != null) {
                 GistModel now = mNowList.get(newItemPosition);
-                return !now.isDifferent(oldModel);
+                boolean diff = now.isDifferent(oldModel);
+                if (diff) Timber.v("items different %d - %d", oldItemPosition, newItemPosition);
+                return !diff;
             } else {
+                Timber.v("items incomparable %d - %d", oldItemPosition, newItemPosition);
                 return false;
             }
         }
 
         @Override
         public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-            Timber.v("contentsTheSame %d -%d", oldItemPosition, newItemPosition);
             ViewModel old = mOldList.get(oldItemPosition);
             ViewModel now = mNowList.get(newItemPosition);
-            return old.equals(now);
+            boolean equals = old.equals(now);
+            if (!equals) Timber.v("contents different %d - %d", oldItemPosition, newItemPosition);
+            return equals;
         }
     }
 }
