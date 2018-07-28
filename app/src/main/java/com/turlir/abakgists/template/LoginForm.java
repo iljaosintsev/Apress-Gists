@@ -2,7 +2,6 @@ package com.turlir.abakgists.template;
 
 import android.graphics.Color;
 import android.support.annotation.NonNull;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
@@ -10,6 +9,7 @@ import com.turlir.abakgists.templater.DynamicForm;
 import com.turlir.abakgists.templater.Structure;
 import com.turlir.abakgists.templater.base.Grouper;
 import com.turlir.abakgists.templater.base.Interceptor;
+import com.turlir.abakgists.templater.widget.FormWidget;
 import com.turlir.abakgists.templater.widget.MaterialField;
 
 class LoginForm extends DynamicForm<EditableProfile> {
@@ -51,8 +51,8 @@ class LoginForm extends DynamicForm<EditableProfile> {
                     }
 
                     @Override
-                    public void add(View view) {
-                        mName = (MaterialField) view;
+                    public void add(FormWidget view) {
+                        mName = (MaterialField) view.view();
                     }
                 })
 
@@ -65,8 +65,8 @@ class LoginForm extends DynamicForm<EditableProfile> {
                     }
 
                     @Override
-                    public void add(View view) {
-                        mPosition = (MaterialField) view;
+                    public void add(FormWidget view) {
+                        mPosition = (MaterialField) view.view();
                     }
                 })
 
@@ -78,8 +78,8 @@ class LoginForm extends DynamicForm<EditableProfile> {
                     }
 
                     @Override
-                    public void add(View view) {
-                        mPhone = (MaterialField) view;
+                    public void add(FormWidget view) {
+                        mPhone = (MaterialField) view.view();
                     }
                 })
                 .endGroup()
@@ -92,8 +92,8 @@ class LoginForm extends DynamicForm<EditableProfile> {
                     }
 
                     @Override
-                    public void add(View view) {
-                        mAdd = (MaterialField) view;
+                    public void add(FormWidget view) {
+                        mAdd = (MaterialField) view.view();
                         mAdd.setOnEditorActionListener(doneVerifierListener());
                     }
                 })

@@ -1,6 +1,6 @@
 package com.turlir.abakgists.templater.base;
 
-import android.view.View;
+import com.turlir.abakgists.templater.widget.FormWidget;
 
 public abstract class Interceptor {
 
@@ -8,7 +8,7 @@ public abstract class Interceptor {
         return null;
     }
 
-    public void add(View view) {
+    public void add(FormWidget view) {
         // stub
     }
 }

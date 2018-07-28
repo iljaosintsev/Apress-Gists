@@ -44,7 +44,7 @@ public class WidgetHolder {
             mWidget.position(FormWidget.LAST);
         }
         if (mCallback != null) {
-            mCallback.add(mWidget.view());
+            mCallback.add(mWidget);
         }
     }
 
