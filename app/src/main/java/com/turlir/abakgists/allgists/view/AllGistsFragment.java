@@ -59,7 +59,7 @@ public class AllGistsFragment
     private AllGistAdapter mAdapter;
 
     private final SwipeRefreshLayout.OnRefreshListener mSwipeListener = () -> {
-        _presenter.updateGist();
+        // _presenter.updateGist();
 
         recycler.clearOnScrollListeners();
         RecyclerView.OnScrollListener scroller = new SimpleScrollListener(AllGistsFragment.this);
@@ -118,9 +118,9 @@ public class AllGistsFragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (savedInstanceState != null) {
-            _presenter.again();
+           // _presenter.again();
         } else {
-            _presenter.first();
+           // _presenter.first();
         }
     }
 

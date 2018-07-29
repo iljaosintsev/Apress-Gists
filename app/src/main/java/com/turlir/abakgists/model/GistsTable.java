@@ -1,20 +1,8 @@
 package com.turlir.abakgists.model;
 
-import com.pushtorefresh.storio.sqlite.queries.DeleteQuery;
-import com.pushtorefresh.storio.sqlite.queries.Query;
-
 public interface GistsTable {
 
-    Query REQUEST_ALL = Query
-            .builder()
-            .table(GistsTable.GISTS)
-            .orderBy(GistsTable.NUMBER + " ASC")
-            .build();
-
-    DeleteQuery DELETE_ALL = DeleteQuery
-            .builder()
-            .table(GistsTable.GISTS)
-            .build();
+    // Query here
 
     String
             BASE_NAME = "gists_db",

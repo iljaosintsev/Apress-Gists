@@ -20,8 +20,7 @@ public class NotesInteractor {
     Observable<List<GistModel>> requestWithNotes() {
         ListGistMapper.Local mapper = new ListGistMapper.Local(new GistMapper.Local());
         mapper.setLocal(true);
-        return mRepo.loadWithNotes()
-                .map(mapper);
+        return null;
     }
 
 }

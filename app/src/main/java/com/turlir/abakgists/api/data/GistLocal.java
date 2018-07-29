@@ -4,38 +4,34 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 
-import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteColumn;
-import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteType;
-import com.turlir.abakgists.model.GistsTable;
-
-@StorIOSQLiteType(table = GistsTable.GISTS)
+//@StorIOSQLiteType(table = GistsTable.GISTS)
 public class GistLocal {
 
-    @StorIOSQLiteColumn(name = GistsTable.ID, key = true)
+    //@StorIOSQLiteColumn(name = GistsTable.ID, key = true)
     @NonNull
     public String id;
 
-    @StorIOSQLiteColumn(name = GistsTable.URL)
+    //@StorIOSQLiteColumn(name = GistsTable.URL)
     @NonNull
     public String url;
 
-    @StorIOSQLiteColumn(name = GistsTable.CREATED)
+    //@StorIOSQLiteColumn(name = GistsTable.CREATED)
     @NonNull
     public String created;
 
-    @StorIOSQLiteColumn(name = GistsTable.DESC)
+    //@StorIOSQLiteColumn(name = GistsTable.DESC)
     @NonNull
     public String description;
 
-    @StorIOSQLiteColumn(name = GistsTable.OWNER_LOGIN)
+    //@StorIOSQLiteColumn(name = GistsTable.OWNER_LOGIN)
     @Nullable
     public String ownerLogin;
 
-    @StorIOSQLiteColumn(name = GistsTable.OWNER_AVATAR)
+    //@StorIOSQLiteColumn(name = GistsTable.OWNER_AVATAR)
     @Nullable
     public String ownerAvatarUrl;
 
-    @StorIOSQLiteColumn(name = GistsTable.NOTE)
+    //@StorIOSQLiteColumn(name = GistsTable.NOTE)
     @NonNull
     public String note;
 

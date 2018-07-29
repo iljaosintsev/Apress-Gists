@@ -4,15 +4,8 @@ import android.content.Context;
 import android.content.ContextWrapper;
 
 import com.google.common.io.Files;
-import com.pushtorefresh.storio.sqlite.SQLiteTypeMapping;
-import com.pushtorefresh.storio.sqlite.StorIOSQLite;
-import com.pushtorefresh.storio.sqlite.impl.DefaultStorIOSQLite;
 import com.turlir.abakgists.api.ApiClient;
 import com.turlir.abakgists.api.GistDatabaseHelper;
-import com.turlir.abakgists.api.GistLocalStorIoLogPutResolver;
-import com.turlir.abakgists.api.data.GistLocal;
-import com.turlir.abakgists.api.data.GistLocalStorIOSQLiteDeleteResolver;
-import com.turlir.abakgists.api.data.GistLocalStorIOSQLiteGetResolver;
 import com.turlir.abakgists.di.AppComponent;
 import com.turlir.abakgists.di.AppModule;
 import com.turlir.abakgists.di.DatabaseModule;
@@ -40,16 +33,8 @@ public class DatabaseMocking extends DaggerMockRule<AppComponent> {
         );
 
         GistDatabaseHelper helper = makeHelper("/test.sql");
-        SQLiteTypeMapping<GistLocal> typeMapping = SQLiteTypeMapping.<GistLocal>builder()
-                .putResolver(new GistLocalStorIoLogPutResolver()) // logger
-                .getResolver(new GistLocalStorIOSQLiteGetResolver())
-                .deleteResolver(new GistLocalStorIOSQLiteDeleteResolver())
-                .build();
-        DefaultStorIOSQLite instance = DefaultStorIOSQLite.builder()
-                .sqliteOpenHelper(helper)
-                .addTypeMapping(GistLocal.class, typeMapping)
-                .build();
-        provides(StorIOSQLite.class, instance);
+
+        // TODO mocking here
 
         providesMock(ApiClient.class);
     }

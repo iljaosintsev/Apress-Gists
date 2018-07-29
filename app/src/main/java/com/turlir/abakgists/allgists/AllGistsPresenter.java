@@ -29,20 +29,6 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
         mLoader.loadNewPage(currentSize);
     }
 
-    public void updateGist() {
-        mLoader.refresh();
-    }
-
-    public void first() {
-        mLoader.resetState();
-        loadPublicGists(0);
-    }
-
-    public void again() {
-        mLoader.resetState();
-        loadPublicGists(GistListInteractor.IGNORE_SIZE);
-    }
-
     private class LoaderCallback implements ListCombination.Callback<GistModel> {
 
         private static final String TAG = "DataCycle";

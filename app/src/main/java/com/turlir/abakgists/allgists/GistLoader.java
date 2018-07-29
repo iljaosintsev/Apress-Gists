@@ -3,12 +3,9 @@ package com.turlir.abakgists.allgists;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
-import com.turlir.abakgists.api.data.GistLocal;
 import com.turlir.abakgists.base.erroring.ErrorSelector;
 import com.turlir.abakgists.model.GistModel;
 
-import java.util.Collections;
 import java.util.List;
 
 import rx.Subscriber;
@@ -36,11 +33,6 @@ class GistLoader {
         mSelector = selector;
         mErrorProcessor = errorProcessor;
 
-        mState = new Start();
-    }
-
-    void resetState() {
-        mInteractor.resetAccumulator();
         mState = new Start();
     }
 
@@ -75,30 +67,6 @@ class GistLoader {
         mState = mState.refresh();
         mState.perform(mCallback);
 
-        clearSubs();
-        Subscription subs = mInteractor.update()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<PutResults<GistLocal>>() {
-                    @Override
-                    public void onCompleted() {
-                        // ignore
-                    }
-                    @Override
-                    public void onError(Throwable e) {
-                        mState = mState.error(e, mSelector, mErrorProcessor);
-                        mState.perform(mCallback);
-                    }
-                    @Override
-                    public void onNext(PutResults<GistLocal> gistLocalPutResults) {
-                        mState = mState.content(Collections.emptyList()); // hack!
-                        mState.perform(mCallback);
-
-                        resetState();
-                        loadNewPage(GistListInteractor.IGNORE_SIZE);
-                    }
-                });
-        memberSubs(subs);
     }
 
     //
