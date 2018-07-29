@@ -5,14 +5,14 @@ import android.support.annotation.Nullable;
 
 import com.turlir.abakgists.model.GistModel;
 
-import rx.functions.Func1;
+import io.reactivex.functions.Function;
 
 public class GistMapper {
 
-    public static class Json implements Func1<GistJson, GistLocal> {
+    public static class Json implements Function<GistJson, GistLocal> {
 
         @Override
-        public GistLocal call(GistJson item) {
+        public GistLocal apply(GistJson item) {
             String desc = safeAssign(item.description);
             GistOwnerJson o = item.owner;
             if (o != null) {
@@ -24,12 +24,12 @@ public class GistMapper {
 
     }
 
-    public static class Local implements Func1<GistLocal, GistModel> {
+    public static class Local implements Function<GistLocal, GistModel> {
 
         private boolean isLocal;
 
         @Override
-        public GistModel call(GistLocal item) {
+        public GistModel apply(GistLocal item) {
             return new GistModel(
                     item.id,
                     item.url,

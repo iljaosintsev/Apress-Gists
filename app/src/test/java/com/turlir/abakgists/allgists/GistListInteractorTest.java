@@ -24,15 +24,12 @@ import org.robolectric.annotation.Config;
 import java.util.Collections;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.android.plugins.RxAndroidPlugins;
+import io.reactivex.observers.TestObserver;
+import io.reactivex.schedulers.Schedulers;
 import it.cosenonjaviste.daggermock.DaggerMockRule;
 import it.cosenonjaviste.daggermock.InjectFromComponent;
-import rx.Observable;
-import rx.Scheduler;
-import rx.android.plugins.RxAndroidPlugins;
-import rx.android.plugins.RxAndroidSchedulersHook;
-import rx.observers.TestSubscriber;
-import rx.plugins.RxJavaHooks;
-import rx.schedulers.Schedulers;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -54,16 +51,7 @@ public class GistListInteractorTest {
 
     @BeforeClass
     public static void setupRx() {
-        RxJavaHooks.reset();
-        RxAndroidPlugins.getInstance().reset();
-
-        RxJavaHooks.setOnIOScheduler(scheduler -> Schedulers.immediate());
-        RxAndroidPlugins.getInstance().registerSchedulersHook(new RxAndroidSchedulersHook() {
-            @Override
-            public Scheduler getMainThreadScheduler() {
-                return Schedulers.immediate();
-            }
-        });
+        RxAndroidPlugins.setInitMainThreadSchedulerHandler(__ -> Schedulers.trampoline());
     }
 
     @Before
@@ -86,25 +74,24 @@ public class GistListInteractorTest {
         Mockito.when(_client.publicGist(2)).thenReturn(serverObs);
 
         Observable<List<GistModel>> obs = mRequester.request(30);
-        TestSubscriber<List<GistModel>> subscriber = new TestSubscriber<>();
+        TestObserver<List<GistModel>> subscriber = new TestObserver<>();
         obs.subscribe(subscriber);
 
         subscriber.assertValueCount(1);
-        subscriber.assertNotCompleted();
-        List<List<GistModel>> events = subscriber.getOnNextEvents();
+        subscriber.assertNotComplete();
+        List<List<GistModel>> events = subscriber.values();
         List<GistModel> first = events.get(0);
         assertEquals(1, first.size());
         assertEquals(serverId, first.get(0).id);
     }
 
-    private TestSubscriber<List<GistModel>> simpleRequest() {
+    private TestObserver<List<GistModel>> simpleRequest() {
         Observable<List<GistModel>> obs = mRequester.request(0);
-        TestSubscriber<List<GistModel>> subscriber = new TestSubscriber<>();
-        obs.subscribe(subscriber);
+        TestObserver<List<GistModel>> subscriber = obs.test();
 
         subscriber.assertValueCount(1);
-        subscriber.assertNotCompleted();
-        List<List<GistModel>> events = subscriber.getOnNextEvents();
+        subscriber.assertNotComplete();
+        List<List<GistModel>> events = subscriber.values();
         List<GistModel> first = events.get(0);
         assertEquals(1, first.size());
 

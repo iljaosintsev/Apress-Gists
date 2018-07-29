@@ -23,15 +23,12 @@ import org.robolectric.annotation.Config;
 import java.util.Collections;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.android.plugins.RxAndroidPlugins;
+import io.reactivex.observers.TestObserver;
+import io.reactivex.schedulers.Schedulers;
 import it.cosenonjaviste.daggermock.DaggerMockRule;
 import it.cosenonjaviste.daggermock.InjectFromComponent;
-import rx.Observable;
-import rx.Scheduler;
-import rx.android.plugins.RxAndroidPlugins;
-import rx.android.plugins.RxAndroidSchedulersHook;
-import rx.observers.TestSubscriber;
-import rx.plugins.RxJavaHooks;
-import rx.schedulers.Schedulers;
 
 import static org.junit.Assert.assertEquals;
 
@@ -50,16 +47,7 @@ public class RepositoryTest {
 
     @BeforeClass
     public static void setupRxHooks() throws Throwable {
-        RxJavaHooks.reset();
-        RxAndroidPlugins.getInstance().reset();
-
-        RxJavaHooks.setOnIOScheduler(scheduler -> Schedulers.immediate());
-        RxAndroidPlugins.getInstance().registerSchedulersHook(new RxAndroidSchedulersHook() {
-            @Override
-            public Scheduler getMainThreadScheduler() {
-                return Schedulers.immediate();
-            }
-        });
+        RxAndroidPlugins.setInitMainThreadSchedulerHandler(__ -> Schedulers.trampoline());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -75,12 +63,12 @@ public class RepositoryTest {
         Mockito.when(_mockClient.publicGist(1)).thenReturn(serverObs);
 
         Observable<List<GistLocal>> obs = _repo.server(1);
-        TestSubscriber<List<GistLocal>> subscriber = new TestSubscriber<>();
+        TestObserver<List<GistLocal>> subscriber = new TestObserver<>();
         obs.subscribe(subscriber);
 
-        subscriber.assertCompleted();
+        subscriber.assertComplete();
         subscriber.assertValueCount(1);
-        List<List<GistLocal>> events = subscriber.getOnNextEvents();
+        List<List<GistLocal>> events = subscriber.values();
         List<GistLocal> first = events.get(0);
         assertEquals(1, first.size());
 

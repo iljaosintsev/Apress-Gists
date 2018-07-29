@@ -6,7 +6,7 @@ import com.turlir.abakgists.api.data.ListGistMapper;
 
 import java.util.List;
 
-import rx.Observable;
+import io.reactivex.Observable;
 
 public class Repository {
 

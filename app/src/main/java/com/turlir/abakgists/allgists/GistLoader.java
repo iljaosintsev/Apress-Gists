@@ -8,10 +8,10 @@ import com.turlir.abakgists.model.GistModel;
 
 import java.util.List;
 
-import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 
 class GistLoader {
 
@@ -21,7 +21,7 @@ class GistLoader {
     private final ListCombination.ErrorProcessing mErrorProcessor;
 
     @Nullable
-    private Subscription mCacheSubs;
+    private Disposable mCacheSubs;
 
     @NonNull
     private ListCombination<GistModel> mState;
@@ -41,12 +41,12 @@ class GistLoader {
         mState.perform(mCallback);
 
         clearSubs();
-        Subscription subs = mInteractor.request(currentSize)
+        Disposable subs = mInteractor.request(currentSize)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<GistModel>>() {
+                .subscribeWith(new DisposableObserver<List<GistModel>>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                         // ignore
                     }
                     @Override
@@ -72,12 +72,12 @@ class GistLoader {
     //
 
     private void clearSubs() {
-        if (mCacheSubs != null && !mCacheSubs.isUnsubscribed()) {
-            mCacheSubs.unsubscribe();
+        if (mCacheSubs != null && !mCacheSubs.isDisposed()) {
+            mCacheSubs.dispose();
         }
     }
 
-    private void memberSubs(Subscription subs) {
+    private void memberSubs(Disposable subs) {
         mCacheSubs = subs;
     }
 }

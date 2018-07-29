@@ -7,19 +7,17 @@ import com.turlir.abakgists.model.GistModel;
 
 import java.util.List;
 
-import rx.Observable;
+import io.reactivex.Observable;
 
 public class GistListInteractor {
 
     private static final float PAGE_SIZE = 30;
 
     private final Repository mRepo;
-    private final GistMapper.Local mTransformer;
+    private final GistMapper.Local mTransformer = new GistMapper.Local();
 
     public GistListInteractor(Repository repo) {
         mRepo = repo;
-
-        mTransformer = new GistMapper.Local();
     }
 
     /**

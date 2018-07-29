@@ -22,7 +22,7 @@ public class GistJsonToLocalMapperTest {
     @Test
     public void callWithOwnerTest() throws Exception {
         GistJson gist = new GistJson("id", "url", "created", "desc", new GistOwnerJson("login", "avatarurl"));
-        GistLocal model = mapper.call(gist);
+        GistLocal model = mapper.apply(gist);
         GistLocal expected = new GistLocal("id", "url", "created", "desc", "login", "avatarurl");
         assertEquals(expected, model);
     }
@@ -30,7 +30,7 @@ public class GistJsonToLocalMapperTest {
     @Test
     public void callWithoutOwnerTest() throws Exception {
         GistJson gist = new GistJson("id", "url", "created", "desc");
-        GistLocal model = mapper.call(gist);
+        GistLocal model = mapper.apply(gist);
         GistLocal expected = new GistLocal("id", "url", "created", "desc", "", null, null);
         assertEquals(expected, model);
     }

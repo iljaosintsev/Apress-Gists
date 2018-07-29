@@ -13,9 +13,9 @@ import java.util.UUID;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import rx.Observable;
+import io.reactivex.Observable;
 
 public class ApiClient {
 
@@ -31,7 +31,7 @@ public class ApiClient {
                 .baseUrl(URL)
                 .client(okhttp)
                 .addConverterFactory(factory)
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
 
         mApi = retrofit.create(GitHubService.class);

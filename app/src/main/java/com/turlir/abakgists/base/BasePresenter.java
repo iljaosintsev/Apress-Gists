@@ -12,20 +12,22 @@ import com.turlir.abakgists.base.erroring.TroubleSelector;
 
 import java.lang.ref.WeakReference;
 
-import rx.Observable;
-import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.ObservableTransformer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.internal.disposables.ListCompositeDisposable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 public abstract class BasePresenter<T extends BaseView> {
 
-    private static final ObservableSchedulersTransformer STANDARD_SCHEDULER
+    private static final ObservableTransformer STANDARD_SCHEDULER
             = new ObservableSchedulersTransformer();
 
-    private final CompositeSubscription subs = new CompositeSubscription();
+    private final ListCompositeDisposable subs = new ListCompositeDisposable();
 
     private WeakReference<T> view = new WeakReference<>(null);
 
@@ -47,15 +49,15 @@ public abstract class BasePresenter<T extends BaseView> {
         return view.get();
     }
 
-    protected void addSubscription(Subscription s) {
+    protected void addSubscription(Disposable s) {
         subs.add(s);
     }
 
-    protected void removeSubscription(Subscription s) {
+    protected void removeSubscription(Disposable s) {
         subs.remove(s);
     }
 
-    protected <E> Observable.Transformer<E, E> defaultScheduler() {
+    protected <E> ObservableTransformer<E, E> defaultScheduler() {
         return STANDARD_SCHEDULER;
     }
 
@@ -105,10 +107,10 @@ public abstract class BasePresenter<T extends BaseView> {
         protected abstract ErrorInterpreter interpreter();
     }
 
-    protected abstract class Handler<E> extends Subscriber<E> {
+    protected abstract class Handler<E> extends DisposableObserver<E> {
 
         @Override
-        public void onCompleted() {
+        public void onComplete() {
 
         }
 
@@ -133,10 +135,10 @@ public abstract class BasePresenter<T extends BaseView> {
      * @param <T> тип последовательности
      */
     private static final class ObservableSchedulersTransformer<T>
-            implements Observable.Transformer<T, T> {
+            implements ObservableTransformer<T, T> {
 
         @Override
-        public Observable<T> call(Observable<T> upstream) {
+        public ObservableSource<T> apply(Observable<T> upstream) {
             return upstream
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread());

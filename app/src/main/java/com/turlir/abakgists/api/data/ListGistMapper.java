@@ -5,11 +5,11 @@ import com.turlir.abakgists.model.GistModel;
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.functions.Func1;
+import io.reactivex.functions.Function;
 
 public class ListGistMapper {
 
-    public static class Json implements Func1<List<GistJson>, List<GistLocal>> {
+    public static class Json implements Function<List<GistJson>, List<GistLocal>> {
 
         private final GistMapper.Json mapper;
 
@@ -18,17 +18,16 @@ public class ListGistMapper {
         }
 
         @Override
-        public List<GistLocal> call(List<GistJson> gistJsons) {
-            List<GistLocal> res = new ArrayList<>(gistJsons.size());
-            for (GistJson item : gistJsons) {
-                res.add(mapper.call(item));
+        public List<GistLocal> apply(List<GistJson> gistJson) {
+            List<GistLocal> res = new ArrayList<>(gistJson.size());
+            for (GistJson item : gistJson) {
+                res.add(mapper.apply(item));
             }
             return res;
         }
     }
 
-    public static class Local
-            implements Func1<List<GistLocal>, List<GistModel>> {
+    public static class Local implements Function<List<GistLocal>, List<GistModel>> {
 
         private final GistMapper.Local mapper;
 
@@ -37,10 +36,10 @@ public class ListGistMapper {
         }
 
         @Override
-        public List<GistModel> call(List<GistLocal> gistJsons) {
+        public List<GistModel> apply(List<GistLocal> gistJsons) {
             List<GistModel> res = new ArrayList<>(gistJsons.size());
             for (GistLocal item : gistJsons) {
-                res.add(mapper.call(item));
+                res.add(mapper.apply(item));
             }
             return res;
         }

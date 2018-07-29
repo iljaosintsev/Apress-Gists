@@ -25,14 +25,11 @@ import org.robolectric.annotation.Config;
 import java.util.Collections;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.android.plugins.RxAndroidPlugins;
+import io.reactivex.schedulers.Schedulers;
 import it.cosenonjaviste.daggermock.DaggerMockRule;
 import it.cosenonjaviste.daggermock.InjectFromComponent;
-import rx.Observable;
-import rx.Scheduler;
-import rx.android.plugins.RxAndroidPlugins;
-import rx.android.plugins.RxAndroidSchedulersHook;
-import rx.plugins.RxJavaHooks;
-import rx.schedulers.Schedulers;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -62,17 +59,8 @@ public class AllGistsPresenterTest {
     private AllGistsFragment mView;
 
     @BeforeClass
-    public static void setup() throws Throwable {
-        RxJavaHooks.reset();
-        RxAndroidPlugins.getInstance().reset();
-
-        RxJavaHooks.setOnIOScheduler(scheduler -> Schedulers.immediate());
-        RxAndroidPlugins.getInstance().registerSchedulersHook(new RxAndroidSchedulersHook() {
-            @Override
-            public Scheduler getMainThreadScheduler() {
-                return Schedulers.immediate();
-            }
-        });
+    public static void setup() {
+        RxAndroidPlugins.setInitMainThreadSchedulerHandler(__ -> Schedulers.trampoline());
     }
 
     @Before

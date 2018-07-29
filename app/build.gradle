@@ -63,13 +63,13 @@ dependencies {
     annotationProcessor 'com.google.dagger:dagger-compiler:2.10'
     compileOnly 'org.glassfish:javax.annotation:10.0-b28'
 
-    implementation 'io.reactivex:rxjava:1.2.9'
-    implementation 'io.reactivex:rxandroid:1.1.0'
-    implementation 'com.jakewharton.rxbinding:rxbinding:0.4.0'
+    implementation "io.reactivex.rxjava2:rxjava:2.1.17"
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
+    implementation 'com.jakewharton.rxbinding2:rxbinding:2.1.1'
 
-    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
-    implementation 'com.squareup.retrofit2:adapter-rxjava:2.2.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
 
     implementation 'com.jakewharton.timber:timber:4.5.1'
 

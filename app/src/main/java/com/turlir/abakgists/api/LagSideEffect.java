@@ -1,11 +1,11 @@
 package com.turlir.abakgists.api;
 
-import rx.functions.Action1;
+import io.reactivex.functions.Consumer;
 
 /**
  * Эффект задержки сети на {@code millis} миллисекунд
  */
-class LagSideEffect implements Action1<Object> {
+class LagSideEffect implements Consumer<Object> {
 
     private final int mLag;
 
@@ -14,12 +14,11 @@ class LagSideEffect implements Action1<Object> {
     }
 
     @Override
-    public void call(Object data) {
+    public void accept(Object o) {
         try {
             Thread.sleep(mLag);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
-
 }

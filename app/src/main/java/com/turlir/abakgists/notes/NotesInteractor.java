@@ -7,7 +7,7 @@ import com.turlir.abakgists.model.GistModel;
 
 import java.util.List;
 
-import rx.Observable;
+import io.reactivex.Observable;
 
 public class NotesInteractor {
 
