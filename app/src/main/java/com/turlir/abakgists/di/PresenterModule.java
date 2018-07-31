@@ -1,6 +1,8 @@
 package com.turlir.abakgists.di;
 
 
+import com.turlir.abakgists.AppDatabase;
+import com.turlir.abakgists.RoomPresenter;
 import com.turlir.abakgists.allgists.AllGistsPresenter;
 import com.turlir.abakgists.allgists.GistListInteractor;
 import com.turlir.abakgists.api.Repository;
@@ -43,6 +45,12 @@ public class PresenterModule {
     @Singleton
     public GistPresenter provideGistPresenter() {
         return new GistPresenter(new EqualsSolver());
+    }
+
+    @Provides
+    @Singleton
+    public RoomPresenter provideRoomPresenter(AppDatabase room) {
+        return new RoomPresenter(room);
     }
 
 }

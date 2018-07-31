@@ -3,6 +3,7 @@ package com.turlir.abakgists.di;
 
 import android.support.annotation.VisibleForTesting;
 
+import com.turlir.abakgists.RoomActivity;
 import com.turlir.abakgists.allgists.AllGistsPresenter;
 import com.turlir.abakgists.allgists.view.AllGistsFragment;
 import com.turlir.abakgists.api.Repository;
@@ -22,6 +23,8 @@ public interface AppComponent {
     void inject(GistActivity fragment);
 
     void inject(NotesFragment fragment);
+
+    void inject(RoomActivity activity);
 
     @VisibleForTesting
     Repository provideRepository();
