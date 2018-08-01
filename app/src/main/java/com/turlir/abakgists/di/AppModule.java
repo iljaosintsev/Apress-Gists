@@ -3,6 +3,7 @@ package com.turlir.abakgists.di;
 
 import android.content.Context;
 
+import com.turlir.abakgists.AppDatabase;
 import com.turlir.abakgists.api.ApiClient;
 import com.turlir.abakgists.api.LogInterceptor;
 import com.turlir.abakgists.api.Repository;
@@ -47,8 +48,8 @@ public class AppModule {
 
     @Provides
     @Singleton
-    public Repository provideRepository(ApiClient client) {
-        return new Repository(client);
+    public Repository provideRepository(ApiClient client, AppDatabase db) {
+        return new Repository(client, db.gistDao());
     }
 
 }

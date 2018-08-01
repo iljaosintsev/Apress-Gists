@@ -3,7 +3,10 @@ package com.turlir.abakgists;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;
 
-@Database(entities = {User.class}, version = 1)
+import com.turlir.abakgists.api.data.GistLocal;
+import com.turlir.abakgists.api.data.GistLocalDao;
+
+@Database(entities = {GistLocal.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
-    public abstract UserDao userDao();
+    public abstract GistLocalDao gistDao();
 }
