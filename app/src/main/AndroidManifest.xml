@@ -37,14 +37,6 @@
             android:label="@string/all_in_one"
             android:theme="@style/AllInOneTheme"/>
 
-        <activity
-            android:name=".RoomActivity"
-            android:label="@string/title_activity_room">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-            </intent-filter>
-        </activity>
-
     </application>
 
 </manifest>
