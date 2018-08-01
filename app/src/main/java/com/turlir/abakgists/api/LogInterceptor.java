@@ -11,6 +11,8 @@ import timber.log.Timber;
 
 public class LogInterceptor implements Interceptor {
 
+    private static final String JSON_HEADER = "application/json; charset=utf-8";
+
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
@@ -20,16 +22,21 @@ public class LogInterceptor implements Interceptor {
         }
 
         Response response = chain.proceed(request);
-        String bodyString = response.body().string();
-        if ("application/json; charset=utf-8".equals(response.headers().get("Content-Type"))) {
-            Timber.i("Response (%d)", response.code());
+        ResponseBody body = response.body();
+
+        if (body != null) {
+            String bodyString = body.string();
+            if (JSON_HEADER.equals(response.headers().get("Content-Type"))) {
+                Timber.i("Response (%d): %s", response.code(), bodyString);
+            } else {
+                Timber.i("Response (%d)", response.code());
+            }
+            MediaType mediaType = body.contentType();
+            body = ResponseBody.create(mediaType, bodyString);
+            return response.newBuilder().body(body).build();
+
         } else {
-            Timber.i("Response (%d): %s", response.code(), bodyString);
+            return null;
         }
-
-        MediaType mediaType = response.body().contentType();
-        ResponseBody body = ResponseBody.create(mediaType, bodyString);
-        return response.newBuilder().body(body).build();
     }
-
 }

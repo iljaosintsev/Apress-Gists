@@ -8,7 +8,7 @@ import java.util.List;
 class Start extends ListCombination<GistModel> {
 
     @Override
-    ListCombination<GistModel> doLoad(int count) {
+    ListCombination<GistModel> doLoad() {
         return this;
     }
 

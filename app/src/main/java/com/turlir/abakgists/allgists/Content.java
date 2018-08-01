@@ -13,7 +13,7 @@ class Content extends ListCombination<GistModel> {
     }
 
     @Override
-    ListCombination<GistModel> doLoad(int count) {
+    ListCombination<GistModel> doLoad() {
         return new InlineLoading();
     }
 

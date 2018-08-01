@@ -4,8 +4,6 @@ import com.turlir.abakgists.base.erroring.ErrorSelector;
 import com.turlir.abakgists.base.erroring.ErrorSituation;
 import com.turlir.abakgists.model.GistModel;
 
-import timber.log.Timber;
-
 class Error extends ListCombination<GistModel> {
 
     private final Throwable mError;
@@ -30,7 +28,6 @@ class Error extends ListCombination<GistModel> {
             call.blockingLoad(false);
 
             Exception exception = (Exception) mError;
-            Timber.e(exception);
             boolean isData = mProcessor.dataAvailable();
             boolean isError = mProcessor.isError();
             ErrorSituation situation = mSelector.select(exception, isData, isError);
@@ -39,7 +36,5 @@ class Error extends ListCombination<GistModel> {
         } else {
             throw new RuntimeException(mError);
         }
-
-        // mHandler.onError(mError);
     }
 }
