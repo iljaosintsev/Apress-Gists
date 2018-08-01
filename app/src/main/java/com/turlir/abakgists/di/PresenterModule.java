@@ -1,9 +1,12 @@
 package com.turlir.abakgists.di;
 
 
+import com.turlir.abakgists.AppDatabase;
 import com.turlir.abakgists.allgists.AllGistsPresenter;
 import com.turlir.abakgists.allgists.GistListInteractor;
 import com.turlir.abakgists.api.Repository;
+import com.turlir.abakgists.gist.EqualsSolver;
+import com.turlir.abakgists.gist.GistPresenter;
 import com.turlir.abakgists.notes.NotesInteractor;
 import com.turlir.abakgists.notes.NotesPresenter;
 
@@ -35,5 +38,11 @@ public class PresenterModule {
     @Singleton
     public NotesPresenter provideNotesPresenter(NotesInteractor interactor) {
         return new NotesPresenter(interactor);
+    }
+
+    @Provides
+    @Singleton
+    public GistPresenter provideGistPresenter(AppDatabase room) {
+        return new GistPresenter(new EqualsSolver(), room.gistDao());
     }
 }
