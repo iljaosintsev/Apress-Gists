@@ -1,4 +1,4 @@
-package com.turlir.abakgists.data;
+package com.turlir.abakgists.allgists;
 
 import android.os.Build;
 
@@ -11,7 +11,6 @@ import com.turlir.abakgists.api.data.GistJson;
 import com.turlir.abakgists.api.data.GistLocal;
 import com.turlir.abakgists.di.AppComponent;
 
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,14 +22,10 @@ import org.robolectric.annotation.Config;
 import java.util.Collections;
 import java.util.List;
 
-import io.reactivex.Observable;
-import io.reactivex.android.plugins.RxAndroidPlugins;
-import io.reactivex.observers.TestObserver;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.Single;
+import io.reactivex.subscribers.TestSubscriber;
 import it.cosenonjaviste.daggermock.DaggerMockRule;
 import it.cosenonjaviste.daggermock.InjectFromComponent;
-
-import static org.junit.Assert.assertEquals;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = Build.VERSION_CODES.O, packageName = "com.turlir.abakgists")
@@ -43,45 +38,33 @@ public class RepositoryTest {
     private Repository _repo;
 
     @Mock
-    private ApiClient _mockClient;
-
-    @BeforeClass
-    public static void setupRxHooks() throws Throwable {
-        RxAndroidPlugins.setInitMainThreadSchedulerHandler(__ -> Schedulers.trampoline());
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void zeroPageExceptionTest() {
-        _repo.server(0);
-    }
+    private ApiClient _client;
 
     @Test
-    public void successFromServerTest() {
-        GistJson stub = new GistJson(Data.SERVER_STUB);
-        List<GistJson> serverList = Collections.singletonList(stub);
-        Observable<List<GistJson>> serverObs = Observable.just(serverList);
-        Mockito.when(_mockClient.publicGist(1)).thenReturn(serverObs);
+    public void roomNotificationAtInsert() {
+        //List<GistLocal> first = partial.blockingFirst();
+        //assertTrue(first.size() > 0);
 
-        Observable<List<GistLocal>> obs = _repo.server(1);
-        TestObserver<List<GistLocal>> subscriber = new TestObserver<>();
-        obs.subscribe(subscriber);
+        /*List<GistLocal> list = mDao.demo(15, 0);
+        int size = list.size();
+        assertTrue(size > 0);*/
 
-        subscriber.assertComplete();
-        subscriber.assertValueCount(1);
-        List<List<GistLocal>> events = subscriber.values();
-        List<GistLocal> first = events.get(0);
-        assertEquals(1, first.size());
+        TestSubscriber<List<GistLocal>> check = _repo
+                .database(15, 0)
+                .test()
+                .awaitCount(1)
+                .assertValueAt(0, lst -> lst.get(0).equals(Data.LOCAL_STUB));
 
-        GistLocal local = new GistLocal(
-                "85547e4878dd9a573215cd905650f284",
-                "https://api.github.com/gists/85547e4878dd9a573215cd905650f284",
-                "2017-04-27T21:54:24Z",
-                "Part of setTextByParts",
-                "",
-                "iljaosintsev",
-                "https://avatars1.githubusercontent.com/u/3526847?v=3"
-        );
-        assertEquals(local, first.get(0));
+        Single<List<GistJson>> mockNetwork = Single.just(Collections.singletonList(Data.NEW_SERVER));
+        Mockito.when(_client.publicGist(1, 15)).thenReturn(mockNetwork);
+
+        _repo.server(1, 15)
+                .test()
+                .assertNoErrors()
+                .assertComplete();
+
+        check.awaitCount(2)
+                .assertValueAt(1, lst -> lst.size() == 2);
     }
 
 }

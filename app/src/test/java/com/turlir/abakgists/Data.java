@@ -25,4 +25,14 @@ public interface Data {
             new GistOwnerJson("iljaosintsev", "https://avatars1.githubusercontent.com/u/3526847?v=3")
     );
 
+    GistJson NEW_SERVER = new GistJson(
+            "1a1dc91c907325c69271ddf0c944bc72",
+            "https://api.github.com/gists/1a1dc91c907325c69271ddf0c944bc72",
+            "2017-04-27T21:54:24Z",
+            "new element",
+            new GistOwnerJson("robot", "https://avatars1.githubusercontent.com/u/3526847?v=3")
+    );
+
+    // TODO: iterator + optional mapper, build method for getting single item
+
 }
