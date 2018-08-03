@@ -7,18 +7,24 @@ import java.util.List;
 
 class InlineLoading extends ListCombination<GistModel> {
 
+    InlineLoading(ListCombination<GistModel> parent) {
+        super(parent);
+    }
+
     @Override
     ListCombination<GistModel> content(List<GistModel> items) {
-        return new Content(items);
+        return new Content(this, items);
     }
 
     @Override
     ListCombination<GistModel> error(Throwable err, ErrorSelector selector, ErrorProcessing processor) {
-        return new Error(err, selector, processor);
+        Error error = new Error(err, selector, processor);
+        error.setOwner(owner);
+        return error;
     }
 
     @Override
-    void perform(Callback<GistModel> call) {
-        call.inlineLoad(true);
+    void perform() {
+        owner.inlineLoad(true);
     }
 }

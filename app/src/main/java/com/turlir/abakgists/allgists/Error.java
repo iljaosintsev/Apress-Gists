@@ -18,14 +18,14 @@ class Error extends ListCombination<GistModel> {
 
     @Override
     ListCombination<GistModel> refresh() {
-        return new Refresh();
+        return new Refresh(this);
     }
 
     @Override
-    void perform(Callback<GistModel> call) {
+    void perform() {
         if (mError instanceof Exception) {
-            call.inlineLoad(false);
-            call.blockingLoad(false);
+            owner.inlineLoad(false);
+            owner.blockingLoad(false);
 
             Exception exception = (Exception) mError;
             boolean isData = mProcessor.dataAvailable();

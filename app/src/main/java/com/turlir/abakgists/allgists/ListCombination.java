@@ -9,6 +9,20 @@ import java.util.List;
 
 abstract class ListCombination<T> {
 
+    protected Callback<T> owner;
+
+    ListCombination() {
+
+    }
+
+    ListCombination(ListCombination<T> parent) {
+        setOwner(parent.owner);
+    }
+
+    void setOwner(Callback<T> owner) {
+        this.owner = owner;
+    }
+
     @CheckResult
     ListCombination<T> refresh() {
         throw new IllegalStateException();
@@ -29,8 +43,8 @@ abstract class ListCombination<T> {
         throw new IllegalStateException();
     }
 
-    void perform(Callback<T> call) {
-        //
+    void perform() {
+        throw new IllegalStateException();
     }
 
     interface Callback<T> {

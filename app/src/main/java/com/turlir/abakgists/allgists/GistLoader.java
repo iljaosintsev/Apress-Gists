@@ -27,13 +27,13 @@ class GistLoader {
         mSelector = selector;
         mErrorProcessor = errorProcessor;
 
-        mState = new Start();
+        mState = new Start(mCallback);
     }
 
     void firstPage() {
-        mState = new Start();
+        mState = new Start(mCallback);
         mState = mState.doLoad();
-        mState.perform(mCallback);
+        mState.perform();
 
         mDatabaseConnection = mInteractor.subscribe()
                 .subscribe(gistModels -> {
@@ -42,12 +42,12 @@ class GistLoader {
                     }
                     if (gistModels.size() > 0) {
                         mState = mState.content(gistModels);
-                        mState.perform(mCallback);
+                        mState.perform();
                     }
 
                 }, t -> {
                     mState = mState.error(t, mSelector, mErrorProcessor);
-                    mState.perform(mCallback);
+                    mState.perform();
                 });
     }
 
@@ -59,7 +59,7 @@ class GistLoader {
         mDatabaseConnection = mInteractor.nextPage()
                 .subscribe(nextItems -> {
                     mState = mState.content(nextItems);
-                    mState.perform(mCallback);
+                    mState.perform();
                     if (!mInteractor.range.isFull(nextItems.size())) {
                         int[] spec = mInteractor.range.specRequiredItems(nextItems.size());
                         int page = spec[0];
@@ -68,7 +68,7 @@ class GistLoader {
 
                         server(page, one);
                         mState = mState.doLoad();
-                        mState.perform(mCallback);
+                        mState.perform();
                     }
                 });
     }
@@ -83,7 +83,7 @@ class GistLoader {
                     @Override
                     public void onError(Throwable e) {
                         mState = mState.error(e, mSelector, mErrorProcessor);
-                        mState.perform(mCallback);
+                        mState.perform();
                         dispose();
                     }
                 });
