@@ -185,12 +185,6 @@ public class AllGistsFragment
     ////
 
     @Override
-    public boolean isRefreshing() {
-        boolean lastNotGist = mAdapter.getGistByPosition(mAdapter.getItemCount() - 1) == null;
-        return swipe.isRefreshing() || lastNotGist;
-    }
-
-    @Override
     public void loadNextPage() {
         // _presenter.loadPublicGists(mAdapter.getItemCount());
         _presenter.nextPage();

@@ -27,9 +27,7 @@ public class SimpleScrollListener extends RecyclerView.OnScrollListener {
         boolean sizeNotDownload = totalItemCount > mLastDownloadedSize;
 
         if (closeEdge && sizeNotDownload) {
-            boolean notEmpty = !mPg.isEmpty();
-            boolean notRefreshing = !mPg.isRefreshing();
-            if (notRefreshing && notEmpty) {
+            if (!mPg.isEmpty()) {
                 mLastDownloadedSize = totalItemCount;
                 // load next page
                 recyclerView.post(mPg::loadNextPage);
@@ -38,8 +36,6 @@ public class SimpleScrollListener extends RecyclerView.OnScrollListener {
     }
 
     public interface Paginator {
-
-        boolean isRefreshing();
 
         void loadNextPage();
 

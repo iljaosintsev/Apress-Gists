@@ -52,6 +52,9 @@ class GistLoader {
     }
 
     void nextPage() {
+        if (mState instanceof InlineLoading || mState instanceof Refresh) {
+            return;
+        }
         mDatabaseConnection.dispose();
         mDatabaseConnection = mInteractor.nextPage()
                 .subscribe(nextItems -> {
