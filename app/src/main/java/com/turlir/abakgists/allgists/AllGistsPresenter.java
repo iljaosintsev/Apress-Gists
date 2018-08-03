@@ -22,11 +22,16 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
         mLoader = new GistLoader(interactor, new LoaderCallback(), selector, new ErrorCallback());
     }
 
-    /**
-     * из локального кеша или сетевого запроса
-     */
-    public void loadPublicGists(final int currentSize) {
-        mLoader.loadNewPage(currentSize);
+    public int trueSize() {
+        return mLoader.size();
+    }
+
+    public void firstLoad() {
+        mLoader.firstPage();
+    }
+
+    public void nextPage() {
+        mLoader.nextPage();
     }
 
     private class LoaderCallback implements ListCombination.Callback<GistModel> {

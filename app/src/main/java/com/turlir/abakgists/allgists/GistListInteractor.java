@@ -1,43 +1,74 @@
 package com.turlir.abakgists.allgists;
 
+import android.support.annotation.NonNull;
+
 import com.turlir.abakgists.api.Repository;
-import com.turlir.abakgists.api.data.GistLocal;
 import com.turlir.abakgists.api.data.GistMapper;
+import com.turlir.abakgists.api.data.ListGistMapper;
 import com.turlir.abakgists.model.GistModel;
 
 import java.util.List;
 
-import io.reactivex.Observable;
+import io.reactivex.Flowable;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 public class GistListInteractor {
 
-    private static final float PAGE_SIZE = 30;
-
     private final Repository mRepo;
-    private final GistMapper.Local mTransformer = new GistMapper.Local();
+    private final ListGistMapper.Local mTransformer = new ListGistMapper.Local(new GistMapper.Local());
+
+    @NonNull
+    Range range;
 
     public GistListInteractor(Repository repo) {
         mRepo = repo;
+        range = new Range(0, 30);
     }
 
-    /**
-     * Извлекает данные из кеша, при необходимости загружает их с сервера
-     *
-     * @param size количество уже загруженных элементов
-     * @return элементы представления
-     */
-    Observable<List<GistModel>> request(final int size) {
-        if (size == 0) {
-            mTransformer.setLocal(true);
-        }
-        return null;
+    public Flowable<List<GistModel>> subscribe() {
+        range = new Range(0, 30);
+        return mRepo.database(range.count(), range.absStart)
+                .map(mTransformer)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(gistModels -> {
+                    Timber.d("from database (first time) loaded %d items, from %d in %d",
+                            gistModels.size(), range.absStart, range.absStop);
+                    if (!range.isFull(gistModels.size())) {
+                        Timber.d("needs load %d items for first page", range.count() - gistModels.size());
+                    }
+                })
+                .doOnComplete(() -> {
+                    Timber.d("database subscription complete");
+                })
+                .doOnError(Timber::e);
     }
-    /**
-     * Обнвляет данные. Скачивает свежие данные с сервра, перезаписывает локальную базу
-     *
-     * @return сведения о записанных элементах
-     */
-    Observable<List<GistLocal>> update() {
-        return null;
+
+    public Flowable<List<GistModel>> nextPage() {
+        range = range.next();
+        return mRepo.database(range.count(), range.absStart)
+                .map(mTransformer)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(gistModels -> {
+                    Timber.d("next page consist of %d items from database, %d - %d",
+                            gistModels.size(), range.absStart, range.absStop);
+                })
+                .doOnNext(items -> {
+                    Timber.d("database subscription complete");
+                })
+                .doOnError(Timber::e);
     }
+
+    public Single<Integer> server(int page, int perPage) {
+        return mRepo.server(page, perPage)
+                .doOnSuccess(count -> Timber.d("from server loaded %d items", count))
+                .doOnError(e -> Timber.e(e, "network error"))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
 }
