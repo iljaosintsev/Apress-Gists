@@ -44,7 +44,6 @@ public class Repository {
     private Single<List<GistLocal>> loadFromServer(int page, int perPage) {
         if (page < 1) throw new IllegalArgumentException();
         return mClient.publicGist(page, perPage)
-                .doOnSuccess(new LagSideEffect(5500))
                 .map(mTransformer);
     }
 

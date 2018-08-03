@@ -18,7 +18,7 @@ class LagSideEffect implements Consumer<Object> {
         try {
             Thread.sleep(mLag);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 }

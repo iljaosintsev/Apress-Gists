@@ -32,7 +32,9 @@ public class ApiClient {
 
     public Single<List<GistJson>> publicGist(int page, int perPage) {
         page = MAX_PAGE - page + 1;
-        return mApi.publicGist(page, perPage);
+        return mApi.publicGist(page, perPage)
+                .doOnSuccess(new LagSideEffect(5500))
+                .doOnError(new LagSideEffect(5500));
     }
 
 
