@@ -2,6 +2,7 @@ package com.turlir.abakgists.allgists.view;
 
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.util.ListUpdateCallback;
@@ -64,18 +65,16 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
         return mContent.get(position).type(mFactory);
     }
 
+    @NonNull
     @Override
-    public ModelViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ModelViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = mInflater.inflate(viewType, parent, false);
 
         final ModelViewHolder holder = mFactory.holder(viewType, view);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int position = holder.getAdapterPosition();
-                if (position != RecyclerView.NO_POSITION) {
-                    mClick.onListItemClick(position);
-                }
+        holder.itemView.setOnClickListener(v -> {
+            int position = holder.getAdapterPosition();
+            if (position != RecyclerView.NO_POSITION) {
+                mClick.onListItemClick(position);
             }
         });
 
@@ -83,7 +82,7 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(ModelViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ModelViewHolder holder, int position) {
         ViewModel item = mContent.get(position);
         //noinspection unchecked
         holder.bind(item);
@@ -113,7 +112,7 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
         return mFactory.instance(item);
     }
 
-    public void addGist(List<GistModel> value) {
+    public void resetGists(List<GistModel> value) {
         DiffUtil.DiffResult diff = DiffUtil.calculateDiff(new GistDiffCallback(mContent, value));
         diff.dispatchUpdatesTo(this);
         diff.dispatchUpdatesTo(mLoggerAdapterOperations);

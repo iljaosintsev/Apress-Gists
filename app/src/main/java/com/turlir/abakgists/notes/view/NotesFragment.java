@@ -2,6 +2,7 @@ package com.turlir.abakgists.notes.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -49,7 +50,7 @@ public class NotesFragment extends BaseFragment implements OnClickListener {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle saved) {
         View root = inflater.inflate(R.layout.fragment_all_gists, container, false);
         butterKnifeBind(root);
@@ -90,7 +91,7 @@ public class NotesFragment extends BaseFragment implements OnClickListener {
     }
 
     public void onNotesLoaded(List<GistModel> gistDiff) {
-        mAdapter.addGist(gistDiff);
+        mAdapter.resetGists(gistDiff);
     }
 
     @Override
