@@ -2,28 +2,21 @@ package com.turlir.abakgists.api;
 
 
 import com.turlir.abakgists.api.data.GistJson;
-import com.turlir.abakgists.api.data.GistOwnerJson;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.UUID;
 
+import io.reactivex.Single;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import io.reactivex.Observable;
 
 public class ApiClient {
 
     private static final String URL = "https://api.github.com";
-    private final GitHubService mApi;
+    private static final int MAX_PAGE = 20;
 
-    private static final SimpleDateFormat SERVER_FORMAT
-            = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss", Locale.getDefault());
+    private final GitHubService mApi;
 
     public ApiClient(OkHttpClient okhttp) {
         GsonConverterFactory factory = GsonConverterFactory.create();
@@ -37,30 +30,11 @@ public class ApiClient {
         mApi = retrofit.create(GitHubService.class);
     }
 
-    public Observable<List<GistJson>> publicGist(int page) {
-        if (page < 2) {
-            return mApi.publicGist(page);
-        } else {
-            List<GistJson> list = generateResponse();
-            return Observable.just(list);
-        }
+    public Single<List<GistJson>> publicGist(int page, int perPage) {
+        page = MAX_PAGE - page + 1;
+        return mApi.publicGist(page, perPage);
     }
 
-    private List<GistJson> generateResponse() {
-        List<GistJson> list = new ArrayList<>(30);
-        for (int i = 0; i < 30; i++) {
-            GistJson json = new GistJson();
-            json.id = UUID.randomUUID().toString();
-            json.url = "https://status.github.com/messages";
-            json.created = SERVER_FORMAT.format(new Date());
-            json.description = "";
-            json.owner = new GistOwnerJson(
-                    "personal generator",
-                    "https://avatars1.githubusercontent.com/u/3526847"
-            );
-            list.add(json);
-        }
-        return list;
-    }
+
 
 }
