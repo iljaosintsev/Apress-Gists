@@ -140,10 +140,9 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
         notifyItemRangeRemoved(0, c);
     }
 
-    void addLoading() {
-        int s = mContent.size();
-        mContent.add(new LoadingModel(getItemCount()));
-        notifyItemInserted(s + 1);
+    void addLoading(int viewed) {
+        mContent.add(new LoadingModel(viewed));
+        notifyItemInserted(mContent.size() + 1);
     }
 
     void removeLastIfLoading() {

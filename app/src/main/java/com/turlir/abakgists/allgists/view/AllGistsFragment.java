@@ -36,6 +36,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
+import timber.log.Timber;
 
 
 public class AllGistsFragment
@@ -118,9 +119,9 @@ public class AllGistsFragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (savedInstanceState != null) {
-           // _presenter.again();
+           // _presenter.again(); // TODO
         } else {
-           // _presenter.first();
+            _presenter.firstLoad();
         }
     }
 
@@ -155,12 +156,18 @@ public class AllGistsFragment
     ///
 
     public void onGistLoaded(List<GistModel> value) {
-        // root.toContent();
+        Timber.d("%d elements put in ui", value.size());
         if (!isEmpty()) {
             mAdapter.removeLastIfLoading();
             swipe.setRefreshing(false);
         }
+        int size = mAdapter.getItemCount();
         mAdapter.addGist(value);
+        if (value.size() >= size) {
+            recycler.clearOnScrollListeners();
+            RecyclerView.OnScrollListener scroller = new SimpleScrollListener(AllGistsFragment.this);
+            recycler.addOnScrollListener(scroller);
+        }
     }
 
     public void onUpdateSuccessful() {
@@ -184,7 +191,8 @@ public class AllGistsFragment
 
     @Override
     public void loadNextPage() {
-        _presenter.loadPublicGists(mAdapter.getItemCount());
+        // _presenter.loadPublicGists(mAdapter.getItemCount());
+        _presenter.nextPage();
     }
 
     @Override
@@ -229,9 +237,7 @@ public class AllGistsFragment
 
     public void inlineLoad(boolean visible) {
         if (visible) {
-            if (!isEmpty()) {
-                mAdapter.addLoading();
-            }
+            mAdapter.addLoading(_presenter.trueSize());
         } else {
             mAdapter.removeLastIfLoading();
         }
