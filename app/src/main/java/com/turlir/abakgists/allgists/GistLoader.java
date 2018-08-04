@@ -26,7 +26,7 @@ class GistLoader {
 
     void firstPage() {
         mState = new Start(mCallback);
-        changeState(mState.doLoad());
+        mState.perform();
 
         mDatabaseConnection = mInteractor.subscribe()
                 .subscribe(gistModels -> {

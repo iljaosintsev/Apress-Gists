@@ -11,11 +11,6 @@ class Start extends ListCombination<GistModel> {
     }
 
     @Override
-    ListCombination<GistModel> doLoad() {
-        return this;
-    }
-
-    @Override
     ListCombination<GistModel> content(List<GistModel> items) {
         if (!items.isEmpty()) {
             return new Content(this, items);
