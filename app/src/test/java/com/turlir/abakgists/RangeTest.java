@@ -22,7 +22,6 @@ public class RangeTest {
 
         range = range.next();
         check(range, 30, 60, 4);
-        assertTrue(range.hasNext());
     }
 
     @Test
@@ -43,6 +42,15 @@ public class RangeTest {
         range = range.next();
         check(range, 45, 55, 4);
         assertFalse(range.isWhole());
+    }
+
+    @Test
+    public void forbiddenNext() {
+        int maxPage = 20;
+        int limit = maxPage * 15;
+        int pageSize = 15;
+        Range range = new Range(limit - pageSize, limit);
+        assertFalse(range.hasNext());
     }
 
     // previous

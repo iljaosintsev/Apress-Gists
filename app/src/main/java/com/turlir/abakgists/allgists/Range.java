@@ -2,7 +2,9 @@ package com.turlir.abakgists.allgists;
 
 public class Range {
 
-    private final int PAGE_SIZE = 15;
+    private final int
+            PAGE_SIZE = 15,
+            MAX_PAGE = 20;
 
     public final int absStart, absStop;
     public final int page;
@@ -57,7 +59,7 @@ public class Range {
     }
 
     public boolean hasNext() {
-        return true;
+        return page < MAX_PAGE;
     }
 
     public boolean hasPrevious() {

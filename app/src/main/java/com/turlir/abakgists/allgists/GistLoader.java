@@ -25,6 +25,7 @@ class GistLoader {
     }
 
     void firstPage() {
+        if (!canLoad()) return;
         mState = new Start(mCallback);
         mState.perform();
 
@@ -43,9 +44,7 @@ class GistLoader {
     }
 
     void nextPage() {
-        if (mState instanceof InlineLoading || mState instanceof Refresh) {
-            return;
-        }
+        if (!canNext()) return;
         mDatabaseConnection.dispose();
         mDatabaseConnection = mInteractor.nextPage()
                 .subscribe(nextItems -> {
@@ -92,5 +91,17 @@ class GistLoader {
         mState = now;
         Timber.v("StateChange", "onStart " + now.getClass().getSimpleName());
         mState.perform();
+    }
+
+    private boolean canLoad() {
+        return mState instanceof InlineLoading || !(mState instanceof Refresh);
+    }
+
+    private boolean canNext() {
+        return canLoad() && mInteractor.range.hasNext();
+    }
+
+    private boolean canPrevious() {
+        return canLoad() && mInteractor.range.hasPrevious();
     }
 }
