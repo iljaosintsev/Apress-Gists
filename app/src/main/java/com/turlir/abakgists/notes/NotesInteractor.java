@@ -7,20 +7,22 @@ import com.turlir.abakgists.model.GistModel;
 
 import java.util.List;
 
-import io.reactivex.Observable;
+import io.reactivex.Flowable;
 
 public class NotesInteractor {
 
     private final Repository mRepo;
+    private final ListGistMapper.Local mMapper;
 
     public NotesInteractor(Repository repo) {
         mRepo = repo;
+        mMapper = new ListGistMapper.Local(new GistMapper.Local());
+        mMapper.setLocal(true);
     }
 
-    Observable<List<GistModel>> requestWithNotes() {
-        ListGistMapper.Local mapper = new ListGistMapper.Local(new GistMapper.Local());
-        mapper.setLocal(true);
-        return null;
+    Flowable<List<GistModel>> requestWithNotes() {
+        return mRepo.notes()
+                .map(mMapper);
     }
 
 }

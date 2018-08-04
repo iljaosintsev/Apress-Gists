@@ -37,6 +37,10 @@ public class Repository {
         return mDao.partial(limit, offset);
     }
 
+    public Flowable<List<GistLocal>> notes() {
+        return mDao.notes();
+    }
+
     ///
     /// private
     ///

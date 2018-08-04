@@ -24,4 +24,6 @@ public interface GistLocalDao {
     @Update
     void update(GistLocal local);
 
+    @Query("SELECT * FROM gists_db WHERE note NOT NULL AND note != \"\"")
+    Flowable<List<GistLocal>> notes();
 }
