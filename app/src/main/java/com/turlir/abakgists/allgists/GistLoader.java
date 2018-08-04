@@ -64,8 +64,12 @@ class GistLoader {
                 });
     }
 
-    public int size() {
+    int size() {
         return mInteractor.range.prev().absStop;
+    }
+
+    void stop() {
+        mDatabaseConnection.dispose();
     }
 
     private void server(int page, int perPage) {

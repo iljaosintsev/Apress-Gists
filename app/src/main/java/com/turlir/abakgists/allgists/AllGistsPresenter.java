@@ -25,6 +25,12 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
         mLoader = new GistLoader(interactor, new LoaderCallback());
     }
 
+    @Override
+    public void detach() {
+        super.detach();
+        mLoader.stop();
+    }
+
     public int trueSize() {
         return mLoader.size();
     }
