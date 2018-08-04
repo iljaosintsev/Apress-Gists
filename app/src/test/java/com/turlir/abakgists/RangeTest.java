@@ -1,6 +1,5 @@
 package com.turlir.abakgists;
 
-import com.turlir.abakgists.allgists.Diff;
 import com.turlir.abakgists.allgists.Range;
 
 import org.junit.Test;
@@ -17,21 +16,13 @@ public class RangeTest {
     public void simpleStart() {
         Range range = new Range(0, 30);
         check(range, 0, 30, 2);
+        assertEquals(15, range.perPage());
 
         range = range.next();
         check(range, 15, 45, 3);
 
         range = range.next();
         check(range, 30, 60, 4);
-    }
-
-    @Test
-    public void atFirstPage() {
-        Range range = new Range(0, 15, 1);
-        check(range, 0, 15, 1);
-
-        range = range.next();
-        check(range, 15, 30, 2);
     }
 
     @Test
@@ -102,19 +93,31 @@ public class RangeTest {
     @Test
     public void aliquotDiff() {
         Range demand = new Range(15, 45);
-        Range actual = new Range(15, 15 + 15);
-        Diff diff = demand.diff(actual);
+        Range actual = new Range(15, 30);
+        Range diff = demand.diff(actual);
         assertEquals(3, diff.page);
-        assertEquals(15, diff.perPage);
+        assertEquals(15, diff.perPage());
+        assertEquals(30, diff.absStart);
+        assertEquals(45, diff.absStop);
     }
 
     @Test
     public void incompleteDiff() {
         Range demand = new Range(15, 45);
         Range actual = new Range(15, 15 + 20);
-        Diff diff = demand.diff(actual);
+        Range diff = demand.diff(actual);
+        assertEquals(3, diff.page);
+        assertEquals(15, diff.perPage());
+        assertEquals(30, diff.absStart);
+        assertEquals(45, diff.absStop);
+
+        demand = new Range(15, 45);
+        actual = new Range(15, 37);
+        diff = demand.diff(actual);
         assertEquals(4, diff.page);
-        assertEquals(10, diff.perPage);
+        assertEquals(11, diff.perPage());
+        assertEquals(32, diff.absStart);
+        assertEquals(45, diff.absStop);
     }
 
     @Test(expected = IllegalArgumentException.class)

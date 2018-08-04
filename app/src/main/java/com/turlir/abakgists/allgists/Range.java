@@ -16,11 +16,10 @@ public class Range {
         page = (int) Math.ceil(absStop / (float) PAGE_SIZE);
     }
 
-    public Range(int relStart, int relStop, int page) {
-        int offset = (int) ((page - 1) * (float) PAGE_SIZE);
-        absStart = offset + relStart;
-        absStop = absStart + relStop;
-        this.page = page;
+    private Range(int start, int stop, int perPage) {
+        absStart = start;
+        absStop = stop;
+        page = (int) Math.ceil(absStop / (float) perPage);
     }
 
     public int[] specRequiredItems(int c) {
@@ -37,18 +36,20 @@ public class Range {
         }
     }
 
-    public Diff diff(Range o) {
+    public Range diff(Range o) {
         int required = count() - o.count();
         if (required < 1) throw new IllegalArgumentException();
         int at = absStop - required;
         if (at % required == 0) {
-            int page = (at / required) + 1;
-            return new Diff(page, required);
+            return new Range(at, absStop, required);
         } else {
-            double floor = Math.floor(at / (float) required);
-            int page = (int) floor + 1;
-            return new Diff(page, required);
+            int round = (int) Math.floor(at / (float) required);
+            return new Range(required * round, absStop, absStop - required * round);
         }
+    }
+
+    public int perPage() {
+        return absStop / page;
     }
 
     public int count() {
