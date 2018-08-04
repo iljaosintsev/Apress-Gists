@@ -8,9 +8,9 @@ class Error extends ListCombination<GistModel> {
 
     private final Throwable mError;
     private final ErrorSelector mSelector;
-    private final ErrorProcessing mProcessor;
+    private final ErrorProcessor mProcessor;
 
-    Error(Throwable error, ErrorSelector selector, ErrorProcessing processor) {
+    Error(Throwable error, ErrorSelector selector, ErrorProcessor processor) {
         mError = error;
         mSelector = selector;
         mProcessor = processor;
@@ -32,7 +32,7 @@ class Error extends ListCombination<GistModel> {
             boolean isData = mProcessor.dataAvailable();
             boolean isError = mProcessor.isError();
             ErrorSituation situation = mSelector.select(exception, isData, isError);
-            situation.perform(mProcessor.error(), exception);
+            situation.perform(mProcessor.interpreter(), exception);
 
         } else {
             throw new RuntimeException(mError);

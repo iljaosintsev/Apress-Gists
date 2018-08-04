@@ -17,7 +17,7 @@ class Refresh extends ListCombination<GistModel> {
     }
 
     @Override
-    ListCombination<GistModel> error(Throwable err, ErrorSelector selector, ErrorProcessing processor) {
+    ListCombination<GistModel> error(Throwable err, ErrorSelector selector, ErrorProcessor processor) {
         Error error = new Error(err, selector, processor);
         error.setOwner(owner);
         return error;

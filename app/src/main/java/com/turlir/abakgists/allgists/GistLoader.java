@@ -12,16 +12,16 @@ import timber.log.Timber;
 class GistLoader {
 
     private final GistListInteractor mInteractor;
-    private final ListCombination.Callback<GistModel> mCallback;
+    private final ListManipulator<GistModel> mCallback;
     private final ErrorSelector mSelector;
-    private final ListCombination.ErrorProcessing mErrorProcessor;
+    private final ErrorProcessor mErrorProcessor;
 
     @NonNull
     private ListCombination<GistModel> mState;
     private Disposable mDatabaseConnection;
 
-    GistLoader(GistListInteractor interactor, ListCombination.Callback<GistModel> callback,
-               ErrorSelector selector, ListCombination.ErrorProcessing errorProcessor) {
+    GistLoader(GistListInteractor interactor, ListManipulator<GistModel> callback,
+               ErrorSelector selector, ErrorProcessor errorProcessor) {
         mInteractor = interactor;
         mCallback = callback;
         mSelector = selector;
@@ -32,8 +32,7 @@ class GistLoader {
 
     void firstPage() {
         mState = new Start(mCallback);
-        mState = mState.doLoad();
-        mState.perform();
+        changeState(mState.doLoad());
 
         mDatabaseConnection = mInteractor.subscribe()
                 .subscribe(gistModels -> {
@@ -41,13 +40,11 @@ class GistLoader {
                         server(1, mInteractor.range.count());
                     }
                     if (gistModels.size() > 0) {
-                        mState = mState.content(gistModels);
-                        mState.perform();
+                        changeState(mState.content(gistModels));
                     }
 
                 }, t -> {
-                    mState = mState.error(t, mSelector, mErrorProcessor);
-                    mState.perform();
+                    changeState(mState.error(t, mSelector, mErrorProcessor));
                 });
     }
 
@@ -58,8 +55,7 @@ class GistLoader {
         mDatabaseConnection.dispose();
         mDatabaseConnection = mInteractor.nextPage()
                 .subscribe(nextItems -> {
-                    mState = mState.content(nextItems);
-                    mState.perform();
+                   changeState(mState.content(nextItems));
                     if (!mInteractor.range.isFull(nextItems.size())) {
                         int[] spec = mInteractor.range.specRequiredItems(nextItems.size());
                         int page = spec[0];
@@ -67,10 +63,13 @@ class GistLoader {
                         Timber.d("needs load %d th page in %d items", page, one);
 
                         server(page, one);
-                        mState = mState.doLoad();
-                        mState.perform();
+                        changeState(mState.doLoad());
                     }
                 });
+    }
+
+    public int size() {
+        return mInteractor.range.prev().absStop;
     }
 
     private void server(int page, int perPage) {
@@ -82,14 +81,16 @@ class GistLoader {
                     }
                     @Override
                     public void onError(Throwable e) {
-                        mState = mState.error(e, mSelector, mErrorProcessor);
-                        mState.perform();
+                        changeState(mState.error(e, mSelector, mErrorProcessor));
                         dispose();
                     }
                 });
     }
 
-    public int size() {
-        return mInteractor.range.prev().absStop;
+    private void changeState(ListCombination<GistModel> now) {
+        Timber.v("StateChange", "onExit " + mState.getClass().getSimpleName());
+        mState = now;
+        Timber.v("StateChange", "onStart " + now.getClass().getSimpleName());
+        mState.perform();
     }
 }

@@ -34,9 +34,9 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
         mLoader.nextPage();
     }
 
-    private class LoaderCallback implements ListCombination.Callback<GistModel> {
+    private class LoaderCallback implements ListManipulator<GistModel> {
 
-        private static final String TAG = "DataCycle";
+        private static final String TAG = "ListOwner";
 
         @Override
         public void blockingLoad(boolean visible) {
@@ -69,10 +69,10 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
        }
     }
 
-    private class ErrorCallback implements ListCombination.ErrorProcessing {
+    private class ErrorCallback implements ErrorProcessor {
 
         @Override
-        public ErrorInterpreter error() {
+        public ErrorInterpreter interpreter() {
             return getView();
         }
 

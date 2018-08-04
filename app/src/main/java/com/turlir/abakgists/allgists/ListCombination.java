@@ -3,14 +3,13 @@ package com.turlir.abakgists.allgists;
 import android.os.Looper;
 import android.support.annotation.CheckResult;
 
-import com.turlir.abakgists.base.erroring.ErrorInterpreter;
 import com.turlir.abakgists.base.erroring.ErrorSelector;
 
 import java.util.List;
 
 abstract class ListCombination<T> {
 
-    protected Callback<T> owner;
+    protected ListManipulator<T> owner;
 
     ListCombination() {
 
@@ -20,7 +19,7 @@ abstract class ListCombination<T> {
         setOwner(parent.owner);
     }
 
-    void setOwner(Callback<T> owner) {
+    void setOwner(ListManipulator<T> owner) {
         this.owner = owner;
     }
 
@@ -35,7 +34,7 @@ abstract class ListCombination<T> {
     }
 
     @CheckResult
-    ListCombination<T> error(Throwable err, ErrorSelector selector, ErrorProcessing processor) {
+    ListCombination<T> error(Throwable err, ErrorSelector selector, ErrorProcessor processor) {
         throw new IllegalStateException();
     }
 
@@ -48,26 +47,6 @@ abstract class ListCombination<T> {
         if (Looper.myLooper() != Looper.getMainLooper()) {
             throw new IllegalStateException("access view outside main thread");
         }
-    }
-
-    interface Callback<T> {
-
-        void blockingLoad(boolean visible);
-
-        void inlineLoad(boolean visible);
-
-        void renderData(List<T> items);
-
-        void emptyData(boolean visible);
-    }
-
-    interface ErrorProcessing {
-
-        ErrorInterpreter error();
-
-        boolean dataAvailable();
-
-        boolean isError();
     }
 
 }
