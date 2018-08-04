@@ -17,6 +17,7 @@ class Empty extends ListCombination<GistModel> {
 
     @Override
     void perform() {
+        super.perform();
         owner.inlineLoad(false);
         owner.blockingLoad(false);
         owner.emptyData(true);

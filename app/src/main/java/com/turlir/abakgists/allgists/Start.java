@@ -34,6 +34,7 @@ class Start extends ListCombination<GistModel> {
 
     @Override
     void perform() {
+        super.perform();
         owner.inlineLoad(false);
         owner.blockingLoad(true);
     }

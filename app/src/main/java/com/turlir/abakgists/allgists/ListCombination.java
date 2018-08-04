@@ -1,5 +1,6 @@
 package com.turlir.abakgists.allgists;
 
+import android.os.Looper;
 import android.support.annotation.CheckResult;
 
 import com.turlir.abakgists.base.erroring.ErrorInterpreter;
@@ -44,7 +45,9 @@ abstract class ListCombination<T> {
     }
 
     void perform() {
-        throw new IllegalStateException();
+        if (Looper.myLooper() != Looper.getMainLooper()) {
+            throw new IllegalStateException("access view outside main thread");
+        }
     }
 
     interface Callback<T> {

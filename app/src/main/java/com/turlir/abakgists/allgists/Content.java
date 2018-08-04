@@ -30,6 +30,7 @@ class Content extends ListCombination<GistModel> {
 
     @Override
     void perform() {
+        super.perform();
         if (mItems.isEmpty()) {
             owner.emptyData(true);
         } else {

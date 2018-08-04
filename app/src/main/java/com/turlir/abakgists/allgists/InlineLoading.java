@@ -25,6 +25,7 @@ class InlineLoading extends ListCombination<GistModel> {
 
     @Override
     void perform() {
+        super.perform();
         owner.inlineLoad(true);
     }
 }

@@ -23,6 +23,7 @@ class Error extends ListCombination<GistModel> {
 
     @Override
     void perform() {
+        super.perform();
         if (mError instanceof Exception) {
             owner.inlineLoad(false);
             owner.blockingLoad(false);
