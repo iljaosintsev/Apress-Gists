@@ -7,7 +7,6 @@ import com.turlir.abakgists.allgists.GistListInteractor;
 import com.turlir.abakgists.api.Repository;
 import com.turlir.abakgists.gist.EqualsSolver;
 import com.turlir.abakgists.gist.GistPresenter;
-import com.turlir.abakgists.notes.NotesInteractor;
 import com.turlir.abakgists.notes.NotesPresenter;
 
 import javax.inject.Singleton;
@@ -24,11 +23,6 @@ public class PresenterModule {
     }
 
     @Provides
-    public NotesInteractor provideNotesInteractor(Repository repo) {
-        return new NotesInteractor(repo);
-    }
-
-    @Provides
     @Singleton
     public AllGistsPresenter provideAllGistsPresenter(GistListInteractor interactor) {
         return new AllGistsPresenter(interactor);
@@ -36,7 +30,7 @@ public class PresenterModule {
 
     @Provides
     @Singleton
-    public NotesPresenter provideNotesPresenter(NotesInteractor interactor) {
+    public NotesPresenter provideNotesPresenter(GistListInteractor interactor) {
         return new NotesPresenter(interactor);
     }
 

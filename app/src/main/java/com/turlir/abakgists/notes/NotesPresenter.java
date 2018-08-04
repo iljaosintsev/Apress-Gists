@@ -1,6 +1,7 @@
 package com.turlir.abakgists.notes;
 
 import com.turlir.abakgists.R;
+import com.turlir.abakgists.allgists.GistListInteractor;
 import com.turlir.abakgists.base.BasePresenter;
 import com.turlir.abakgists.base.BaseView;
 import com.turlir.abakgists.model.GistModel;
@@ -15,9 +16,9 @@ import timber.log.Timber;
 
 public class NotesPresenter extends BasePresenter<NotesFragment> {
 
-    private final NotesInteractor mInteractor;
+    private final GistListInteractor mInteractor;
 
-    public NotesPresenter(NotesInteractor interactor) {
+    public NotesPresenter(GistListInteractor interactor) {
         mInteractor = interactor;
     }
 

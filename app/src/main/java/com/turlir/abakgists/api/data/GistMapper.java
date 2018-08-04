@@ -21,12 +21,11 @@ public class GistMapper {
                 return new GistLocal(item.id, item.url, item.created, desc, null, null);
             }
         }
-
     }
 
     public static class Local implements Function<GistLocal, GistModel> {
 
-        private boolean isLocal;
+        public boolean isLocal;
 
         @Override
         public GistModel apply(GistLocal item) {
@@ -40,10 +39,6 @@ public class GistMapper {
                     item.note,
                     isLocal
             );
-        }
-
-        public void setLocal(boolean local) {
-            isLocal = local;
         }
     }
 

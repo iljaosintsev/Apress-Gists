@@ -45,9 +45,12 @@ public class ListGistMapper {
         }
 
         public void setLocal(boolean local) {
-            mapper.setLocal(local);
+            mapper.isLocal = local;
         }
 
+        public boolean isLocal() {
+            return mapper.isLocal;
+        }
     }
 
 

@@ -71,4 +71,14 @@ public class GistListInteractor {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    public Flowable<List<GistModel>> requestWithNotes() {
+        return mRepo.notes()
+                .map(gistLocals -> {
+                    boolean tmp = mTransformer.isLocal();
+                    mTransformer.setLocal(true);
+                    List<GistModel> res = mTransformer.apply(gistLocals);
+                    mTransformer.setLocal(tmp);
+                    return res;
+                });
+    }
 }
