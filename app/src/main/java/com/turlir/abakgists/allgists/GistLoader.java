@@ -59,6 +59,8 @@ class GistLoader {
                         server(page, one);
                         changeState(mState.doLoad());
                     }
+                }, t -> {
+                    changeState(mState.error(t));
                 });
     }
 
