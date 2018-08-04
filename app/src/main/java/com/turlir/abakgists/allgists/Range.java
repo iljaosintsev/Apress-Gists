@@ -37,6 +37,20 @@ public class Range {
         }
     }
 
+    public Diff diff(Range o) {
+        int required = count() - o.count();
+        if (required < 1) throw new IllegalArgumentException();
+        int at = absStop - required;
+        if (at % required == 0) {
+            int page = (at / required) + 1;
+            return new Diff(page, required);
+        } else {
+            double floor = Math.floor(at / (float) required);
+            int page = (int) floor + 1;
+            return new Diff(page, required);
+        }
+    }
+
     public int count() {
         return absStop - absStart;
     }

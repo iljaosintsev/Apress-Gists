@@ -1,5 +1,6 @@
 package com.turlir.abakgists;
 
+import com.turlir.abakgists.allgists.Diff;
 import com.turlir.abakgists.allgists.Range;
 
 import org.junit.Test;
@@ -94,6 +95,40 @@ public class RangeTest {
         int perPage = spec[1];
         assertEquals(4, page);
         assertEquals(10, perPage);
+    }
+
+    // diff
+
+    @Test
+    public void aliquotDiff() {
+        Range demand = new Range(15, 45);
+        Range actual = new Range(15, 15 + 15);
+        Diff diff = demand.diff(actual);
+        assertEquals(3, diff.page);
+        assertEquals(15, diff.perPage);
+    }
+
+    @Test
+    public void incompleteDiff() {
+        Range demand = new Range(15, 45);
+        Range actual = new Range(15, 15 + 20);
+        Diff diff = demand.diff(actual);
+        assertEquals(4, diff.page);
+        assertEquals(10, diff.perPage);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void invertDiff() {
+        Range demand = new Range(15, 45);
+        Range actual = new Range(15, 15 + 15);
+        actual.diff(demand);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void diffWithEqualsRange() {
+        Range demand = new Range(15, 45);
+        Range actual = new Range(15, 45);
+        actual.diff(demand);
     }
 
     private void check(Range r, int s, int e, int p) {
