@@ -11,4 +11,6 @@ interface ListManipulator<T> {
     void renderData(List<T> items);
 
     void emptyData(boolean visible);
+
+    ErrorProcessor getErrorProcessor();
 }

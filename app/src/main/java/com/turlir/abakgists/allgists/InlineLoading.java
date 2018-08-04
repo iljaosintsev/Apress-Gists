@@ -1,6 +1,5 @@
 package com.turlir.abakgists.allgists;
 
-import com.turlir.abakgists.base.erroring.ErrorSelector;
 import com.turlir.abakgists.model.GistModel;
 
 import java.util.List;
@@ -17,8 +16,8 @@ class InlineLoading extends ListCombination<GistModel> {
     }
 
     @Override
-    ListCombination<GistModel> error(Throwable err, ErrorSelector selector, ErrorProcessor processor) {
-        Error error = new Error(err, selector, processor);
+    ListCombination<GistModel> error(Throwable err) {
+        Error error = new Error(err);
         error.setOwner(owner);
         return error;
     }

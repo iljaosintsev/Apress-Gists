@@ -3,8 +3,6 @@ package com.turlir.abakgists.allgists;
 import android.os.Looper;
 import android.support.annotation.CheckResult;
 
-import com.turlir.abakgists.base.erroring.ErrorSelector;
-
 import java.util.List;
 
 abstract class ListCombination<T> {
@@ -34,7 +32,7 @@ abstract class ListCombination<T> {
     }
 
     @CheckResult
-    ListCombination<T> error(Throwable err, ErrorSelector selector, ErrorProcessor processor) {
+    ListCombination<T> error(Throwable err) {
         throw new IllegalStateException();
     }
 

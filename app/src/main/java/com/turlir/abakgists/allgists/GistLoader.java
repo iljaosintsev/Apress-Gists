@@ -2,7 +2,6 @@ package com.turlir.abakgists.allgists;
 
 import android.support.annotation.NonNull;
 
-import com.turlir.abakgists.base.erroring.ErrorSelector;
 import com.turlir.abakgists.model.GistModel;
 
 import io.reactivex.disposables.Disposable;
@@ -13,19 +12,14 @@ class GistLoader {
 
     private final GistListInteractor mInteractor;
     private final ListManipulator<GistModel> mCallback;
-    private final ErrorSelector mSelector;
-    private final ErrorProcessor mErrorProcessor;
 
     @NonNull
     private ListCombination<GistModel> mState;
     private Disposable mDatabaseConnection;
 
-    GistLoader(GistListInteractor interactor, ListManipulator<GistModel> callback,
-               ErrorSelector selector, ErrorProcessor errorProcessor) {
+    GistLoader(GistListInteractor interactor, ListManipulator<GistModel> callback) {
         mInteractor = interactor;
         mCallback = callback;
-        mSelector = selector;
-        mErrorProcessor = errorProcessor;
 
         mState = new Start(mCallback);
     }
@@ -44,7 +38,7 @@ class GistLoader {
                     }
 
                 }, t -> {
-                    changeState(mState.error(t, mSelector, mErrorProcessor));
+                    changeState(mState.error(t));
                 });
     }
 
@@ -81,7 +75,7 @@ class GistLoader {
                     }
                     @Override
                     public void onError(Throwable e) {
-                        changeState(mState.error(e, mSelector, mErrorProcessor));
+                        changeState(mState.error(e));
                         dispose();
                     }
                 });

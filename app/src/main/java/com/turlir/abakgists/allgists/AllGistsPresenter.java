@@ -16,10 +16,13 @@ import timber.log.Timber;
 public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
 
     private final GistLoader mLoader;
+    private final ErrorSelector mSelector;
+    private final ErrorProcessor mProcessor;
 
     public AllGistsPresenter(GistListInteractor interactor) {
-        ErrorSelector selector = new TroubleSelector(new RepeatingError());
-        mLoader = new GistLoader(interactor, new LoaderCallback(), selector, new ErrorCallback());
+        mSelector = new TroubleSelector(new RepeatingError());
+        mProcessor = new ErrorCallback();
+        mLoader = new GistLoader(interactor, new LoaderCallback());
     }
 
     public int trueSize() {
@@ -67,9 +70,19 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
         public void emptyData(boolean visible) {
             // not impl
        }
+
+        @Override
+        public ErrorProcessor getErrorProcessor() {
+            return mProcessor;
+        }
     }
 
     private class ErrorCallback implements ErrorProcessor {
+
+        @Override
+        public ErrorSelector getErrorSelector() {
+            return mSelector;
+        }
 
         @Override
         public ErrorInterpreter interpreter() {
