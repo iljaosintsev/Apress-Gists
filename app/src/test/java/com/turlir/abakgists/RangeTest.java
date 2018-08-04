@@ -135,8 +135,7 @@ public class RangeTest {
     }
 
     private void check(Range r, int s, int e, int p) {
-        assertEquals(s, r.absStart);
-        assertEquals(e, r.absStop);
+        assertEquals(new Range(s, e), r);
         assertEquals(p, r.page);
     }
 

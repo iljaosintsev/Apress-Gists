@@ -1,9 +1,10 @@
 package com.turlir.abakgists.allgists;
 
+import java.util.Objects;
+
 public class Range {
 
-    private final int
-            PAGE_SIZE = 15,
+    private final int PAGE_SIZE = 15,
             MAX_PAGE = 20;
 
     public final int absStart, absStop;
@@ -79,5 +80,29 @@ public class Range {
 
     public boolean hasPrevious() {
         return absStart - PAGE_SIZE >= 0;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Range range = (Range) o;
+        return absStart == range.absStart &&
+               absStop == range.absStop &&
+               page == range.page;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(absStart, absStop, page);
+    }
+
+    @Override
+    public String toString() {
+        return "Range{" +
+               "absStart=" + absStart +
+               ", absStop=" + absStop +
+               ", page=" + page +
+               '}';
     }
 }
