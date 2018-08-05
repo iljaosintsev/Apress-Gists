@@ -1,5 +1,7 @@
 package com.turlir.abakgists.allgists;
 
+import android.support.annotation.VisibleForTesting;
+
 import java.util.Objects;
 
 public class Range {
@@ -17,7 +19,8 @@ public class Range {
         page = (int) Math.ceil(absStop / (float) PAGE_SIZE);
     }
 
-    private Range(int start, int stop, int perPage) {
+    @VisibleForTesting
+    public Range(int start, int stop, int perPage) {
         absStart = start;
         absStop = stop;
         page = (int) Math.ceil(absStop / (float) perPage);

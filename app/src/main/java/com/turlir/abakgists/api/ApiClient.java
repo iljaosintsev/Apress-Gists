@@ -14,9 +14,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ApiClient {
 
     private static final String URL = "https://api.github.com";
-    private static final int MAX_PAGE = 20;
 
     private final GitHubService mApi;
+    private final Shift mShift;
 
     public ApiClient(OkHttpClient okhttp) {
         GsonConverterFactory factory = GsonConverterFactory.create();
@@ -28,15 +28,29 @@ public class ApiClient {
                 .build();
 
         mApi = retrofit.create(GitHubService.class);
+        mShift = new Shift();
     }
 
-    public Single<List<GistJson>> publicGist(int page, int perPage) {
-        page = MAX_PAGE - page + 1;
-        return mApi.publicGist(page, perPage)
+    public Single<List<GistJson>> publicGist(final int page, final int perPage) {
+        int nowPage = mShift.shift(page, perPage);
+        return mApi.publicGist(nowPage, perPage)
                 .doOnSuccess(new LagSideEffect(5500))
                 .doOnError(new LagSideEffect(5500));
     }
 
+    static class Shift {
+        private static final int MAX_PAGE = 20;
+        private static final int PER_PAGE = 15;
 
-
+        public int shift(int page, int perPage) {
+            if (perPage == PER_PAGE) {
+                page = MAX_PAGE - page + 1;
+                return page;
+            } else {
+                int scaled = perPage / 15;
+                int demo = MAX_PAGE / scaled;
+                return demo - page + 1;
+            }
+        }
+    }
 }
