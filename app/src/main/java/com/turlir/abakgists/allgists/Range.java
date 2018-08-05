@@ -39,8 +39,10 @@ public class Range {
 
     public Range diff(Range o) {
         int required = count() - o.count();
-        if (required < 1) throw new IllegalArgumentException();
-        int at = absStop - required;
+        if (required < 1 || absStart != o.absStart) {
+            throw new IllegalArgumentException();
+        }
+        int at = o.absStop;
         if (at % required == 0) {
             return new Range(at, absStop, required);
         } else {
