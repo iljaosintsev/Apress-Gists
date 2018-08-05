@@ -26,17 +26,6 @@ public class RangeTest {
     }
 
     @Test
-    public void atSpecificPosition() {
-        Range range = new Range(30, 40);
-        assertEquals(3, range.page);
-        assertFalse(range.isWhole());
-
-        range = range.next();
-        check(range, 45, 55, 4);
-        assertFalse(range.isWhole());
-    }
-
-    @Test
     public void forbiddenNext() {
         int maxPage = 20;
         int limit = maxPage * 15;

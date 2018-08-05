@@ -59,10 +59,6 @@ public class Range {
         return absStop - absStart;
     }
 
-    public boolean isWhole() {
-        return absStop % PAGE_SIZE == 0;
-    }
-
     public boolean isFull(int count) {
         return count == count();
     }
