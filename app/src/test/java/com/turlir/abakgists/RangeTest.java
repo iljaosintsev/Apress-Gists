@@ -123,6 +123,21 @@ public class RangeTest {
         actual.diff(demand);
     }
 
+    // slice
+
+    @Test
+    public void correctSlice() {
+        Range range = new Range(15, 45);
+        Range actual = range.slice(15);
+        check(actual, 15, 30, 2);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void lessStartSlice() {
+        Range range = new Range(15, 45);
+        range.slice(1);
+    }
+
     private void check(Range r, int s, int e, int p) {
         assertEquals(new Range(s, e), r);
         assertEquals(p, r.page);

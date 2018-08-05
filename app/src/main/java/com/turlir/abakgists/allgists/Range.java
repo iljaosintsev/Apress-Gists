@@ -37,6 +37,11 @@ public class Range {
         }
     }
 
+    public Range slice(int size) {
+        if (size < absStart) throw new IllegalArgumentException();
+        return new Range(absStart, absStart + size);
+    }
+
     public Range diff(Range o) {
         int required = count() - o.count();
         if (required < 1 || absStart != o.absStart) {
