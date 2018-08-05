@@ -55,28 +55,6 @@ public class RangeTest {
         assertFalse(range.hasPrevious());
     }
 
-    // specRequiredItems
-
-    @Test
-    public void aliquotRequiredItems() {
-        Range range = new Range(15, 45);
-        int[] spec = range.specRequiredItems(15);
-        int page = spec[0];
-        int perPage = spec[1];
-        assertEquals(3, page);
-        assertEquals(15, perPage);
-    }
-
-    @Test
-    public void incompleteRequiredItems() {
-        Range range = new Range(15, 45);
-        int[] spec = range.specRequiredItems(20);
-        int page = spec[0];
-        int perPage = spec[1];
-        assertEquals(4, page);
-        assertEquals(10, perPage);
-    }
-
     // diff
 
     @Test

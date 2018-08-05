@@ -23,20 +23,6 @@ public class Range {
         page = (int) Math.ceil(absStop / (float) perPage);
     }
 
-    public int[] specRequiredItems(int c) {
-        int required = count() - c;
-        if (required < 1) throw new IllegalArgumentException();
-        int at = absStop - required;
-        if (at % required == 0) {
-            int page = (at / required) + 1;
-            return new int[] {page, required};
-        } else {
-            double floor = Math.floor(at / (float) required);
-            int page = (int) floor + 1;
-            return new int[] {page, required};
-        }
-    }
-
     public Range slice(int size) {
         if (size < absStart) throw new IllegalArgumentException();
         return new Range(absStart, absStart + size);
