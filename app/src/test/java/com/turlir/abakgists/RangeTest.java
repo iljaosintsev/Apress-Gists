@@ -101,19 +101,19 @@ public class RangeTest {
         actual.diff(demand);
     }
 
-    // slice
+    // cut
 
     @Test
-    public void correctSlice() {
+    public void correctCut() {
         Range range = new Range(15, 45);
-        Range actual = range.slice(15);
+        Range actual = range.cut(15);
         check(actual, 15, 30, 2);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void lessStartSlice() {
+    public void lessStartCut() {
         Range range = new Range(15, 45);
-        range.slice(1);
+        range.cut(1);
     }
 
     private void check(Range r, int s, int e, int p) {

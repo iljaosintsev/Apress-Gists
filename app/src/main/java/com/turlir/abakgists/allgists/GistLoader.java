@@ -50,8 +50,8 @@ class GistLoader {
                 .subscribe(nextItems -> {
                    changeState(mState.content(nextItems));
                     if (!mInteractor.range.isFull(nextItems.size())) {
-                        Range defect = mInteractor.range.slice(nextItems.size());
-                        Range required = mInteractor.range.diff(defect);
+                        Range already = mInteractor.range.cut(nextItems.size());
+                        Range required = mInteractor.range.diff(already);
                         int page = required.page;
                         int one = required.perPage();
                         Timber.d("needs load %d th page in %d items", page, one);

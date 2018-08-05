@@ -23,7 +23,7 @@ public class Range {
         page = (int) Math.ceil(absStop / (float) perPage);
     }
 
-    public Range slice(int size) {
+    public Range cut(int size) {
         if (size < absStart) throw new IllegalArgumentException();
         return new Range(absStart, absStart + size);
     }
