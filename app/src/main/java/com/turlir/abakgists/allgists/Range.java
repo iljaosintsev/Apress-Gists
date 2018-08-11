@@ -31,7 +31,7 @@ public class Range {
     }
 
     public Range cut(int size) {
-        if (size < absStart) throw new IllegalArgumentException();
+        if (size > count()) throw new IllegalArgumentException();
         return new Range(absStart, absStart + size, addition);
     }
 

@@ -121,7 +121,7 @@ class GistLoader {
     }
 
     private boolean canLoad() {
-        return mState instanceof InlineLoading || !(mState instanceof Refresh);
+        return !(mState instanceof InlineLoading) && !(mState instanceof Refresh);
     }
 
     private boolean canNext() {

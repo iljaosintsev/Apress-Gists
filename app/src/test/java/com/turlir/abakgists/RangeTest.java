@@ -98,12 +98,25 @@ public class RangeTest {
         Range range = new Range(15, 45);
         Range actual = range.cut(15);
         check(actual, 15, 30);
+
+        actual = range.cut(1);
+        check(actual, 15, 16);
+
+        actual = range.cut(30);
+        check(actual, 15, 45);
+    }
+
+    @Test
+    public void cutBeforeStart() {
+        Range range = new Range(30, 60);
+        Range actual = range.cut(15);
+        check(actual, 30, 45);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void lessStartCut() {
+    public void cutOutOfRange() {
         Range range = new Range(15, 45);
-        range.cut(1);
+        range.cut(31);
     }
 
     private void check(Range r, int s, int e) {
