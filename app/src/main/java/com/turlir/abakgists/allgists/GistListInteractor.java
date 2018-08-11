@@ -32,8 +32,6 @@ public class GistListInteractor {
         range = new Range(0, 30, 15);
         return mRepo.database(range.count(), range.absStart)
                 .map(mTransformer)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(gistModels -> {
                     Timber.d("from database (first time) loaded %d items, from %d in %d",
                             gistModels.size(), range.absStart, range.absStop);
@@ -44,22 +42,24 @@ public class GistListInteractor {
                 .doOnComplete(() -> {
                     Timber.d("database subscription complete");
                 })
-                .doOnError(Timber::e);
+                .doOnError(Timber::e)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     public Flowable<List<GistModel>> nextPage() {
         range = range.next();
         return mRepo.database(range.count(), range.absStart)
                 .map(mTransformer)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(gistModels -> {
                     Timber.d("next page consist of %d items from database, %d - %d",
                             gistModels.size(), range.absStart, range.absStop);
                 })
-                .doOnNext(items -> {
+                .doOnComplete(() -> {
                     Timber.d("database subscription complete");
                 })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .doOnError(Timber::e);
     }
 
@@ -69,6 +69,22 @@ public class GistListInteractor {
                 .doOnError(e -> Timber.e(e, "data error"))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Flowable<List<GistModel>> prevPage() {
+        range = range.prev();
+        return mRepo.database(range.count(), range.absStart)
+                .map(mTransformer)
+                .doOnNext(gistModels -> {
+                    Timber.d("prev page consist of %d items from database, %d - %d",
+                            gistModels.size(), range.absStart, range.absStop);
+                })
+                .doOnComplete(() -> {
+                    Timber.d("database subscription complete");
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnError(Timber::e);
     }
 
     public Flowable<List<GistModel>> requestWithNotes() {

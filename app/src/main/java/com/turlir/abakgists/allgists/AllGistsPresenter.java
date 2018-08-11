@@ -45,6 +45,10 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
         mLoader.nextPage();
     }
 
+    public void prevPage() {
+        mLoader.prevPage();
+    }
+
     private class LoaderCallback implements ListManipulator<GistModel> {
 
         @Override

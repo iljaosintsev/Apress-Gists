@@ -193,7 +193,7 @@ public class AllGistsFragment
     @Override
     public void loadPrevPage() {
         Timber.v("scrolling initial previous page");
-        //_presenter.prevPage();
+        _presenter.prevPage();
     }
 
     @Override

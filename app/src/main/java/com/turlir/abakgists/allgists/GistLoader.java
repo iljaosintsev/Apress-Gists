@@ -51,7 +51,10 @@ class GistLoader {
     }
 
     void nextPage() {
-        if (!canNext()) return;
+        if (!canNext()) {
+            Timber.d("last page reached, loading next page is not allowed");
+            return;
+        }
         mDatabaseConnection.dispose();
         mDatabaseConnection = mInteractor.nextPage()
                 .subscribe(nextItems -> {
@@ -65,6 +68,23 @@ class GistLoader {
                         Timber.d("download required %d th page in %d items", number, size);
                         server(number, size);
                         changeState(mState.doLoad());
+                    }
+                }, t -> {
+                    changeState(mState.error(t));
+                });
+    }
+
+    void prevPage() {
+        if (!canPrevious()) {
+            Timber.d("first page reached, loading previous page is not allowed");
+            return;
+        }
+        mDatabaseConnection.dispose();
+        mDatabaseConnection = mInteractor.prevPage()
+                .subscribe(nextItems -> {
+                    changeState(mState.content(nextItems));
+                    if (!mInteractor.range.isFull(nextItems.size())) {
+                        throw new IllegalStateException();
                     }
                 }, t -> {
                     changeState(mState.error(t));
