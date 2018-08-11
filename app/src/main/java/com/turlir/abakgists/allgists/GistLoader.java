@@ -88,9 +88,8 @@ class GistLoader {
     }
 
     private void changeState(ListCombination<GistModel> now) {
-        Timber.v("StateChange", "onExit " + mState.getClass().getSimpleName());
+        Timber.v("StateChange leave %s, enter %s", mState.getClass().getSimpleName(), now.getClass().getSimpleName());
         mState = now;
-        Timber.v("StateChange", "onStart " + now.getClass().getSimpleName());
         mState.perform();
     }
 

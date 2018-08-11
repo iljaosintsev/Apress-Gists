@@ -16,9 +16,9 @@ public class LogInterceptor implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
-        Timber.i("Request: %s", request.url().toString());
+        Timber.d("Request: %s", request.url().toString());
         if (request.method().equals("POST")) {
-            Timber.i("Request body: %s", request);
+            Timber.v("Request body: %s", request);
         }
 
         Response response = chain.proceed(request);
@@ -27,9 +27,9 @@ public class LogInterceptor implements Interceptor {
         if (body != null) {
             String bodyString = body.string();
             if (JSON_HEADER.equals(response.headers().get("Content-Type"))) {
-                Timber.i("Response (%d): %s", response.code(), bodyString);
+                Timber.v("Response (%d): %s", response.code(), bodyString);
             } else {
-                Timber.i("Response (%d)", response.code());
+                Timber.v("Response (%d)", response.code());
             }
             MediaType mediaType = body.contentType();
             body = ResponseBody.create(mediaType, bodyString);

@@ -45,12 +45,10 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
 
     private class LoaderCallback implements ListManipulator<GistModel> {
 
-        private static final String TAG = "ListOwner";
-
         @Override
         public void blockingLoad(boolean visible) {
             if (getView() != null) {
-                Timber.v(TAG, "blockingLoad %s", visible);
+                Timber.v("blockingLoad %s", visible);
                 getView().toBlockingLoad(visible);
             }
         }
@@ -58,7 +56,7 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
         @Override
         public void inlineLoad(boolean visible) {
             if (getView() != null) {
-                Timber.v(TAG, "inlineLoad %s", visible);
+                Timber.v("inlineLoad %s", visible);
                 getView().inlineLoad(visible);
             }
         }
@@ -66,7 +64,7 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
         @Override
         public void renderData(List<GistModel> items) {
             if (getView() != null) {
-                Timber.v(TAG, "renderData %s", items.size());
+                Timber.v("renderData %s", items.size());
                 getView().onGistLoaded(items);
             }
 

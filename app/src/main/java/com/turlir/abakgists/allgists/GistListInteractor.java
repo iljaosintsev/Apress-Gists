@@ -66,7 +66,7 @@ public class GistListInteractor {
     public Single<Integer> server(int page, int perPage) {
         return mRepo.server(page, perPage)
                 .doOnSuccess(count -> Timber.d("from server loaded %d items", count))
-                .doOnError(e -> Timber.e(e, "network error"))
+                .doOnError(e -> Timber.e(e, "data error"))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }

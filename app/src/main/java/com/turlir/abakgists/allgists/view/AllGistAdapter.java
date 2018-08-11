@@ -183,10 +183,10 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
             if (oldModel != null) {
                 GistModel now = mNowList.get(newItemPosition);
                 boolean diff = now.isDifferent(oldModel);
-                if (diff) Timber.v("items different %d - %d", oldItemPosition, newItemPosition);
+                //if (diff) Timber.v("items different %d - %d", oldItemPosition, newItemPosition);
                 return !diff;
             } else {
-                Timber.v("items incomparable %d - %d", oldItemPosition, newItemPosition);
+                //Timber.v("items incomparable %d - %d", oldItemPosition, newItemPosition);
                 return false;
             }
         }
@@ -196,7 +196,7 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
             ViewModel old = mOldList.get(oldItemPosition);
             ViewModel now = mNowList.get(newItemPosition);
             boolean equals = old.equals(now);
-            if (!equals) Timber.v("contents different %d - %d", oldItemPosition, newItemPosition);
+            //if (!equals) Timber.v("contents different %d - %d", oldItemPosition, newItemPosition);
             return equals;
         }
     }
