@@ -186,8 +186,14 @@ public class AllGistsFragment
 
     @Override
     public void loadNextPage() {
-        // _presenter.loadPublicGists(mAdapter.getItemCount());
+        Timber.v("scrolling initial next page");
         _presenter.nextPage();
+    }
+
+    @Override
+    public void loadPrevPage() {
+        Timber.v("scrolling initial previous page");
+        //_presenter.prevPage();
     }
 
     @Override

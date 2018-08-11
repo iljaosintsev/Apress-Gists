@@ -6,10 +6,10 @@ import android.support.v7.widget.RecyclerView;
 
 public class SimpleScrollListener extends RecyclerView.OnScrollListener {
 
-    private static final int THRESHOLD = 3;
+    private static final int THRESHOLD_END = 3, THRESHOLD_UP = 7;
 
     private final Paginator mPg;
-    private int mLastDownloadedSize;
+    private int mNextDownloadSize, mPrevDownloadSize;
 
     public SimpleScrollListener(Paginator pg) {
         mPg = pg;
@@ -23,14 +23,23 @@ public class SimpleScrollListener extends RecyclerView.OnScrollListener {
         int visibleItemCount = lm.getChildCount();
         int totalItemCount = lm.getItemCount();
 
-        boolean closeEdge = firstVisibleItem + visibleItemCount + THRESHOLD >= totalItemCount;
-        boolean sizeNotDownload = totalItemCount > mLastDownloadedSize;
-
-        if (closeEdge && sizeNotDownload) {
-            if (!mPg.isEmpty()) {
-                mLastDownloadedSize = totalItemCount;
-                // load next page
-                recyclerView.post(mPg::loadNextPage);
+        if (dy > 0) {
+            boolean closeEnd = firstVisibleItem + visibleItemCount + THRESHOLD_END >= totalItemCount;
+            if (closeEnd) {
+                boolean sizeNotDownload = totalItemCount > mNextDownloadSize;
+                if (sizeNotDownload && !mPg.isEmpty()) {
+                    mNextDownloadSize = totalItemCount;
+                    recyclerView.post(mPg::loadNextPage);
+                }
+            }
+        } else if (dy < 0) {
+            boolean closeUp = firstVisibleItem - THRESHOLD_UP <= 0;
+            if (closeUp) {
+                boolean sizeNotDownload = totalItemCount > mPrevDownloadSize;
+                if (sizeNotDownload && !mPg.isEmpty()) {
+                    mPrevDownloadSize = totalItemCount;
+                    recyclerView.post(mPg::loadPrevPage);
+                }
             }
         }
     }
@@ -38,6 +47,8 @@ public class SimpleScrollListener extends RecyclerView.OnScrollListener {
     public interface Paginator {
 
         void loadNextPage();
+
+        void loadPrevPage();
 
         boolean isEmpty();
     }
