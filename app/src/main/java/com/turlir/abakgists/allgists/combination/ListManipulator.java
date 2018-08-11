@@ -1,8 +1,8 @@
-package com.turlir.abakgists.allgists;
+package com.turlir.abakgists.allgists.combination;
 
 import java.util.List;
 
-interface ListManipulator<T> {
+public interface ListManipulator<T> {
 
     void blockingLoad(boolean visible);
 

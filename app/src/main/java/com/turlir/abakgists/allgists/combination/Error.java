@@ -1,4 +1,4 @@
-package com.turlir.abakgists.allgists;
+package com.turlir.abakgists.allgists.combination;
 
 import com.turlir.abakgists.base.erroring.ErrorInterpreter;
 import com.turlir.abakgists.base.erroring.ErrorSelector;
@@ -14,12 +14,12 @@ class Error extends ListCombination<GistModel> {
     }
 
     @Override
-    ListCombination<GistModel> refresh() {
+    public ListCombination<GistModel> refresh() {
         return new Refresh(this);
     }
 
     @Override
-    void perform() {
+    public void perform() {
         super.perform();
         ErrorProcessor processor = owner.getErrorProcessor();
         ErrorSelector selector = processor.getErrorSelector();

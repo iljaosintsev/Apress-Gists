@@ -1,11 +1,11 @@
-package com.turlir.abakgists.allgists;
+package com.turlir.abakgists.allgists.combination;
 
 import android.os.Looper;
 import android.support.annotation.CheckResult;
 
 import java.util.List;
 
-abstract class ListCombination<T> {
+public abstract class ListCombination<T> {
 
     protected ListManipulator<T> owner;
 
@@ -22,26 +22,26 @@ abstract class ListCombination<T> {
     }
 
     @CheckResult
-    ListCombination<T> refresh() {
+    public ListCombination<T> refresh() {
         throw new IllegalStateException();
     }
 
     @CheckResult
-    ListCombination<T> content(List<T> items) {
+    public ListCombination<T> content(List<T> items) {
         throw new IllegalStateException();
     }
 
     @CheckResult
-    ListCombination<T> error(Throwable err) {
+    public ListCombination<T> error(Throwable err) {
         throw new IllegalStateException();
     }
 
     @CheckResult
-    ListCombination<T> doLoad() {
+    public ListCombination<T> doLoad() {
         throw new IllegalStateException();
     }
 
-    void perform() {
+    public void perform() {
         if (Looper.myLooper() != Looper.getMainLooper()) {
             throw new IllegalStateException("access view outside main thread");
         }

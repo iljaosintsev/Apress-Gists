@@ -1,17 +1,17 @@
-package com.turlir.abakgists.allgists;
+package com.turlir.abakgists.allgists.combination;
 
 import com.turlir.abakgists.model.GistModel;
 
 import java.util.List;
 
-class Start extends ListCombination<GistModel> {
+public class Start extends ListCombination<GistModel> {
 
-    Start(ListManipulator<GistModel> owner) {
+    public Start(ListManipulator<GistModel> owner) {
         setOwner(owner);
     }
 
     @Override
-    ListCombination<GistModel> content(List<GistModel> items) {
+    public ListCombination<GistModel> content(List<GistModel> items) {
         if (!items.isEmpty()) {
             return new Content(this, items);
         } else {
@@ -20,14 +20,14 @@ class Start extends ListCombination<GistModel> {
     }
 
     @Override
-    ListCombination<GistModel> error(Throwable err) {
-        Error error = new Error(err);
+    public ListCombination<GistModel> error(Throwable err) {
+        com.turlir.abakgists.allgists.combination.Error error = new com.turlir.abakgists.allgists.combination.Error(err);
         error.setOwner(owner);
         return error;
     }
 
     @Override
-    void perform() {
+    public void perform() {
         super.perform();
         owner.inlineLoad(false);
         owner.blockingLoad(true);

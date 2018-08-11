@@ -1,4 +1,4 @@
-package com.turlir.abakgists.allgists;
+package com.turlir.abakgists.allgists.combination;
 
 import com.turlir.abakgists.model.GistModel;
 
@@ -11,12 +11,12 @@ class Empty extends ListCombination<GistModel> {
     }
 
     @Override
-    ListCombination<GistModel> content(List<GistModel> items) {
+    public ListCombination<GistModel> content(List<GistModel> items) {
         return new Content(this, items);
     }
 
     @Override
-    void perform() {
+    public void perform() {
         super.perform();
         owner.inlineLoad(false);
         owner.blockingLoad(false);
