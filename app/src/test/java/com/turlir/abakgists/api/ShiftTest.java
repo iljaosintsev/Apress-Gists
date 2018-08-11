@@ -5,6 +5,7 @@ import com.turlir.abakgists.allgists.Range;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ShiftTest {
 
@@ -35,32 +36,32 @@ public class ShiftTest {
     @Test
     public void absolutePointOne() {
         Range start = new Range(0, 30);
-        Range second = start.next(); // 15;45
-        Range defect = second.cut(15); // 15;30
-        Range required = second.diff(defect); // 30;45
-        int page = required.page; // 3
-        int perPage = required.perPage(); // 15
+        Range second = start.next();
+        assertTrue(new Range(15, 45, 15).equals(second));
+
+        Range defect = second.cut(15);
+        assertTrue(new Range(15, 30, 15).equals(defect));
+
+        Range required = second.diff(defect);
+        assertTrue(new Range(30, 45, 15).equals(required));
+        assertEquals(3, required.page().number);
 
         AbsolutePoint abs = new AbsolutePoint();
         Range shifted = abs.shift(required);
-        assertEquals(255, shifted.absStart);
-        assertEquals(270, shifted.absStop);
-        assertEquals(15, shifted.perPage());
-        assertEquals(18, shifted.page);
+        assertTrue(new Range(255, 270, 15).equals(shifted));
+        assertEquals(18, shifted.page().number);
     }
 
     @Test
     public void absolutePointTwo() {
         Range start = new Range(0, 30, 30);
-        int page = start.page; // 1
-        int perPage = start.perPage(); // 30
+        assertEquals(1, start.page().number);
+        assertEquals(30, start.addition);
 
         AbsolutePoint abs = new AbsolutePoint();
         Range shifted = abs.shift(start);
-        assertEquals(270, shifted.absStart);
-        assertEquals(300, shifted.absStop);
-        assertEquals(30, shifted.perPage());
-        assertEquals(10, shifted.page);
+        assertTrue(new Range(270, 300, 30).equals(shifted));
+        assertEquals(10, shifted.page().number);
     }
 
     static class AbsolutePoint {
@@ -68,16 +69,16 @@ public class ShiftTest {
         private final static int PER_PAGE = 15;
 
         Range shift(Range r) {
-            int perPage = r.perPage();
-            int page = r.page;
-            if (perPage == PER_PAGE) {
-                page = PAGE - page + 1;
-                return new Range((page - 1) * PER_PAGE, page * PER_PAGE, perPage);
+            int size = r.addition;
+            int number = r.page().number;
+            if (size == PER_PAGE) {
+                number = PAGE - number + 1;
+                return new Range((number - 1) * PER_PAGE, number * PER_PAGE, size);
             } else {
-                int scaled = perPage / 15;
+                int scaled = size / 15;
                 int demo = MAX_PAGE / scaled;
-                page = demo - page + 1;
-                return new Range((page - 1) * perPage, page * perPage, perPage);
+                number = demo - number + 1;
+                return new Range((number - 1) * size, number * size, size);
             }
         }
     }

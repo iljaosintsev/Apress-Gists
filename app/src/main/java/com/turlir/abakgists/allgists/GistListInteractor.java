@@ -25,11 +25,11 @@ public class GistListInteractor {
 
     public GistListInteractor(Repository repo) {
         mRepo = repo;
-        range = new Range(0, 30);
+        range = new Range(0, 30, 15);
     }
 
     public Flowable<List<GistModel>> subscribe() {
-        range = new Range(0, 30);
+        range = new Range(0, 30, 15);
         return mRepo.database(range.count(), range.absStart)
                 .map(mTransformer)
                 .subscribeOn(Schedulers.io())

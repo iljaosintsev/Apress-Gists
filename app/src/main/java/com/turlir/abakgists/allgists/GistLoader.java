@@ -31,8 +31,10 @@ class GistLoader {
 
         mDatabaseConnection = mInteractor.subscribe()
                 .subscribe(gistModels -> {
-                    if (!mInteractor.range.isFull(gistModels.size())) {
-                        server(1, mInteractor.range.count());
+                    final Range range = mInteractor.range;
+                    if (!range.isFull(gistModels.size())) {
+                        LoadablePage page = range.page();
+                        server(page.number, page.size);
                     }
                     if (gistModels.size() > 0) {
                         changeState(mState.content(gistModels));
@@ -52,11 +54,11 @@ class GistLoader {
                     if (!mInteractor.range.isFull(nextItems.size())) {
                         Range already = mInteractor.range.cut(nextItems.size());
                         Range required = mInteractor.range.diff(already);
-                        int page = required.page;
-                        int one = required.perPage();
-                        Timber.d("needs load %d th page in %d items", page, one);
-
-                        server(page, one);
+                        LoadablePage page = required.page();
+                        int number = page.number;
+                        int size = page.size;
+                        Timber.d("download required %d th page in %d items", number, size);
+                        server(number, size);
                         changeState(mState.doLoad());
                     }
                 }, t -> {
@@ -98,10 +100,10 @@ class GistLoader {
     }
 
     private boolean canNext() {
-        return canLoad() && mInteractor.range.hasNext();
+        return canLoad() && mInteractor.range.page().hasNext();
     }
 
     private boolean canPrevious() {
-        return canLoad() && mInteractor.range.hasPrevious();
+        return canLoad() && mInteractor.range.page().hasPrevious();
     }
 }

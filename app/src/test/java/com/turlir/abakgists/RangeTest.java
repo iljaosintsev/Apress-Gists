@@ -4,9 +4,7 @@ import com.turlir.abakgists.allgists.Range;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class RangeTest {
 
@@ -15,23 +13,14 @@ public class RangeTest {
     @Test
     public void simpleStart() {
         Range range = new Range(0, 30);
-        check(range, 0, 30, 2);
-        assertEquals(15, range.perPage());
+        check(range, 0, 30);
+        assertEquals(15, range.addition);
 
         range = range.next();
-        check(range, 15, 45, 3);
+        check(range, 15, 45);
 
         range = range.next();
-        check(range, 30, 60, 4);
-    }
-
-    @Test
-    public void forbiddenNext() {
-        int maxPage = 20;
-        int limit = maxPage * 15;
-        int pageSize = 15;
-        Range range = new Range(limit - pageSize, limit);
-        assertFalse(range.hasNext());
+        check(range, 30, 60);
     }
 
     // previous
@@ -39,20 +28,18 @@ public class RangeTest {
     @Test
     public void previousAtFirst() {
         Range range = new Range(0, 30);
-        assertFalse(range.hasPrevious());
+        assertFalse(range.page().hasPrevious());
     }
 
     @Test
     public void pagedPrevious() {
         Range range = new Range(30, 40);
-        assertTrue(range.hasPrevious());
+        assertTrue(range.page().hasPrevious());
         range = range.prev();
-        check(range, 15, 25, 2);
-        assertTrue(range.hasPrevious());
+        check(range, 15, 25);
 
         range = range.prev();
-        check(range, 0, 10, 1);
-        assertFalse(range.hasPrevious());
+        check(range, 0, 10);
     }
 
     // diff
@@ -62,28 +49,25 @@ public class RangeTest {
         Range demand = new Range(15, 45);
         Range actual = new Range(15, 30);
         Range diff = demand.diff(actual);
-        assertEquals(3, diff.page);
-        assertEquals(15, diff.perPage());
+        assertEquals(15, diff.addition);
         assertEquals(30, diff.absStart);
         assertEquals(45, diff.absStop);
     }
 
     @Test
     public void incompleteDiff() {
-        Range demand = new Range(15, 45);
-        Range actual = new Range(15, 15 + 20);
+        Range demand = new Range(15, 45, 15);
+        Range actual = new Range(15, 15 + 20, 15);
         Range diff = demand.diff(actual);
-        assertEquals(3, diff.page);
-        assertEquals(15, diff.perPage());
+        assertEquals(15, diff.addition);
         assertEquals(30, diff.absStart);
         assertEquals(45, diff.absStop);
 
-        demand = new Range(15, 45);
-        actual = new Range(15, 37);
+        demand = new Range(15, 45, 15);
+        actual = new Range(15, 37, 15);
         diff = demand.diff(actual);
-        assertEquals(4, diff.page);
-        assertEquals(11, diff.perPage());
-        assertEquals(32, diff.absStart);
+        assertEquals(15, diff.addition);
+        assertEquals(30, diff.absStart);
         assertEquals(45, diff.absStop);
     }
 
@@ -107,7 +91,7 @@ public class RangeTest {
     public void correctCut() {
         Range range = new Range(15, 45);
         Range actual = range.cut(15);
-        check(actual, 15, 30, 2);
+        check(actual, 15, 30);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -116,9 +100,8 @@ public class RangeTest {
         range.cut(1);
     }
 
-    private void check(Range r, int s, int e, int p) {
+    private void check(Range r, int s, int e) {
         assertEquals(new Range(s, e), r);
-        assertEquals(p, r.page);
     }
 
 }

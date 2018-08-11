@@ -6,29 +6,31 @@ import java.util.Objects;
 
 public class Range {
 
-    private final int PAGE_SIZE = 15,
-            MAX_PAGE = 20;
+    public final int absStart, absStop, addition;
 
-    public final int absStart, absStop;
-    public final int page;
-
+    @VisibleForTesting
     public Range(int start, int stop) {
+        this(start, stop, 15);
+    }
+
+    public Range(int start, int stop, int addition) {
         if (start >= stop) throw new IllegalArgumentException();
         absStart = start;
         absStop = stop;
-        page = (int) Math.ceil(absStop / (float) PAGE_SIZE);
+        this.addition = addition;
     }
 
-    @VisibleForTesting
-    public Range(int start, int stop, int perPage) {
-        absStart = start;
-        absStop = stop;
-        page = (int) Math.ceil(absStop / (float) perPage);
+    public LoadablePage page() {
+        return page(count());
+    }
+
+    private LoadablePage page(int perPage) {
+        return new LoadablePage(absStart, absStart + perPage);
     }
 
     public Range cut(int size) {
         if (size < absStart) throw new IllegalArgumentException();
-        return new Range(absStart, absStart + size);
+        return new Range(absStart, absStart + size, addition);
     }
 
     public Range diff(Range o) {
@@ -40,13 +42,13 @@ public class Range {
         if (at % required == 0) {
             return new Range(at, absStop, required);
         } else {
-            int round = (int) Math.floor(at / (float) required);
-            return new Range(required * round, absStop, absStop - required * round);
+            int center = absStart + count() / 2;
+            if (at > center) {
+                return downScale(2);
+            } else {
+                return this;
+            }
         }
-    }
-
-    public int perPage() {
-        return absStop / page;
     }
 
     public int count() {
@@ -58,20 +60,18 @@ public class Range {
     }
 
     public Range next() {
-        return new Range(absStart + PAGE_SIZE, absStop + PAGE_SIZE);
+        return new Range(absStart + addition, absStop + addition, addition);
     }
 
     public Range prev() {
-        int start = Math.max(0, absStart - PAGE_SIZE);
-        return new Range(start, absStop - PAGE_SIZE);
+        int start = Math.max(0, absStart - addition);
+        return new Range(start, absStop - addition, addition);
     }
 
-    public boolean hasNext() {
-        return page < MAX_PAGE;
-    }
-
-    public boolean hasPrevious() {
-        return absStart - PAGE_SIZE >= 0;
+    private Range downScale(int coefficient) {
+        if (coefficient < 2 || count() % coefficient != 0) throw new IllegalArgumentException();
+        int newStart = absStart + count() / coefficient;
+        return new Range(newStart, absStop, addition);
     }
 
     @Override
@@ -81,12 +81,12 @@ public class Range {
         Range range = (Range) o;
         return absStart == range.absStart &&
                absStop == range.absStop &&
-               page == range.page;
+               addition == range.addition;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(absStart, absStop, page);
+        return Objects.hash(absStart, absStop, addition);
     }
 
     @Override
@@ -94,7 +94,7 @@ public class Range {
         return "Range{" +
                "absStart=" + absStart +
                ", absStop=" + absStop +
-               ", page=" + page +
+               ", addition=" + addition +
                '}';
     }
 }
