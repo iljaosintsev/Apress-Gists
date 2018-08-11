@@ -26,19 +26,9 @@ public class LoadablePageTest {
         new LoadablePage(35, 45);
     }
 
-    @Test
-    public void forbiddenNext() {
-        int maxPage = 20;
-        int limit = maxPage * 15;
-        int pageSize = 15;
-        LoadablePage range = new LoadablePage(limit - pageSize, limit);
-        assertFalse(range.hasNext());
-    }
-
-    @Test
-    public void forbiddenPrevious() {
-        LoadablePage page = new LoadablePage(0, 30);
-        assertFalse(page.hasPrevious());
+    @Test(expected = IllegalArgumentException.class)
+    public void failureCombination() {
+        new LoadablePage(15, 45);
     }
 
 }

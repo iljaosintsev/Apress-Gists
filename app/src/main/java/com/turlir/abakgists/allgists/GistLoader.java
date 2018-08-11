@@ -105,10 +105,10 @@ class GistLoader {
     }
 
     private boolean canNext() {
-        return canLoad() && mInteractor.range.page().hasNext();
+        return canLoad() && mInteractor.range.hasNext();
     }
 
     private boolean canPrevious() {
-        return canLoad() && mInteractor.range.page().hasPrevious();
+        return canLoad() && mInteractor.range.hasPrevious();
     }
 }

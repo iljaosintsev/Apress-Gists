@@ -6,6 +6,8 @@ import java.util.Objects;
 
 public class Range {
 
+    private static final int MAX_EL = 105;
+
     public final int absStart, absStop, addition;
 
     @VisibleForTesting
@@ -66,6 +68,14 @@ public class Range {
     public Range prev() {
         int start = Math.max(0, absStart - addition);
         return new Range(start, absStop - addition, addition);
+    }
+
+    public boolean hasNext() {
+        return absStop + addition <= MAX_EL;
+    }
+
+    public boolean hasPrevious() {
+        return absStart >= addition;
     }
 
     private Range downScale(int coefficient) {

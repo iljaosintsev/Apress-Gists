@@ -23,23 +23,35 @@ public class RangeTest {
         check(range, 30, 60);
     }
 
+    @Test
+    public void forbiddenNext() {
+        Range page = new Range(90, 105, 15);
+        assertFalse(page.hasNext());
+    }
+
     // previous
 
     @Test
     public void previousAtFirst() {
         Range range = new Range(0, 30);
-        assertFalse(range.page().hasPrevious());
+        assertFalse(range.hasPrevious());
     }
 
     @Test
     public void pagedPrevious() {
         Range range = new Range(30, 40);
-        assertTrue(range.page().hasPrevious());
+        assertTrue(range.hasPrevious());
         range = range.prev();
         check(range, 15, 25);
 
         range = range.prev();
         check(range, 0, 10);
+    }
+
+    @Test
+    public void forbiddenPrevious() {
+        Range page = new Range(0, 30, 15);
+        assertFalse(page.hasPrevious());
     }
 
     // diff
@@ -49,26 +61,20 @@ public class RangeTest {
         Range demand = new Range(15, 45);
         Range actual = new Range(15, 30);
         Range diff = demand.diff(actual);
-        assertEquals(15, diff.addition);
-        assertEquals(30, diff.absStart);
-        assertEquals(45, diff.absStop);
+        assertTrue(new Range(30, 45, 15).equals(diff));
     }
 
     @Test
     public void incompleteDiff() {
         Range demand = new Range(15, 45, 15);
-        Range actual = new Range(15, 15 + 20, 15);
+        Range actual = new Range(15, 35, 15);
         Range diff = demand.diff(actual);
-        assertEquals(15, diff.addition);
-        assertEquals(30, diff.absStart);
-        assertEquals(45, diff.absStop);
+        assertTrue(new Range(30, 45, 15).equals(diff));
 
         demand = new Range(15, 45, 15);
         actual = new Range(15, 37, 15);
         diff = demand.diff(actual);
-        assertEquals(15, diff.addition);
-        assertEquals(30, diff.absStart);
-        assertEquals(45, diff.absStop);
+        assertTrue(new Range(30, 45, 15).equals(diff));
     }
 
     @Test(expected = IllegalArgumentException.class)
