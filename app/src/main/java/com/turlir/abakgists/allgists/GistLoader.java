@@ -21,6 +21,7 @@ class GistLoader {
     @NonNull
     private ListCombination<GistModel> mState;
     private Disposable mDatabaseConnection;
+    private boolean isEnded;
 
     GistLoader(GistListInteractor interactor, ListManipulator<GistModel> callback) {
         mInteractor = interactor;
@@ -37,9 +38,9 @@ class GistLoader {
         mDatabaseConnection = mInteractor.subscribe()
                 .subscribe(gistModels -> {
                     final Range range = mInteractor.range;
-                    if (!range.isFull(gistModels.size())) {
+                    if (gistModels.size() == 0 && !isEnded) {
                         LoadablePage page = range.page();
-                        server(page.number, page.size);
+                        server(page);
                     }
                     if (gistModels.size() > 0) {
                         changeState(mState.content(gistModels));
@@ -59,14 +60,12 @@ class GistLoader {
         mDatabaseConnection = mInteractor.nextPage()
                 .subscribe(nextItems -> {
                    changeState(mState.content(nextItems));
-                    if (!mInteractor.range.isFull(nextItems.size())) {
+                   if (mInteractor.range.addition == nextItems.size() && !isEnded) {
                         Range already = mInteractor.range.cut(nextItems.size());
                         Range required = mInteractor.range.diff(already);
                         LoadablePage page = required.page();
-                        int number = page.number;
-                        int size = page.size;
-                        Timber.d("download required %d th page in %d items", number, size);
-                        server(number, size);
+                        Timber.d("download required %d th page in %d items", page.number, page.size);
+                        server(page);
                         changeState(mState.doLoad());
                     }
                 }, t -> {
@@ -83,9 +82,6 @@ class GistLoader {
         mDatabaseConnection = mInteractor.prevPage()
                 .subscribe(nextItems -> {
                     changeState(mState.content(nextItems));
-                    if (!mInteractor.range.isFull(nextItems.size())) {
-                        throw new IllegalStateException();
-                    }
                 }, t -> {
                     changeState(mState.error(t));
                 });
@@ -96,14 +92,19 @@ class GistLoader {
     }
 
     void stop() {
-        mDatabaseConnection.dispose();
+        if (mDatabaseConnection != null) {
+            mDatabaseConnection.dispose();
+        }
     }
 
-    private void server(int page, int perPage) {
-        mInteractor.server(page, perPage)
+    private void server(LoadablePage page) {
+        mInteractor.server(page)
                 .subscribe(new ResourceSingleObserver<Integer>() {
                     @Override
                     public void onSuccess(Integer count) {
+                        if (count < page.size) {
+                            isEnded = true; // source ended
+                        }
                         dispose();
                     }
                     @Override
@@ -125,7 +126,7 @@ class GistLoader {
     }
 
     private boolean canNext() {
-        return canLoad() && mInteractor.range.hasNext();
+        return canLoad() && mInteractor.range.hasNext() && !isEnded;
     }
 
     private boolean canPrevious() {

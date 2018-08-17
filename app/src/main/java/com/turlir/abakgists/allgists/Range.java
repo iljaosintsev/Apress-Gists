@@ -57,10 +57,6 @@ public class Range {
         return absStop - absStart;
     }
 
-    public boolean isFull(int count) {
-        return count == count();
-    }
-
     public Range next() {
         return new Range(absStart + addition, absStop + addition, addition);
     }

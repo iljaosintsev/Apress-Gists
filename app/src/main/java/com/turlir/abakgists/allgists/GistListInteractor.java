@@ -35,7 +35,7 @@ public class GistListInteractor {
                 .doOnNext(gistModels -> {
                     Timber.d("from database (first time) loaded %d items, from %d in %d",
                             gistModels.size(), range.absStart, range.absStop);
-                    if (!range.isFull(gistModels.size())) {
+                    if (range.addition == gistModels.size()) {
                         Timber.d("needs load %d items for first page", range.count() - gistModels.size());
                     }
                 })
@@ -63,8 +63,8 @@ public class GistListInteractor {
                 .doOnError(Timber::e);
     }
 
-    public Single<Integer> server(int page, int perPage) {
-        return mRepo.server(page, perPage)
+    public Single<Integer> server(LoadablePage page) {
+        return mRepo.server(page.number, page.size)
                 .doOnSuccess(count -> Timber.d("from server loaded %d items", count))
                 .doOnError(e -> Timber.e(e, "data error"))
                 .subscribeOn(Schedulers.io())
