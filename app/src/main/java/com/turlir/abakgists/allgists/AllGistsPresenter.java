@@ -73,7 +73,6 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
                 Timber.v("renderData %s", items.size());
                 getView().onGistLoaded(items);
             }
-
         }
 
         @Override

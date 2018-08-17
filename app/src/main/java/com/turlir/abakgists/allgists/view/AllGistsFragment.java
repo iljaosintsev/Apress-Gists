@@ -62,10 +62,7 @@ public class AllGistsFragment
 
     private final SwipeRefreshLayout.OnRefreshListener mSwipeListener = () -> {
         // _presenter.updateGist();
-
-        recycler.clearOnScrollListeners();
-        RecyclerView.OnScrollListener scroller = new SimpleScrollListener(AllGistsFragment.this);
-        recycler.addOnScrollListener(scroller);
+        resetScroller();
     };
 
     @Override
@@ -165,10 +162,14 @@ public class AllGistsFragment
         int size = mAdapter.getItemCount();
         mAdapter.resetGists(value);
         if (value.size() >= size) {
-            recycler.clearOnScrollListeners();
-            RecyclerView.OnScrollListener scroller = new SimpleScrollListener(AllGistsFragment.this);
-            recycler.addOnScrollListener(scroller);
+            resetScroller();
         }
+    }
+
+    private void resetScroller() {
+        recycler.clearOnScrollListeners();
+        RecyclerView.OnScrollListener scroller = new SimpleScrollListener(this);
+        recycler.addOnScrollListener(scroller);
     }
 
     public void onUpdateSuccessful() {
@@ -209,6 +210,7 @@ public class AllGistsFragment
     public void nonBlockingError(String msg) {
         swipe.setRefreshing(false);
         Snackbar.make(recycler, msg, Snackbar.LENGTH_LONG).show();
+        resetScroller();
     }
 
     @Override

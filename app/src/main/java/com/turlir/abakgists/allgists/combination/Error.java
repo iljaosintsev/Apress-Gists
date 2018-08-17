@@ -5,6 +5,8 @@ import com.turlir.abakgists.base.erroring.ErrorSelector;
 import com.turlir.abakgists.base.erroring.ErrorSituation;
 import com.turlir.abakgists.model.GistModel;
 
+import java.util.List;
+
 class Error extends ListCombination<GistModel> {
 
     private final Throwable mError;
@@ -16,6 +18,11 @@ class Error extends ListCombination<GistModel> {
     @Override
     public ListCombination<GistModel> refresh() {
         return new Refresh(this);
+    }
+
+    @Override
+    public ListCombination<GistModel> content(List<GistModel> items) {
+        return new Content(this, items);
     }
 
     @Override
