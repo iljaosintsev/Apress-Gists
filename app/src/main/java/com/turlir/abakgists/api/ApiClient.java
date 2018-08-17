@@ -34,8 +34,8 @@ public class ApiClient {
     public Single<List<GistJson>> publicGist(final int page, final int perPage) {
         int nowPage = mShift.shift(page, perPage);
         return mApi.publicGist(nowPage, perPage)
-                .doOnSuccess(new LagSideEffect(5500))
-                .doOnError(new LagSideEffect(5500));
+                .doOnSuccess(new LagSideEffect())
+                .doOnError(new LagSideEffect());
     }
 
     static class Shift {

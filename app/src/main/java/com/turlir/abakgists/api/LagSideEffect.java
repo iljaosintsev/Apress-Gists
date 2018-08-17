@@ -9,6 +9,10 @@ class LagSideEffect implements Consumer<Object> {
 
     private final int mLag;
 
+    LagSideEffect() {
+        this(5500);
+    }
+
     LagSideEffect(int millis) {
         mLag = millis;
     }

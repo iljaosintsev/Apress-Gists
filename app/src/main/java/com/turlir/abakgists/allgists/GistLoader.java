@@ -52,7 +52,7 @@ class GistLoader {
 
     void nextPage() {
         if (!canNext()) {
-            Timber.d("last page reached, loading next page is not allowed");
+            Timber.d("loading next page is not allowed (is loading or last page reached)");
             return;
         }
         mDatabaseConnection.dispose();
@@ -76,7 +76,7 @@ class GistLoader {
 
     void prevPage() {
         if (!canPrevious()) {
-            Timber.d("first page reached, loading previous page is not allowed");
+            Timber.d("loading previous page is not allowed (is loading or first page reached)");
             return;
         }
         mDatabaseConnection.dispose();
