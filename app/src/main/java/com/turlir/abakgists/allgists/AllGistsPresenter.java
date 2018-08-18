@@ -71,7 +71,10 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
         public void renderData(List<GistModel> items) {
             if (getView() != null) {
                 Timber.v("renderData %s", items.size());
-                getView().onGistLoaded(items, !mLoader.canPrevious(), !mLoader.canNext(), mLoader.isFill(items.size()));
+                boolean shouldReset = mLoader.isFill(items.size());
+                boolean forward = shouldReset && mLoader.canPrevious();
+                boolean backward = shouldReset && mLoader.canNext();
+                getView().onGistLoaded(items, forward, backward);
             }
         }
 

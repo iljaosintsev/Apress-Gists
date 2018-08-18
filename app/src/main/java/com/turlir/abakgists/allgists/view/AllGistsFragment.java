@@ -158,20 +158,18 @@ public class AllGistsFragment
     /// Presenter
     ///
 
-    public void onGistLoaded(List<GistModel> value, boolean isFirstPage, boolean isLastPage, boolean isResetScroll) {
-        Timber.d("%d elements put in ui", value.size());
+    public void onGistLoaded(List<GistModel> value, boolean resetForward, boolean resetBackward) {
+        Timber.d("%d elements put in ui, %s resetForward, %s resetBackward", value.size(), resetForward, resetBackward);
         if (!isEmpty()) {
             mAdapter.removeLastIfLoading();
             swipe.setRefreshing(false);
         }
         mAdapter.resetGists(value);
-        if (isResetScroll) {
-            if (!isFirstPage) {
-                mForwardScrollListener.reset();
-            }
-            if (!isLastPage) {
-                mBackwardScrollListener.reset();
-            }
+        if (resetForward) {
+            mForwardScrollListener.reset();
+        }
+        if (resetBackward) {
+            mBackwardScrollListener.reset();
         }
     }
 
