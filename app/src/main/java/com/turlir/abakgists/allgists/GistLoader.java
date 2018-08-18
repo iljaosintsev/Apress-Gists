@@ -80,6 +80,9 @@ class GistLoader {
         }
         mDatabaseConnection.dispose();
         mDatabaseConnection = mInteractor.prevPage()
+                .doOnNext(nextItems -> {
+                    isEnded = false;
+                })
                 .subscribe(nextItems -> {
                     changeState(mState.content(nextItems));
                 }, t -> {
@@ -89,6 +92,10 @@ class GistLoader {
 
     int size() {
         return mInteractor.range.prev().absStop;
+    }
+
+    boolean isFill(int size) {
+        return mInteractor.range.count() == size;
     }
 
     void stop() {
@@ -125,11 +132,11 @@ class GistLoader {
         return !(mState instanceof InlineLoading) && !(mState instanceof Refresh);
     }
 
-    private boolean canNext() {
+    public boolean canNext() {
         return canLoad() && mInteractor.range.hasNext() && !isEnded;
     }
 
-    private boolean canPrevious() {
+    public boolean canPrevious() {
         return canLoad() && mInteractor.range.hasPrevious();
     }
 }

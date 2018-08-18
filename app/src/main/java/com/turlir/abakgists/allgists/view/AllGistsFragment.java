@@ -27,9 +27,10 @@ import com.turlir.abakgists.base.erroring.ErrorInterpreter;
 import com.turlir.abakgists.gist.GistActivity;
 import com.turlir.abakgists.model.GistModel;
 import com.turlir.abakgists.widgets.DividerDecorator;
-import com.turlir.abakgists.widgets.SimpleScrollListener;
+import com.turlir.abakgists.widgets.DownScroller;
 import com.turlir.abakgists.widgets.SpaceDecorator;
 import com.turlir.abakgists.widgets.SwitchLayout;
+import com.turlir.abakgists.widgets.UpScroller;
 
 import java.util.List;
 
@@ -42,7 +43,7 @@ import timber.log.Timber;
 
 public class AllGistsFragment
         extends BaseFragment
-        implements OnClickListener, SimpleScrollListener.Paginator, ErrorInterpreter {
+        implements OnClickListener, DownScroller.NextPager, UpScroller.PrevPager, ErrorInterpreter {
 
     private static final int MIN_COUNT = 2;
 
@@ -59,6 +60,8 @@ public class AllGistsFragment
     SwipeRefreshLayout swipe;
 
     private AllGistAdapter mAdapter;
+    private DownScroller mForwardScrollListener;
+    private UpScroller mBackwardScrollListener;
 
     private final SwipeRefreshLayout.OnRefreshListener mSwipeListener = () -> {
         // _presenter.updateGist();
@@ -96,8 +99,10 @@ public class AllGistsFragment
         SpaceDecorator space = new SpaceDecorator(cnt, R.dimen.activity_horizontal_margin, R.dimen.half_margin);
         recycler.addItemDecoration(space);
 
-        RecyclerView.OnScrollListener scroller = new SimpleScrollListener(this);
-        recycler.addOnScrollListener(scroller);
+        mForwardScrollListener = new DownScroller(this);
+        recycler.addOnScrollListener(mForwardScrollListener);
+        mBackwardScrollListener = new UpScroller(this);
+        recycler.addOnScrollListener(mBackwardScrollListener);
 
         recycler.setItemAnimator(new SlideInLeftAnimator());
 
@@ -153,23 +158,26 @@ public class AllGistsFragment
     /// Presenter
     ///
 
-    public void onGistLoaded(List<GistModel> value) {
+    public void onGistLoaded(List<GistModel> value, boolean isFirstPage, boolean isLastPage, boolean isResetScroll) {
         Timber.d("%d elements put in ui", value.size());
         if (!isEmpty()) {
             mAdapter.removeLastIfLoading();
             swipe.setRefreshing(false);
         }
-        int size = mAdapter.getItemCount();
         mAdapter.resetGists(value);
-        if (value.size() >= size) {
-            resetScroller();
+        if (isResetScroll) {
+            if (!isFirstPage) {
+                mForwardScrollListener.reset();
+            }
+            if (!isLastPage) {
+                mBackwardScrollListener.reset();
+            }
         }
     }
 
     private void resetScroller() {
-        recycler.clearOnScrollListeners();
-        RecyclerView.OnScrollListener scroller = new SimpleScrollListener(this);
-        recycler.addOnScrollListener(scroller);
+        mForwardScrollListener.reset();
+        mBackwardScrollListener.reset();
     }
 
     public void onUpdateSuccessful() {
@@ -182,18 +190,18 @@ public class AllGistsFragment
     }
 
     ////
-    //// Paginator
+    //// Pager(s)
     ////
 
     @Override
     public void loadNextPage() {
-        Timber.v("scrolling initial next page");
+        Timber.i("scrolling initial request next page");
         _presenter.nextPage();
     }
 
     @Override
     public void loadPrevPage() {
-        Timber.v("scrolling initial previous page");
+        Timber.i("scrolling initial request previous page");
         _presenter.prevPage();
     }
 
