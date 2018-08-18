@@ -15,12 +15,15 @@ public class RangeTest {
         Range range = new Range(0, 30);
         check(range, 0, 30);
         assertEquals(15, range.addition);
+        assertTrue(range.hasNext());
 
         range = range.next();
         check(range, 15, 45);
+        assertTrue(range.hasNext());
 
         range = range.next();
         check(range, 30, 60);
+        assertTrue(range.hasNext());
     }
 
     @Test
@@ -39,13 +42,13 @@ public class RangeTest {
 
     @Test
     public void pagedPrevious() {
-        Range range = new Range(30, 40);
+        Range range = new Range(30, 60);
         assertTrue(range.hasPrevious());
         range = range.prev();
-        check(range, 15, 25);
+        check(range, 15, 45);
 
         range = range.prev();
-        check(range, 0, 10);
+        check(range, 0, 30);
     }
 
     @Test
