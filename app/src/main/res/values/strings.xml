@@ -23,5 +23,6 @@
     <string name="there_changes">There are changes</string>
     <string name="save_quest">Do you want to save the changes?</string>
     <string name="title_activity_room">RoomActivity</string>
+    <string name="delete">Delete</string>
 
 </resources>

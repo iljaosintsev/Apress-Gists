@@ -24,6 +24,9 @@ public interface GistLocalDao {
     @Update
     void update(GistLocal local);
 
+    @Query("DELETE FROM gists_db WHERE id == :id")
+    void deleteById(String id);
+
     @Query("SELECT * FROM gists_db WHERE note NOT NULL AND note != \"\"")
     Flowable<List<GistLocal>> notes();
 }

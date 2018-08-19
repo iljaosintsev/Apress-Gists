@@ -55,4 +55,27 @@ public class GistPresenter extends BasePresenter<GistActivity> {
         content = now;
     }
 
+    public void delete() {
+        Completable.fromRunnable(() -> mDao.deleteById(content.id))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new ResourceCompletableObserver() {
+                    @Override
+                    public void onComplete() {
+                        dispose();
+                        Timber.v("gist %s successfully deleted");
+                        if (getView() != null) {
+                            getView().deleteSuccess();
+                        }
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        dispose();
+                        Timber.d(e, "failure delete gist");
+                        if (getView() != null) {
+                            getView().deleteFailure();
+                        }
+                    }
+                });
+    }
 }

@@ -2,12 +2,14 @@ package com.turlir.abakgists.gist;
 
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -70,6 +72,33 @@ public class GistActivity extends BaseActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.gist_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.gist_menu_delete:
+                new AlertDialog.Builder(this)
+                        .setTitle("Last chance")
+                        .setMessage("Do you want to delete this gist?")
+                        .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                            _presenter.delete();
+                        })
+                        .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+                            dialog.cancel();
+                        })
+                        .create()
+                        .show();
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(EXTRA_GIST, _presenter.content);
@@ -93,6 +122,15 @@ public class GistActivity extends BaseActivity {
         startActivity(i);
     }
 
+    public void deleteSuccess() {
+        Snackbar.make(findViewById(android.R.id.content), "Gist successfully deleted", Snackbar.LENGTH_LONG).show();
+        onBackPressed();
+    }
+
+    public void deleteFailure() {
+        Snackbar.make(findViewById(android.R.id.content), "Error when deleting gist", Snackbar.LENGTH_LONG).show();
+    }
+
     @Override
     public void onBackPressed() {
         if (!_presenter.isChange(desc.getText().toString(), note.getText().toString())) {
@@ -101,20 +139,14 @@ public class GistActivity extends BaseActivity {
             new AlertDialog.Builder(this)
                     .setTitle(R.string.there_changes)
                     .setMessage(R.string.save_quest)
-                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            onClickSave();
-                            dialog.dismiss();
-                            GistActivity.super.onBackPressed();
-                        }
+                    .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                        onClickSave();
+                        dialog.dismiss();
+                        onBackPressed();
                     })
-                    .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                            GistActivity.super.onBackPressed();
-                        }
+                    .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+                        dialog.cancel();
+                        onBackPressed();
                     })
                     .create()
                     .show();
