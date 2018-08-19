@@ -37,7 +37,7 @@ class GistLoader {
         mState = new Start(mCallback);
         mState.perform();
 
-        mDatabaseConnection = mInteractor.subscribe()
+        mDatabaseConnection = mInteractor.firstPage()
                 .subscribe(gistModels -> {
                     final Range range = mInteractor.range;
                     if (gistModels.size() == 0 && !isEnded) {

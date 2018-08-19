@@ -28,15 +28,15 @@ public class GistListInteractor {
         range = new Range(0, 30, 15);
     }
 
-    public Flowable<List<GistModel>> subscribe() {
+    public Flowable<List<GistModel>> firstPage() {
         range = new Range(0, 30, 15);
         return mRepo.database(range.count(), range.absStart)
                 .map(mTransformer)
                 .doOnNext(gistModels -> {
                     Timber.d("from database (first time) loaded %d items, from %d in %d",
                             gistModels.size(), range.absStart, range.absStop);
-                    if (range.addition == gistModels.size()) {
-                        Timber.d("needs load %d items for first page", range.count() - gistModels.size());
+                    if (gistModels.size() == 0) {
+                        Timber.d("needs load first %d items from server", range.count());
                     }
                 })
                 .doOnComplete(() -> {
