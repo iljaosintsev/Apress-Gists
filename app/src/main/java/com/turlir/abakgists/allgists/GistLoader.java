@@ -21,6 +21,8 @@ class GistLoader {
     @NonNull
     private ListCombination<GistModel> mState;
     private Disposable mDatabaseConnection;
+    @NonNull
+    private String mLastId = "";
     private boolean isEnded;
 
     GistLoader(GistListInteractor interactor, ListManipulator<GistModel> callback) {
@@ -44,7 +46,9 @@ class GistLoader {
                     }
                     if (gistModels.size() > 0) {
                         changeState(mState.content(gistModels));
+                        mLastId = gistModels.get(gistModels.size() - 1).id;
                     }
+                    isEnded = range.count() != gistModels.size();
 
                 }, t -> {
                     changeState(mState.error(t));
@@ -60,7 +64,8 @@ class GistLoader {
         mDatabaseConnection = mInteractor.nextPage()
                 .subscribe(nextItems -> {
                    changeState(mState.content(nextItems));
-                   if (mInteractor.range.addition == nextItems.size() && !isEnded) {
+                    GistModel currentLast = nextItems.get(nextItems.size() - 1);
+                    if (currentLast.id.equals(mLastId) && !isEnded) {
                         Range already = mInteractor.range.cut(nextItems.size());
                         Range required = mInteractor.range.diff(already);
                         LoadablePage page = required.page();
@@ -68,6 +73,7 @@ class GistLoader {
                         server(page);
                         changeState(mState.doLoad());
                     }
+                    mLastId = currentLast.id;
                 }, t -> {
                     changeState(mState.error(t));
                 });
@@ -82,6 +88,7 @@ class GistLoader {
         mDatabaseConnection = mInteractor.prevPage()
                 .doOnNext(nextItems -> {
                     isEnded = false;
+                    mLastId = nextItems.get(nextItems.size() - 1).id;
                 })
                 .subscribe(nextItems -> {
                     changeState(mState.content(nextItems));
@@ -109,8 +116,9 @@ class GistLoader {
                 .subscribe(new ResourceSingleObserver<Integer>() {
                     @Override
                     public void onSuccess(Integer count) {
-                        if (count < page.size) {
-                            isEnded = true; // source ended
+                        isEnded = count < page.size;
+                        if (isEnded) {
+                            Timber.d("gists list ended");
                         }
                         dispose();
                     }
