@@ -67,7 +67,7 @@ class GistLoader {
                     GistModel nowLast = nextItems.get(nextItems.size() - 1);
                     boolean lastNotChanged = nowLast.id.equals(mLastId);
                     mLastId = nowLast.id;
-                    if (lastNotChanged && !canLoad()) { // loading in process
+                    if (!canLoad()) { // loading in process
                         mState.content(nextItems).perform(); // side effect without state change
                         mState.perform(); // repeat loading
                     } else {
@@ -127,6 +127,7 @@ class GistLoader {
                         if (isEnded) {
                             Timber.d("gists list ended");
                         }
+                        mState = new Start(mCallback);
                         dispose();
                     }
                     @Override
