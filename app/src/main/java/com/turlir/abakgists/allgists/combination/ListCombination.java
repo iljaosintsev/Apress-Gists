@@ -41,6 +41,11 @@ public abstract class ListCombination<T> {
         throw new IllegalStateException();
     }
 
+    @CheckResult
+    public ListCombination<T> doIntermediate() {
+        throw new IllegalStateException();
+    }
+
     public void perform() {
         if (Looper.myLooper() != Looper.getMainLooper()) {
             throw new IllegalStateException("access view outside main thread");

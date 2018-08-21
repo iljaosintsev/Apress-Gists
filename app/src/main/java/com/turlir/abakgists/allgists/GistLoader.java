@@ -68,9 +68,11 @@ class GistLoader {
                     boolean lastNotChanged = nowLast.id.equals(mLastId);
                     mLastId = nowLast.id;
                     if (!canLoad()) { // loading in process
+                        Timber.v("updating list when loading the next page");
                         mState.content(nextItems).perform(); // side effect without state change
                         mState.perform(); // repeat loading
                     } else {
+                        Timber.v("updating list direct");
                         changeState(mState.content(nextItems)); // perform
                     }
                     if (lessThan && lastNotChanged && !isEnded && canNext()) {
@@ -127,7 +129,7 @@ class GistLoader {
                         if (isEnded) {
                             Timber.d("gists list ended");
                         }
-                        mState = new Start(mCallback);
+                        changeState(mState.doIntermediate());
                         dispose();
                     }
                     @Override

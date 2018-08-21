@@ -21,9 +21,14 @@ public class Start extends ListCombination<GistModel> {
 
     @Override
     public ListCombination<GistModel> error(Throwable err) {
-        com.turlir.abakgists.allgists.combination.Error error = new com.turlir.abakgists.allgists.combination.Error(err);
+        Error error = new Error(err);
         error.setOwner(owner);
         return error;
+    }
+
+    @Override
+    public ListCombination<GistModel> doIntermediate() {
+        return new IntermediateState(this);
     }
 
     @Override

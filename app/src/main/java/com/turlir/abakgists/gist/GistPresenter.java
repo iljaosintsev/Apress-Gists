@@ -63,7 +63,7 @@ public class GistPresenter extends BasePresenter<GistActivity> {
                     @Override
                     public void onComplete() {
                         dispose();
-                        Timber.v("gist %s successfully deleted");
+                        Timber.v("gist successfully deleted");
                         if (getView() != null) {
                             getView().deleteSuccess();
                         }

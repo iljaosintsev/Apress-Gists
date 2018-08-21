@@ -23,6 +23,11 @@ public class InlineLoading extends ListCombination<GistModel> {
     }
 
     @Override
+    public ListCombination<GistModel> doIntermediate() {
+        return new IntermediateState(this);
+    }
+
+    @Override
     public void perform() {
         super.perform();
         owner.inlineLoad(true);
