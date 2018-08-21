@@ -63,9 +63,17 @@ class GistLoader {
         mDatabaseConnection.dispose();
         mDatabaseConnection = mInteractor.nextPage()
                 .subscribe(nextItems -> {
-                   changeState(mState.content(nextItems));
-                    GistModel currentLast = nextItems.get(nextItems.size() - 1);
-                    if (currentLast.id.equals(mLastId) && !isEnded) {
+                    boolean lessThan = mInteractor.range.count() > nextItems.size();
+                    GistModel nowLast = nextItems.get(nextItems.size() - 1);
+                    boolean lastNotChanged = nowLast.id.equals(mLastId);
+                    mLastId = nowLast.id;
+                    if (lastNotChanged && !canLoad()) { // loading in process
+                        mState.content(nextItems).perform(); // side effect without state change
+                        mState.perform(); // repeat loading
+                    } else {
+                        changeState(mState.content(nextItems)); // perform
+                    }
+                    if (lessThan && lastNotChanged && !isEnded && canNext()) {
                         Range already = mInteractor.range.cut(nextItems.size());
                         Range required = mInteractor.range.diff(already);
                         LoadablePage page = required.page();
@@ -73,7 +81,6 @@ class GistLoader {
                         server(page);
                         changeState(mState.doLoad());
                     }
-                    mLastId = currentLast.id;
                 }, t -> {
                     changeState(mState.error(t));
                 });
