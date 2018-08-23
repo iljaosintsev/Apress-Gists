@@ -1,6 +1,7 @@
 package com.turlir.abakgists.allgists;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.turlir.abakgists.allgists.combination.InlineLoading;
 import com.turlir.abakgists.allgists.combination.ListCombination;
@@ -23,8 +24,8 @@ class GistLoader {
     @NonNull
     private ListCombination<GistModel> mState;
     private Disposable mDatabaseConnection;
-    @NonNull
-    private String mLastId = "";
+    @Nullable
+    private GistModel mLast = null;
     private boolean isEnded;
 
     GistLoader(GistListInteractor interactor, ListManipulator<GistModel> callback) {
@@ -48,7 +49,7 @@ class GistLoader {
                     }
                     if (gistModels.size() > 0) {
                         changeState(mState.content(gistModels));
-                        mLastId = gistModels.get(gistModels.size() - 1).id;
+                        mLast = gistModels.get(gistModels.size() - 1);
                     }
                     isEnded = range.count() != gistModels.size();
 
@@ -74,8 +75,8 @@ class GistLoader {
     private void setNextItems(List<GistModel> nextItems) {
         boolean lessThan = mInteractor.range.count() > nextItems.size();
         GistModel nowLast = nextItems.get(nextItems.size() - 1);
-        boolean lastNotChanged = nowLast.id.equals(mLastId);
-        mLastId = nowLast.id;
+        boolean lastNotChanged = mLast != null && nowLast.isDifferent(mLast);
+        mLast = nowLast;
         if (!canLoad()) { // loading in process
             Timber.v("updating list when loading the next page");
             mState.content(nextItems).perform(); // side effect without state change
@@ -103,7 +104,7 @@ class GistLoader {
         mDatabaseConnection = mInteractor.prevPage()
                 .doOnNext(nextItems -> {
                     isEnded = false;
-                    mLastId = nextItems.get(nextItems.size() - 1).id;
+                    mLast = nextItems.get(nextItems.size() - 1);
                 })
                 .subscribe(nextItems -> {
                     changeState(mState.content(nextItems));
@@ -116,8 +117,8 @@ class GistLoader {
         return mInteractor.range.prev().absStop;
     }
 
-    boolean isFill(int size) {
-        return mInteractor.range.count() == size;
+    boolean isDifferent(GistModel now) {
+        return mLast != null && now.isDifferent(mLast);
     }
 
     void stop() {

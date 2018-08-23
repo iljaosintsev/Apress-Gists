@@ -107,7 +107,7 @@ public class GistModel
      * @param other сравниваемый элемент
      * @return {@code true} - различны, иначе {@code false}
      */
-    public boolean isDifferent(GistModel other) {
+    public boolean isDifferent(@NonNull GistModel other) {
         return !other.id.equals(this.id);
     }
 
