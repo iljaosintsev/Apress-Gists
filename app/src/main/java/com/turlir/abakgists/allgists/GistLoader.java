@@ -9,6 +9,8 @@ import com.turlir.abakgists.allgists.combination.Refresh;
 import com.turlir.abakgists.allgists.combination.Start;
 import com.turlir.abakgists.model.GistModel;
 
+import java.util.List;
+
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.ResourceSingleObserver;
 import timber.log.Timber;
@@ -63,29 +65,33 @@ class GistLoader {
         mDatabaseConnection.dispose();
         mDatabaseConnection = mInteractor.nextPage()
                 .subscribe(nextItems -> {
-                    boolean lessThan = mInteractor.range.count() > nextItems.size();
-                    GistModel nowLast = nextItems.get(nextItems.size() - 1);
-                    boolean lastNotChanged = nowLast.id.equals(mLastId);
-                    mLastId = nowLast.id;
-                    if (!canLoad()) { // loading in process
-                        Timber.v("updating list when loading the next page");
-                        mState.content(nextItems).perform(); // side effect without state change
-                        mState.perform(); // repeat loading
-                    } else {
-                        Timber.v("updating list direct");
-                        changeState(mState.content(nextItems)); // perform
-                    }
-                    if (lessThan && lastNotChanged && !isEnded && canNext()) {
-                        Range already = mInteractor.range.cut(nextItems.size());
-                        Range required = mInteractor.range.diff(already);
-                        LoadablePage page = required.page();
-                        Timber.d("download required %d th page in %d items", page.number, page.size);
-                        server(page);
-                        changeState(mState.doLoad());
-                    }
+                    setNextItems(nextItems);
                 }, t -> {
                     changeState(mState.error(t));
                 });
+    }
+
+    private void setNextItems(List<GistModel> nextItems) {
+        boolean lessThan = mInteractor.range.count() > nextItems.size();
+        GistModel nowLast = nextItems.get(nextItems.size() - 1);
+        boolean lastNotChanged = nowLast.id.equals(mLastId);
+        mLastId = nowLast.id;
+        if (!canLoad()) { // loading in process
+            Timber.v("updating list when loading the next page");
+            mState.content(nextItems).perform(); // side effect without state change
+            mState.perform(); // repeat loading
+        } else {
+            Timber.v("updating list direct");
+            changeState(mState.content(nextItems)); // perform
+        }
+        if (lessThan && lastNotChanged && !isEnded && canNext()) {
+            Range already = mInteractor.range.cut(nextItems.size());
+            Range required = mInteractor.range.diff(already);
+            LoadablePage page = required.page();
+            Timber.d("download required %d th page in %d items", page.number, page.size);
+            server(page);
+            changeState(mState.doLoad());
+        }
     }
 
     void prevPage() {
