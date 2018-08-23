@@ -129,6 +129,9 @@ class GistLoader {
 
     private void server(LoadablePage page) {
         mInteractor.server(page)
+                .doOnSuccess(i -> {
+                    changeState(mState.doIntermediate());
+                })
                 .subscribe(new ResourceSingleObserver<Integer>() {
                     @Override
                     public void onSuccess(Integer count) {
@@ -136,7 +139,6 @@ class GistLoader {
                         if (isEnded) {
                             Timber.d("gists list ended");
                         }
-                        changeState(mState.doIntermediate());
                         dispose();
                     }
                     @Override
