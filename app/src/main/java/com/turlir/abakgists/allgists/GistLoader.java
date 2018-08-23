@@ -66,27 +66,32 @@ class GistLoader {
         mDatabaseConnection.dispose();
         mDatabaseConnection = mInteractor.nextPage()
                 .subscribe(nextItems -> {
-                    setNextItems(nextItems);
+                    onNextItems(nextItems);
                 }, t -> {
                     changeState(mState.error(t));
                 });
     }
 
-    private void setNextItems(List<GistModel> nextItems) {
-        boolean lessThan = mInteractor.range.count() > nextItems.size();
-        GistModel nowLast = nextItems.get(nextItems.size() - 1);
-        boolean lastNotChanged = mLast != null && nowLast.isDifferent(mLast);
-        mLast = nowLast;
+    private void onNextItems(List<GistModel> nextItems) {
         if (!canLoad()) { // loading in process
-            Timber.v("updating list when loading the next page");
+            Timber.d("updating list when loading the next page");
             mState.content(nextItems).perform(); // side effect without state change
             mState.perform(); // repeat loading
+            mLast = nextItems.get(nextItems.size() - 1);
+            return;
         } else {
-            Timber.v("updating list direct");
+            Timber.d("updating list direct");
             changeState(mState.content(nextItems)); // perform
         }
-        if (lessThan && lastNotChanged && !isEnded && canNext()) {
-            Range already = mInteractor.range.cut(nextItems.size());
+
+        int nowSize = nextItems.size();
+        boolean lessThan = nowSize < mInteractor.range.count();
+        GistModel lastItem = nextItems.get(nowSize - 1);
+        boolean eqLast = mLast == null || !lastItem.isDifferent(mLast);
+        mLast = lastItem;
+
+        if (lessThan && canNext() && eqLast) {
+            Range already = mInteractor.range.cut(mInteractor.range.addition);
             Range required = mInteractor.range.diff(already);
             LoadablePage page = required.page();
             Timber.d("download required %d th page in %d items", page.number, page.size);
@@ -150,7 +155,7 @@ class GistLoader {
     }
 
     private void changeState(ListCombination<GistModel> now) {
-        Timber.v("StateChange leave %s, enter %s", mState.getClass().getSimpleName(), now.getClass().getSimpleName());
+        Timber.d("state change: leave %s, enter %s", mState.getClass().getSimpleName(), now.getClass().getSimpleName());
         mState = now;
         mState.perform();
     }
