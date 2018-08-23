@@ -1,5 +1,7 @@
 package com.turlir.abakgists.api;
 
+import java.util.concurrent.TimeUnit;
+
 import io.reactivex.functions.Consumer;
 
 /**
@@ -7,13 +9,13 @@ import io.reactivex.functions.Consumer;
  */
 class LagSideEffect implements Consumer<Object> {
 
-    private final int mLag;
+    private final long mLag;
 
     LagSideEffect() {
-        this(5500);
+        this(TimeUnit.SECONDS.toMillis(6));
     }
 
-    LagSideEffect(int millis) {
+    LagSideEffect(long millis) {
         mLag = millis;
     }
 
