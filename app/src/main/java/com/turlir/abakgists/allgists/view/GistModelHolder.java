@@ -1,7 +1,6 @@
 package com.turlir.abakgists.allgists.view;
 
 
-import android.support.annotation.DrawableRes;
 import android.view.View;
 import android.widget.TextView;
 
@@ -34,22 +33,16 @@ class GistModelHolder extends ModelViewHolder<GistModel> {
 
     @Override
     void bind(GistModel item) {
+        final String prefix;
         if (item.ownerLogin == null) {
-            tvId.setText(String.valueOf(item.id));
+            prefix = tvId.getResources().getString(R.string.anonymous);
         } else {
-            tvId.setText(item.ownerLogin);
+            prefix = item.ownerLogin;
         }
+        tvId.setText(tvId.getResources().getString(R.string.ownerLogin, prefix, item.id));
         tvCreated.setText(item.created);
         tvNote.setText(item.note);
         tvDesc.setText(item.description);
-
-        final @DrawableRes int left;
-        if (item.isLocal) {
-            left = R.drawable.indicator_online;
-        } else {
-            left = R.drawable.indicator_offline;
-        }
-        tvCreated.setCompoundDrawablesWithIntrinsicBounds(left, 0, 0, 0);
     }
 
 }
