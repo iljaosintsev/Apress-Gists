@@ -41,7 +41,7 @@ class Error extends ListCombination<GistModel> {
             boolean isData = processor.dataAvailable();
             boolean isError = processor.isError();
             ErrorSituation situation = selector.select(exception, isData, isError);
-            situation.perform(interpreter, exception);
+            situation.perform(interpreter, exception, processor.getResources());
 
         } else {
             throw new RuntimeException(mError);

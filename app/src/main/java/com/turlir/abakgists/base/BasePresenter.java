@@ -86,7 +86,7 @@ public abstract class BasePresenter<T extends BaseView> {
                     ErrorSituation callback =
                             mRobot.select(exception, isDataAvailable(), isError());
 
-                    callback.perform(interpreter, exception);
+                    callback.perform(interpreter, exception, getView().getContext().getResources());
                 }
 
             } else {

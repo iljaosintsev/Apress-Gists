@@ -1,6 +1,7 @@
 package com.turlir.abakgists.base.erroring;
 
 
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 
 import java.io.IOException;
@@ -9,32 +10,32 @@ public class TroubleSelector implements ErrorSelector {
 
     private final ErrorSituation mTrueTrue = new CommonError() { // 3
         @Override
-        public void perform(@NonNull ErrorInterpreter v, Exception e) {
-            super.perform(v, e);
+        public void perform(@NonNull ErrorInterpreter v, Exception e, Resources res) {
+            super.perform(v, e, res);
             v.nonBlockingError("Отсутствует подключение к сети Интернет");
         }
     };
 
     private final ErrorSituation mTrueFalse = new CommonError() { // 2
         @Override
-        public void perform(@NonNull ErrorInterpreter v, Exception e) {
-            super.perform(v, e);
+        public void perform(@NonNull ErrorInterpreter v, Exception e, Resources res) {
+            super.perform(v, e, res);
             v.blockingError("Ошибка " + getErrorName(e) + " при получении данных");
         }
     };
 
     private final ErrorSituation mFalseTrue = new CommonError() { // 1
         @Override
-        public void perform(@NonNull ErrorInterpreter v, Exception e) {
-            super.perform(v, e);
+        public void perform(@NonNull ErrorInterpreter v, Exception e, Resources res) {
+            super.perform(v, e, res);
             v.alertError("Произошла ошибка" + "\n" + getErrorName(e));
         }
     };
 
     private final ErrorSituation mFalseFalse = new CommonError() { // 0
         @Override
-        public void perform(@NonNull ErrorInterpreter v, Exception e) {
-            super.perform(v, e);
+        public void perform(@NonNull ErrorInterpreter v, Exception e, Resources res) {
+            super.perform(v, e, res);
             v.blockingError("Ошибка " + getErrorName(e));
         }
     };

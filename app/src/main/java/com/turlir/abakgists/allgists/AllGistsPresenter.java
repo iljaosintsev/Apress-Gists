@@ -1,6 +1,8 @@
 package com.turlir.abakgists.allgists;
 
 
+import android.content.res.Resources;
+
 import com.turlir.abakgists.allgists.combination.ErrorProcessor;
 import com.turlir.abakgists.allgists.combination.ListManipulator;
 import com.turlir.abakgists.allgists.view.AllGistsFragment;
@@ -113,6 +115,14 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
         @Override
         public boolean isError() {
             return getView() != null && getView().isError();
+        }
+
+        @Override
+        public Resources getResources() {
+            if (getView() != null) {
+                return getView().getResources();
+            }
+            return null;
         }
 
     }
