@@ -2,7 +2,7 @@ package com.turlir.abakgists.base.erroring;
 
 import android.support.annotation.NonNull;
 
-public final class RepeatingError implements ErrorSituation {
+public final class RepeatingError extends CommonError {
 
     @Override
     public boolean should(Exception ex, boolean dataAvailable, boolean isErrorNow) {
@@ -11,6 +11,7 @@ public final class RepeatingError implements ErrorSituation {
 
     @Override
     public void perform(@NonNull ErrorInterpreter v, Exception e) {
+        super.perform(v, e);
         v.blockingError("Увы, попытайтесь снова через некоторое время");
     }
 }

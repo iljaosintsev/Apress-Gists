@@ -10,6 +10,7 @@ public class TroubleSelector implements ErrorSelector {
     private final ErrorSituation mTrueTrue = new CommonError() { // 3
         @Override
         public void perform(@NonNull ErrorInterpreter v, Exception e) {
+            super.perform(v, e);
             v.nonBlockingError("Отсутствует подключение к сети Интернет");
         }
     };
@@ -17,6 +18,7 @@ public class TroubleSelector implements ErrorSelector {
     private final ErrorSituation mTrueFalse = new CommonError() { // 2
         @Override
         public void perform(@NonNull ErrorInterpreter v, Exception e) {
+            super.perform(v, e);
             v.blockingError("Ошибка " + getErrorName(e) + " при получении данных");
         }
     };
@@ -24,6 +26,7 @@ public class TroubleSelector implements ErrorSelector {
     private final ErrorSituation mFalseTrue = new CommonError() { // 1
         @Override
         public void perform(@NonNull ErrorInterpreter v, Exception e) {
+            super.perform(v, e);
             v.alertError("Произошла ошибка" + "\n" + getErrorName(e));
         }
     };
@@ -31,6 +34,7 @@ public class TroubleSelector implements ErrorSelector {
     private final ErrorSituation mFalseFalse = new CommonError() { // 0
         @Override
         public void perform(@NonNull ErrorInterpreter v, Exception e) {
+            super.perform(v, e);
             v.blockingError("Ошибка " + getErrorName(e));
         }
     };

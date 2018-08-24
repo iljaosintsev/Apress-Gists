@@ -21,4 +21,9 @@ public class Refresh extends ListCombination<GistModel> {
         error.setOwner(owner);
         return error;
     }
+
+    @Override
+    public ListCombination<GistModel> doIntermediate() {
+        return new IntermediateState(this);
+    }
 }
