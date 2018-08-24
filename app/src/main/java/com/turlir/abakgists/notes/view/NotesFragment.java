@@ -20,7 +20,6 @@ import com.turlir.abakgists.gist.GistActivity;
 import com.turlir.abakgists.model.GistModel;
 import com.turlir.abakgists.notes.NotesPresenter;
 import com.turlir.abakgists.widgets.DividerDecorator;
-import com.turlir.abakgists.widgets.SpaceDecorator;
 import com.turlir.abakgists.widgets.SwitchLayout;
 
 import java.util.List;
@@ -70,8 +69,6 @@ public class NotesFragment extends BaseFragment implements OnClickListener {
         DividerDecorator divider = new DividerDecorator(getActivity(), R.drawable.divider,
                 DividerItemDecoration.VERTICAL, DividerDecorator.TOP_DIVIDER);
         recycler.addItemDecoration(divider);
-        SpaceDecorator space = new SpaceDecorator(getActivity(), R.dimen.activity_horizontal_margin, R.dimen.half_margin);
-        recycler.addItemDecoration(space);
         return root;
     }
 

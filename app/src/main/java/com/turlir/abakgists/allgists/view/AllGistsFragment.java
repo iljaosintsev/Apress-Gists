@@ -28,7 +28,6 @@ import com.turlir.abakgists.gist.GistActivity;
 import com.turlir.abakgists.model.GistModel;
 import com.turlir.abakgists.widgets.DividerDecorator;
 import com.turlir.abakgists.widgets.DownScroller;
-import com.turlir.abakgists.widgets.SpaceDecorator;
 import com.turlir.abakgists.widgets.SwitchLayout;
 import com.turlir.abakgists.widgets.UpScroller;
 
@@ -95,8 +94,6 @@ public class AllGistsFragment
                 DividerDecorator.TOP_DIVIDER
         );
         recycler.addItemDecoration(divider);
-        SpaceDecorator space = new SpaceDecorator(cnt, R.dimen.activity_horizontal_margin, R.dimen.half_margin);
-        recycler.addItemDecoration(space);
 
         mForwardScrollListener = new DownScroller(this);
         recycler.addOnScrollListener(mForwardScrollListener);
