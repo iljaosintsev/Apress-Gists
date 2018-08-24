@@ -1,5 +1,7 @@
 package com.turlir.abakgists.api;
 
+import android.annotation.SuppressLint;
+
 import com.turlir.abakgists.api.data.GistLocal;
 import com.turlir.abakgists.api.data.GistLocalDao;
 import com.turlir.abakgists.api.data.GistMapper;
@@ -35,6 +37,16 @@ public class Repository {
 
     public Flowable<List<GistLocal>> database(int limit, int offset) {
         return mDao.partial(limit, offset);
+    }
+
+    @SuppressLint("CheckResult")
+    public Single<Integer> reloadAllGist(int page, int perPage) {
+        return loadFromServer(page, perPage)
+                .map(gistLocals -> {
+                    int deleted = mDao.deleteAll();
+                    putToCache(gistLocals);
+                    return deleted;
+                });
     }
 
     public Flowable<List<GistLocal>> notes() {

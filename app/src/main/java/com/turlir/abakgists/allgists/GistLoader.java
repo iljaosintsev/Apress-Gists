@@ -50,8 +50,8 @@ class GistLoader {
                     if (gistModels.size() > 0) {
                         changeState(mState.content(gistModels));
                         mLast = gistModels.get(gistModels.size() - 1);
+                        isEnded = range.count() != gistModels.size();
                     }
-                    isEnded = range.count() != gistModels.size();
 
                 }, t -> {
                     changeState(mState.error(t));
@@ -115,6 +115,27 @@ class GistLoader {
                     mLast = nextItems.get(nextItems.size() - 1);
                 }, t -> {
                     changeState(mState.error(t));
+                });
+    }
+
+    public void updateGist() {
+        if (!canLoad()) return;
+        changeState(mState.refresh());
+        mDatabaseConnection.dispose();
+        mInteractor.loadAndReplace()
+                .subscribe(new ResourceSingleObserver<Integer>() {
+                    @Override
+                    public void onSuccess(Integer deleted) {
+                        dispose();
+                        Timber.d("successful deleted %d items", deleted);
+                        changeState(mState.doIntermediate());
+                        firstPage();
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        dispose();
+                        changeState(mState.error(e));
+                    }
                 });
     }
 

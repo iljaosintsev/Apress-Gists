@@ -64,8 +64,7 @@ public class AllGistsFragment
     private UpScroller mBackwardScrollListener;
 
     private final SwipeRefreshLayout.OnRefreshListener mSwipeListener = () -> {
-        // _presenter.updateGist();
-        resetScroller();
+        _presenter.updateGist();
     };
 
     @Override

@@ -87,6 +87,14 @@ public class GistListInteractor {
                 .doOnError(Timber::e);
     }
 
+    public Single<Integer> loadAndReplace() {
+        range = new Range(0, 30, 15);
+        LoadablePage page = range.page();
+        return mRepo.reloadAllGist(page.number, page.size)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
     public Flowable<List<GistModel>> requestWithNotes() {
         return mRepo.notes()
                 .map(gistLocals -> {
