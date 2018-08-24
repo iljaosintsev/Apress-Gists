@@ -76,6 +76,7 @@ dependencies {
     annotationProcessor "android.arch.persistence.room:compiler:1.1.1"
     implementation "android.arch.persistence.room:rxjava2:1.1.1"
 
+    implementation 'com.facebook.stetho:stetho:1.5.0'
     implementation 'com.jakewharton.timber:timber:4.5.1'
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.1'

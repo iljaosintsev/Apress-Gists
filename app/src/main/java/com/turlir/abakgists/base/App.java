@@ -4,6 +4,7 @@ package com.turlir.abakgists.base;
 import android.app.Application;
 import android.os.StrictMode;
 
+import com.facebook.stetho.Stetho;
 import com.squareup.leakcanary.LeakCanary;
 import com.turlir.abakgists.di.AppComponent;
 import com.turlir.abakgists.di.AppModule;
@@ -42,8 +43,8 @@ public class App extends Application {
         if (!LeakCanary.isInAnalyzerProcess(this)) {
             LeakCanary.install(this);
         }
-
         Timber.plant(new Timber.DebugTree());
+        Stetho.initializeWithDefaults(this);
     }
 
 }
