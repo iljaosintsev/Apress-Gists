@@ -109,10 +109,10 @@ class GistLoader {
         mDatabaseConnection = mInteractor.prevPage()
                 .doOnNext(nextItems -> {
                     isEnded = false;
-                    mLast = nextItems.get(nextItems.size() - 1);
                 })
                 .subscribe(nextItems -> {
                     changeState(mState.content(nextItems));
+                    mLast = nextItems.get(nextItems.size() - 1);
                 }, t -> {
                     changeState(mState.error(t));
                 });
