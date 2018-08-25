@@ -16,6 +16,13 @@
 Использование rxjava первой версии, а не второй мотивируется
 [отсутствием](https://github.com/pushtorefresh/storio/issues/685) поддержки у ORM библиотеки storio.
 
+# Ветка Templater-type
+
+В этой ветке находится прототип шаблонизатора – компонента для декларативного управления экранными формами.
+Простая форма размещена в [TemplateActivity](app/src/main/java/com/turlir/abakgists/template/TemplateActivity.java).
+Для любого виджета в форме принят тип String для возвращаемого значения.
+Наглядно это выражается в интерфейсе [Interceptor](app/src/main/java/com/turlir/abakgists/templater/base/Interceptor.java)
+
 # Логика работы
 
 При открытии списка All gists сначала выполняется запрос в базу данных, в случае если
