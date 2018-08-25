@@ -33,7 +33,7 @@ public abstract class ListCombination<T> {
 
     @CheckResult
     public ListCombination<T> error(Throwable err) {
-        throw new IllegalStateException();
+        throw new IllegalStateException(err);
     }
 
     @CheckResult
