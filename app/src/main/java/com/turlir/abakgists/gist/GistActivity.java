@@ -159,8 +159,16 @@ public class GistActivity extends BaseActivity {
     }
 
     public void deleteSuccess() {
-        Snackbar.make(findViewById(android.R.id.content), "Gist successfully deleted", Snackbar.LENGTH_LONG).show();
-        onBackPressed();
+        Snackbar.make(
+                findViewById(android.R.id.content),
+                "Gist successfully deleted",
+                Snackbar.LENGTH_SHORT
+        ).addCallback(new Snackbar.Callback() {
+            @Override
+            public void onDismissed(Snackbar transientBottomBar, int event) {
+                onBackPressed();
+            }
+        }).show();
     }
 
     public void deleteFailure() {
