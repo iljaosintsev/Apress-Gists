@@ -50,7 +50,7 @@ class GistLoader {
                     if (gistModels.size() > 0) {
                         changeState(mState.content(gistModels));
                         mLast = gistModels.get(gistModels.size() - 1);
-                        isEnded = range.count() != gistModels.size();
+                        //isEnded = range.count() != gistModels.size();
                     }
 
                 }, t -> {
