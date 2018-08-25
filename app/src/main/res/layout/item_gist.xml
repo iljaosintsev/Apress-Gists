@@ -1,65 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/half_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/half_margin">
 
     <TextView
-        android:id="@+id/item_gist_nick"
+        android:id="@+id/item_gist_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_toStartOf="@+id/item_gist_created"
-        android:minHeight="32dp"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
-        tools:text="Turlir" />
+        android:layout_marginBottom="@dimen/half_margin"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        tools:text="986fa7aa42dd456c19982cf40574c5a6"/>
 
     <TextView
-        android:id="@+id/item_gist_created"
+        android:id="@+id/item_gist_desc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/item_gist_nick"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
-        tools:text="12 апреля 2017, 20:38" />
-
-    <LinearLayout
-        android:id="@+id/item_gist_dec_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:layout_below="@id/item_gist_nick">
-
-        <TextView
-            android:id="@+id/item_gist_desc"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:maxLines="2"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincid" />
-
-        <com.turlir.abakgists.widgets.NumberTextView
-            android:id="@+id/item_gist_number"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="9" />
-
-    </LinearLayout>
+        android:layout_marginBottom="@dimen/half_margin"
+        android:maxLines="2"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        tools:text="desc gist for turlir"/>
 
     <TextView
         android:id="@+id/item_gist_note"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/item_gist_dec_container"
-        android:layout_marginTop="4dp"
+        android:layout_marginBottom="@dimen/half_margin"
         android:maxLines="2"
-        tools:text="hands-on notes text" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        tools:text="note"/>
 
-</RelativeLayout>
+    <TextView
+        android:id="@+id/item_gist_created"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+        tools:text="2017-04-01T19:30:18Z"/>
+
+</LinearLayout>

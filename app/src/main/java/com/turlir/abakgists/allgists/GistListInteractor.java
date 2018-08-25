@@ -1,120 +1,108 @@
 package com.turlir.abakgists.allgists;
 
-import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
+import android.support.annotation.NonNull;
+
 import com.turlir.abakgists.api.Repository;
-import com.turlir.abakgists.api.data.GistLocal;
 import com.turlir.abakgists.api.data.GistMapper;
+import com.turlir.abakgists.api.data.ListGistMapper;
 import com.turlir.abakgists.model.GistModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import rx.Observable;
-import rx.functions.Action1;
-import rx.functions.Func1;
+import io.reactivex.Flowable;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 public class GistListInteractor {
 
-    static final int IGNORE_SIZE = -1;
-    private static final float PAGE_SIZE = 30;
-
     private final Repository mRepo;
-    private final List<GistModel> mData;
-    private final GistMapper.Local mTransformer;
+    private final ListGistMapper.Local mTransformer = new ListGistMapper.Local(new GistMapper.Local());
+
+    @NonNull
+    Range range;
 
     public GistListInteractor(Repository repo) {
         mRepo = repo;
-        mData = new ArrayList<>();
-        mTransformer = new GistMapper.Local();
+        range = new Range(0, 30, 15);
     }
 
-    List<GistModel> accumulator() {
-        return new ArrayList<>(mData); // shadow copy
-    }
-
-    void resetAccumulator() {
-        mData.clear();
-    }
-
-    /**
-     * Извлекает данные из кеша, при необходимости загружает их с сервера
-     *
-     * @param size количество уже загруженных элементов
-     * @return элементы представления
-     */
-    Observable<List<GistModel>> request(final int size) {
-        if (size == 0) {
-            mTransformer.setLocal(true);
-        }
-
-        return mRepo.load()
-                .flatMap(new Func1<List<GistLocal>, Observable<List<GistLocal>>>() {
-                    @Override
-                    public Observable<List<GistLocal>> call(List<GistLocal> gistModels) {
-                        if (gistModels.size() < size + 1) {
-                            mTransformer.setLocal(false);
-                            int page = Math.round(size / PAGE_SIZE) + 1;
-                            return mRepo.server(page);
-                        } else {
-                            return Observable.just(gistModels);
-                        }
+    public Flowable<List<GistModel>> firstPage() {
+        range = new Range(0, 30, 15);
+        return mRepo.database(range.count(), range.absStart)
+                .map(mTransformer)
+                .doOnNext(gistModels -> {
+                    Timber.d("from database (first time) loaded %d items, from %d in %d",
+                            gistModels.size(), range.absStart, range.absStop);
+                    if (gistModels.size() == 0) {
+                        Timber.d("needs load first %d items from server", range.count());
                     }
                 })
-                .map(new Func1<List<GistLocal>, List<GistModel>>() {
-                    @Override
-                    public List<GistModel> call(List<GistLocal> gistLocals) {
-                        final int originCacheSize = mData.size();
-
-                        for (int i = 0; i < gistLocals.size(); i++) {
-                            final GistLocal item = gistLocals.get(i);
-
-                            if (i + 1 > originCacheSize) { // новые данные в БД
-                                GistModel m = mTransformer.call(item);
-                                mData.add(m);
-
-                            } else { // обновление БД
-                                GistModel cache = mData.get(i);
-
-                                boolean changed =
-                                        !cache.description.equals(item.description) ||
-                                        !cache.note.equals(item.note);
-
-                                if (changed) {
-                                    Timber.d("%s recreated", cache);
-                                    mTransformer.setLocal(mData.get(i).isLocal);
-                                    mData.set(i, mTransformer.call(item));
-                                    // только один элемент из набора может измениться с обновлением
-                                    // i = originCacheSize;
-                                }
-                            }
-                        }
-
-                        return mData;
-                    }
+                .doOnComplete(() -> {
+                    Timber.d("database subscription complete");
                 })
-                .doOnError(throwable -> {
-                    try {
-                        Thread.sleep(3500);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                });
+                .doOnError(Timber::e)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
-    /**
-     * Обнвляет данные. Скачивает свежие данные с сервра, перезаписывает локальную базу
-     *
-     * @return сведения о записанных элементах
-     */
-    Observable<PutResults<GistLocal>> update() {
-        mTransformer.setLocal(false);
-        return mRepo.reload()
-                .doOnNext(new Action1<PutResults<GistLocal>>() {
-                    @Override
-                    public void call(PutResults<GistLocal> gistLocalPutResults) {
-                        // сохраняем кеш в RAM до успешного завершения сетевого запроса
-                        mData.clear();
-                    }
+
+    public Flowable<List<GistModel>> nextPage() {
+        range = range.next();
+        return mRepo.database(range.count(), range.absStart)
+                .map(mTransformer)
+                .doOnNext(gistModels -> {
+                    Timber.d("next page consist of %d items from database, %d - %d",
+                            gistModels.size(), range.absStart, range.absStop);
+                })
+                .doOnComplete(() -> {
+                    Timber.d("database subscription complete");
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnError(Timber::e);
+    }
+
+    public Single<Integer> server(LoadablePage page) {
+        return mRepo.server(page.number, page.size)
+                .doOnSuccess(count -> Timber.d("from server loaded %d items", count))
+                .doOnError(e -> Timber.e(e, "data error"))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Flowable<List<GistModel>> prevPage() {
+        range = range.prev();
+        return mRepo.database(range.count(), range.absStart)
+                .map(mTransformer)
+                .doOnNext(gistModels -> {
+                    Timber.d("prev page consist of %d items from database, %d - %d",
+                            gistModels.size(), range.absStart, range.absStop);
+                })
+                .doOnComplete(() -> {
+                    Timber.d("database subscription complete");
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnError(Timber::e);
+    }
+
+    public Single<Integer> loadAndReplace() {
+        range = new Range(0, 30, 15);
+        LoadablePage page = range.page();
+        return mRepo.reloadAllGist(page.number, page.size)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Flowable<List<GistModel>> requestWithNotes() {
+        return mRepo.notes()
+                .map(gistLocals -> {
+                    boolean tmp = mTransformer.isLocal();
+                    mTransformer.setLocal(true);
+                    List<GistModel> res = mTransformer.apply(gistLocals);
+                    mTransformer.setLocal(tmp);
+                    return res;
                 });
     }
 }

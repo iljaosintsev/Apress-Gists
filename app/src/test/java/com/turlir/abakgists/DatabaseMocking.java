@@ -1,23 +1,15 @@
 package com.turlir.abakgists;
 
+import android.arch.persistence.db.SupportSQLiteDatabase;
+import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.ContextWrapper;
 
 import com.google.common.io.Files;
-import com.pushtorefresh.storio.sqlite.SQLiteTypeMapping;
-import com.pushtorefresh.storio.sqlite.StorIOSQLite;
-import com.pushtorefresh.storio.sqlite.impl.DefaultStorIOSQLite;
-import com.turlir.abakgists.api.ApiClient;
-import com.turlir.abakgists.api.GistDatabaseHelper;
-import com.turlir.abakgists.api.GistLocalStorIoLogPutResolver;
-import com.turlir.abakgists.api.data.GistLocal;
-import com.turlir.abakgists.api.data.GistLocalStorIOSQLiteDeleteResolver;
-import com.turlir.abakgists.api.data.GistLocalStorIOSQLiteGetResolver;
 import com.turlir.abakgists.di.AppComponent;
 import com.turlir.abakgists.di.AppModule;
 import com.turlir.abakgists.di.DatabaseModule;
 import com.turlir.abakgists.di.PresenterModule;
-import com.turlir.abakgists.model.GistsTable;
 
 import org.robolectric.RuntimeEnvironment;
 
@@ -39,29 +31,19 @@ public class DatabaseMocking extends DaggerMockRule<AppComponent> {
                 new PresenterModule()
         );
 
-        GistDatabaseHelper helper = makeHelper("/test.sql");
-        SQLiteTypeMapping<GistLocal> typeMapping = SQLiteTypeMapping.<GistLocal>builder()
-                .putResolver(new GistLocalStorIoLogPutResolver()) // logger
-                .getResolver(new GistLocalStorIOSQLiteGetResolver())
-                .deleteResolver(new GistLocalStorIOSQLiteDeleteResolver())
-                .build();
-        DefaultStorIOSQLite instance = DefaultStorIOSQLite.builder()
-                .sqliteOpenHelper(helper)
-                .addTypeMapping(GistLocal.class, typeMapping)
-                .build();
-        provides(StorIOSQLite.class, instance);
+        substitutionDatabase("/test.sql", "test.sqlite");
 
-        providesMock(ApiClient.class);
-    }
+        AppDatabase database = Room.databaseBuilder(RuntimeEnvironment.application, AppDatabase.class, "test.sqlite")
+                .allowMainThreadQueries()
+                .build();
 
-    private GistDatabaseHelper makeHelper(final String name) {
-        substitutionDatabase(name, GistsTable.BASE_NAME);
-        return new GistDatabaseHelper(RuntimeEnvironment.application);
+        SupportSQLiteDatabase sqlite = database.getOpenHelper().getReadableDatabase();
+        String path = sqlite.getPath();
+        System.out.println("Path testing database " + path);
+        provides(AppDatabase.class, database);
     }
 
     private void substitutionDatabase(final String file, final String basename) {
-        String filePath = getClass().getResource(file).getFile();
-
         Context cnt = RuntimeEnvironment.application.getApplicationContext();
         String destinationPath = new ContextWrapper(cnt).getDatabasePath(basename).getAbsolutePath();
         File to = new File(destinationPath);
@@ -69,7 +51,7 @@ public class DatabaseMocking extends DaggerMockRule<AppComponent> {
         boolean isDirExists = new File(parent).exists();
         assertTrue(isDirExists);
 
-        File from = new File(filePath);
+        File from = new File(getClass().getResource(file).getFile());
         try {
             Files.copy(from, to);
         } catch (IOException e) {

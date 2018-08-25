@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,21 +27,22 @@ import com.turlir.abakgists.base.erroring.ErrorInterpreter;
 import com.turlir.abakgists.gist.GistActivity;
 import com.turlir.abakgists.model.GistModel;
 import com.turlir.abakgists.widgets.DividerDecorator;
-import com.turlir.abakgists.widgets.SimpleScrollListener;
-import com.turlir.abakgists.widgets.SpaceDecorator;
+import com.turlir.abakgists.widgets.DownScroller;
 import com.turlir.abakgists.widgets.SwitchLayout;
+import com.turlir.abakgists.widgets.UpScroller;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.BindDimen;
 import butterknife.BindView;
+import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
+import timber.log.Timber;
 
 
 public class AllGistsFragment
         extends BaseFragment
-        implements OnClickListener, SimpleScrollListener.Paginator, ErrorInterpreter {
+        implements OnClickListener, DownScroller.NextPager, UpScroller.PrevPager, ErrorInterpreter {
 
     private static final int MIN_COUNT = 2;
 
@@ -55,23 +58,12 @@ public class AllGistsFragment
     @BindView(R.id.swipeLayout)
     SwipeRefreshLayout swipe;
 
-    @BindDimen(R.dimen.activity_horizontal_margin)
-    int sideMargin;
-
-    @BindDimen(R.dimen.activity_horizontal_margin)
-    int topMargin;
-
-    @BindDimen(R.dimen.list_item_bottom_margin)
-    int bottomMargin;
-
     private AllGistAdapter mAdapter;
+    private DownScroller mForwardScrollListener;
+    private UpScroller mBackwardScrollListener;
 
     private final SwipeRefreshLayout.OnRefreshListener mSwipeListener = () -> {
         _presenter.updateGist();
-
-        recycler.clearOnScrollListeners();
-        RecyclerView.OnScrollListener scroller = new SimpleScrollListener(AllGistsFragment.this);
-        recycler.addOnScrollListener(scroller);
     };
 
     @Override
@@ -82,7 +74,7 @@ public class AllGistsFragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saved) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle saved) {
         View root = inflater.inflate(R.layout.fragment_all_gists, container, false);
         butterKnifeBind(root);
 
@@ -102,16 +94,15 @@ public class AllGistsFragment
                 DividerDecorator.TOP_DIVIDER
         );
         recycler.addItemDecoration(divider);
-        SpaceDecorator space = new SpaceDecorator(sideMargin, topMargin, sideMargin, bottomMargin);
-        recycler.addItemDecoration(space);
 
-        RecyclerView.OnScrollListener scroller = new SimpleScrollListener(this);
-        recycler.addOnScrollListener(scroller);
+        mForwardScrollListener = new DownScroller(this);
+        recycler.addOnScrollListener(mForwardScrollListener);
+        mBackwardScrollListener = new UpScroller(this);
+        recycler.addOnScrollListener(mBackwardScrollListener);
 
-        recycler.setItemAnimator(new GistListItemAnimator());
+        recycler.setItemAnimator(new SlideInLeftAnimator());
 
         // start
-        this.root.toLoading();
         TextView tv = root.findViewById(R.id.in_loading_tv);
         Drawable[] pd = tv.getCompoundDrawables();
         for (Drawable drawable : pd) {
@@ -124,12 +115,12 @@ public class AllGistsFragment
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (savedInstanceState != null) {
-            _presenter.again();
+           // _presenter.again(); // TODO
         } else {
-            _presenter.first();
+            _presenter.firstLoad();
         }
     }
 
@@ -159,23 +150,28 @@ public class AllGistsFragment
         }
     }
 
-    @Override
-    public void onContinuesClick() {
-        mAdapter.replaceInlineErrorToLoading();
-        _presenter.loadPublicGists(mAdapter.getItemCount() - 1);
-    }
-
     ///
     /// Presenter
     ///
 
-    public void onGistLoaded(List<GistModel> value) {
-        root.toContent();
+    public void onGistLoaded(List<GistModel> value, boolean resetForward, boolean resetBackward) {
+        Timber.d("%d elements put in ui, %s resetForward, %s resetBackward", value.size(), resetForward, resetBackward);
         if (!isEmpty()) {
             mAdapter.removeLastIfLoading();
             swipe.setRefreshing(false);
         }
-        mAdapter.addGist(value);
+        mAdapter.resetGists(value);
+        if (resetForward) {
+            mForwardScrollListener.reset();
+        }
+        if (resetBackward) {
+            mBackwardScrollListener.reset();
+        }
+    }
+
+    private void resetScroller() {
+        mForwardScrollListener.reset();
+        mBackwardScrollListener.reset();
     }
 
     public void onUpdateSuccessful() {
@@ -188,21 +184,19 @@ public class AllGistsFragment
     }
 
     ////
-    //// Paginator
+    //// Pager(s)
     ////
 
     @Override
-    public boolean isRefreshing() {
-        boolean lastNotGist = mAdapter.getGistByPosition(mAdapter.getItemCount() - 1) == null;
-        return swipe.isRefreshing() || lastNotGist;
+    public void loadNextPage() {
+        Timber.i("scrolling initial request next page");
+        _presenter.nextPage();
     }
 
     @Override
-    public void loadNextPage() {
-        _presenter.loadPublicGists(mAdapter.getItemCount());
-        if (!isEmpty()) {
-            mAdapter.addLoading();
-        }
+    public void loadPrevPage() {
+        Timber.i("scrolling initial request previous page");
+        _presenter.prevPage();
     }
 
     @Override
@@ -217,7 +211,8 @@ public class AllGistsFragment
     @Override
     public void nonBlockingError(String msg) {
         swipe.setRefreshing(false);
-        mAdapter.replaceLoadingToInlineError();
+        Snackbar.make(recycler, msg, Snackbar.LENGTH_LONG).show();
+        resetScroller();
     }
 
     @Override
@@ -228,7 +223,6 @@ public class AllGistsFragment
     @Override
     public void blockingError(String msg) {
         swipe.setRefreshing(false);
-        root.toContent();
         mAdapter.clearAll(); // что бы ошибки не накапливались с обновлением
         mAdapter.addError(msg);
     }
@@ -236,5 +230,21 @@ public class AllGistsFragment
     @Override
     public String toString() {
         return "All Gists";
+    }
+
+    public void toBlockingLoad(boolean visible) {
+        if (visible) {
+            root.toLoading();
+        } else {
+            root.toContent();
+        }
+    }
+
+    public void inlineLoad(boolean visible) {
+        if (visible) {
+            mAdapter.addLoading(_presenter.trueSize());
+        } else {
+            mAdapter.removeLastIfLoading();
+        }
     }
 }

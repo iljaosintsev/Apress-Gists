@@ -2,6 +2,7 @@ package com.turlir.abakgists.allgists.view;
 
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.util.ListUpdateCallback;
@@ -64,8 +65,9 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
         return mContent.get(position).type(mFactory);
     }
 
+    @NonNull
     @Override
-    public ModelViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ModelViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = mInflater.inflate(viewType, parent, false);
 
         final ModelViewHolder holder = mFactory.holder(viewType, view);
@@ -80,7 +82,7 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(ModelViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ModelViewHolder holder, int position) {
         ViewModel item = mContent.get(position);
         //noinspection unchecked
         holder.bind(item);
@@ -110,7 +112,7 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
         return mFactory.instance(item);
     }
 
-    public void addGist(List<GistModel> value) {
+    public void resetGists(List<GistModel> value) {
         DiffUtil.DiffResult diff = DiffUtil.calculateDiff(new GistDiffCallback(mContent, value));
         diff.dispatchUpdatesTo(this);
         diff.dispatchUpdatesTo(mLoggerAdapterOperations);
@@ -137,44 +139,20 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
         notifyItemRangeRemoved(0, c);
     }
 
-    void addLoading() {
-        int s = mContent.size();
-        mContent.add(new LoadingModel(s));
-        notifyItemInserted(s + 1);
+    void addLoading(int viewed) {
+        mContent.add(new LoadingModel(viewed));
+        notifyItemInserted(mContent.size() + 1);
     }
 
     void removeLastIfLoading() {
         int i = getItemCount() - 1;
-        ViewModel last = getItemByPosition(i);
-        int type = last.type(mFactory);
-        if (type == R.layout.inline_loading) {
-            mContent.remove(i);
-            notifyItemRemoved(i);
-        }
-    }
-
-    void replaceLoadingToInlineError() {
-        int i = getItemCount() - 1;
-        ViewModel last = getItemByPosition(i);
-        int type = last.type(mFactory);
-        if (type == R.layout.inline_loading) {
-            View.OnClickListener listener = v -> mClick.onContinuesClick();
-            mContent.set(i, new InlineErrorModel(listener));
-            notifyItemChanged(i);
-        } else {
-            Timber.e("Illegal state: last element not loading");
-        }
-    }
-
-    void replaceInlineErrorToLoading() {
-        int i = getItemCount() - 1;
-        ViewModel last = getItemByPosition(i);
-        int type = last.type(mFactory);
-        if (type == R.layout.inline_error) {
-            mContent.set(i, new LoadingModel(i));
-            notifyItemChanged(i);
-        } else {
-            Timber.e("Illegal state: last element not error");
+        if (i > 0) {
+            ViewModel last = getItemByPosition(i);
+            int type = last.type(mFactory);
+            if (type == R.layout.inline_loading) {
+                mContent.remove(i);
+                notifyItemRemoved(i);
+            }
         }
     }
 
@@ -205,10 +183,10 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
             if (oldModel != null) {
                 GistModel now = mNowList.get(newItemPosition);
                 boolean diff = now.isDifferent(oldModel);
-                if (diff) Timber.v("items different %d - %d", oldItemPosition, newItemPosition);
+                //if (diff) Timber.v("items different %d - %d", oldItemPosition, newItemPosition);
                 return !diff;
             } else {
-                Timber.v("items incomparable %d - %d", oldItemPosition, newItemPosition);
+                //Timber.v("items incomparable %d - %d", oldItemPosition, newItemPosition);
                 return false;
             }
         }
@@ -218,7 +196,7 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
             ViewModel old = mOldList.get(oldItemPosition);
             ViewModel now = mNowList.get(newItemPosition);
             boolean equals = old.equals(now);
-            if (!equals) Timber.v("contents different %d - %d", oldItemPosition, newItemPosition);
+            //if (!equals) Timber.v("contents different %d - %d", oldItemPosition, newItemPosition);
             return equals;
         }
     }

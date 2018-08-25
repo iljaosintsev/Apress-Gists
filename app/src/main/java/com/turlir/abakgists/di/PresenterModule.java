@@ -1,14 +1,12 @@
 package com.turlir.abakgists.di;
 
 
-import com.pushtorefresh.storio.sqlite.StorIOSQLite;
+import com.turlir.abakgists.AppDatabase;
 import com.turlir.abakgists.allgists.AllGistsPresenter;
 import com.turlir.abakgists.allgists.GistListInteractor;
 import com.turlir.abakgists.api.Repository;
-import com.turlir.abakgists.allinone.AllInOnePresenter;
 import com.turlir.abakgists.gist.EqualsSolver;
 import com.turlir.abakgists.gist.GistPresenter;
-import com.turlir.abakgists.notes.NotesInteractor;
 import com.turlir.abakgists.notes.NotesPresenter;
 
 import javax.inject.Singleton;
@@ -25,11 +23,6 @@ public class PresenterModule {
     }
 
     @Provides
-    public NotesInteractor provideNotesInteractor(Repository repo) {
-        return new NotesInteractor(repo);
-    }
-
-    @Provides
     @Singleton
     public AllGistsPresenter provideAllGistsPresenter(GistListInteractor interactor) {
         return new AllGistsPresenter(interactor);
@@ -37,20 +30,13 @@ public class PresenterModule {
 
     @Provides
     @Singleton
-    public NotesPresenter provideNotesPresenter(NotesInteractor interactor) {
+    public NotesPresenter provideNotesPresenter(GistListInteractor interactor) {
         return new NotesPresenter(interactor);
     }
 
     @Provides
     @Singleton
-    public GistPresenter provideGistPresenter(StorIOSQLite base) {
-        return new GistPresenter(base, new EqualsSolver());
+    public GistPresenter provideGistPresenter(AppDatabase room) {
+        return new GistPresenter(new EqualsSolver(), room.gistDao());
     }
-
-    @Provides
-    @Singleton
-    public AllInOnePresenter provideAllInOnePresenter(StorIOSQLite base) {
-        return new AllInOnePresenter(base);
-    }
-
 }

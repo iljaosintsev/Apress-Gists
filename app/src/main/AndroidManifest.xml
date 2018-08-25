@@ -34,7 +34,7 @@
             android:label="@string/notes"/>
 
         <activity
-            android:name=".allinone.AllInOneActivity"
+            android:name=".AllInOneActivity"
             android:label="@string/all_in_one"
             android:theme="@style/AllInOneTheme">
             <intent-filter>

@@ -1,41 +1,44 @@
 package com.turlir.abakgists.api.data;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 
-import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteColumn;
-import com.pushtorefresh.storio.sqlite.annotations.StorIOSQLiteType;
 import com.turlir.abakgists.model.GistsTable;
 
-@StorIOSQLiteType(table = GistsTable.GISTS)
+@Entity(tableName = GistsTable.BASE_NAME)
 public class GistLocal {
 
-    @StorIOSQLiteColumn(name = GistsTable.ID, key = true)
+    @ColumnInfo(name = GistsTable.ID)
+    @PrimaryKey
     @NonNull
     public String id;
 
-    @StorIOSQLiteColumn(name = GistsTable.URL)
+    @ColumnInfo(name = GistsTable.URL)
     @NonNull
     public String url;
 
-    @StorIOSQLiteColumn(name = GistsTable.CREATED)
+    @ColumnInfo(name = GistsTable.CREATED)
     @NonNull
     public String created;
 
-    @StorIOSQLiteColumn(name = GistsTable.DESC)
+    @ColumnInfo(name = GistsTable.DESC)
     @NonNull
     public String description;
 
-    @StorIOSQLiteColumn(name = GistsTable.OWNER_LOGIN)
+    @ColumnInfo(name = GistsTable.OWNER_LOGIN)
     @Nullable
     public String ownerLogin;
 
-    @StorIOSQLiteColumn(name = GistsTable.OWNER_AVATAR)
+    @ColumnInfo(name = GistsTable.OWNER_AVATAR)
     @Nullable
     public String ownerAvatarUrl;
 
-    @StorIOSQLiteColumn(name = GistsTable.NOTE)
+    @ColumnInfo(name = GistsTable.NOTE)
     @NonNull
     public String note;
 
@@ -44,16 +47,19 @@ public class GistLocal {
         // for storio, don`t use
     }
 
+    @Ignore
     public GistLocal(@NonNull String id, @NonNull String url, @NonNull String created,
                      @NonNull String description) {
         this(id, url, created, description, "", null);
     }
 
+    @Ignore
     public GistLocal(@NonNull String id, @NonNull String url, @NonNull String created,
                      @NonNull String description, @Nullable String ownerLogin, @Nullable String ownerAvatarUrl) {
         this(id, url, created, description, "", ownerLogin, ownerAvatarUrl);
     }
 
+    @Ignore
     public GistLocal(@NonNull String id, @NonNull String url, @NonNull String created,
                      @NonNull String description, @NonNull String note, @Nullable String ownerLogin,
                      @Nullable String ownerAvatarUrl) {
@@ -67,6 +73,7 @@ public class GistLocal {
     }
 
     @VisibleForTesting
+    @Ignore
     public GistLocal(GistLocal other) {
         this(other.id, other.url, other.created, other.description);
         note = other.note;

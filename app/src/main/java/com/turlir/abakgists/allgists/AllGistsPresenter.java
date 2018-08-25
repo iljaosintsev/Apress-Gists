@@ -1,114 +1,129 @@
 package com.turlir.abakgists.allgists;
 
 
-import android.support.annotation.NonNull;
+import android.content.res.Resources;
 
-import com.pushtorefresh.storio.sqlite.operations.put.PutResults;
+import com.turlir.abakgists.allgists.combination.ErrorProcessor;
+import com.turlir.abakgists.allgists.combination.ListManipulator;
 import com.turlir.abakgists.allgists.view.AllGistsFragment;
-import com.turlir.abakgists.api.data.GistLocal;
 import com.turlir.abakgists.base.BasePresenter;
 import com.turlir.abakgists.base.erroring.ErrorInterpreter;
-import com.turlir.abakgists.base.erroring.ErrorSituation;
+import com.turlir.abakgists.base.erroring.ErrorSelector;
 import com.turlir.abakgists.base.erroring.RepeatingError;
+import com.turlir.abakgists.base.erroring.TroubleSelector;
 import com.turlir.abakgists.model.GistModel;
 
 import java.util.List;
 
-import rx.Subscription;
 import timber.log.Timber;
 
 public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
 
-    private final GistListInteractor mInteractor;
-
-    private Subscription mCacheSubs;
+    private final GistLoader mLoader;
+    private final ErrorSelector mSelector;
+    private final ErrorProcessor mProcessor;
 
     public AllGistsPresenter(GistListInteractor interactor) {
-        mInteractor = interactor;
+        mSelector = new TroubleSelector(new RepeatingError());
+        mProcessor = new ErrorCallback();
+        mLoader = new GistLoader(interactor, new LoaderCallback());
     }
 
-    /**
-     * из локального кеша или сетевого запроса
-     *
-     */
-    public void loadPublicGists(final int currentSize) {
-        removeCacheSubs();
-        Subscription subs = mInteractor.request(currentSize)
-                .compose(this.<List<GistModel>>defaultScheduler())
-                .subscribe(new GistDownloadHandler<List<GistModel>>() {
-                    @Override
-                    public void onNext(List<GistModel> value) {
-                        if (getView() != null) {
-                            Timber.d("onNext %d", value.size());
-                            getView().onGistLoaded(value);
-                        }
-                    }
-                });
-        addCacheSubs(subs);
+    @Override
+    public void detach() {
+        super.detach();
+        mLoader.stop();
+    }
+
+    public int trueSize() {
+        return mLoader.size();
+    }
+
+    public void firstLoad() {
+        mLoader.firstPage();
+    }
+
+    public void nextPage() {
+        mLoader.nextPage();
+    }
+
+    public void prevPage() {
+        mLoader.prevPage();
     }
 
     public void updateGist() {
-        removeCacheSubs();
-        Subscription subs = mInteractor.update()
-                .compose(this.<PutResults<GistLocal>>defaultScheduler())
-                .subscribe(new GistDownloadHandler<PutResults<GistLocal>>() {
-                    @Override
-                    public void onNext(PutResults<GistLocal> gistModelPutResults) {
-                        if (getView() != null) {
-                            getView().onUpdateSuccessful();
-                            loadPublicGists(GistListInteractor.IGNORE_SIZE);
-                        }
-                    }
-                });
-        addSubscription(subs);
+        mLoader.updateGist();
     }
 
-    public void first() {
-        mInteractor.resetAccumulator();
-        loadPublicGists(0);
-    }
+    private class LoaderCallback implements ListManipulator<GistModel> {
 
-    public void again() {
-        if (getView() != null) {
-            getView().onGistLoaded(mInteractor.accumulator());
-        }
-        loadPublicGists(GistListInteractor.IGNORE_SIZE);
-    }
-
-    private void removeCacheSubs() {
-        if (mCacheSubs != null && !mCacheSubs.isUnsubscribed()) {
-            removeSubscription(mCacheSubs);
-        }
-    }
-
-    private void addCacheSubs(Subscription subs) {
-        mCacheSubs = subs;
-        addSubscription(mCacheSubs);
-    }
-
-    private abstract class GistDownloadHandler<E> extends ErrorHandler<E> {
-
-        @NonNull
         @Override
-        protected ErrorSituation[] additionalSituation() {
-            return new ErrorSituation[] { new RepeatingError() };
+        public void blockingLoad(boolean visible) {
+            if (getView() != null) {
+                Timber.v("blockingLoad %s", visible);
+                getView().toBlockingLoad(visible);
+            }
         }
 
         @Override
-        protected boolean isError() {
-            return getView() != null && getView().isError();
+        public void inlineLoad(boolean visible) {
+            if (getView() != null) {
+                Timber.v("inlineLoad %s", visible);
+                getView().inlineLoad(visible);
+            }
         }
 
         @Override
-        protected boolean isDataAvailable() {
+        public void renderData(List<GistModel> items) {
+            if (getView() != null) {
+                Timber.v("renderData %s", items.size());
+                boolean shouldReset = mLoader.isDifferent(items.get(items.size() - 1));
+                boolean forward = shouldReset && mLoader.canNext();
+                boolean backward = shouldReset && mLoader.canPrevious();
+                getView().onGistLoaded(items, forward, backward);
+            }
+        }
+
+        @Override
+        public void emptyData(boolean visible) {
+            // not impl
+       }
+
+        @Override
+        public ErrorProcessor getErrorProcessor() {
+            return mProcessor;
+        }
+    }
+
+    private class ErrorCallback implements ErrorProcessor {
+
+        @Override
+        public ErrorSelector getErrorSelector() {
+            return mSelector;
+        }
+
+        @Override
+        public ErrorInterpreter interpreter() {
+            return getView();
+        }
+
+        @Override
+        public boolean dataAvailable() {
             return getView() != null && !getView().isEmpty();
         }
 
         @Override
-        protected ErrorInterpreter interpreter() {
-            return getView();
+        public boolean isError() {
+            return getView() != null && getView().isError();
+        }
+
+        @Override
+        public Resources getResources() {
+            if (getView() != null) {
+                return getView().getResources();
+            }
+            return null;
         }
 
     }
-
 }

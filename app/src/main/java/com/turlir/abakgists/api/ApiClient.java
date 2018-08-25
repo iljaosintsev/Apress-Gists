@@ -2,28 +2,21 @@ package com.turlir.abakgists.api;
 
 
 import com.turlir.abakgists.api.data.GistJson;
-import com.turlir.abakgists.api.data.GistOwnerJson;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.UUID;
 
+import io.reactivex.Single;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import rx.Observable;
 
 public class ApiClient {
 
     private static final String URL = "https://api.github.com";
-    private final GitHubService mApi;
 
-    private static final SimpleDateFormat SERVER_FORMAT
-            = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss", Locale.getDefault());
+    private final GitHubService mApi;
+    private final Shift mShift;
 
     public ApiClient(OkHttpClient okhttp) {
         GsonConverterFactory factory = GsonConverterFactory.create();
@@ -31,36 +24,41 @@ public class ApiClient {
                 .baseUrl(URL)
                 .client(okhttp)
                 .addConverterFactory(factory)
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
 
         mApi = retrofit.create(GitHubService.class);
+        mShift = new Shift();
     }
 
-    public Observable<List<GistJson>> publicGist(int page) {
-        if (page < 2) {
-            return mApi.publicGist(page);
-        } else {
-            List<GistJson> list = generateResponse();
-            return Observable.just(list);
+    public Single<List<GistJson>> publicGist(final int page, final int perPage) {
+        int nowPage = mShift.shift(page, perPage);
+        //int _perPage = endOfList(perPage, nowPage);
+        return mApi.publicGist(nowPage, perPage)
+                .doOnSuccess(new LagSideEffect())
+                .doOnError(new LagSideEffect());
+    }
+
+    private int endOfList(int perPage, int nowPage) {
+        if (nowPage < 18 && perPage == 15) {
+            return perPage - 5;
+        }
+        return perPage;
+    }
+
+    static class Shift {
+        private static final int MAX_PAGE = 20;
+        private static final int PER_PAGE = 15;
+
+        public int shift(int page, int perPage) {
+            if (perPage == PER_PAGE) {
+                page = MAX_PAGE - page + 1;
+                return page;
+            } else {
+                int scaled = perPage / 15;
+                int demo = MAX_PAGE / scaled;
+                return demo - page + 1;
+            }
         }
     }
-
-    private List<GistJson> generateResponse() {
-        List<GistJson> list = new ArrayList<>(30);
-        for (int i = 0; i < 30; i++) {
-            GistJson json = new GistJson();
-            json.id = UUID.randomUUID().toString();
-            json.url = "https://status.github.com/messages";
-            json.created = SERVER_FORMAT.format(new Date());
-            json.description = "";
-            json.owner = new GistOwnerJson(
-                    "personal generator",
-                    "https://avatars1.githubusercontent.com/u/3526847"
-            );
-            list.add(json);
-        }
-        return list;
-    }
-
 }

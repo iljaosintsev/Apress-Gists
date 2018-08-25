@@ -24,5 +24,8 @@
     <string name="there_changes">There are changes</string>
     <string name="save_quest">Do you want to save the changes?</string>
     <string name="try_now">Try now</string>
+    <string name="title_activity_room">RoomActivity</string>
+    <string name="delete">Delete</string>
+    <string name="ownerLogin">%1$s (%2$s)</string>
 
 </resources>

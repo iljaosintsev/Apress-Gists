@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.turlir.abakgists.allgists.view.AllGistsActivity;
-import com.turlir.abakgists.allinone.AllInOneActivity;
 import com.turlir.abakgists.notes.view.NotesActivity;
 import com.turlir.abakgists.view.anim.base.Factory;
 import com.turlir.abakgists.view.anim.creator.Setting;
