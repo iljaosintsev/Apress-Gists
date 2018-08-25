@@ -15,7 +15,7 @@ public interface GistLocalDao {
     @Query("SELECT * FROM gists_db")
     Flowable<List<GistLocal>> all();
 
-    @Query("SELECT * FROM gists_db LIMIT :limit OFFSET :offset")
+    @Query("SELECT * FROM gists_db ORDER BY datetime(created) LIMIT :limit OFFSET :offset")
     Flowable<List<GistLocal>> partial(int limit, int offset);
 
     @Insert()
