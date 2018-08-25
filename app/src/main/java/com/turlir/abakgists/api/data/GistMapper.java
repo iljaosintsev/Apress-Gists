@@ -11,16 +11,14 @@ public class GistMapper {
 
     public static class Json implements Function<GistJson, GistLocal> {
 
-        private int mInt;
-
         @Override
         public GistLocal apply(GistJson item) {
             String desc = safeAssign(item.description);
             GistOwnerJson o = item.owner;
             if (o != null) {
-                return new GistLocal(String.valueOf(++mInt), item.url, item.created, desc, o.login, o.avatarUrl);
+                return new GistLocal(item.id, item.url, item.created, desc, o.login, o.avatarUrl);
             } else {
-                return new GistLocal(String.valueOf(++mInt), item.url, item.created, desc, null, null);
+                return new GistLocal(item.id, item.url, item.created, desc, null, null);
             }
         }
     }
