@@ -46,8 +46,7 @@ class GistLoader {
                     if (gistModels.size() == 0 && !isEnded) {
                         LoadablePage page = range.page();
                         server(page);
-                    }
-                    if (gistModels.size() > 0) {
+                    } else {
                         changeState(mState.content(gistModels));
                         mLast = gistModels.get(gistModels.size() - 1);
                         //isEnded = range.count() != gistModels.size();
