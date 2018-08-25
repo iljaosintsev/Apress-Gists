@@ -1,6 +1,10 @@
 package com.turlir.abakgists.base;
 
+import android.widget.ImageView;
+
+import com.turlir.abakgists.model.GistModel;
+
 public interface OnClickListener {
-    void onListItemClick(int position);
+    void onListItemClick(GistModel model, ImageView ivAvatar);
 }
 

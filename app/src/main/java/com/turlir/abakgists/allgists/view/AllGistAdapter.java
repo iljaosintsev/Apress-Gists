@@ -74,7 +74,10 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
         holder.itemView.setOnClickListener(v -> {
             int position = holder.getAdapterPosition();
             if (position != RecyclerView.NO_POSITION) {
-                mClick.onListItemClick(position);
+                GistModel g = getGistByPosition(position);
+                if (g != null) {
+                    mClick.onListItemClick(g, ((GistModelHolder) holder).ivAvatar);
+                }
             }
         });
 

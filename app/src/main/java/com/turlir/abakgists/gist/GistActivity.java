@@ -10,14 +10,16 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
-import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.turlir.abakgists.R;
 import com.turlir.abakgists.base.App;
@@ -198,12 +200,23 @@ public class GistActivity extends BaseActivity {
     }
 
     private void applyContent(GistModel content) {
+        supportPostponeEnterTransition();
         Picasso.with(GistActivity.this)
                 .load(content.ownerAvatarUrl)
                 .fit()
                 .error(R.drawable.ic_github)
-                .placeholder(R.drawable.ic_github)
-                .into(avatar);
+                .networkPolicy(NetworkPolicy.OFFLINE)
+                .priority(Picasso.Priority.HIGH)
+                .into(avatar, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        supportStartPostponedEnterTransition();
+                    }
+                    @Override
+                    public void onError() {
+                        supportStartPostponedEnterTransition();
+                    }
+                });
 
         tvLogin.setText(content.login(getContext()));
 

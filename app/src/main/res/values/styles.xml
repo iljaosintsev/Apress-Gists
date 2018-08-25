@@ -7,6 +7,8 @@
 
         <item name="android:textColorPrimary">@color/textColorPrimaryInverse</item>
         <item name="android:textColorPrimaryInverse">@color/textColorPrimary</item>
+
+        <item name="android:windowContentTransitions">true</item>
     </style>
 
     <style name="AllInOneTheme" parent="Theme.AppCompat.NoActionBar">

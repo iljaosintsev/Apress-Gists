@@ -27,4 +27,6 @@
     <string name="title_activity_room">RoomActivity</string>
     <string name="delete">Delete</string>
 
+    <string name="avatar_transition_tag">avatar_transition_tag</string>
+
 </resources>
