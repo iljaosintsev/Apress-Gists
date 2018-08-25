@@ -8,6 +8,7 @@
     <dimen name="list_item_bottom_margin">20dp</dimen>
     <dimen name="divider_height">2dp</dimen>
     <dimen name="number_tv_padding">4dp</dimen>
-    <dimen name="avatar_size">56dp</dimen>
+    <dimen name="small_avatar_size">56dp</dimen>
+    <dimen name="avatar_size">72dp</dimen>
     <dimen name="indicator_size">12dp</dimen>
 </resources>
