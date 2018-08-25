@@ -2,8 +2,10 @@ package com.turlir.abakgists.allgists.view;
 
 
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.turlir.abakgists.R;
 import com.turlir.abakgists.model.GistModel;
 
@@ -12,6 +14,9 @@ import butterknife.ButterKnife;
 import timber.log.Timber;
 
 class GistModelHolder extends ModelViewHolder<GistModel> {
+
+    @BindView(R.id.item_gist_avatar)
+    ImageView ivAvatar;
 
     @BindView(R.id.item_gist_id)
     TextView tvId;
@@ -39,10 +44,16 @@ class GistModelHolder extends ModelViewHolder<GistModel> {
         } else {
             prefix = item.ownerLogin;
         }
-        tvId.setText(tvId.getResources().getString(R.string.ownerLogin, prefix, item.id));
+        tvId.setText(prefix);
         tvCreated.setText(item.created);
         tvNote.setText(item.note);
         tvDesc.setText(item.description);
+        Picasso.with(ivAvatar.getContext())
+                .load(item.ownerAvatarUrl)
+                .fit()
+                .error(R.drawable.ic_github)
+                .placeholder(R.drawable.ic_github)
+                .into(ivAvatar);
     }
 
 }
