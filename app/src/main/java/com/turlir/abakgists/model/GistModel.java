@@ -33,7 +33,7 @@ public class GistModel
     @NonNull
     public final String note;
 
-    public final boolean isLocal;
+    private final boolean isLocal;
 
     public static final Parcelable.Creator<GistModel> CREATOR = new Parcelable.Creator<GistModel>() {
         @Override
@@ -140,12 +140,16 @@ public class GistModel
 
     @Override
     public String toString() {
-        return "GistModel{" +
-               "id='" + id + '\'' +
-               ", description='" + description + '\'' +
-               ", note='" + note + '\'' +
-               ", isLocal=" + isLocal +
-               '}';
+        return new StringBuilder("GistModel {")
+                .append(" id=").append(id).append(",\n")
+                .append(" url=").append(url).append(",\n")
+                .append(" created=").append(created).append(",\n")
+                .append(" description=").append(description).append(",\n")
+                .append(" ownerLogin=").append(ownerLogin).append(",\n")
+                .append(" ownerAvatarUrl=").append(ownerAvatarUrl).append(",\n")
+                .append(" note=").append(note).append(",\n")
+                .append(" isLocal=").append(isLocal).append(",\n")
+                .append('}').toString();
     }
 
     @Override
@@ -157,6 +161,7 @@ public class GistModel
         result = 167 * result + (ownerLogin != null ? ownerLogin.hashCode() : 0);
         result = 167 * result + (ownerAvatarUrl != null ? ownerAvatarUrl.hashCode() : 0);
         result = 167 * result + note.hashCode();
+        result = 167 * result + (isLocal ? 1 : 0);
         return result;
     }
 
@@ -185,7 +190,9 @@ public class GistModel
             if (gistModel.ownerAvatarUrl != null) return false;
         }
 
-        return note.equals(gistModel.note);
+        if (!note.equals(gistModel.note)) return false;
+
+        return isLocal == gistModel.isLocal;
     }
 
 }

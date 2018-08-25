@@ -4,6 +4,7 @@ package com.turlir.abakgists;
 import com.turlir.abakgists.api.data.GistJson;
 import com.turlir.abakgists.api.data.GistLocal;
 import com.turlir.abakgists.api.data.GistOwnerJson;
+import com.turlir.abakgists.model.GistModel;
 
 public interface Data {
 
@@ -15,6 +16,29 @@ public interface Data {
             "note",
             "iljaosintsev",
             "https://avatars1.githubusercontent.com/u/3526847?v=3"
+    );
+
+    GistModel LOCAL_STUB_FALSE = new GistModel(
+            "85547e4878dd9a573215cd905650f284",
+            "https://api.github.com/gists/85547e4878dd9a573215cd905650f284",
+            "27 апреля 2017, 09:54",
+            "Part of setTextByParts",
+            "iljaosintsev",
+            "https://avatars1.githubusercontent.com/u/3526847?v=3",
+            "note",
+            false
+    );
+
+
+    GistModel LOCAL_STUB_TRUE = new GistModel(
+            "85547e4878dd9a573215cd905650f284",
+            "https://api.github.com/gists/85547e4878dd9a573215cd905650f284",
+            "27 апреля 2017, 09:54",
+            "Part of setTextByParts",
+            "iljaosintsev",
+            "https://avatars1.githubusercontent.com/u/3526847?v=3",
+            "note",
+            true
     );
 
     GistJson SERVER_STUB = new GistJson(

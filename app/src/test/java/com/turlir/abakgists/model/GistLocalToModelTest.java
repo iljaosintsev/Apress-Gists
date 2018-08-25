@@ -6,6 +6,8 @@ import com.turlir.abakgists.api.data.GistMapper;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Locale;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -15,24 +17,23 @@ public class GistLocalToModelTest {
 
     @Before
     public void setup() {
-        mapper = new GistMapper.Local();
+        mapper = new GistMapper.Local(Locale.forLanguageTag("ru-RU"));
     }
 
     @Test
     public void simpleTest() {
-        GistModel actual = mapper.call(Data.LOCAL_STUB);
+        mapper.isLocal = false;
+        GistModel actual = mapper.apply(Data.LOCAL_STUB);
         assertNotNull(actual);
-
-        assertEquals(Data.USER_STUB_F, actual);
+        assertEquals(Data.LOCAL_STUB_FALSE, actual);
     }
 
     @Test
     public void localFlagTest() {
-        mapper.setLocal(true);
-        GistModel actual = mapper.call(Data.LOCAL_STUB);
+        mapper.isLocal = true;
+        GistModel actual = mapper.apply(Data.LOCAL_STUB);
         assertNotNull(actual);
-
-        assertEquals(Data.USER_STUB_T, actual);
+        assertEquals(Data.LOCAL_STUB_TRUE, actual);
     }
 
 
