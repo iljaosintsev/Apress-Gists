@@ -34,7 +34,7 @@ public class AppModule {
         OkHttp3Downloader network = new OkHttp3Downloader(client);
         Picasso pic = new Picasso.Builder(cnt)
                 .indicatorsEnabled(BuildConfig.DEBUG)
-                .loggingEnabled(BuildConfig.DEBUG)
+                .loggingEnabled(false)
                 .downloader(network)
                 .build();
         Picasso.setSingletonInstance(pic);
