@@ -36,11 +36,7 @@
         <activity
             android:name=".AllInOneActivity"
             android:label="@string/all_in_one"
-            android:theme="@style/AllInOneTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-            </intent-filter>
-        </activity>
+            android:theme="@style/AllInOneTheme"/>
 
     </application>
 
