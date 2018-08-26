@@ -14,6 +14,7 @@ import java.util.List;
 
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.ResourceSingleObserver;
+import io.reactivex.subscribers.DisposableSubscriber;
 import timber.log.Timber;
 
 class GistLoader {
@@ -41,20 +42,7 @@ class GistLoader {
         mState.perform();
 
         mDatabaseConnection = mInteractor.firstPage()
-                .subscribe(gistModels -> {
-                    final Range range = mInteractor.range;
-                    if (gistModels.size() == 0 && !isEnded) {
-                        LoadablePage page = range.page();
-                        server(page);
-                    } else {
-                        changeState(mState.content(gistModels));
-                        mLast = gistModels.get(gistModels.size() - 1);
-                        //isEnded = range.count() != gistModels.size();
-                    }
-
-                }, t -> {
-                    changeState(mState.error(t));
-                });
+                .subscribeWith(new DatabaseSubscriber(true));
     }
 
     void nextPage() {
@@ -64,39 +52,7 @@ class GistLoader {
         }
         mDatabaseConnection.dispose();
         mDatabaseConnection = mInteractor.nextPage()
-                .subscribe(nextItems -> {
-                    onNextItems(nextItems);
-                }, t -> {
-                    changeState(mState.error(t));
-                });
-    }
-
-    private void onNextItems(List<GistModel> nextItems) {
-        if (!canLoad()) { // loading in process
-            Timber.d("updating list when loading the next page");
-            mState.content(nextItems).perform(); // side effect without state change
-            mState.perform(); // repeat loading
-            mLast = nextItems.get(nextItems.size() - 1);
-            return;
-        } else {
-            Timber.d("updating list direct");
-            changeState(mState.content(nextItems)); // perform
-        }
-
-        int nowSize = nextItems.size();
-        boolean lessThan = nowSize < mInteractor.range.count();
-        GistModel lastItem = nextItems.get(nowSize - 1);
-        boolean eqLast = mLast == null || !lastItem.isDifferent(mLast);
-        mLast = lastItem;
-
-        if (lessThan && canNext() && eqLast) {
-            Range already = mInteractor.range.cut(mInteractor.range.addition);
-            Range required = mInteractor.range.diff(already);
-            LoadablePage page = required.page();
-            Timber.d("download required %d th page in %d items", page.number, page.size);
-            server(page);
-            changeState(mState.doLoad());
-        }
+                .subscribeWith(new DatabaseSubscriber(false));
     }
 
     void prevPage() {
@@ -106,18 +62,11 @@ class GistLoader {
         }
         mDatabaseConnection.dispose();
         mDatabaseConnection = mInteractor.prevPage()
-                .doOnNext(nextItems -> {
-                    isEnded = false;
-                })
-                .subscribe(nextItems -> {
-                    changeState(mState.content(nextItems));
-                    mLast = nextItems.get(nextItems.size() - 1);
-                }, t -> {
-                    changeState(mState.error(t));
-                });
+                .doOnNext(nextItems -> isEnded = false)
+                .subscribeWith(new DatabaseSubscriber(false));
     }
 
-    public void updateGist() {
+    void updateGist() {
         if (!canLoad()) return;
         changeState(mState.refresh());
         mDatabaseConnection.dispose();
@@ -152,6 +101,14 @@ class GistLoader {
         }
     }
 
+    boolean canNext() {
+        return canLoad() && mInteractor.range.hasNext() && !isEnded;
+    }
+
+    boolean canPrevious() {
+        return canLoad() && mInteractor.range.hasPrevious();
+    }
+
     private void server(LoadablePage page) {
         mInteractor.server(page)
                 .doOnSuccess(i -> {
@@ -174,6 +131,53 @@ class GistLoader {
                 });
     }
 
+    private void onNextItems(List<GistModel> nextItems, boolean isFirstPage) {
+        if (isFirstPage) {
+            itemsInFirstPage(nextItems);
+        } else {
+            suchNextItems(nextItems);
+        }
+    }
+
+    private void itemsInFirstPage(List<GistModel> nextItems) {
+        int nowSize = nextItems.size();
+        if (nowSize == 0) {
+            LoadablePage page = mInteractor.range.page();
+            server(page);
+        } else {
+            changeState(mState.content(nextItems));
+            mLast = nextItems.get(nextItems.size() - 1);
+        }
+    }
+
+    private void suchNextItems(List<GistModel> nextItems) {
+        int nowSize = nextItems.size();
+        if (!canLoad()) { // loading in process
+            Timber.d("updating list when loading the next page");
+            mState.content(nextItems).perform(); // side effect without state change
+            mState.perform(); // repeat loading
+            mLast = nextItems.get(nextItems.size() - 1);
+            return;
+        } else {
+            Timber.d("updating list direct");
+            changeState(mState.content(nextItems)); // perform
+        }
+
+        boolean lessThan = nowSize < mInteractor.range.count();
+        GistModel lastItem = nextItems.get(nowSize - 1);
+        boolean eqLast = mLast == null || !lastItem.isDifferent(mLast);
+        mLast = lastItem;
+
+        if (lessThan && canNext() && eqLast) {
+            Range already = mInteractor.range.cut(mInteractor.range.addition);
+            Range required = mInteractor.range.diff(already);
+            LoadablePage page = required.page();
+            Timber.d("download required %d th page in %d items", page.number, page.size);
+            server(page);
+            changeState(mState.doLoad());
+        }
+    }
+
     private void changeState(ListCombination<GistModel> now) {
         Timber.d("state change: leave %s, enter %s", mState.getClass().getSimpleName(), now.getClass().getSimpleName());
         mState = now;
@@ -184,11 +188,27 @@ class GistLoader {
         return !(mState instanceof InlineLoading) && !(mState instanceof Refresh);
     }
 
-    public boolean canNext() {
-        return canLoad() && mInteractor.range.hasNext() && !isEnded;
-    }
+    private class DatabaseSubscriber extends DisposableSubscriber<List<GistModel>> {
 
-    public boolean canPrevious() {
-        return canLoad() && mInteractor.range.hasPrevious();
+        private boolean isFirstPage;
+
+        DatabaseSubscriber(boolean isFirstPage) {
+            this.isFirstPage = isFirstPage;
+        }
+
+        @Override
+        public void onNext(List<GistModel> gistModels) {
+            onNextItems(gistModels, isFirstPage);
+        }
+
+        @Override
+        public void onError(Throwable t) {
+            changeState(mState.error(t));
+        }
+
+        @Override
+        public void onComplete() {
+            //
+        }
     }
 }
