@@ -3,7 +3,6 @@ package com.turlir.abakgists.api.data;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
-import android.arch.persistence.room.Update;
 
 import java.util.List;
 
@@ -21,8 +20,8 @@ public interface GistLocalDao {
     @Insert()
     void insertAll(List<GistLocal> users);
 
-    @Update
-    void update(GistLocal local);
+    @Query("UPDATE gists_db SET 'desc' = :desc, note = :note WHERE id = :id")
+    void update(String id, String desc, String note);
 
     @Query("DELETE FROM gists_db WHERE id == :id")
     void deleteById(String id);

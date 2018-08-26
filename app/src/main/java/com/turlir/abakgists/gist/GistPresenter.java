@@ -1,6 +1,5 @@
 package com.turlir.abakgists.gist;
 
-import com.turlir.abakgists.api.data.GistLocal;
 import com.turlir.abakgists.api.data.GistLocalDao;
 import com.turlir.abakgists.base.BasePresenter;
 import com.turlir.abakgists.model.GistModel;
@@ -34,10 +33,7 @@ public class GistPresenter extends BasePresenter<GistActivity> {
     }
 
     void transact(String desc, String note) {
-        GistModel now = new GistModel(content, desc, note);
-        GistLocal local = new GistLocal(now.id, now.url, now.created, now.description, now.note,
-                now.ownerLogin, now.ownerAvatarUrl);
-        Completable.fromRunnable(() -> mDao.update(local))
+        Completable.fromRunnable(() -> mDao.update(content.id, desc, note))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new ResourceCompletableObserver() {
@@ -45,6 +41,10 @@ public class GistPresenter extends BasePresenter<GistActivity> {
                     public void onComplete() {
                         dispose();
                         Timber.v("update gist in Presenter success");
+                        content = new GistModel(content, desc, note);
+                        if (getView() != null) {
+                            getView().updateSuccess();
+                        }
                     }
                     @Override
                     public void onError(Throwable e) {
@@ -52,7 +52,6 @@ public class GistPresenter extends BasePresenter<GistActivity> {
                         Timber.d(e, "update gist in GistPresenter failure");
                     }
                 });
-        content = now;
     }
 
     public void delete() {

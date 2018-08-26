@@ -149,7 +149,6 @@ public class GistActivity extends BaseActivity {
         } else {
             Timber.i("Изменения не внесены");
         }
-        finish();
     }
 
     @OnClick(R.id.btn_web)
@@ -175,6 +174,10 @@ public class GistActivity extends BaseActivity {
 
     public void deleteFailure() {
         Snackbar.make(findViewById(android.R.id.content), "Error when deleting gist", Snackbar.LENGTH_LONG).show();
+    }
+
+    public void updateSuccess() {
+        finish();
     }
 
     @Override
