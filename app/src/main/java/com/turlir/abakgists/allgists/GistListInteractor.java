@@ -21,7 +21,7 @@ public class GistListInteractor {
     private final ListGistMapper.Local mTransformer = new ListGistMapper.Local(new GistMapper.Local());
 
     @NonNull
-    Range range;
+    Window range;
 
     public GistListInteractor(Repository repo) {
         mRepo = repo;
@@ -30,11 +30,11 @@ public class GistListInteractor {
 
     public Flowable<List<GistModel>> firstPage() {
         range = new Range(0, 30, 15);
-        return mRepo.database(range.count(), range.absStart)
+        return mRepo.database(range.count(), range.start())
                 .map(mTransformer)
                 .doOnNext(gistModels -> {
                     Timber.d("from database (first time) loaded %d items, from %d in %d",
-                            gistModels.size(), range.absStart, range.absStop);
+                            gistModels.size(), range.start(), range.stop());
                     if (gistModels.size() == 0) {
                         Timber.d("needs load first %d items from server", range.count());
                     }
@@ -49,11 +49,11 @@ public class GistListInteractor {
 
     public Flowable<List<GistModel>> nextPage() {
         range = range.next();
-        return mRepo.database(range.count(), range.absStart)
+        return mRepo.database(range.count(), range.start())
                 .map(mTransformer)
                 .doOnNext(gistModels -> {
                     Timber.d("next page consist of %d items from database, %d - %d",
-                            gistModels.size(), range.absStart, range.absStop);
+                            gistModels.size(), range.start(), range.stop());
                 })
                 .doOnComplete(() -> {
                     Timber.d("database subscription complete");
@@ -73,11 +73,11 @@ public class GistListInteractor {
 
     public Flowable<List<GistModel>> prevPage() {
         range = range.prev();
-        return mRepo.database(range.count(), range.absStart)
+        return mRepo.database(range.count(), range.start())
                 .map(mTransformer)
                 .doOnNext(gistModels -> {
                     Timber.d("prev page consist of %d items from database, %d - %d",
-                            gistModels.size(), range.absStart, range.absStop);
+                            gistModels.size(), range.start(), range.stop());
                 })
                 .doOnComplete(() -> {
                     Timber.d("database subscription complete");

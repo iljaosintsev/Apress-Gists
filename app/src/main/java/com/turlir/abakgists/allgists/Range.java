@@ -4,11 +4,11 @@ import android.support.annotation.VisibleForTesting;
 
 import java.util.Objects;
 
-public class Range {
+public class Range implements Window {
 
     private static final int MAX_EL = 105;
 
-    public final int absStart, absStop, addition;
+    private final int absStart, absStop, addition;
 
     @VisibleForTesting
     public Range(int start, int stop) {
@@ -22,6 +22,22 @@ public class Range {
         this.addition = addition;
     }
 
+    @Override
+    public int start() {
+        return absStart;
+    }
+
+    @Override
+    public int addition() {
+        return addition;
+    }
+
+    @Override
+    public int stop() {
+        return absStop;
+    }
+
+    @Override
     public LoadablePage page() {
         return page(count());
     }
@@ -30,17 +46,19 @@ public class Range {
         return new LoadablePage(absStart, absStart + perPage);
     }
 
-    public Range cut(int size) {
+    @Override
+    public Window cut(int size) {
         if (size > count()) throw new IllegalArgumentException();
         return new Range(absStart, absStart + size, addition);
     }
 
-    public Range diff(Range o) {
+    @Override
+    public Window diff(Window o) {
         int required = count() - o.count();
-        if (required < 1 || absStart != o.absStart) {
+        if (required < 1 || absStart != o.start()) {
             throw new IllegalArgumentException();
         }
-        int at = o.absStop;
+        int at = o.stop();
         if (at % required == 0) {
             return new Range(at, absStop, required);
         } else {
@@ -53,23 +71,28 @@ public class Range {
         }
     }
 
+    @Override
     public int count() {
         return absStop - absStart;
     }
 
-    public Range next() {
+    @Override
+    public Window next() {
         return new Range(absStart + addition, absStop + addition, addition);
     }
 
-    public Range prev() {
+    @Override
+    public Window prev() {
         int start = Math.max(0, absStart - addition);
         return new Range(start, absStop - addition, addition);
     }
 
+    @Override
     public boolean hasNext() {
         return absStop + addition <= MAX_EL;
     }
 
+    @Override
     public boolean hasPrevious() {
         return absStart >= addition;
     }

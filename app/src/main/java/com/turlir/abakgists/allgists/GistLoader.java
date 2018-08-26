@@ -88,7 +88,7 @@ class GistLoader {
     }
 
     int size() {
-        return mInteractor.range.prev().absStop;
+        return mInteractor.range.prev().stop();
     }
 
     boolean isDifferent(GistModel now) {
@@ -169,8 +169,8 @@ class GistLoader {
         mLast = lastItem;
 
         if (lessThan && canNext() && eqLast) {
-            Range already = mInteractor.range.cut(mInteractor.range.addition);
-            Range required = mInteractor.range.diff(already);
+            Window already = mInteractor.range.cut(mInteractor.range.addition());
+            Window required = mInteractor.range.diff(already);
             LoadablePage page = required.page();
             Timber.d("download required %d th page in %d items", page.number, page.size);
             server(page);
