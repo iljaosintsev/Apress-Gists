@@ -1,10 +1,14 @@
 package com.turlir.abakgists;
 
+import com.turlir.abakgists.allgists.Window;
+
 import com.turlir.abakgists.allgists.Range;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class RangeTest {
 
@@ -12,9 +16,9 @@ public class RangeTest {
 
     @Test
     public void simpleStart() {
-        Range range = new Range(0, 30);
+        Window range = new Range(0, 30);
         check(range, 0, 30);
-        assertEquals(15, range.addition);
+        assertEquals(15, range.addition());
         assertTrue(range.hasNext());
 
         range = range.next();
@@ -42,7 +46,7 @@ public class RangeTest {
 
     @Test
     public void pagedPrevious() {
-        Range range = new Range(30, 60);
+        Window range = new Range(30, 60);
         assertTrue(range.hasPrevious());
         range = range.prev();
         check(range, 15, 45);
@@ -63,7 +67,7 @@ public class RangeTest {
     public void aliquotDiff() {
         Range demand = new Range(15, 45);
         Range actual = new Range(15, 30);
-        Range diff = demand.diff(actual);
+        Window diff = demand.diff(actual);
         assertTrue(new Range(30, 45, 15).equals(diff));
     }
 
@@ -71,7 +75,7 @@ public class RangeTest {
     public void incompleteDiff() {
         Range demand = new Range(15, 45, 15);
         Range actual = new Range(15, 35, 15);
-        Range diff = demand.diff(actual);
+        Window diff = demand.diff(actual);
         assertTrue(new Range(30, 45, 15).equals(diff));
 
         demand = new Range(15, 45, 15);
@@ -99,7 +103,7 @@ public class RangeTest {
     @Test
     public void correctCut() {
         Range range = new Range(15, 45);
-        Range actual = range.cut(15);
+        Window actual = range.cut(15);
         check(actual, 15, 30);
 
         actual = range.cut(1);
@@ -112,7 +116,7 @@ public class RangeTest {
     @Test
     public void cutBeforeStart() {
         Range range = new Range(30, 60);
-        Range actual = range.cut(15);
+        Window actual = range.cut(15);
         check(actual, 30, 45);
     }
 
@@ -122,7 +126,7 @@ public class RangeTest {
         range.cut(31);
     }
 
-    private void check(Range r, int s, int e) {
+    private void check(Window r, int s, int e) {
         assertEquals(new Range(s, e), r);
     }
 

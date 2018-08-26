@@ -1,6 +1,7 @@
 package com.turlir.abakgists.api;
 
 import com.turlir.abakgists.allgists.Range;
+import com.turlir.abakgists.allgists.Window;
 
 import org.junit.Test;
 
@@ -35,14 +36,14 @@ public class ShiftTest {
 
     @Test
     public void absolutePointOne() {
-        Range start = new Range(0, 30);
-        Range second = start.next();
+        Window start = new Range(0, 30);
+        Window second = start.next();
         assertTrue(new Range(15, 45, 15).equals(second));
 
-        Range defect = second.cut(15);
+        Window defect = second.cut(15);
         assertTrue(new Range(15, 30, 15).equals(defect));
 
-        Range required = second.diff(defect);
+        Window required = second.diff(defect);
         assertTrue(new Range(30, 45, 15).equals(required));
         assertEquals(3, required.page().number);
 
@@ -54,9 +55,9 @@ public class ShiftTest {
 
     @Test
     public void absolutePointTwo() {
-        Range start = new Range(0, 30, 30);
+        Window start = new Range(0, 30, 30);
         assertEquals(1, start.page().number);
-        assertEquals(30, start.addition);
+        assertEquals(30, start.addition());
 
         AbsolutePoint abs = new AbsolutePoint();
         Range shifted = abs.shift(start);
@@ -68,8 +69,8 @@ public class ShiftTest {
         private final static int PAGE = 20;
         private final static int PER_PAGE = 15;
 
-        Range shift(Range r) {
-            int size = r.addition;
+        Range shift(Window r) {
+            int size = r.addition();
             int number = r.page().number;
             if (size == PER_PAGE) {
                 number = PAGE - number + 1;
