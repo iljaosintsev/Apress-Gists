@@ -13,7 +13,7 @@ import com.turlir.abakgists.allgists.view.ViewModel;
 
 public class GistModel
         extends ViewModel
-        implements Parcelable {
+        implements Parcelable, Identifiable<GistModel> {
 
     public final String id;
 
@@ -104,11 +104,17 @@ public class GistModel
         return factory.type(this);
     }
 
+    @Override
+    public String getId() {
+        return id;
+    }
+
     /**
      * различны ли элементы с точки зрения базы данных
      * @param other сравниваемый элемент
      * @return {@code true} - различны, иначе {@code false}
      */
+    @Override
     public boolean isDifferent(@NonNull GistModel other) {
         return !other.id.equals(this.id);
     }
