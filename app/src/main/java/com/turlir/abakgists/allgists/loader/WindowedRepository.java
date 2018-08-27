@@ -1,4 +1,4 @@
-package com.turlir.abakgists.allgists;
+package com.turlir.abakgists.allgists.loader;
 
 import android.support.annotation.NonNull;
 
@@ -9,23 +9,23 @@ import java.util.List;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 
-abstract class WindowedRepository<T extends Identifiable<T>> {
+public abstract class WindowedRepository<T extends Identifiable<T>> {
 
     @NonNull
-    Window range;
+    protected Window range;
 
-    WindowedRepository(@NonNull Window start) {
+    public WindowedRepository(@NonNull Window start) {
         range = start;
     }
 
-    final LoadablePage requiredPage() {
+    public final LoadablePage requiredPage() {
         int inList = computeApproximateSize();
         Window already = range.cut(inList);
         Window required = range.diff(already);
         return required.page();
     }
 
-    abstract int computeApproximateSize();
+    public abstract int computeApproximateSize();
 
     public abstract Flowable<List<T>> firstPage();
 

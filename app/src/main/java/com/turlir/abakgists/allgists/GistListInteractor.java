@@ -1,5 +1,8 @@
 package com.turlir.abakgists.allgists;
 
+import com.turlir.abakgists.allgists.loader.LoadablePage;
+import com.turlir.abakgists.allgists.loader.Window;
+import com.turlir.abakgists.allgists.loader.WindowedRepository;
 import com.turlir.abakgists.api.Repository;
 import com.turlir.abakgists.api.data.GistMapper;
 import com.turlir.abakgists.api.data.ListGistMapper;
@@ -106,7 +109,7 @@ public class GistListInteractor extends WindowedRepository<GistModel> {
     }
 
     @Override
-    int computeApproximateSize() {
+    public int computeApproximateSize() {
         //return range.stop() - range.addition();
         return range.addition();
     }

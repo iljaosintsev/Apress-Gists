@@ -1,6 +1,8 @@
 package com.turlir.abakgists.allgists;
 
 import com.turlir.abakgists.allgists.combination.ListManipulator;
+import com.turlir.abakgists.allgists.loader.Loader;
+import com.turlir.abakgists.allgists.loader.WindowedRepository;
 import com.turlir.abakgists.model.GistModel;
 
 class GistLoader extends Loader<GistModel> {
@@ -12,12 +14,12 @@ class GistLoader extends Loader<GistModel> {
     }
 
     @Override
-    boolean shouldRequest(boolean lessThan, boolean eqLast) {
+    public boolean shouldRequest(boolean lessThan, boolean eqLast) {
         return eqLast && lessThan && canNext();
     }
 
     @Override
-    boolean shouldRender(int size) {
+    public boolean shouldRender(int size) {
         /*boolean v = mPreviousSize != size;
         mPreviousSize = size;
         return v;*/

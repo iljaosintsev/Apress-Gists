@@ -1,7 +1,7 @@
 package com.turlir.abakgists.api;
 
-import com.turlir.abakgists.allgists.Range;
-import com.turlir.abakgists.allgists.Window;
+import com.turlir.abakgists.allgists.loader.Range;
+import com.turlir.abakgists.allgists.loader.Window;
 
 import org.junit.Test;
 

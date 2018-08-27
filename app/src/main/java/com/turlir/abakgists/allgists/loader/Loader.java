@@ -1,4 +1,4 @@
-package com.turlir.abakgists.allgists;
+package com.turlir.abakgists.allgists.loader;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,7 +18,7 @@ import io.reactivex.observers.ResourceSingleObserver;
 import io.reactivex.subscribers.DisposableSubscriber;
 import timber.log.Timber;
 
-abstract class Loader<T extends Identifiable<T>> {
+public abstract class Loader<T extends Identifiable<T>> {
 
     private final WindowedRepository<T> mInteractor;
     private final ListManipulator<T> mCallback;
@@ -30,17 +30,17 @@ abstract class Loader<T extends Identifiable<T>> {
     private T mLast = null;
     private boolean isEnded;
 
-    Loader(WindowedRepository<T> interactor, ListManipulator<T> callback) {
+    public Loader(WindowedRepository<T> interactor, ListManipulator<T> callback) {
         mInteractor = interactor;
         mCallback = callback;
         mState = new Start<>(mCallback);
     }
 
-    abstract boolean shouldRequest(boolean lessThan, boolean eqLast);
+    public abstract boolean shouldRequest(boolean lessThan, boolean eqLast);
 
-    abstract boolean shouldRender(int size);
+    public abstract boolean shouldRender(int size);
 
-    void firstPage() {
+    public void firstPage() {
         if (!canLoad()) return;
         mState = new Start<>(mCallback);
         mState.perform();
@@ -49,7 +49,7 @@ abstract class Loader<T extends Identifiable<T>> {
                 .subscribeWith(new DatabaseSubscriber(true));
     }
 
-    void nextPage() {
+    public void nextPage() {
         if (!canNext()) {
             Timber.d("loading next page is not allowed (is loading or last page reached)");
             return;
@@ -59,7 +59,7 @@ abstract class Loader<T extends Identifiable<T>> {
                 .subscribeWith(new DatabaseSubscriber(false));
     }
 
-    void prevPage() {
+    public void prevPage() {
         if (!canPrevious()) {
             Timber.d("loading previous page is not allowed (is loading or first page reached)");
             return;
@@ -70,7 +70,7 @@ abstract class Loader<T extends Identifiable<T>> {
                 .subscribeWith(new DatabaseSubscriber(false));
     }
 
-    void updateGist(Window start) {
+    public void updateGist(Window start) {
         if (!canLoad()) return;
         changeState(mState.refresh());
         mDatabaseConnection.dispose();
@@ -91,25 +91,25 @@ abstract class Loader<T extends Identifiable<T>> {
                 });
     }
 
-    int size() {
+    public int size() {
         return mInteractor.range.prev().stop();
     }
 
-    boolean isDifferent(T now) {
+    public boolean isDifferent(T now) {
         return mLast != null && now.isDifferent(mLast);
     }
 
-    void stop() {
+    public void stop() {
         if (mDatabaseConnection != null) {
             mDatabaseConnection.dispose();
         }
     }
 
-    boolean canNext() {
+    public boolean canNext() {
         return canLoad() && mInteractor.range.hasNext() && !isEnded;
     }
 
-    boolean canPrevious() {
+    public boolean canPrevious() {
         return canLoad() && mInteractor.range.hasPrevious();
     }
 

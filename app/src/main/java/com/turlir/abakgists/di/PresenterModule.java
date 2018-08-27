@@ -4,7 +4,7 @@ package com.turlir.abakgists.di;
 import com.turlir.abakgists.AppDatabase;
 import com.turlir.abakgists.allgists.AllGistsPresenter;
 import com.turlir.abakgists.allgists.GistListInteractor;
-import com.turlir.abakgists.allgists.Range;
+import com.turlir.abakgists.allgists.loader.Range;
 import com.turlir.abakgists.api.Repository;
 import com.turlir.abakgists.gist.EqualsSolver;
 import com.turlir.abakgists.gist.GistPresenter;

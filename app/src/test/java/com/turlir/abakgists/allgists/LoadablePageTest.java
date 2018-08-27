@@ -1,8 +1,10 @@
 package com.turlir.abakgists.allgists;
 
+import com.turlir.abakgists.allgists.loader.LoadablePage;
+
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class LoadablePageTest {
 

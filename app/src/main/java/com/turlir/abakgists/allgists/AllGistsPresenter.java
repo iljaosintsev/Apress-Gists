@@ -5,6 +5,9 @@ import android.content.res.Resources;
 
 import com.turlir.abakgists.allgists.combination.ErrorProcessor;
 import com.turlir.abakgists.allgists.combination.ListManipulator;
+import com.turlir.abakgists.allgists.loader.Range;
+import com.turlir.abakgists.allgists.loader.Window;
+import com.turlir.abakgists.allgists.loader.WindowedRepository;
 import com.turlir.abakgists.allgists.view.AllGistsFragment;
 import com.turlir.abakgists.api.Repository;
 import com.turlir.abakgists.base.BasePresenter;
