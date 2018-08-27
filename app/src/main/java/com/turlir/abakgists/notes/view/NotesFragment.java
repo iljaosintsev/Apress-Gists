@@ -64,7 +64,6 @@ public class NotesFragment extends BaseFragment implements OnClickListener {
         swipe.setEnabled(false);
 
         mAdapter = new AllGistAdapter(getContext(), this);
-        recycler.setAdapter(mAdapter);
         RecyclerView.LayoutManager lm
                 = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recycler.setLayoutManager(lm);
@@ -102,6 +101,9 @@ public class NotesFragment extends BaseFragment implements OnClickListener {
     public void onNotesLoaded(List<GistModel> gists) {
         root.toContent();
         mAdapter.resetGists(gists);
+        if (recycler.getAdapter() == null) {
+            recycler.setAdapter(mAdapter);
+        }
     }
 
     @Override
