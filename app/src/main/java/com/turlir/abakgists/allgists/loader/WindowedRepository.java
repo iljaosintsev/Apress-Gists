@@ -18,6 +18,11 @@ public abstract class WindowedRepository<T extends Identifiable<T>> {
         range = start;
     }
 
+    @NonNull
+    public Window getRange() {
+        return range;
+    }
+
     public final LoadablePage requiredPage() {
         int inList = computeApproximateSize();
         Window already = range.cut(inList);

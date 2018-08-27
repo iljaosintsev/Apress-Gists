@@ -3,6 +3,7 @@ package com.turlir.abakgists.di;
 
 import com.turlir.abakgists.AppDatabase;
 import com.turlir.abakgists.allgists.AllGistsPresenter;
+import com.turlir.abakgists.allgists.DataSourceFactory;
 import com.turlir.abakgists.allgists.GistListInteractor;
 import com.turlir.abakgists.allgists.loader.Range;
 import com.turlir.abakgists.api.Repository;
@@ -25,8 +26,14 @@ public class PresenterModule {
 
     @Provides
     @Singleton
-    public AllGistsPresenter provideAllGistsPresenter(Repository repo) {
-        return new AllGistsPresenter(repo);
+    public AllGistsPresenter provideAllGistsPresenter(DataSourceFactory factory) {
+        return new AllGistsPresenter(factory);
+    }
+
+    @Provides
+    @Singleton
+    public DataSourceFactory provideDataSourceFactory(Repository repo) {
+        return new DataSourceFactory(repo);
     }
 
     @Provides
