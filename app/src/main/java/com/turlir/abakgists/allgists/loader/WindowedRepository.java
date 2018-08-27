@@ -30,7 +30,7 @@ public abstract class WindowedRepository<T extends Identifiable<T>> {
         return required.page();
     }
 
-    public abstract int computeApproximateSize();
+    protected abstract int computeApproximateSize();
 
     public abstract Flowable<List<T>> firstPage();
 

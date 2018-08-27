@@ -109,7 +109,7 @@ public class GistListInteractor extends WindowedRepository<GistModel> {
     }
 
     @Override
-    public int computeApproximateSize() {
+    protected int computeApproximateSize() {
         //return range.stop() - range.addition();
         return range.addition();
     }
