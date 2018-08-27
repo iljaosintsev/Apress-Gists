@@ -176,7 +176,7 @@ public abstract class TokenizeLayout extends FrameLayout
 
             TypedArray ta = c.obtainStyledAttributes(attrs, R.styleable.TokenizeLayout_Layout, 0, 0);
             try {
-                mHided = ta.getInteger(R.styleable.TokenizeLayout_Layout_layout_hided, View.INVISIBLE); // default
+                mHided = ta.getInteger(R.styleable.TokenizeLayout_Layout_switch_visibility, View.INVISIBLE); // default
             } finally {
                 ta.recycle();
             }

@@ -1,7 +1,7 @@
 <resources>
 
     <declare-styleable name="TokenizeLayout_Layout">
-        <attr name="layout_hided" format="enum">
+        <attr name="switch_visibility" format="enum">
             <enum name="invisible" value="4"/>
             <enum name="gone" value="8"/>
         </attr>
