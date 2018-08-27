@@ -2,10 +2,12 @@ package com.turlir.abakgists.allgists;
 
 
 import android.content.res.Resources;
+import android.os.Bundle;
 
 import com.turlir.abakgists.allgists.combination.ErrorProcessor;
 import com.turlir.abakgists.allgists.combination.ListManipulator;
 import com.turlir.abakgists.allgists.loader.Range;
+import com.turlir.abakgists.allgists.loader.WindowedRepository;
 import com.turlir.abakgists.allgists.view.AllGistsFragment;
 import com.turlir.abakgists.base.BasePresenter;
 import com.turlir.abakgists.base.erroring.ErrorInterpreter;
@@ -20,14 +22,19 @@ import timber.log.Timber;
 
 public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
 
-    private final GistLoader mLoader;
+    private static final String RANGE = "range";
+
+    private final DataSourceFactory mFactory;
+    private WindowedRepository<GistModel> mDataSource;
+    private GistLoader mLoader;
     private final ErrorSelector mSelector;
 
     public AllGistsPresenter(DataSourceFactory factory) {
         mSelector = new TroubleSelector(new RepeatingError());
         Range policy = createStartPoint();
-        GistListInteractor dataSource = factory.create(policy);
-        mLoader = factory.create(dataSource, new LoaderCallback());
+        mFactory = factory;
+        GistListInteractor dataSource = mFactory.create(policy);
+        mLoader = mFactory.create(dataSource, new LoaderCallback());
     }
 
     @Override
@@ -59,6 +66,18 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
     private static Range createStartPoint() {
         return new Range(0, 30, 15);
         //return new Range(0, 30, 30);
+    }
+
+    public void saveRange(Bundle state) {
+        Range now = mFactory.convert(mDataSource.getRange());
+        state.putParcelable(RANGE, now);
+    }
+
+    public void again(Bundle state) {
+        Range last = state.getParcelable(RANGE);
+        mDataSource = mFactory.create(last);
+        mLoader = new GistLoader(mDataSource, new LoaderCallback());
+        firstLoad();
     }
 
     private class LoaderCallback implements ListManipulator<GistModel> {

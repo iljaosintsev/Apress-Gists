@@ -1,10 +1,12 @@
 package com.turlir.abakgists.allgists.loader;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.VisibleForTesting;
 
 import java.util.Objects;
 
-public class Range implements Window {
+public class Range implements Window, Parcelable {
 
     private static final int MAX_EL = 105;
 
@@ -21,6 +23,40 @@ public class Range implements Window {
         absStop = stop;
         this.addition = addition;
     }
+
+    //<editor-fold desc="Parcelable">
+
+    private Range(Parcel in) {
+        absStart = in.readInt();
+        absStop = in.readInt();
+        addition = in.readInt();
+    }
+
+    public static final Creator<Range> CREATOR = new Creator<Range>() {
+        @Override
+        public Range createFromParcel(Parcel in) {
+            return new Range(in);
+        }
+
+        @Override
+        public Range[] newArray(int size) {
+            return new Range[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(absStart);
+        dest.writeInt(absStop);
+        dest.writeInt(addition);
+    }
+
+    //</editor-fold>
 
     @Override
     public int start() {

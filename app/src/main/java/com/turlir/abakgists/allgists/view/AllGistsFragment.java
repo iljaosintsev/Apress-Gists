@@ -86,7 +86,6 @@ public class AllGistsFragment
         Context cnt = getActivity();
 
         mAdapter = new AllGistAdapter(getContext(), this);
-        recycler.setAdapter(mAdapter);
         LinearLayoutManager lm = new LinearLayoutManager(cnt, LinearLayoutManager.VERTICAL, false);
         recycler.setLayoutManager(lm);
 
@@ -121,10 +120,16 @@ public class AllGistsFragment
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (savedInstanceState != null) {
-           // _presenter.again(); // TODO
+            _presenter.again(savedInstanceState);
         } else {
             _presenter.firstLoad();
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        _presenter.saveRange(outState);
     }
 
     @Override
@@ -172,6 +177,9 @@ public class AllGistsFragment
         }
         if (resetBackward) {
             mBackwardScrollListener.reset();
+        }
+        if (recycler.getAdapter() == null) {
+            recycler.setAdapter(mAdapter);
         }
     }
 
