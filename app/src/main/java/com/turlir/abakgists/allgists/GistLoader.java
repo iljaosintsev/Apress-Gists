@@ -169,9 +169,7 @@ class GistLoader {
         mLast = lastItem;
 
         if (lessThan && canNext() && eqLast) {
-            Window already = mInteractor.range.cut(mInteractor.range.addition());
-            Window required = mInteractor.range.diff(already);
-            LoadablePage page = required.page();
+            LoadablePage page = mInteractor.requiredPage();
             Timber.d("download required %d th page in %d items", page.number, page.size);
             server(page);
             changeState(mState.doLoad());

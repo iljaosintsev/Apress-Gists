@@ -11,6 +11,7 @@ import java.util.List;
 
 import io.reactivex.Flowable;
 import io.reactivex.Single;
+import timber.log.Timber;
 
 public class Repository {
 
@@ -60,7 +61,10 @@ public class Repository {
     private Single<List<GistLocal>> loadFromServer(int page, int perPage) {
         if (page < 1) throw new IllegalArgumentException();
         return mClient.publicGist(page, perPage)
-                .map(mTransformer);
+                .map(mTransformer)
+                .doOnSuccess(list -> {
+                    Timber.d("from server loaded %d items", list.size());
+                });
     }
 
     private Integer putToCache(List<GistLocal> gists) {

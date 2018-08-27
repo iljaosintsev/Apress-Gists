@@ -105,4 +105,15 @@ public class GistListInteractor {
                     return res;
                 });
     }
+
+    public LoadablePage requiredPage() {
+        int inList = computeApproximateSize();
+        Window already = range.cut(inList);
+        Window required = range.diff(already);
+        return required.page();
+    }
+
+    private int computeApproximateSize() {
+        return range.addition();
+    }
 }

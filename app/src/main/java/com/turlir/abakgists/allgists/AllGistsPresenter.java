@@ -21,11 +21,9 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
 
     private final GistLoader mLoader;
     private final ErrorSelector mSelector;
-    private final ErrorProcessor mProcessor;
 
     public AllGistsPresenter(GistListInteractor interactor) {
         mSelector = new TroubleSelector(new RepeatingError());
-        mProcessor = new ErrorCallback();
         mLoader = new GistLoader(interactor, new LoaderCallback());
     }
 
@@ -56,6 +54,8 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
     }
 
     private class LoaderCallback implements ListManipulator<GistModel> {
+
+        private ErrorProcessor mProcessor;
 
         @Override
         public void blockingLoad(boolean visible) {
@@ -91,6 +91,9 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
 
         @Override
         public ErrorProcessor getErrorProcessor() {
+            if (mProcessor == null) {
+                mProcessor = new ErrorCallback();
+            }
             return mProcessor;
         }
     }
