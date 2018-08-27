@@ -1,29 +1,27 @@
 package com.turlir.abakgists.allgists.combination;
 
-import com.turlir.abakgists.model.GistModel;
-
 import java.util.List;
 
-public class Refresh extends ListCombination<GistModel> {
+public class Refresh<T> extends ListCombination<T> {
 
-    Refresh(ListCombination<GistModel> parent) {
+    Refresh(ListCombination<T> parent) {
         super(parent);
     }
 
     @Override
-    public ListCombination<GistModel> content(List<GistModel> items) {
-        return new Content(this, items);
+    public ListCombination<T> content(List<T> items) {
+        return new Content<>(this, items);
     }
 
     @Override
-    public ListCombination<GistModel> error(Throwable err) {
-        com.turlir.abakgists.allgists.combination.Error error = new com.turlir.abakgists.allgists.combination.Error(err);
+    public ListCombination<T> error(Throwable err) {
+        Error<T> error = new Error<>(err);
         error.setOwner(owner);
         return error;
     }
 
     @Override
-    public ListCombination<GistModel> doIntermediate() {
-        return new IntermediateState(this);
+    public ListCombination<T> doIntermediate() {
+        return new IntermediateState<>(this);
     }
 }

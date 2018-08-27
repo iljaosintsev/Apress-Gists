@@ -1,31 +1,29 @@
 package com.turlir.abakgists.allgists.combination;
 
-import com.turlir.abakgists.model.GistModel;
-
 import java.util.List;
 
-class Content extends ListCombination<GistModel> {
+class Content<T> extends ListCombination<T> {
 
-    private final List<GistModel> mItems;
+    private final List<T> mItems;
 
-    Content(ListCombination<GistModel> parent, List<GistModel> items) {
+    Content(ListCombination<T> parent, List<T> items) {
         super(parent);
         mItems = items;
     }
 
     @Override
-    public ListCombination<GistModel> doLoad() {
-        return new InlineLoading(this);
+    public ListCombination<T> doLoad() {
+        return new InlineLoading<>(this);
     }
 
     @Override
-    public ListCombination<GistModel> refresh() {
-        return new Refresh(this); // with data
+    public ListCombination<T> refresh() {
+        return new Refresh<>(this); // with data
     }
 
     @Override
-    public ListCombination<GistModel> content(List<GistModel> items) { // by design
-        return new Content(this, items);
+    public ListCombination<T> content(List<T> items) { // by design
+        return new Content<>(this, items);
     }
 
     @Override

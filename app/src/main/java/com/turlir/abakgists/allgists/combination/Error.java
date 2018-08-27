@@ -3,11 +3,10 @@ package com.turlir.abakgists.allgists.combination;
 import com.turlir.abakgists.base.erroring.ErrorInterpreter;
 import com.turlir.abakgists.base.erroring.ErrorSelector;
 import com.turlir.abakgists.base.erroring.ErrorSituation;
-import com.turlir.abakgists.model.GistModel;
 
 import java.util.List;
 
-class Error extends ListCombination<GistModel> {
+class Error<T> extends ListCombination<T> {
 
     private final Throwable mError;
 
@@ -16,13 +15,13 @@ class Error extends ListCombination<GistModel> {
     }
 
     @Override
-    public ListCombination<GistModel> refresh() {
-        return new Refresh(this);
+    public ListCombination<T> refresh() {
+        return new Refresh<>(this);
     }
 
     @Override
-    public ListCombination<GistModel> content(List<GistModel> items) {
-        return new Content(this, items);
+    public ListCombination<T> content(List<T> items) {
+        return new Content<>(this, items);
     }
 
     @Override

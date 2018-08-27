@@ -1,25 +1,23 @@
 package com.turlir.abakgists.allgists.combination;
 
-import com.turlir.abakgists.model.GistModel;
-
 import java.util.List;
 
-class IntermediateState extends ListCombination<GistModel> {
+class IntermediateState<T> extends ListCombination<T> {
 
-    private final ListCombination<GistModel> mDelegate;
+    private final ListCombination<T> mDelegate;
 
-    IntermediateState(ListCombination<GistModel> parent) {
+    IntermediateState(ListCombination<T> parent) {
         super(parent);
         mDelegate = parent;
     }
 
     @Override
-    public ListCombination<GistModel> content(List<GistModel> items) {
+    public ListCombination<T> content(List<T> items) {
         return mDelegate.content(items);
     }
 
     @Override
-    public ListCombination<GistModel> error(Throwable err) {
+    public ListCombination<T> error(Throwable err) {
         return mDelegate.error(err);
     }
 }

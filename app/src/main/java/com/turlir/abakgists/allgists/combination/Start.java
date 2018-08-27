@@ -1,34 +1,32 @@
 package com.turlir.abakgists.allgists.combination;
 
-import com.turlir.abakgists.model.GistModel;
-
 import java.util.List;
 
-public class Start extends ListCombination<GistModel> {
+public class Start<T> extends ListCombination<T> {
 
-    public Start(ListManipulator<GistModel> owner) {
+    public Start(ListManipulator<T> owner) {
         setOwner(owner);
     }
 
     @Override
-    public ListCombination<GistModel> content(List<GistModel> items) {
+    public ListCombination<T> content(List<T> items) {
         if (!items.isEmpty()) {
-            return new Content(this, items);
+            return new Content<>(this, items);
         } else {
-            return new Empty(this);
+            return new Empty<>(this);
         }
     }
 
     @Override
-    public ListCombination<GistModel> error(Throwable err) {
-        Error error = new Error(err);
+    public ListCombination<T> error(Throwable err) {
+        Error<T> error = new Error<>(err);
         error.setOwner(owner);
         return error;
     }
 
     @Override
-    public ListCombination<GistModel> doIntermediate() {
-        return new IntermediateState(this);
+    public ListCombination<T> doIntermediate() {
+        return new IntermediateState<>(this);
     }
 
     @Override
