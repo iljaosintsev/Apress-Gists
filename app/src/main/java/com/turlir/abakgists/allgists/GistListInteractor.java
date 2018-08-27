@@ -1,7 +1,5 @@
 package com.turlir.abakgists.allgists;
 
-import android.support.annotation.NonNull;
-
 import com.turlir.abakgists.api.Repository;
 import com.turlir.abakgists.api.data.GistMapper;
 import com.turlir.abakgists.api.data.ListGistMapper;
@@ -15,21 +13,18 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
-public class GistListInteractor {
+public class GistListInteractor extends WindowedRepository<GistModel> {
 
     private final Repository mRepo;
     private final ListGistMapper.Local mTransformer = new ListGistMapper.Local(new GistMapper.Local());
 
-    @NonNull
-    Window range;
-
-    public GistListInteractor(Repository repo) {
+    public GistListInteractor(Repository repo, Window start) {
+        super(start);
         mRepo = repo;
-        range = new Range(0, 30, 15);
     }
 
+    @Override
     public Flowable<List<GistModel>> firstPage() {
-        range = new Range(0, 30, 15);
         return mRepo.database(range.count(), range.start())
                 .map(mTransformer)
                 .doOnNext(gistModels -> {
@@ -47,6 +42,7 @@ public class GistListInteractor {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    @Override
     public Flowable<List<GistModel>> nextPage() {
         range = range.next();
         return mRepo.database(range.count(), range.start())
@@ -63,6 +59,7 @@ public class GistListInteractor {
                 .doOnError(Timber::e);
     }
 
+    @Override
     public Single<Integer> server(LoadablePage page) {
         return mRepo.server(page.number, page.size)
                 .doOnSuccess(count -> Timber.d("from server loaded %d items", count))
@@ -71,6 +68,7 @@ public class GistListInteractor {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    @Override
     public Flowable<List<GistModel>> prevPage() {
         range = range.prev();
         return mRepo.database(range.count(), range.start())
@@ -87,9 +85,10 @@ public class GistListInteractor {
                 .doOnError(Timber::e);
     }
 
-    public Single<Integer> loadAndReplace() {
-        range = new Range(0, 30, 15);
-        LoadablePage page = range.page();
+    @Override
+    public Single<Integer> loadAndReplace(Window start) {
+        LoadablePage page = start.page();
+        range = start;
         return mRepo.reloadAllGist(page.number, page.size)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
@@ -106,14 +105,9 @@ public class GistListInteractor {
                 });
     }
 
-    public LoadablePage requiredPage() {
-        int inList = computeApproximateSize();
-        Window already = range.cut(inList);
-        Window required = range.diff(already);
-        return required.page();
-    }
-
-    private int computeApproximateSize() {
+    @Override
+    int computeApproximateSize() {
+        //return range.stop() - range.addition();
         return range.addition();
     }
 }

@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import com.turlir.abakgists.allgists.combination.ErrorProcessor;
 import com.turlir.abakgists.allgists.combination.ListManipulator;
 import com.turlir.abakgists.allgists.view.AllGistsFragment;
+import com.turlir.abakgists.api.Repository;
 import com.turlir.abakgists.base.BasePresenter;
 import com.turlir.abakgists.base.erroring.ErrorInterpreter;
 import com.turlir.abakgists.base.erroring.ErrorSelector;
@@ -19,12 +20,14 @@ import timber.log.Timber;
 
 public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
 
-    private final GistLoader mLoader;
+    private GistLoader mLoader;
     private final ErrorSelector mSelector;
 
-    public AllGistsPresenter(GistListInteractor interactor) {
+    public AllGistsPresenter(Repository repo) {
         mSelector = new TroubleSelector(new RepeatingError());
-        mLoader = new GistLoader(interactor, new LoaderCallback());
+        Window policy = createStartPoint();
+        WindowedRepository<GistModel> dataSource = new GistListInteractor(repo, policy);
+        mLoader = new GistLoader(dataSource, new LoaderCallback());
     }
 
     @Override
@@ -50,7 +53,12 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
     }
 
     public void updateGist() {
-        mLoader.updateGist();
+        mLoader.updateGist(createStartPoint());
+    }
+
+    private static Window createStartPoint() {
+        return new Range(0, 30, 15);
+        //return new Range(0, 30, 30);
     }
 
     private class LoaderCallback implements ListManipulator<GistModel> {
