@@ -33,8 +33,8 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
         mSelector = new TroubleSelector(new RepeatingError());
         Range policy = createStartPoint();
         mFactory = factory;
-        GistListInteractor dataSource = mFactory.create(policy);
-        mLoader = mFactory.create(dataSource, new LoaderCallback());
+        mDataSource = mFactory.create(policy);
+        mLoader = mFactory.create(mDataSource, new LoaderCallback());
     }
 
     @Override
