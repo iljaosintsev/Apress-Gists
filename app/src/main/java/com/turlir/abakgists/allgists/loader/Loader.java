@@ -114,7 +114,7 @@ public abstract class Loader<T extends Identifiable<T>> {
     }
 
     private void server(LoadablePage page) {
-        mInteractor.server(page)
+        mInteractor.loadAnPut(page)
                 .doOnSuccess(i -> changeState(mState.doIntermediate()))
                 .subscribe(new ResourceSingleObserver<Integer>() {
                     @Override

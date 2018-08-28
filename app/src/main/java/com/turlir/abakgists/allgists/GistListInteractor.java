@@ -27,65 +27,11 @@ public class GistListInteractor extends WindowedRepository<GistModel> {
     }
 
     @Override
-    public Flowable<List<GistModel>> firstPage() {
-        return mRepo.database(range.count(), range.start())
-                .map(mTransformer)
-                .doOnNext(gistModels -> {
-                    Timber.d("from database (first time) loaded %d items, from %d in %d",
-                            gistModels.size(), range.start(), range.stop());
-                    if (gistModels.size() == 0) {
-                        Timber.d("needs load first %d items from server", range.count());
-                    }
-                })
-                .doOnComplete(() -> {
-                    Timber.d("database subscription complete");
-                })
-                .doOnError(Timber::e)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
-
-    @Override
-    public Flowable<List<GistModel>> nextPage() {
-        range = range.next();
-        return mRepo.database(range.count(), range.start())
-                .map(mTransformer)
-                .doOnNext(gistModels -> {
-                    Timber.d("next page consist of %d items from database, %d - %d",
-                            gistModels.size(), range.start(), range.stop());
-                })
-                .doOnComplete(() -> {
-                    Timber.d("database subscription complete");
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnError(Timber::e);
-    }
-
-    @Override
-    public Single<Integer> server(LoadablePage page) {
-        return mRepo.server(page.number, page.size)
-                .doOnSuccess(count -> Timber.d("from server loaded %d items", count))
+    public Single<Integer> loadAnPut(LoadablePage page) {
+        return mRepo.fromServerToDatabase(page.number, page.size)
                 .doOnError(e -> Timber.e(e, "data error"))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
-    }
-
-    @Override
-    public Flowable<List<GistModel>> prevPage() {
-        range = range.prev();
-        return mRepo.database(range.count(), range.start())
-                .map(mTransformer)
-                .doOnNext(gistModels -> {
-                    Timber.d("prev page consist of %d items from database, %d - %d",
-                            gistModels.size(), range.start(), range.stop());
-                })
-                .doOnComplete(() -> {
-                    Timber.d("database subscription complete");
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnError(Timber::e);
     }
 
     @Override
@@ -93,6 +39,31 @@ public class GistListInteractor extends WindowedRepository<GistModel> {
         LoadablePage page = start.page();
         range = start;
         return mRepo.reloadAllGist(page.number, page.size)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    protected int computeApproximateSize() {
+        //return range.stop() - range.addition();
+        return range.addition();
+    }
+
+    @Override
+    protected Flowable<List<GistModel>> subscribe(Window range) {
+        return mRepo.database(range.count(), range.start())
+                .map(mTransformer)
+                .doOnNext(gistModels -> {
+                    Timber.d("from database loaded %d items, from %d in %d",
+                            gistModels.size(), range.start(), range.stop());
+                    if (gistModels.size() == 0) {
+                        Timber.d("needs load first %d items from loadAnPut", range.count());
+                    }
+                })
+                .doOnComplete(() -> {
+                    Timber.d("database subscription complete");
+                })
+                .doOnError(Timber::e)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -106,11 +77,5 @@ public class GistListInteractor extends WindowedRepository<GistModel> {
                     mTransformer.setLocal(tmp);
                     return res;
                 });
-    }
-
-    @Override
-    protected int computeApproximateSize() {
-        //return range.stop() - range.addition();
-        return range.addition();
     }
 }

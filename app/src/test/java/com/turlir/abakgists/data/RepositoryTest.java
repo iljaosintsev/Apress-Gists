@@ -1,4 +1,4 @@
-package com.turlir.abakgists.allgists;
+package com.turlir.abakgists.data;
 
 import android.os.Build;
 
@@ -58,7 +58,7 @@ public class RepositoryTest {
         Single<List<GistJson>> mockNetwork = Single.just(Collections.singletonList(Data.NEW_SERVER));
         Mockito.when(_client.publicGist(1, 15)).thenReturn(mockNetwork);
 
-        _repo.server(1, 15)
+        _repo.fromServerToDatabase(1, 15)
                 .test()
                 .assertNoErrors()
                 .assertComplete();

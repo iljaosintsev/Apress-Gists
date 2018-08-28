@@ -23,6 +23,14 @@ public abstract class WindowedRepository<T extends Identifiable<T>> {
         return range;
     }
 
+    public abstract Single<Integer> loadAnPut(LoadablePage page);
+
+    public abstract Single<Integer> loadAndReplace(Window start);
+
+    protected abstract int computeApproximateSize();
+
+    protected abstract Flowable<List<T>> subscribe(Window w);
+
     public final LoadablePage requiredPage() {
         int inList = computeApproximateSize();
         Window already = range.cut(inList);
@@ -30,15 +38,17 @@ public abstract class WindowedRepository<T extends Identifiable<T>> {
         return required.page();
     }
 
-    protected abstract int computeApproximateSize();
+    public final Flowable<List<T>> firstPage() {
+        return subscribe(range);
+    }
 
-    public abstract Flowable<List<T>> firstPage();
+    public final Flowable<List<T>> nextPage() {
+        range = range.next();
+        return subscribe(range);
+    }
 
-    public abstract Flowable<List<T>> nextPage();
-
-    public abstract Single<Integer> server(LoadablePage page);
-
-    public abstract Flowable<List<T>> prevPage();
-
-    public abstract Single<Integer> loadAndReplace(Window start);
+    public final Flowable<List<T>> prevPage() {
+        range = range.prev();
+        return subscribe(range);
+    }
 }

@@ -31,7 +31,7 @@ public class Repository {
      * @param page номер загружаемой страницы, больше 1
      * @return сохраненные в БД элементы
      */
-    public Single<Integer> server(int page, int count) {
+    public Single<Integer> fromServerToDatabase(int page, int count) {
         return loadFromServer(page, count)
                 .map(this::putToCache);
     }
@@ -62,9 +62,7 @@ public class Repository {
         if (page < 1) throw new IllegalArgumentException();
         return mClient.publicGist(page, perPage)
                 .map(mTransformer)
-                .doOnSuccess(list -> {
-                    Timber.d("from server loaded %d items", list.size());
-                });
+                .doOnSuccess(list -> Timber.d("from fromServerToDatabase loaded %d items", list.size()));
     }
 
     private Integer putToCache(List<GistLocal> gists) {
