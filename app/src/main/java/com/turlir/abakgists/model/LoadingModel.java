@@ -3,7 +3,7 @@ package com.turlir.abakgists.model;
 
 import com.turlir.abakgists.allgists.view.ViewModel;
 
-public class LoadingModel extends ViewModel {
+public class LoadingModel implements ViewModel {
 
     public final int count;
 

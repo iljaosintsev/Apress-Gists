@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.turlir.abakgists.R;
+import com.turlir.abakgists.model.InlineErrorModel;
 
 import java.util.List;
 

@@ -11,8 +11,7 @@ import com.turlir.abakgists.R;
 import com.turlir.abakgists.allgists.view.ViewModel;
 
 public class GistModel
-        extends ViewModel
-        implements Parcelable, Identifiable<GistModel> {
+        implements ViewModel, Parcelable, Identifiable<GistModel> {
 
     public final String id;
 

@@ -3,6 +3,7 @@ package com.turlir.abakgists.allgists.view;
 import android.view.View;
 
 import com.turlir.abakgists.R;
+import com.turlir.abakgists.model.InlineErrorModel;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
