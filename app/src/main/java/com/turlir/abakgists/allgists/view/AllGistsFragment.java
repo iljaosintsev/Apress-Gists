@@ -239,6 +239,9 @@ public class AllGistsFragment
         swipe.setRefreshing(false);
         mAdapter.clearAll(); // что бы ошибки не накапливались с обновлением
         mAdapter.addError(msg);
+        if (recycler.getAdapter() == null) {
+            recycler.setAdapter(mAdapter);
+        }
     }
 
     @Override

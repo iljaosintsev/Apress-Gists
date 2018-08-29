@@ -1,4 +1,4 @@
-package com.turlir.abakgists.allgists.view;
+package com.turlir.abakgists.allgists.view.listing;
 
 
 import android.view.View;
@@ -13,10 +13,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
-class GistModelHolder extends ModelViewHolder<GistModel> {
+public class GistModelHolder extends ModelViewHolder<GistModel> {
 
     @BindView(R.id.item_gist_avatar)
-    ImageView ivAvatar;
+    public ImageView ivAvatar;
 
     @BindView(R.id.item_gist_id)
     TextView tvId;

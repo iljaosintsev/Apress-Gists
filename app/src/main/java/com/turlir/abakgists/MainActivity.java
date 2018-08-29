@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     View btnAll;
 
     private Pair<Params, Params> animateParams;
+    private AnimatorSet animation;
 
     @Override
     protected void onCreate(@Nullable Bundle state) {
@@ -49,6 +50,14 @@ public class MainActivity extends AppCompatActivity {
         if (animateParams != null) {
             AnimatorSet set = animateButton(animateParams.second);
             set.start();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (animation != null && animation.isStarted()) {
+            animation.end();
         }
     }
 
@@ -73,9 +82,9 @@ public class MainActivity extends AppCompatActivity {
                 .center(btnNotes)
                 .down(btnAll)
                 .compute();
-        AnimatorSet set = animateButton(animateParams.first);
-        set.start();
-        set.addListener(new AnimatorListenerAdapter() {
+        animation = animateButton(animateParams.first);
+        animation.start();
+        animation.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
                 Intent i = new Intent(getApplicationContext(), clazz);

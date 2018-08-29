@@ -1,8 +1,9 @@
-package com.turlir.abakgists.allgists.view;
+package com.turlir.abakgists.allgists.view.listing;
 
 import android.view.View;
 
 import com.turlir.abakgists.R;
+import com.turlir.abakgists.model.InlineErrorModel;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;

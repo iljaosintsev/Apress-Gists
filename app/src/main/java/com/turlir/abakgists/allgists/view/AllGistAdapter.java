@@ -8,27 +8,30 @@ import android.support.v7.util.DiffUtil;
 import android.support.v7.util.ListUpdateCallback;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
+import com.hannesdorfmann.adapterdelegates3.ListDelegationAdapter;
 import com.turlir.abakgists.R;
+import com.turlir.abakgists.allgists.view.listing.ErrorDelegate;
+import com.turlir.abakgists.allgists.view.listing.GistModelDelegate;
+import com.turlir.abakgists.allgists.view.listing.GistModelHolder;
+import com.turlir.abakgists.allgists.view.listing.InlineErrorDelegate;
+import com.turlir.abakgists.allgists.view.listing.LoadingDelegate;
 import com.turlir.abakgists.base.OnClickListener;
 import com.turlir.abakgists.model.ErrorModel;
 import com.turlir.abakgists.model.GistModel;
 import com.turlir.abakgists.model.LoadingModel;
+import com.turlir.abakgists.model.InterfaceModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import timber.log.Timber;
 
-public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
+public class AllGistAdapter extends ListDelegationAdapter<List<InterfaceModel>> {
 
-    private final LayoutInflater mInflater;
     private final OnClickListener mClick;
-
-    private final TypesFactory mFactory;
-    private final List<ViewModel> mContent;
+    private final GistModelDelegate mGistDelegate;
 
     private final ListUpdateCallback mLoggerAdapterOperations = new ListUpdateCallback() {
         @Override
@@ -53,24 +56,21 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
     };
 
     public AllGistAdapter(Context cnt, OnClickListener clickListener) {
-        mInflater = LayoutInflater.from(cnt);
+        LayoutInflater inflater = LayoutInflater.from(cnt);
         mClick = clickListener;
-        mContent = new ArrayList<>();
+        setItems(new ArrayList<>());
 
-        mFactory = new TypesFactory();
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        return mContent.get(position).type(mFactory);
+        mGistDelegate = new GistModelDelegate(inflater);
+        delegatesManager.addDelegate(R.layout.item_gist, mGistDelegate);
+        delegatesManager.addDelegate(R.layout.inline_loading, new LoadingDelegate(inflater));
+        delegatesManager.addDelegate(R.layout.inline_error, new InlineErrorDelegate(inflater));
+        delegatesManager.addDelegate(R.layout.network_error, new ErrorDelegate(inflater));
     }
 
     @NonNull
     @Override
-    public ModelViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(viewType, parent, false);
-
-        final ModelViewHolder holder = mFactory.holder(viewType, view);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        RecyclerView.ViewHolder holder = super.onCreateViewHolder(parent, viewType);
         holder.itemView.setOnClickListener(v -> {
             int position = holder.getAdapterPosition();
             if (position != RecyclerView.NO_POSITION) {
@@ -80,20 +80,7 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
                 }
             }
         });
-
         return holder;
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull ModelViewHolder holder, int position) {
-        ViewModel item = mContent.get(position);
-        //noinspection unchecked
-        holder.bind(item);
-    }
-
-    @Override
-    public int getItemCount() {
-        return mContent.size();
     }
 
     @Override
@@ -105,66 +92,61 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
             return position;
         }
     }
-    private ViewModel getItemByPosition(int p) {
-        return mContent.get(p);
-    }
 
     @Nullable
     public GistModel getGistByPosition(int p) {
-        ViewModel item = getItemByPosition(p);
-        return mFactory.instance(item);
+        InterfaceModel item = getItemByPosition(p);
+        if (getItemViewType(p) == mGistDelegate.getLayout()) {
+            return (GistModel) item;
+        }
+        return null;
     }
 
     public void resetGists(List<GistModel> value) {
-        DiffUtil.DiffResult diff = DiffUtil.calculateDiff(new GistDiffCallback(mContent, value));
+        DiffUtil.DiffResult diff = DiffUtil.calculateDiff(new GistDiffCallback(items, value));
         diff.dispatchUpdatesTo(this);
         diff.dispatchUpdatesTo(mLoggerAdapterOperations);
 
-        mContent.clear();
-        mContent.addAll(value);
-    }
-
-    public void removeLastItem() {
-        int index = mContent.size() - 1;
-        mContent.remove(index);
-        notifyItemRemoved(index);
+        items.clear();
+        items.addAll(value);
     }
 
     void addError(String desc) {
-        int s = mContent.size();
-        mContent.add(new ErrorModel(desc));
-        notifyItemInserted(s + 1);
+        items.add(new ErrorModel(desc));
+        notifyItemInserted(items.size());
     }
 
     void clearAll() {
         int c = getItemCount();
-        mContent.clear();
+        items.clear();
         notifyItemRangeRemoved(0, c);
     }
 
     void addLoading(int viewed) {
-        mContent.add(new LoadingModel(viewed));
-        notifyItemInserted(mContent.size() + 1);
+        items.add(new LoadingModel(viewed));
+        notifyItemInserted(items.size());
     }
 
     void removeLastIfLoading() {
         int i = getItemCount() - 1;
         if (i > 0) {
-            ViewModel last = getItemByPosition(i);
-            int type = last.type(mFactory);
-            if (type == R.layout.inline_loading) {
-                mContent.remove(i);
+            if (getItemViewType(i) == R.layout.inline_loading) {
+                items.remove(i);
                 notifyItemRemoved(i);
             }
         }
     }
 
+    private InterfaceModel getItemByPosition(int p) {
+        return items.get(p);
+    }
+
     private /*static*/ class GistDiffCallback extends DiffUtil.Callback {
 
-        private final List<ViewModel> mOldList;
+        private final List<InterfaceModel> mOldList;
         private final List<GistModel> mNowList;
 
-        private GistDiffCallback(List<ViewModel> oldList, List<GistModel> nowList) {
+        private GistDiffCallback(List<InterfaceModel> oldList, List<GistModel> nowList) {
             this.mOldList = oldList;
             this.mNowList = nowList;
         }
@@ -181,8 +163,7 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
 
         @Override
         public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-            ViewModel old = mOldList.get(oldItemPosition);
-            GistModel oldModel = mFactory.instance(old);
+            GistModel oldModel = getGistByPosition(oldItemPosition);
             if (oldModel != null) {
                 GistModel now = mNowList.get(newItemPosition);
                 boolean diff = now.isDifferent(oldModel);
@@ -196,8 +177,8 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
 
         @Override
         public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-            ViewModel old = mOldList.get(oldItemPosition);
-            ViewModel now = mNowList.get(newItemPosition);
+            InterfaceModel old = mOldList.get(oldItemPosition);
+            InterfaceModel now = mNowList.get(newItemPosition);
             boolean equals = old.equals(now);
             //if (!equals) Timber.v("contents different %d - %d", oldItemPosition, newItemPosition);
             return equals;
