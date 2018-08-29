@@ -105,9 +105,6 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
             return position;
         }
     }
-    private ViewModel getItemByPosition(int p) {
-        return mContent.get(p);
-    }
 
     @Nullable
     public GistModel getGistByPosition(int p) {
@@ -124,16 +121,9 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
         mContent.addAll(value);
     }
 
-    public void removeLastItem() {
-        int index = mContent.size() - 1;
-        mContent.remove(index);
-        notifyItemRemoved(index);
-    }
-
     void addError(String desc) {
-        int s = mContent.size();
         mContent.add(new ErrorModel(desc));
-        notifyItemInserted(s + 1);
+        notifyItemInserted(mContent.size());
     }
 
     void clearAll() {
@@ -144,19 +134,21 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
 
     void addLoading(int viewed) {
         mContent.add(new LoadingModel(viewed));
-        notifyItemInserted(mContent.size() + 1);
+        notifyItemInserted(mContent.size());
     }
 
     void removeLastIfLoading() {
         int i = getItemCount() - 1;
         if (i > 0) {
-            ViewModel last = getItemByPosition(i);
-            int type = last.type(mFactory);
-            if (type == R.layout.inline_loading) {
+            if (getItemViewType(i) == R.layout.inline_loading) {
                 mContent.remove(i);
                 notifyItemRemoved(i);
             }
         }
+    }
+
+    private ViewModel getItemByPosition(int p) {
+        return mContent.get(p);
     }
 
     private /*static*/ class GistDiffCallback extends DiffUtil.Callback {
@@ -181,8 +173,7 @@ public class AllGistAdapter extends RecyclerView.Adapter<ModelViewHolder> {
 
         @Override
         public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-            ViewModel old = mOldList.get(oldItemPosition);
-            GistModel oldModel = mFactory.instance(old);
+            GistModel oldModel = getGistByPosition(oldItemPosition);
             if (oldModel != null) {
                 GistModel now = mNowList.get(newItemPosition);
                 boolean diff = now.isDifferent(oldModel);
