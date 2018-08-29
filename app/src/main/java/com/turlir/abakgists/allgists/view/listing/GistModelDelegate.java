@@ -1,4 +1,4 @@
-package com.turlir.abakgists.allgists.view;
+package com.turlir.abakgists.allgists.view.listing;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -14,7 +14,7 @@ import java.util.List;
 
 public class GistModelDelegate extends BaseAdapterDelegate {
 
-    GistModelDelegate(LayoutInflater inflater) {
+    public GistModelDelegate(LayoutInflater inflater) {
         super(inflater);
     }
 
@@ -37,7 +37,7 @@ public class GistModelDelegate extends BaseAdapterDelegate {
     }
 
     @Override
-    protected int getLayout() {
+    public int getLayout() {
         return R.layout.item_gist;
     }
 

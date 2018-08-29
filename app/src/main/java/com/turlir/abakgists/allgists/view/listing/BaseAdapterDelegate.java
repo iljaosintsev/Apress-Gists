@@ -1,4 +1,4 @@
-package com.turlir.abakgists.allgists.view;
+package com.turlir.abakgists.allgists.view.listing;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;

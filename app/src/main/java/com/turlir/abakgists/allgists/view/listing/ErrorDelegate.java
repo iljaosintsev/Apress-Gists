@@ -1,4 +1,4 @@
-package com.turlir.abakgists.allgists.view;
+package com.turlir.abakgists.allgists.view.listing;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -7,36 +7,36 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.turlir.abakgists.R;
-import com.turlir.abakgists.model.InlineErrorModel;
+import com.turlir.abakgists.model.ErrorModel;
 import com.turlir.abakgists.model.InterfaceModel;
 
 import java.util.List;
 
-public class InlineErrorDelegate extends BaseAdapterDelegate {
+public class ErrorDelegate extends BaseAdapterDelegate {
 
-    InlineErrorDelegate(LayoutInflater inflater) {
+    public ErrorDelegate(LayoutInflater inflater) {
         super(inflater);
     }
 
     @NonNull
     @Override
     protected RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, View itemView) {
-        return new InlineErrorModelHolder(itemView);
+        return new ErrorModelHolder(itemView);
     }
 
     @Override
     protected int getLayout() {
-        return R.layout.inline_error;
+        return R.layout.network_error;
     }
 
     @Override
     protected boolean isForViewType(@NonNull List<InterfaceModel> items, int position) {
-        return items.get(position) instanceof InlineErrorModel;
+        return items.get(position) instanceof ErrorModel;
     }
 
     @Override
     protected void onBindViewHolder(@NonNull List<InterfaceModel> items, int position,
                                     @NonNull RecyclerView.ViewHolder holder, @NonNull List<Object> payloads) {
-        ((InlineErrorModelHolder) holder).bind((InlineErrorModel) items.get(position));
+        ((ErrorModelHolder) holder).bind((ErrorModel) items.get(position));
     }
 }
