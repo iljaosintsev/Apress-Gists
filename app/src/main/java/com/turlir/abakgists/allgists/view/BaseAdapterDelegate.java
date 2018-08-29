@@ -7,10 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegate;
+import com.turlir.abakgists.model.InterfaceModel;
 
 import java.util.List;
 
-abstract class BaseAdapterDelegate extends AdapterDelegate<List<ViewModel>> {
+abstract class BaseAdapterDelegate extends AdapterDelegate<List<InterfaceModel>> {
 
     private final LayoutInflater mInflater;
 

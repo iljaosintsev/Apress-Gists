@@ -1,9 +1,7 @@
 package com.turlir.abakgists.model;
 
 
-import com.turlir.abakgists.allgists.view.ViewModel;
-
-public class ErrorModel implements ViewModel {
+public class ErrorModel implements InterfaceModel {
 
     public final String description;
 

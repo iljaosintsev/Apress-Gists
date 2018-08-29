@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.turlir.abakgists.R;
 import com.turlir.abakgists.model.ErrorModel;
+import com.turlir.abakgists.model.InterfaceModel;
 
 import java.util.List;
 
@@ -29,12 +30,12 @@ class ErrorDelegate extends BaseAdapterDelegate {
     }
 
     @Override
-    protected boolean isForViewType(@NonNull List<ViewModel> items, int position) {
+    protected boolean isForViewType(@NonNull List<InterfaceModel> items, int position) {
         return items.get(position) instanceof ErrorModel;
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull List<ViewModel> items, int position,
+    protected void onBindViewHolder(@NonNull List<InterfaceModel> items, int position,
                                     @NonNull RecyclerView.ViewHolder holder, @NonNull List<Object> payloads) {
         ((ErrorModelHolder) holder).bind((ErrorModel) items.get(position));
     }

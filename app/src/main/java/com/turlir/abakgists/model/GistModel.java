@@ -8,10 +8,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.turlir.abakgists.R;
-import com.turlir.abakgists.allgists.view.ViewModel;
 
 public class GistModel
-        implements ViewModel, Parcelable, Identifiable<GistModel> {
+        implements InterfaceModel, Parcelable, Identifiable<GistModel> {
 
     public final String id;
 

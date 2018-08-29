@@ -16,13 +16,14 @@ import com.turlir.abakgists.base.OnClickListener;
 import com.turlir.abakgists.model.ErrorModel;
 import com.turlir.abakgists.model.GistModel;
 import com.turlir.abakgists.model.LoadingModel;
+import com.turlir.abakgists.model.InterfaceModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import timber.log.Timber;
 
-public class AllGistAdapter extends ListDelegationAdapter<List<ViewModel>> {
+public class AllGistAdapter extends ListDelegationAdapter<List<InterfaceModel>> {
 
     private final OnClickListener mClick;
     private final GistModelDelegate mGistDelegate;
@@ -89,7 +90,7 @@ public class AllGistAdapter extends ListDelegationAdapter<List<ViewModel>> {
 
     @Nullable
     public GistModel getGistByPosition(int p) {
-        ViewModel item = getItemByPosition(p);
+        InterfaceModel item = getItemByPosition(p);
         if (getItemViewType(p) == mGistDelegate.getLayout()) {
             return (GistModel) item;
         }
@@ -131,16 +132,16 @@ public class AllGistAdapter extends ListDelegationAdapter<List<ViewModel>> {
         }
     }
 
-    private ViewModel getItemByPosition(int p) {
+    private InterfaceModel getItemByPosition(int p) {
         return items.get(p);
     }
 
     private /*static*/ class GistDiffCallback extends DiffUtil.Callback {
 
-        private final List<ViewModel> mOldList;
+        private final List<InterfaceModel> mOldList;
         private final List<GistModel> mNowList;
 
-        private GistDiffCallback(List<ViewModel> oldList, List<GistModel> nowList) {
+        private GistDiffCallback(List<InterfaceModel> oldList, List<GistModel> nowList) {
             this.mOldList = oldList;
             this.mNowList = nowList;
         }
@@ -171,8 +172,8 @@ public class AllGistAdapter extends ListDelegationAdapter<List<ViewModel>> {
 
         @Override
         public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-            ViewModel old = mOldList.get(oldItemPosition);
-            ViewModel now = mNowList.get(newItemPosition);
+            InterfaceModel old = mOldList.get(oldItemPosition);
+            InterfaceModel now = mNowList.get(newItemPosition);
             boolean equals = old.equals(now);
             //if (!equals) Timber.v("contents different %d - %d", oldItemPosition, newItemPosition);
             return equals;

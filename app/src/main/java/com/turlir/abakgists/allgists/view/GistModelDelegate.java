@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.turlir.abakgists.R;
 import com.turlir.abakgists.model.GistModel;
+import com.turlir.abakgists.model.InterfaceModel;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class GistModelDelegate extends BaseAdapterDelegate {
     }
 
     @Override
-    protected boolean isForViewType(@NonNull List<ViewModel> items, int position) {
+    protected boolean isForViewType(@NonNull List<InterfaceModel> items, int position) {
         return items.get(position) instanceof GistModel;
     }
 
@@ -41,7 +42,7 @@ public class GistModelDelegate extends BaseAdapterDelegate {
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull List<ViewModel> items, int position,
+    protected void onBindViewHolder(@NonNull List<InterfaceModel> items, int position,
                                     @NonNull RecyclerView.ViewHolder holder, @NonNull List<Object> payloads) {
         GistModelHolder gmh = ((GistModelHolder) holder);
         GistModel data = (GistModel) items.get(position);

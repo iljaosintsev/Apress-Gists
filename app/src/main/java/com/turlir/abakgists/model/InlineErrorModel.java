@@ -3,9 +3,7 @@ package com.turlir.abakgists.model;
 
 import android.view.View;
 
-import com.turlir.abakgists.allgists.view.ViewModel;
-
-public class InlineErrorModel implements ViewModel {
+public class InlineErrorModel implements InterfaceModel {
 
     public final View.OnClickListener clicker;
 
