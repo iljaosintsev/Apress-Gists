@@ -10,10 +10,4 @@ class InlineErrorModel extends ViewModel {
     InlineErrorModel(View.OnClickListener clicker) {
         this.clicker = clicker;
     }
-
-    @Override
-    public int type(TypesFactory factory) {
-        return factory.type(this);
-    }
-
 }

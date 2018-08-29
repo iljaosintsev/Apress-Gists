@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.turlir.abakgists.R;
-import com.turlir.abakgists.allgists.view.TypesFactory;
 import com.turlir.abakgists.allgists.view.ViewModel;
 
 public class GistModel
@@ -97,11 +96,6 @@ public class GistModel
     @Override
     public int describeContents() {
         return 0;
-    }
-
-    @Override
-    public int type(TypesFactory factory) {
-        return factory.type(this);
     }
 
     @Override
