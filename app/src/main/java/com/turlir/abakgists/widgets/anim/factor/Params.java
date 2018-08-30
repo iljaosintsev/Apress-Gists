@@ -16,24 +16,20 @@ import java.util.List;
  *     <li>Прозрачность</li>
  * </ul>
  * Первые два параметра в совокупности представляют изменение положения view (на сколько {@code px} и в какую сторону).
- * Минимальное значение перемещения передается в виде аргумента {@code value}
- * в метод {@link #distance(int position, float value)}.
  * Итоговое перемещение вычисляется по формуле {@code v * m + a}, где
  * <ul>
- *     <li>v – минимальное значение перемещения</li>
+ *     <li>v – базовое значение перемещения (высота view)</li>
  *     <li>m – направления перемещения (1 – вниз, минус 1 – вверх, 0 – на месте)</li>
  *     <li>a – слагаемое для компенсации отступов между view</li>
  * </ul>
  */
 public class Params {
 
-    private final List<Integer> distanceMulti; // изменяет направление перемещения
-    private final List<Float> distanceAdd; // компенсирует расстояние между view
+    private final List<Float> distance; // изменяет направление перемещения
     private final List<Float> alpha; // "исчезает" view
 
     private Params() {
-        distanceMulti = new ArrayList<>(3);
-        distanceAdd = new ArrayList<>(3);
+        distance = new ArrayList<>(3);
         alpha = new ArrayList<>(3);
     }
 
@@ -45,23 +41,12 @@ public class Params {
         return alpha.get(position);
     }
 
-    /**
-     * Рассчитывается изменение положения для view с учетом хранимого множителя и приращения
-     * @param position порядковый номер view
-     * @param value базовое значение перемещения
-     * @return изменение положения для view
-     */
-    float distance(int position, float value) {
-        return value * distanceMulti.get(position) + distanceAdd.get(position);
+    float distance(int position) {
+        return distance.get(position);
     }
 
-    private Params multi(int arg) {
-        distanceMulti.add(arg);
-        return this;
-    }
-
-    private Params additional(float arg) {
-        distanceAdd.add(arg);
+    private Params distance(int multi, float add, float value) {
+        distance.add(value * multi + add);
         return this;
     }
 
@@ -71,16 +56,12 @@ public class Params {
     }
 
     private boolean consistent() {
-        int du = distanceMulti.size();
-        int da = distanceAdd.size();
-        int a = alpha.size();
-        return du == da && da == a;
+        return distance.size() == alpha.size();
     }
 
     @Override
     public String toString() {
-        return Arrays.toString(distanceMulti.toArray()) + "\n" +
-               Arrays.toString(distanceAdd.toArray()) + "\n" +
+        return Arrays.toString(distance.toArray()) + "\n" +
                Arrays.toString(alpha.toArray());
     }
 
@@ -147,20 +128,24 @@ public class Params {
 
             for (View item : mViews) {
                 there.alpha(mSelected == item ? 1 : 0f);
-
                 back.alpha(1f);
-                back.additional(0);
 
                 if (item == mSelected) {
                     float distance = Math.abs(mSelected.getY() - mViews[1].getY()) - item.getHeight();
                     int sign = Float.compare(mViews[1].getY(), mSelected.getY());
-                    there.additional(distance * sign);
-                    there.multi(Float.compare(mViews[1].getY(), item.getY()));
-                    back.multi(Float.compare(item.getY(), mViews[1].getY()) / 2);
+                    float tadd = distance * sign;
+                    int tm = Float.compare(mViews[1].getY(), item.getY());
+                    there.distance(tm, tadd, item.getHeight());
+
+                    int bm = Float.compare(item.getY(), mViews[1].getY()) / 2;
+                    back.distance(bm, 0f, item.getHeight());
+
                 } else {
-                    there.additional(0f);
-                    there.multi(Float.compare(item.getY(), mSelected.getY()));
-                    back.multi(Float.compare(mSelected.getY(), mViews[1].getY()) / 2);
+                    int tm = Float.compare(item.getY(), mSelected.getY());
+                    there.distance(tm, 0f, item.getHeight());
+
+                    int bm = Float.compare(mSelected.getY(), mViews[1].getY()) / 2;
+                    back.distance(bm, 0f, item.getHeight());
                 }
             }
 
@@ -236,12 +221,14 @@ public class Params {
                 if (item == mSelected) { // я выбранный
                     float distance = Math.abs(mSelected.getY() - mViews[1].getY()) - item.getHeight(); // на сколько
                     int sign = Float.compare(mViews[1].getY(), mSelected.getY()); //  в какую сторону
-                    params.additional(distance * sign); // двигаться
-                    params.multi(Float.compare(mViews[1].getY(), item.getY())); // я относительно центра
+                    float add = (distance * sign); // двигаться
+                    int multi = Float.compare(mViews[1].getY(), item.getY()); // я относительно центра
+                    params.distance(multi, add, item.getHeight());
 
                 } else {
-                    params.additional(0f); // дополнительно никуда не двигаться
-                    params.multi(Float.compare(item.getY(), mSelected.getY())); // я относительно выбранного
+                    float add = 0f; // дополнительно никуда не двигаться
+                    int multi = Float.compare(item.getY(), mSelected.getY()); // я относительно выбранного
+                    params.distance(multi, add, item.getHeight());
                 }
             }
             mSelected = null;
