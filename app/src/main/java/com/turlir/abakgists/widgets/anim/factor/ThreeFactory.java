@@ -1,10 +1,10 @@
-package com.turlir.abakgists.view.anim.factor;
+package com.turlir.abakgists.widgets.anim.factor;
 
 import android.view.View;
 
-import com.turlir.abakgists.view.anim.base.AnimationCreator;
-import com.turlir.abakgists.view.anim.creator.Setting;
-import com.turlir.abakgists.view.anim.creator.VerticalMove;
+import com.turlir.abakgists.widgets.anim.base.AnimationCreator;
+import com.turlir.abakgists.widgets.anim.creator.Setting;
+import com.turlir.abakgists.widgets.anim.creator.VerticalMove;
 
 /**
  * Создает делегаты однонаправленной анимации горизонтального движения для двух из трех view.

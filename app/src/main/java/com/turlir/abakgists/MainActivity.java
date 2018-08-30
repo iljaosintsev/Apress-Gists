@@ -12,10 +12,10 @@ import android.view.View;
 
 import com.turlir.abakgists.allgists.view.AllGistsActivity;
 import com.turlir.abakgists.notes.view.NotesActivity;
-import com.turlir.abakgists.view.anim.base.Factory;
-import com.turlir.abakgists.view.anim.creator.Setting;
-import com.turlir.abakgists.view.anim.factor.ButtonAnimFactory;
-import com.turlir.abakgists.view.anim.factor.Params;
+import com.turlir.abakgists.widgets.anim.base.Factory;
+import com.turlir.abakgists.widgets.anim.creator.Setting;
+import com.turlir.abakgists.widgets.anim.factor.ButtonAnimFactory;
+import com.turlir.abakgists.widgets.anim.factor.Params;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

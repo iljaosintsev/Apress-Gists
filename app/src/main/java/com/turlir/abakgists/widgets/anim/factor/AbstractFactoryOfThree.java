@@ -1,9 +1,9 @@
-package com.turlir.abakgists.view.anim.factor;
+package com.turlir.abakgists.widgets.anim.factor;
 
 import android.view.View;
 
-import com.turlir.abakgists.view.anim.base.AnimationCreator;
-import com.turlir.abakgists.view.anim.base.Factory;
+import com.turlir.abakgists.widgets.anim.base.AnimationCreator;
+import com.turlir.abakgists.widgets.anim.base.Factory;
 
 import java.util.ArrayList;
 import java.util.List;

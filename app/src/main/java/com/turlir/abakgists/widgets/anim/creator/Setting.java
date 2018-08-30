@@ -1,4 +1,4 @@
-package com.turlir.abakgists.view.anim.creator;
+package com.turlir.abakgists.widgets.anim.creator;
 
 import android.support.annotation.FloatRange;
 

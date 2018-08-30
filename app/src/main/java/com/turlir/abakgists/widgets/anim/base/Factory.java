@@ -1,4 +1,4 @@
-package com.turlir.abakgists.view.anim.base;
+package com.turlir.abakgists.widgets.anim.base;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
