@@ -7,16 +7,18 @@ import android.view.View;
 
 import com.turlir.abakgists.view.anim.base.AnimationCreator;
 
-public class VerticalMove
-        implements AnimationCreator {
+/**
+ * Анимация перемещения view по вертикали с изменением прозрачности
+ */
+public class VerticalMove implements AnimationCreator {
 
     private final Setting mSetting;
     private final float mDistance;
 
-    public VerticalMove(Setting setting, View v) {
-        this(setting, v.getHeight());
-    }
-
+    /**
+     * @param setting параметры анимации
+     * @param distance изменение положение в {@code px}, может быть отрицательным
+     */
     public VerticalMove(Setting setting, float distance) {
         this.mSetting = setting;
         mDistance = distance;

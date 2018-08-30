@@ -2,9 +2,22 @@ package com.turlir.abakgists.view.anim.creator;
 
 import android.support.annotation.FloatRange;
 
+/**
+ * Набор дополнительных параметров анимации, не привязанных к конкретным view.
+ */
 public class Setting {
 
-    public final long delay, duration;
+    /**
+     * Задержка
+     */
+    public final long delay;
+    /**
+     * Продолжительность
+     */
+    public final long duration;
+    /**
+     * Прозрачность
+     */
     public final float alpha;
 
     public Setting(long delay, long duration, @FloatRange(from = 0, to = 1) float alpha) {
@@ -12,15 +25,4 @@ public class Setting {
         this.duration = duration;
         this.alpha = alpha;
     }
-
-    public Setting(long delay, long duration) {
-        this.delay = delay;
-        this.duration = duration;
-        alpha = -1;
-    }
-
-    public boolean shouldAlphaChange() {
-        return alpha == -1;
-    }
-
 }

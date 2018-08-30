@@ -6,12 +6,19 @@ import com.turlir.abakgists.view.anim.base.AnimationCreator;
 import com.turlir.abakgists.view.anim.creator.Setting;
 import com.turlir.abakgists.view.anim.creator.VerticalMove;
 
-public class ButtonAnimFactory
-        extends AbstractFactoryOfThree {
+/**
+ * Создает делегаты однонаправленной анимации вертикального движения для набора из трех view.
+ * Характер анимации: якорная view перемещается в центре композиции, две остальные отъезжают от нее и исчезают.
+ */
+public class ButtonAnimFactory extends AbstractFactoryOfThree {
 
     private final Params mParams;
     private final Setting mCommon;
 
+    /**
+     * @param specific спецификация анимации
+     * @param common общие параметры
+     */
     public ButtonAnimFactory(Params specific, Setting common) {
         mParams = specific;
         mCommon = common;

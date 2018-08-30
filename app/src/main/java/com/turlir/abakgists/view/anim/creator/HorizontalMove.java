@@ -6,16 +6,18 @@ import android.view.View;
 
 import com.turlir.abakgists.view.anim.base.AnimationCreator;
 
-public class HorizontalMove
-        implements AnimationCreator {
+/**
+ * Анимация перемещения view по горизонтали с изменением прозрачности
+ */
+public class HorizontalMove implements AnimationCreator {
 
     private final Setting mSetting;
     private final float mDistance;
 
-    public HorizontalMove(Setting setting, View v) {
-        this(setting, v.getWidth());
-    }
-
+    /**
+     * @param setting параметры анимации
+     * @param distance изменение положение в {@code px}, может быть отрицательным
+     */
     public HorizontalMove(Setting setting, float distance) {
         this.mSetting = setting;
         mDistance = distance;
@@ -23,8 +25,7 @@ public class HorizontalMove
 
     @Override
     public ObjectAnimator createAnimation(View view) {
-        return ObjectAnimator
-                .ofFloat(view, View.TRANSLATION_X, mDistance);
+        return ObjectAnimator.ofFloat(view, View.TRANSLATION_X, mDistance);
     }
 
     @Override
