@@ -1,12 +1,12 @@
 package com.turlir.abakgists.api;
 
 import com.turlir.abakgists.allgists.loader.Range;
+import com.turlir.abakgists.allgists.loader.WindowDiffer;
 import com.turlir.abakgists.allgists.loader.Window;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class ShiftTest {
 
@@ -34,44 +34,47 @@ public class ShiftTest {
 
     // other way
 
+    private final WindowDiffer differ = new WindowDiffer();
+
     @Test
     public void absolutePointOne() {
         Window start = new Range(0, 30);
         Window second = start.next();
         assertTrue(new Range(15, 45, 15).equals(second));
 
-        Window defect = second.cut(15);
+        Window defect = differ.cut(second, 15);
         assertTrue(new Range(15, 30, 15).equals(defect));
 
-        Window required = second.diff(defect);
+        Window required = differ.diff(second, defect);
         assertTrue(new Range(30, 45, 15).equals(required));
-        assertEquals(3, required.page().number);
+        assertEquals(3, differ.page(required).number);
 
         AbsolutePoint abs = new AbsolutePoint();
         Range shifted = abs.shift(required);
         assertTrue(new Range(255, 270, 15).equals(shifted));
-        assertEquals(18, shifted.page().number);
+        assertEquals(18, differ.page(shifted).number);
     }
 
     @Test
     public void absolutePointTwo() {
         Window start = new Range(0, 30, 30);
-        assertEquals(1, start.page().number);
+        assertEquals(1, differ.page(start).number);
         assertEquals(30, start.addition());
 
         AbsolutePoint abs = new AbsolutePoint();
         Range shifted = abs.shift(start);
         assertTrue(new Range(270, 300, 30).equals(shifted));
-        assertEquals(10, shifted.page().number);
+        assertEquals(10, differ.page(shifted).number);
     }
 
     static class AbsolutePoint {
         private final static int PAGE = 20;
         private final static int PER_PAGE = 15;
+        private final WindowDiffer differ = new WindowDiffer();
 
         Range shift(Window r) {
             int size = r.addition();
-            int number = r.page().number;
+            int number = differ.page(r).number;
             if (size == PER_PAGE) {
                 number = PAGE - number + 1;
                 return new Range((number - 1) * PER_PAGE, number * PER_PAGE, size);

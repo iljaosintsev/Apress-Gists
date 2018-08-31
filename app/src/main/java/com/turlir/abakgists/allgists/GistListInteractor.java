@@ -36,7 +36,7 @@ public class GistListInteractor extends WindowedRepository<GistModel> {
 
     @Override
     public Single<Integer> loadAndReplace(Window start) {
-        LoadablePage page = start.page();
+        LoadablePage page = page(start);
         range = start;
         return mRepo.reloadAllGist(page.number, page.size)
                 .subscribeOn(Schedulers.io())

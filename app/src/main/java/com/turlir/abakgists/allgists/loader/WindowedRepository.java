@@ -13,9 +13,11 @@ public abstract class WindowedRepository<T extends Identifiable<T>> {
 
     @NonNull
     protected Window range;
+    private final WindowDiffer differ;
 
     public WindowedRepository(@NonNull Window start) {
         range = start;
+        differ = new WindowDiffer();
     }
 
     @NonNull
@@ -31,11 +33,19 @@ public abstract class WindowedRepository<T extends Identifiable<T>> {
 
     protected abstract Flowable<List<T>> subscribe(Window w);
 
+    protected LoadablePage page(Window w) {
+        return differ.page(w);
+    }
+
     public final LoadablePage requiredPage() {
         int inList = computeApproximateSize();
-        Window already = range.cut(inList);
-        Window required = range.diff(already);
-        return required.page();
+        Window already = differ.cut(range, inList);
+        Window required = differ.diff(range, already);
+        return differ.page(required);
+    }
+
+    public LoadablePage page() {
+        return differ.page(range);
     }
 
     public final Flowable<List<T>> firstPage() {

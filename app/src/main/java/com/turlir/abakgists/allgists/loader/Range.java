@@ -74,40 +74,6 @@ public class Range implements Window, Parcelable {
     }
 
     @Override
-    public LoadablePage page() {
-        return page(count());
-    }
-
-    private LoadablePage page(int perPage) {
-        return new LoadablePage(absStart, absStart + perPage);
-    }
-
-    @Override
-    public Window cut(int size) {
-        if (size > count()) throw new IllegalArgumentException();
-        return new Range(absStart, absStart + size, addition);
-    }
-
-    @Override
-    public Window diff(Window o) {
-        int required = count() - o.count();
-        if (required < 1 || absStart != o.start()) {
-            throw new IllegalArgumentException();
-        }
-        int at = o.stop();
-        if (at % required == 0) {
-            return new Range(at, absStop, required);
-        } else {
-            int center = absStart + count() / 2;
-            if (at > center) {
-                return downScale(2);
-            } else {
-                return this;
-            }
-        }
-    }
-
-    @Override
     public int count() {
         return absStop - absStart;
     }
@@ -133,7 +99,8 @@ public class Range implements Window, Parcelable {
         return absStart >= addition;
     }
 
-    private Range downScale(int coefficient) {
+    @Override
+    public Range downScale(int coefficient) {
         if (coefficient < 2 || count() % coefficient != 0) throw new IllegalArgumentException();
         int newStart = absStart + count() / coefficient;
         return new Range(newStart, absStop, addition);

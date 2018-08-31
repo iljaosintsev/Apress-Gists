@@ -12,11 +12,7 @@ public interface Window {
 
     //
 
-    Window cut(int size);
-
-    Window diff(Window o);
-
-    LoadablePage page();
+    Range downScale(int coefficient);
 
     //
 

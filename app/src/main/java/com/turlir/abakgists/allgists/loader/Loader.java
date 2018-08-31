@@ -173,7 +173,7 @@ public abstract class Loader<T extends Identifiable<T>> {
         private void itemsInFirstPage(List<T> nextItems) {
             int nowSize = nextItems.size();
             if (nowSize == 0) {
-                LoadablePage page = mInteractor.range.page();
+                LoadablePage page = mInteractor.page();
                 server(page);
             } else {
                 if (shouldRender(nowSize)) {
