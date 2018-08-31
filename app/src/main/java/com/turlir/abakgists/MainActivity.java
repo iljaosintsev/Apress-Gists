@@ -54,8 +54,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onPause() {
+        super.onPause();
+        animation.removeAllListeners();
         if (animation != null && animation.isStarted()) {
             animation.end();
         }
