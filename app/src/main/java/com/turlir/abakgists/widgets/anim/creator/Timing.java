@@ -3,7 +3,7 @@ package com.turlir.abakgists.widgets.anim.creator;
 /**
  * Набор дополнительных параметров анимации, не привязанных к конкретным view.
  */
-public class Setting {
+public class Timing {
 
     /**
      * Задержка
@@ -14,7 +14,7 @@ public class Setting {
      */
     public final long duration;
 
-    public Setting(long delay, long duration) {
+    public Timing(long delay, long duration) {
         this.delay = delay;
         this.duration = duration;
     }

@@ -18,7 +18,7 @@ import android.view.animation.LinearInterpolator;
 import com.turlir.abakgists.allgists.view.AllGistsActivity;
 import com.turlir.abakgists.notes.view.NotesActivity;
 import com.turlir.abakgists.widgets.anim.base.Factory;
-import com.turlir.abakgists.widgets.anim.creator.Setting;
+import com.turlir.abakgists.widgets.anim.creator.Timing;
 import com.turlir.abakgists.widgets.anim.factor.ButtonAnimFactory;
 import com.turlir.abakgists.widgets.anim.factor.Params;
 
@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private AnimatorSet animateButton(final Params params) {
-        Setting common = new Setting(0, DURATION);
+        Timing common = new Timing(0, DURATION);
         Factory factory = new ButtonAnimFactory(params, common);
         return factory.animate(btnAllGists, btnNotes, btnAll);
     }

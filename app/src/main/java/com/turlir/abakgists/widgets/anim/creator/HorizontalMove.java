@@ -11,14 +11,14 @@ import com.turlir.abakgists.widgets.anim.base.AnimationCreator;
  */
 public class HorizontalMove implements AnimationCreator {
 
-    private final Setting mSetting;
+    private final Timing mSetting;
     private final float mDistance;
 
     /**
      * @param setting параметры анимации
      * @param distance изменение положение в {@code px}, может быть отрицательным
      */
-    public HorizontalMove(Setting setting, float distance) {
+    public HorizontalMove(Timing setting, float distance) {
         this.mSetting = setting;
         mDistance = distance;
     }

@@ -12,14 +12,14 @@ import com.turlir.abakgists.widgets.anim.base.AnimationCreator;
  */
 public class VerticalMove implements AnimationCreator {
 
-    private final Setting mSetting;
+    private final Timing mSetting;
     private final float mDistance, mAlpha;
 
     /**
      * @param setting параметры анимации
      * @param distance изменение положение в {@code px}, может быть отрицательным
      */
-    public VerticalMove(Setting setting, float distance, float alpha) {
+    public VerticalMove(Timing setting, float distance, float alpha) {
         this.mSetting = setting;
         mDistance = distance;
         mAlpha = alpha;

@@ -3,7 +3,7 @@ package com.turlir.abakgists.widgets.anim.factor;
 import android.view.View;
 
 import com.turlir.abakgists.widgets.anim.base.AnimationCreator;
-import com.turlir.abakgists.widgets.anim.creator.Setting;
+import com.turlir.abakgists.widgets.anim.creator.Timing;
 import com.turlir.abakgists.widgets.anim.creator.VerticalMove;
 
 /**
@@ -13,13 +13,13 @@ import com.turlir.abakgists.widgets.anim.creator.VerticalMove;
 public class ButtonAnimFactory extends AbstractFactoryOfThree {
 
     private final Params mParams;
-    private final Setting mCommon;
+    private final Timing mCommon;
 
     /**
      * @param specific спецификация анимации
      * @param common общие параметры
      */
-    public ButtonAnimFactory(Params specific, Setting common) {
+    public ButtonAnimFactory(Params specific, Timing common) {
         mParams = specific;
         mCommon = common;
     }

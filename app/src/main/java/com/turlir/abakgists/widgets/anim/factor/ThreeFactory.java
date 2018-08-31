@@ -3,7 +3,7 @@ package com.turlir.abakgists.widgets.anim.factor;
 import android.view.View;
 
 import com.turlir.abakgists.widgets.anim.base.AnimationCreator;
-import com.turlir.abakgists.widgets.anim.creator.Setting;
+import com.turlir.abakgists.widgets.anim.creator.Timing;
 import com.turlir.abakgists.widgets.anim.creator.VerticalMove;
 
 /**
@@ -13,12 +13,12 @@ import com.turlir.abakgists.widgets.anim.creator.VerticalMove;
  */
 public class ThreeFactory extends AbstractFactoryOfThree {
 
-    private final Setting mSetting;
+    private final Timing mSetting;
 
     /**
      * @param setting общие параметры анимации для всех трех view
      */
-    public ThreeFactory(Setting setting) {
+    public ThreeFactory(Timing setting) {
         mSetting = setting;
     }
 
