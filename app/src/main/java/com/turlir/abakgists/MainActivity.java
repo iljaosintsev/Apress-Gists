@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private AnimatorSet animateButton(final Params params) {
-        Setting common = new Setting(0, DURATION, 0);
+        Setting common = new Setting(0, DURATION);
         Factory factory = new ButtonAnimFactory(params, common);
         return factory.animate(btnAllGists, btnNotes, btnAll);
     }

@@ -24,7 +24,7 @@ public class ThreeFactory extends AbstractFactoryOfThree {
 
     @Override
     public AnimationCreator first(View v) {
-        return new VerticalMove(mSetting, -v.getHeight());
+        return new VerticalMove(mSetting, -v.getHeight(), 0f);
     }
 
     @Override
@@ -34,6 +34,6 @@ public class ThreeFactory extends AbstractFactoryOfThree {
 
     @Override
     public AnimationCreator three(View v) {
-        return new VerticalMove(mSetting, v.getHeight());
+        return new VerticalMove(mSetting, v.getHeight(), 0f);
     }
 }

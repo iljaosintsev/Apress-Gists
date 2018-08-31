@@ -26,19 +26,16 @@ public class ButtonAnimFactory extends AbstractFactoryOfThree {
 
     @Override
     public AnimationCreator first(View v) {
-        Setting s = new Setting(mCommon.delay, mCommon.duration, mParams.alpha(0));
-        return new VerticalMove(s, mParams.distance(0));
+        return new VerticalMove(mCommon, mParams.distance(0), mParams.alpha(0));
     }
 
     @Override
     public AnimationCreator second(View v) {
-        Setting s = new Setting(mCommon.delay, mCommon.duration, mParams.alpha(1));
-        return new VerticalMove(s, mParams.distance(1));
+        return new VerticalMove(mCommon, mParams.distance(1), mParams.alpha(1));
     }
 
     @Override
     public AnimationCreator three(View v) {
-        Setting s = new Setting(mCommon.delay, mCommon.duration, mParams.alpha(2));
-        return new VerticalMove(s, mParams.distance(2));
+        return new VerticalMove(mCommon, mParams.distance(2), mParams.alpha(2));
     }
 }

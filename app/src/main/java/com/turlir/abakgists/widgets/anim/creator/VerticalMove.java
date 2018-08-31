@@ -13,21 +13,22 @@ import com.turlir.abakgists.widgets.anim.base.AnimationCreator;
 public class VerticalMove implements AnimationCreator {
 
     private final Setting mSetting;
-    private final float mDistance;
+    private final float mDistance, mAlpha;
 
     /**
      * @param setting параметры анимации
      * @param distance изменение положение в {@code px}, может быть отрицательным
      */
-    public VerticalMove(Setting setting, float distance) {
+    public VerticalMove(Setting setting, float distance, float alpha) {
         this.mSetting = setting;
         mDistance = distance;
+        mAlpha = alpha;
     }
 
     @Override
     public ObjectAnimator createAnimation(View view) {
         PropertyValuesHolder t = PropertyValuesHolder.ofFloat(View.TRANSLATION_Y, mDistance);
-        PropertyValuesHolder a = PropertyValuesHolder.ofFloat(View.ALPHA, mSetting.alpha);
+        PropertyValuesHolder a = PropertyValuesHolder.ofFloat(View.ALPHA, mAlpha);
         return ObjectAnimator.ofPropertyValuesHolder(view, t, a);
     }
 
