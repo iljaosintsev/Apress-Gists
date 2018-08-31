@@ -28,7 +28,7 @@ import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int DURATION = 750;
+    private static final Timing COMMON = new Timing(0, 750);
 
     @BindView(R.id.btn_all_gists)
     View btnAllGists;
@@ -98,8 +98,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private AnimatorSet animateButton(final Params params) {
-        Timing common = new Timing(0, DURATION);
-        Factory factory = new ButtonAnimFactory(params, common);
+        Factory factory = new ButtonAnimFactory(params, COMMON);
         return factory.animate(btnAllGists, btnNotes, btnAll);
     }
 
