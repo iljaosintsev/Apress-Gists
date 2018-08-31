@@ -76,7 +76,7 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
     public void again(Bundle state) {
         Range last = state.getParcelable(RANGE);
         mDataSource = mFactory.create(last);
-        mLoader = new GistLoader(mDataSource, new LoaderCallback());
+        mLoader = mFactory.create(mDataSource, new LoaderCallback());
         firstLoad();
     }
 
