@@ -112,12 +112,12 @@ public class AllGistsPresenter extends BasePresenter<GistListView> {
 
         @Override
         public boolean dataAvailable() {
-            return getView() != null && !getView().isEmpty();
+            return getView() != null && mLoader.hasData();
         }
 
         @Override
         public boolean isError() {
-            return getView() != null && getView().isError();
+            return getView() != null && mLoader.hasError();
         }
 
         @Override

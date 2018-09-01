@@ -174,11 +174,6 @@ public class AllGistsFragment extends BaseFragment implements GistListView, Gist
         }
     }
 
-    @Override
-    public boolean isError() {
-        return mAdapter.getItemCount() == 1 && mAdapter.getGistByPosition(0) == null;
-    }
-
     ////
     //// Pager(s)
     ////

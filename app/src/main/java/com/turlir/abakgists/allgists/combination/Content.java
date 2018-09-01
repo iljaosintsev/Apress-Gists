@@ -4,7 +4,7 @@ import com.turlir.abakgists.model.GistModel;
 
 import java.util.List;
 
-class Content extends ListCombination<GistModel> {
+public class Content extends ListCombination<GistModel> {
 
     private final List<GistModel> mItems;
 
@@ -38,5 +38,9 @@ class Content extends ListCombination<GistModel> {
         }
         owner.blockingLoad(false);
         owner.inlineLoad(false);
+    }
+
+    public int countItems() {
+        return mItems.size();
     }
 }

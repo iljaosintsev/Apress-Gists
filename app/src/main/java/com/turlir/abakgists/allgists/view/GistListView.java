@@ -10,10 +10,6 @@ public interface GistListView extends ErrorInterpreter, BaseView {
 
     void onGistLoaded(List<GistModel> value, boolean resetForward, boolean resetBackward);
 
-    boolean isError();
-
-    boolean isEmpty();
-
     void toBlockingLoad(boolean visible);
 
     void inlineLoad(boolean visible);

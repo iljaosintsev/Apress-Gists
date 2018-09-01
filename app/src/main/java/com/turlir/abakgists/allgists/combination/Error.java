@@ -7,7 +7,7 @@ import com.turlir.abakgists.model.GistModel;
 
 import java.util.List;
 
-class Error extends ListCombination<GistModel> {
+public class Error extends ListCombination<GistModel> {
 
     private final Throwable mError;
 

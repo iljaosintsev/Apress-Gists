@@ -3,6 +3,8 @@ package com.turlir.abakgists.allgists;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.turlir.abakgists.allgists.combination.Content;
+import com.turlir.abakgists.allgists.combination.Error;
 import com.turlir.abakgists.allgists.combination.InlineLoading;
 import com.turlir.abakgists.allgists.combination.ListCombination;
 import com.turlir.abakgists.allgists.combination.ListManipulator;
@@ -109,6 +111,17 @@ class GistLoader {
         return canLoad() && mInteractor.range.hasPrevious();
     }
 
+    public boolean hasData() {
+        if (mState instanceof Content) {
+            return ((Content) mState).countItems() != 0;
+        }
+        return false;
+    }
+
+    public boolean hasError() {
+        return mState instanceof Error;
+    }
+
     private void server(LoadablePage page) {
         mInteractor.server(page)
                 .doOnSuccess(i -> {
@@ -178,8 +191,8 @@ class GistLoader {
 
     private void changeState(ListCombination<GistModel> now) {
         Timber.d("state change: leave %s, enter %s", mState.getClass().getSimpleName(), now.getClass().getSimpleName());
+        now.perform();
         mState = now;
-        mState.perform();
     }
 
     private boolean canLoad() {
