@@ -12,9 +12,7 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public abstract class BaseFragment
-        extends Fragment
-        implements BaseView {
+public abstract class BaseFragment extends Fragment implements BaseView {
 
     private final List<Unbinder> mUnbinders = new ArrayList<>();
 

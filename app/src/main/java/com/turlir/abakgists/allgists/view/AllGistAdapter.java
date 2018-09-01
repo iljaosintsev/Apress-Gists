@@ -17,7 +17,7 @@ import com.turlir.abakgists.allgists.view.listing.GistModelDelegate;
 import com.turlir.abakgists.allgists.view.listing.GistModelHolder;
 import com.turlir.abakgists.allgists.view.listing.InlineErrorDelegate;
 import com.turlir.abakgists.allgists.view.listing.LoadingDelegate;
-import com.turlir.abakgists.base.OnClickListener;
+import com.turlir.abakgists.base.GistItemClickListener;
 import com.turlir.abakgists.model.ErrorModel;
 import com.turlir.abakgists.model.GistModel;
 import com.turlir.abakgists.model.LoadingModel;
@@ -30,7 +30,7 @@ import timber.log.Timber;
 
 public class AllGistAdapter extends ListDelegationAdapter<List<InterfaceModel>> {
 
-    private final OnClickListener mClick;
+    private final GistItemClickListener mClick;
     private final GistModelDelegate mGistDelegate;
 
     private final ListUpdateCallback mLoggerAdapterOperations = new ListUpdateCallback() {
@@ -55,7 +55,7 @@ public class AllGistAdapter extends ListDelegationAdapter<List<InterfaceModel>> 
         }
     };
 
-    public AllGistAdapter(Context cnt, OnClickListener clickListener) {
+    public AllGistAdapter(Context cnt, GistItemClickListener clickListener) {
         LayoutInflater inflater = LayoutInflater.from(cnt);
         mClick = clickListener;
         setItems(new ArrayList<>());

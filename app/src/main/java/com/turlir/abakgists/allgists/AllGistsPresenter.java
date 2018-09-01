@@ -5,7 +5,7 @@ import android.content.res.Resources;
 
 import com.turlir.abakgists.allgists.combination.ErrorProcessor;
 import com.turlir.abakgists.allgists.combination.ListManipulator;
-import com.turlir.abakgists.allgists.view.AllGistsFragment;
+import com.turlir.abakgists.allgists.view.GistListView;
 import com.turlir.abakgists.base.BasePresenter;
 import com.turlir.abakgists.base.erroring.ErrorInterpreter;
 import com.turlir.abakgists.base.erroring.ErrorSelector;
@@ -17,7 +17,7 @@ import java.util.List;
 
 import timber.log.Timber;
 
-public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
+public class AllGistsPresenter extends BasePresenter<GistListView> {
 
     private final GistLoader mLoader;
     private final ErrorSelector mSelector;
@@ -123,7 +123,7 @@ public class AllGistsPresenter extends BasePresenter<AllGistsFragment> {
         @Override
         public Resources getResources() {
             if (getView() != null) {
-                return getView().getResources();
+                return getView().getContext().getResources();
             }
             return null;
         }

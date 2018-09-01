@@ -25,8 +25,7 @@ import com.turlir.abakgists.R;
 import com.turlir.abakgists.allgists.AllGistsPresenter;
 import com.turlir.abakgists.base.App;
 import com.turlir.abakgists.base.BaseFragment;
-import com.turlir.abakgists.base.OnClickListener;
-import com.turlir.abakgists.base.erroring.ErrorInterpreter;
+import com.turlir.abakgists.base.GistItemClickListener;
 import com.turlir.abakgists.gist.GistActivity;
 import com.turlir.abakgists.model.GistModel;
 import com.turlir.abakgists.widgets.DividerDecorator;
@@ -43,9 +42,8 @@ import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 import timber.log.Timber;
 
 
-public class AllGistsFragment
-        extends BaseFragment
-        implements OnClickListener, DownScroller.NextPager, UpScroller.PrevPager, ErrorInterpreter {
+public class AllGistsFragment extends BaseFragment implements GistListView, GistItemClickListener,
+        DownScroller.NextPager, UpScroller.PrevPager {
 
     private static final int MIN_COUNT = 2;
 
@@ -160,6 +158,7 @@ public class AllGistsFragment
     /// Presenter
     ///
 
+    @Override
     public void onGistLoaded(List<GistModel> value, boolean resetForward, boolean resetBackward) {
         Timber.d("%d elements put in ui, %s resetForward, %s resetBackward", value.size(), resetForward, resetBackward);
         if (!isEmpty()) {
@@ -175,16 +174,7 @@ public class AllGistsFragment
         }
     }
 
-    private void resetScroller() {
-        mForwardScrollListener.reset();
-        mBackwardScrollListener.reset();
-    }
-
-    public void onUpdateSuccessful() {
-        mAdapter.clearAll();
-        swipe.setRefreshing(false);
-    }
-
+    @Override
     public boolean isError() {
         return mAdapter.getItemCount() == 1 && mAdapter.getGistByPosition(0) == null;
     }
@@ -237,10 +227,6 @@ public class AllGistsFragment
     }
 
     @Override
-    public String toString() {
-        return "All Gists";
-    }
-
     public void toBlockingLoad(boolean visible) {
         if (visible) {
             root.toLoading();
@@ -249,11 +235,22 @@ public class AllGistsFragment
         }
     }
 
+    @Override
     public void inlineLoad(boolean visible) {
         if (visible) {
             mAdapter.addLoading(_presenter.trueSize());
         } else {
             mAdapter.removeLastIfLoading();
         }
+    }
+
+    @Override
+    public String toString() {
+        return "All Gists";
+    }
+
+    private void resetScroller() {
+        mForwardScrollListener.reset();
+        mBackwardScrollListener.reset();
     }
 }
