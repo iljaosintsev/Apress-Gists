@@ -196,7 +196,8 @@ public class AllGistsFragment extends BaseFragment implements GistListView, Gist
     public void nonBlockingError(String msg) {
         swipe.setRefreshing(false);
         Snackbar.make(recycler, msg, Snackbar.LENGTH_LONG).show();
-        resetScroller();
+        mForwardScrollListener.reset();
+        mBackwardScrollListener.reset();
     }
 
     @Override
@@ -236,10 +237,5 @@ public class AllGistsFragment extends BaseFragment implements GistListView, Gist
     @Override
     public String toString() {
         return "All Gists";
-    }
-
-    private void resetScroller() {
-        mForwardScrollListener.reset();
-        mBackwardScrollListener.reset();
     }
 }
