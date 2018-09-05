@@ -21,9 +21,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.turlir.abakgists.R;
 import com.turlir.abakgists.allgists.AllGistsPresenter;
-import com.turlir.abakgists.base.App;
 import com.turlir.abakgists.base.BaseFragment;
 import com.turlir.abakgists.base.GistItemClickListener;
 import com.turlir.abakgists.gist.GistActivity;
@@ -37,8 +37,6 @@ import com.turlir.abakgists.widgets.UpScroller;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import butterknife.BindView;
 import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 import timber.log.Timber;
@@ -49,7 +47,7 @@ public class AllGistsFragment extends BaseFragment implements GistListView, Gist
 
     private static final int MIN_COUNT = 2;
 
-    @Inject
+    @InjectPresenter
     AllGistsPresenter _presenter;
 
     @BindView(R.id.all_gist_switch)
@@ -68,13 +66,6 @@ public class AllGistsFragment extends BaseFragment implements GistListView, Gist
     private final SwipeRefreshLayout.OnRefreshListener mSwipeListener = () -> {
         _presenter.updateGist();
     };
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        App.getComponent().inject(this);
-        _presenter.attach(this);
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle saved) {
@@ -137,7 +128,7 @@ public class AllGistsFragment extends BaseFragment implements GistListView, Gist
     @Override
     public void onDetach() {
         super.onDetach();
-        _presenter.detach();
+        _presenter.detachView(this);
     }
 
     ///

@@ -2,8 +2,9 @@ package com.turlir.abakgists.base;
 
 
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.view.View;
+
+import com.arellomobile.mvp.MvpAppCompatFragment;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -12,7 +13,7 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public abstract class BaseFragment extends Fragment implements BaseView {
+public abstract class BaseFragment extends MvpAppCompatFragment implements BaseView {
 
     private final List<Unbinder> mUnbinders = new ArrayList<>();
 

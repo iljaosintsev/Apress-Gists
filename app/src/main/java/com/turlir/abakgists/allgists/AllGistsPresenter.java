@@ -1,12 +1,15 @@
 package com.turlir.abakgists.allgists;
 
 
+import android.content.Context;
 import android.content.res.Resources;
 
+import com.arellomobile.mvp.InjectViewState;
+import com.arellomobile.mvp.MvpPresenter;
 import com.turlir.abakgists.allgists.combination.ErrorProcessor;
 import com.turlir.abakgists.allgists.combination.ListManipulator;
 import com.turlir.abakgists.allgists.view.GistListView;
-import com.turlir.abakgists.base.BasePresenter;
+import com.turlir.abakgists.base.App;
 import com.turlir.abakgists.base.erroring.ErrorInterpreter;
 import com.turlir.abakgists.base.erroring.ErrorSelector;
 import com.turlir.abakgists.base.erroring.RepeatingError;
@@ -17,21 +20,31 @@ import com.turlir.abakgists.model.LoadingModel;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import timber.log.Timber;
 
-public class AllGistsPresenter extends BasePresenter<GistListView> {
+@InjectViewState
+public class AllGistsPresenter extends MvpPresenter<GistListView> {
+
+    @Inject
+    GistListInteractor interactor;
+
+    @Inject
+    Context context;
 
     private final GistLoader mLoader;
     private final LoaderCallback mViewInteract;
 
-    public AllGistsPresenter(GistListInteractor interactor) {
+    public AllGistsPresenter() {
+        App.getComponent().inject(this);
         mViewInteract = new LoaderCallback();
         mLoader = new GistLoader(interactor, mViewInteract, new ErrorCallback());
     }
 
     @Override
-    public void detach() {
-        super.detach();
+    public void detachView(GistListView view) {
+        super.detachView(view);
         mLoader.stop();
     }
 
@@ -55,6 +68,10 @@ public class AllGistsPresenter extends BasePresenter<GistListView> {
         return mLoader.size();
     }
 
+    private boolean isViewAttached() {
+        return !getAttachedViews().isEmpty();
+    }
+
     private class LoaderCallback implements ListManipulator<GistModel> {
 
         private int mItems;
@@ -62,35 +79,29 @@ public class AllGistsPresenter extends BasePresenter<GistListView> {
 
         @Override
         public void blockingLoad(boolean visible) {
-            if (getView() != null) {
-                Timber.v("blockingLoad %s", visible);
-                isBlocked = visible;
-                getView().toBlockingLoad(visible);
-            }
+            Timber.v("blockingLoad %s", visible);
+            isBlocked = visible;
+            getViewState().toBlockingLoad(visible);
         }
 
         @Override
         public void inlineLoad(boolean visible) {
-            if (getView() != null) {
-                Timber.v("inlineLoad %s", visible);
-                if (visible) {
-                    getView().inlineLoad(new LoadingModel(trueSize()));
-                } else {
-                    getView().removeInlineLoad();
-                }
+            Timber.v("inlineLoad %s", visible);
+            if (visible) {
+                getViewState().inlineLoad(new LoadingModel(trueSize()));
+            } else {
+                getViewState().removeInlineLoad();
             }
         }
 
         @Override
         public void renderData(List<GistModel> items) {
-            if (getView() != null) {
-                Timber.v("renderData %s", items.size());
-                mItems = items.size();
-                boolean shouldReset = mLoader.isDifferent(items.get(items.size() - 1));
-                boolean forward = shouldReset && mLoader.canNext();
-                boolean backward = shouldReset && mLoader.canPrevious();
-                getView().onGistLoaded(items, forward, backward);
-            }
+            Timber.v("renderData %s", items.size());
+            mItems = items.size();
+            boolean shouldReset = mLoader.isDifferent(items.get(items.size() - 1));
+            boolean forward = shouldReset && mLoader.canNext();
+            boolean backward = shouldReset && mLoader.canPrevious();
+            getViewState().onGistLoaded(items, forward, backward);
         }
 
         @Override
@@ -119,7 +130,7 @@ public class AllGistsPresenter extends BasePresenter<GistListView> {
 
         @Override
         public ErrorInterpreter interpreter() {
-            if (getView() != null) {
+            if (isViewAttached()) {
                 return this;
             }
             return null;
@@ -127,12 +138,12 @@ public class AllGistsPresenter extends BasePresenter<GistListView> {
 
         @Override
         public boolean dataAvailable() {
-            return getView() != null && mViewInteract.dataAvailable();
+            return mViewInteract.dataAvailable();
         }
 
         @Override
         public boolean isError() {
-            return getView() != null && hasError;
+            return hasError;
         }
 
         @Override
@@ -142,35 +153,27 @@ public class AllGistsPresenter extends BasePresenter<GistListView> {
 
         @Override
         public Resources getResources() {
-            if (getView() != null) {
-                return getView().getContext().getResources();
-            }
-            return null;
+            return context.getResources();
         }
 
         // ErrorInterpreter
 
         @Override
         public void nonBlockingError(String msg) {
-            if (getView() != null) {
-                getView().nonBlockingError(msg);
-            }
+            hasError = true;
+            getViewState().nonBlockingError(msg);
         }
 
         @Override
         public void alertError(String msg) {
-            if (getView() != null) {
-                hasError = true;
-                getView().alertError(msg);
-            }
+            hasError = true;
+            getViewState().alertError(msg);
         }
 
         @Override
         public void blockingError(String msg) {
-            if (getView() != null) {
-                hasError = true;
-                getView().blockingError(new ErrorModel(msg));
-            }
+            hasError = true;
+            getViewState().blockingError(new ErrorModel(msg));
         }
     }
 }

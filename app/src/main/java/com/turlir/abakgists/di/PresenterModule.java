@@ -2,7 +2,6 @@ package com.turlir.abakgists.di;
 
 
 import com.turlir.abakgists.AppDatabase;
-import com.turlir.abakgists.allgists.AllGistsPresenter;
 import com.turlir.abakgists.allgists.GistListInteractor;
 import com.turlir.abakgists.api.Repository;
 import com.turlir.abakgists.gist.EqualsSolver;
@@ -20,12 +19,6 @@ public class PresenterModule {
     @Provides
     public GistListInteractor provideGistListInteractor(Repository repo) {
         return new GistListInteractor(repo);
-    }
-
-    @Provides
-    @Singleton
-    public AllGistsPresenter provideAllGistsPresenter(GistListInteractor interactor) {
-        return new AllGistsPresenter(interactor);
     }
 
     @Provides
