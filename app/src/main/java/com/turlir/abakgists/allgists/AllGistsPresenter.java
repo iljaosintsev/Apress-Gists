@@ -22,9 +22,11 @@ import timber.log.Timber;
 public class AllGistsPresenter extends BasePresenter<GistListView> {
 
     private final GistLoader mLoader;
+    private final LoaderCallback mViewInteract;
 
     public AllGistsPresenter(GistListInteractor interactor) {
-        mLoader = new GistLoader(interactor, new LoaderCallback(), new ErrorCallback());
+        mViewInteract = new LoaderCallback();
+        mLoader = new GistLoader(interactor, mViewInteract, new ErrorCallback());
     }
 
     @Override
@@ -55,10 +57,14 @@ public class AllGistsPresenter extends BasePresenter<GistListView> {
 
     private class LoaderCallback implements ListManipulator<GistModel> {
 
+        private int mItems;
+        private boolean isBlocked;
+
         @Override
         public void blockingLoad(boolean visible) {
             if (getView() != null) {
                 Timber.v("blockingLoad %s", visible);
+                isBlocked = visible;
                 getView().toBlockingLoad(visible);
             }
         }
@@ -79,6 +85,7 @@ public class AllGistsPresenter extends BasePresenter<GistListView> {
         public void renderData(List<GistModel> items) {
             if (getView() != null) {
                 Timber.v("renderData %s", items.size());
+                mItems = items.size();
                 boolean shouldReset = mLoader.isDifferent(items.get(items.size() - 1));
                 boolean forward = shouldReset && mLoader.canNext();
                 boolean backward = shouldReset && mLoader.canPrevious();
@@ -90,11 +97,16 @@ public class AllGistsPresenter extends BasePresenter<GistListView> {
         public void emptyData(boolean visible) {
             // not impl
         }
+
+        private boolean dataAvailable() {
+            return mItems > 0 && !isBlocked;
+        }
     }
 
     private class ErrorCallback implements ErrorProcessor, ErrorInterpreter {
 
         private final ErrorSelector mSelector;
+        private boolean hasError;
 
         ErrorCallback() {
             mSelector = new TroubleSelector(new RepeatingError());
@@ -115,12 +127,17 @@ public class AllGistsPresenter extends BasePresenter<GistListView> {
 
         @Override
         public boolean dataAvailable() {
-            return getView() != null && mLoader.hasData();
+            return getView() != null && mViewInteract.dataAvailable();
         }
 
         @Override
         public boolean isError() {
-            return getView() != null && mLoader.hasError();
+            return getView() != null && hasError;
+        }
+
+        @Override
+        public void resetError() {
+            hasError = false;
         }
 
         @Override
@@ -143,6 +160,7 @@ public class AllGistsPresenter extends BasePresenter<GistListView> {
         @Override
         public void alertError(String msg) {
             if (getView() != null) {
+                hasError = true;
                 getView().alertError(msg);
             }
         }
@@ -150,6 +168,7 @@ public class AllGistsPresenter extends BasePresenter<GistListView> {
         @Override
         public void blockingError(String msg) {
             if (getView() != null) {
+                hasError = true;
                 getView().blockingError(new ErrorModel(msg));
             }
         }
