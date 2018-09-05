@@ -27,7 +27,9 @@ import com.turlir.abakgists.base.App;
 import com.turlir.abakgists.base.BaseFragment;
 import com.turlir.abakgists.base.GistItemClickListener;
 import com.turlir.abakgists.gist.GistActivity;
+import com.turlir.abakgists.model.ErrorModel;
 import com.turlir.abakgists.model.GistModel;
+import com.turlir.abakgists.model.LoadingModel;
 import com.turlir.abakgists.widgets.DividerDecorator;
 import com.turlir.abakgists.widgets.DownScroller;
 import com.turlir.abakgists.widgets.SwitchLayout;
@@ -212,10 +214,10 @@ public class AllGistsFragment extends BaseFragment implements GistListView, Gist
     }
 
     @Override
-    public void blockingError(String msg) {
+    public void blockingError(ErrorModel model) {
         swipe.setRefreshing(false);
         mAdapter.clearAll(); // что бы ошибки не накапливались с обновлением
-        mAdapter.addError(msg);
+        mAdapter.addError(model);
         if (recycler.getAdapter() == null) {
             recycler.setAdapter(mAdapter);
         }
@@ -231,12 +233,13 @@ public class AllGistsFragment extends BaseFragment implements GistListView, Gist
     }
 
     @Override
-    public void inlineLoad(boolean visible) {
-        if (visible) {
-            mAdapter.addLoading(_presenter.trueSize());
-        } else {
-            mAdapter.removeLastIfLoading();
-        }
+    public void inlineLoad(LoadingModel visible) {
+        mAdapter.addLoading(visible);
+    }
+
+    @Override
+    public void removeInlineLoad() {
+        mAdapter.removeLastIfLoading();
     }
 
     @Override
