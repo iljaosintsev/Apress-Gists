@@ -10,9 +10,11 @@ import java.util.List;
 public class Error extends ListCombination<GistModel> {
 
     private final Throwable mError;
+    private final ErrorProcessor mProcessor;
 
-    Error(Throwable error) {
+    Error(Throwable error, ErrorProcessor processor) {
         mError = error;
+        mProcessor = processor;
     }
 
     @Override
@@ -28,9 +30,8 @@ public class Error extends ListCombination<GistModel> {
     @Override
     public void perform() {
         super.perform();
-        ErrorProcessor processor = owner.getErrorProcessor();
-        ErrorSelector selector = processor.getErrorSelector();
-        ErrorInterpreter interpreter = processor.interpreter();
+        ErrorSelector selector = mProcessor.getErrorSelector();
+        ErrorInterpreter interpreter = mProcessor.interpreter();
         if (interpreter == null) return;
 
         if (mError instanceof Exception) {
@@ -38,10 +39,10 @@ public class Error extends ListCombination<GistModel> {
             owner.blockingLoad(false);
 
             Exception exception = (Exception) mError;
-            boolean isData = processor.dataAvailable();
-            boolean isError = processor.isError();
+            boolean isData = mProcessor.dataAvailable();
+            boolean isError = mProcessor.isError();
             ErrorSituation situation = selector.select(exception, isData, isError);
-            situation.perform(interpreter, exception, processor.getResources());
+            situation.perform(interpreter, exception, mProcessor.getResources());
 
         } else {
             throw new RuntimeException(mError);

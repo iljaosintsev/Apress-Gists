@@ -20,11 +20,9 @@ import timber.log.Timber;
 public class AllGistsPresenter extends BasePresenter<GistListView> {
 
     private final GistLoader mLoader;
-    private final ErrorSelector mSelector;
 
     public AllGistsPresenter(GistListInteractor interactor) {
-        mSelector = new TroubleSelector(new RepeatingError());
-        mLoader = new GistLoader(interactor, new LoaderCallback());
+        mLoader = new GistLoader(interactor, new LoaderCallback(), new ErrorCallback());
     }
 
     @Override
@@ -54,8 +52,6 @@ public class AllGistsPresenter extends BasePresenter<GistListView> {
     }
 
     private class LoaderCallback implements ListManipulator<GistModel> {
-
-        private ErrorProcessor mProcessor;
 
         @Override
         public void blockingLoad(boolean visible) {
@@ -87,18 +83,16 @@ public class AllGistsPresenter extends BasePresenter<GistListView> {
         @Override
         public void emptyData(boolean visible) {
             // not impl
-       }
-
-        @Override
-        public ErrorProcessor getErrorProcessor() {
-            if (mProcessor == null) {
-                mProcessor = new ErrorCallback();
-            }
-            return mProcessor;
         }
     }
 
     private class ErrorCallback implements ErrorProcessor {
+
+        private final ErrorSelector mSelector;
+
+        ErrorCallback() {
+            mSelector = new TroubleSelector(new RepeatingError());
+        }
 
         @Override
         public ErrorSelector getErrorSelector() {
@@ -107,7 +101,10 @@ public class AllGistsPresenter extends BasePresenter<GistListView> {
 
         @Override
         public ErrorInterpreter interpreter() {
-            return getView();
+            if (getView() != null) {
+                return getView();
+            }
+            return null;
         }
 
         @Override
@@ -127,6 +124,5 @@ public class AllGistsPresenter extends BasePresenter<GistListView> {
             }
             return null;
         }
-
     }
 }
