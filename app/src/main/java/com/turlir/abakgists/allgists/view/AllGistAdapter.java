@@ -76,6 +76,7 @@ public class AllGistAdapter extends ListDelegationAdapter<List<InterfaceModel>> 
             if (position != RecyclerView.NO_POSITION) {
                 GistModel g = getGistByPosition(position);
                 if (g != null) {
+                    holder.setIsRecyclable(false);
                     mClick.onListItemClick(g, ((GistModelHolder) holder).ivAvatar);
                 }
             }
