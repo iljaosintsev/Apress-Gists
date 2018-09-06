@@ -43,8 +43,8 @@ public class AllGistsPresenter extends MvpPresenter<GistListView> {
     }
 
     @Override
-    public void detachView(GistListView view) {
-        super.detachView(view);
+    public void onDestroy() {
+        super.onDestroy();
         mLoader.stop();
     }
 

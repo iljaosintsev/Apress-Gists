@@ -74,21 +74,6 @@ public class AllGistsFragment extends BaseFragment implements GistListView, Gist
 
         swipe.setOnRefreshListener(mSwipeListener);
 
-        Context cnt = getActivity();
-
-        mAdapter = new AllGistAdapter(getContext(), this);
-        recycler.setAdapter(mAdapter);
-        LinearLayoutManager lm = new LinearLayoutManager(cnt, LinearLayoutManager.VERTICAL, false);
-        recycler.setLayoutManager(lm);
-
-        DividerDecorator divider = new DividerDecorator(
-                cnt,
-                R.drawable.divider,
-                DividerDecorator.VERTICAL,
-                DividerDecorator.TOP_DIVIDER
-        );
-        recycler.addItemDecoration(divider);
-
         mForwardScrollListener = new DownScroller(this);
         recycler.addOnScrollListener(mForwardScrollListener);
         mBackwardScrollListener = new UpScroller(this);
@@ -111,11 +96,28 @@ public class AllGistsFragment extends BaseFragment implements GistListView, Gist
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (savedInstanceState != null) {
-           // _presenter.again(); // TODO
-        } else {
+        if (savedInstanceState == null) {
             _presenter.firstLoad();
         }
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Context cnt = getActivity();
+
+        mAdapter = new AllGistAdapter(cnt, this);
+        recycler.setAdapter(mAdapter);
+        LinearLayoutManager lm = new LinearLayoutManager(cnt, LinearLayoutManager.VERTICAL, false);
+        recycler.setLayoutManager(lm);
+
+        DividerDecorator divider = new DividerDecorator(
+                cnt,
+                R.drawable.divider,
+                DividerDecorator.VERTICAL,
+                DividerDecorator.TOP_DIVIDER
+        );
+        recycler.addItemDecoration(divider);
     }
 
     @Override
