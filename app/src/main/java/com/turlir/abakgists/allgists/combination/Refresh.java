@@ -16,8 +16,8 @@ public class Refresh extends ListCombination<GistModel> {
     }
 
     @Override
-    public ListCombination<GistModel> error(Throwable err) {
-        com.turlir.abakgists.allgists.combination.Error error = new com.turlir.abakgists.allgists.combination.Error(err);
+    public ListCombination<GistModel> error(Throwable err, ErrorProcessor processor) {
+        Error error = new Error(err, processor);
         error.setOwner(owner);
         return error;
     }

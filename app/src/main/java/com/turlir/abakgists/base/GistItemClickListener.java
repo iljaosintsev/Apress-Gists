@@ -4,7 +4,7 @@ import android.widget.ImageView;
 
 import com.turlir.abakgists.model.GistModel;
 
-public interface OnClickListener {
+public interface GistItemClickListener {
     void onListItemClick(GistModel model, ImageView ivAvatar);
 }
 

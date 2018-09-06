@@ -17,11 +17,11 @@ import com.turlir.abakgists.allgists.view.listing.GistModelDelegate;
 import com.turlir.abakgists.allgists.view.listing.GistModelHolder;
 import com.turlir.abakgists.allgists.view.listing.InlineErrorDelegate;
 import com.turlir.abakgists.allgists.view.listing.LoadingDelegate;
-import com.turlir.abakgists.base.OnClickListener;
+import com.turlir.abakgists.base.GistItemClickListener;
 import com.turlir.abakgists.model.ErrorModel;
 import com.turlir.abakgists.model.GistModel;
-import com.turlir.abakgists.model.LoadingModel;
 import com.turlir.abakgists.model.InterfaceModel;
+import com.turlir.abakgists.model.LoadingModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ import timber.log.Timber;
 
 public class AllGistAdapter extends ListDelegationAdapter<List<InterfaceModel>> {
 
-    private final OnClickListener mClick;
+    private final GistItemClickListener mClick;
     private final GistModelDelegate mGistDelegate;
 
     private final ListUpdateCallback mLoggerAdapterOperations = new ListUpdateCallback() {
@@ -55,7 +55,7 @@ public class AllGistAdapter extends ListDelegationAdapter<List<InterfaceModel>> 
         }
     };
 
-    public AllGistAdapter(Context cnt, OnClickListener clickListener) {
+    public AllGistAdapter(Context cnt, GistItemClickListener clickListener) {
         LayoutInflater inflater = LayoutInflater.from(cnt);
         mClick = clickListener;
         setItems(new ArrayList<>());
@@ -94,15 +94,6 @@ public class AllGistAdapter extends ListDelegationAdapter<List<InterfaceModel>> 
         }
     }
 
-    @Nullable
-    public GistModel getGistByPosition(int p) {
-        InterfaceModel item = getItemByPosition(p);
-        if (getItemViewType(p) == mGistDelegate.getLayout()) {
-            return (GistModel) item;
-        }
-        return null;
-    }
-
     public void resetGists(List<GistModel> value) {
         DiffUtil.DiffResult diff = DiffUtil.calculateDiff(new GistDiffCallback(items, value));
         diff.dispatchUpdatesTo(this);
@@ -112,8 +103,8 @@ public class AllGistAdapter extends ListDelegationAdapter<List<InterfaceModel>> 
         items.addAll(value);
     }
 
-    void addError(String desc) {
-        items.add(new ErrorModel(desc));
+    void addError(ErrorModel model) {
+        items.add(model);
         notifyItemInserted(items.size());
     }
 
@@ -123,8 +114,8 @@ public class AllGistAdapter extends ListDelegationAdapter<List<InterfaceModel>> 
         notifyItemRangeRemoved(0, c);
     }
 
-    void addLoading(int viewed) {
-        items.add(new LoadingModel(viewed));
+    void addLoading(LoadingModel model) {
+        items.add(model);
         notifyItemInserted(items.size());
     }
 
@@ -138,8 +129,13 @@ public class AllGistAdapter extends ListDelegationAdapter<List<InterfaceModel>> 
         }
     }
 
-    private InterfaceModel getItemByPosition(int p) {
-        return items.get(p);
+    @Nullable
+    private GistModel getGistByPosition(int p) {
+        InterfaceModel item = items.get(p);
+        if (getItemViewType(p) == mGistDelegate.getLayout()) {
+            return (GistModel) item;
+        }
+        return null;
     }
 
     private /*static*/ class GistDiffCallback extends DiffUtil.Callback {

@@ -19,7 +19,7 @@ class IntermediateState extends ListCombination<GistModel> {
     }
 
     @Override
-    public ListCombination<GistModel> error(Throwable err) {
-        return mDelegate.error(err);
+    public ListCombination<GistModel> error(Throwable err, ErrorProcessor processor) {
+        return mDelegate.error(err, processor);
     }
 }

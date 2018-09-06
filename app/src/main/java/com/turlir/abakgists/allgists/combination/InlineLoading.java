@@ -16,8 +16,8 @@ public class InlineLoading extends ListCombination<GistModel> {
     }
 
     @Override
-    public ListCombination<GistModel> error(Throwable err) {
-        Error error = new Error(err);
+    public ListCombination<GistModel> error(Throwable err, ErrorProcessor processor) {
+        Error error = new Error(err, processor);
         error.setOwner(owner);
         return error;
     }

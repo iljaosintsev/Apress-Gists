@@ -21,14 +21,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.turlir.abakgists.R;
 import com.turlir.abakgists.allgists.AllGistsPresenter;
-import com.turlir.abakgists.base.App;
 import com.turlir.abakgists.base.BaseFragment;
-import com.turlir.abakgists.base.OnClickListener;
-import com.turlir.abakgists.base.erroring.ErrorInterpreter;
+import com.turlir.abakgists.base.GistItemClickListener;
 import com.turlir.abakgists.gist.GistActivity;
+import com.turlir.abakgists.model.ErrorModel;
 import com.turlir.abakgists.model.GistModel;
+import com.turlir.abakgists.model.LoadingModel;
 import com.turlir.abakgists.widgets.DividerDecorator;
 import com.turlir.abakgists.widgets.DownScroller;
 import com.turlir.abakgists.widgets.SwitchLayout;
@@ -36,20 +37,17 @@ import com.turlir.abakgists.widgets.UpScroller;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import butterknife.BindView;
 import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 import timber.log.Timber;
 
 
-public class AllGistsFragment
-        extends BaseFragment
-        implements OnClickListener, DownScroller.NextPager, UpScroller.PrevPager, ErrorInterpreter {
+public class AllGistsFragment extends BaseFragment implements GistListView, GistItemClickListener,
+        DownScroller.NextPager, UpScroller.PrevPager {
 
     private static final int MIN_COUNT = 2;
 
-    @Inject
+    @InjectPresenter
     AllGistsPresenter _presenter;
 
     @BindView(R.id.all_gist_switch)
@@ -70,33 +68,11 @@ public class AllGistsFragment
     };
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        App.getComponent().inject(this);
-        _presenter.attach(this);
-    }
-
-    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle saved) {
         View root = inflater.inflate(R.layout.fragment_all_gists, container, false);
         butterKnifeBind(root);
 
         swipe.setOnRefreshListener(mSwipeListener);
-
-        Context cnt = getActivity();
-
-        mAdapter = new AllGistAdapter(getContext(), this);
-        recycler.setAdapter(mAdapter);
-        LinearLayoutManager lm = new LinearLayoutManager(cnt, LinearLayoutManager.VERTICAL, false);
-        recycler.setLayoutManager(lm);
-
-        DividerDecorator divider = new DividerDecorator(
-                cnt,
-                R.drawable.divider,
-                DividerDecorator.VERTICAL,
-                DividerDecorator.TOP_DIVIDER
-        );
-        recycler.addItemDecoration(divider);
 
         mForwardScrollListener = new DownScroller(this);
         recycler.addOnScrollListener(mForwardScrollListener);
@@ -120,11 +96,28 @@ public class AllGistsFragment
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (savedInstanceState != null) {
-           // _presenter.again(); // TODO
-        } else {
+        if (savedInstanceState == null) {
             _presenter.firstLoad();
         }
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Context cnt = getActivity();
+
+        mAdapter = new AllGistAdapter(cnt, this);
+        recycler.setAdapter(mAdapter);
+        LinearLayoutManager lm = new LinearLayoutManager(cnt, LinearLayoutManager.VERTICAL, false);
+        recycler.setLayoutManager(lm);
+
+        DividerDecorator divider = new DividerDecorator(
+                cnt,
+                R.drawable.divider,
+                DividerDecorator.VERTICAL,
+                DividerDecorator.TOP_DIVIDER
+        );
+        recycler.addItemDecoration(divider);
     }
 
     @Override
@@ -137,7 +130,7 @@ public class AllGistsFragment
     @Override
     public void onDetach() {
         super.onDetach();
-        _presenter.detach();
+        _presenter.detachView(this);
     }
 
     ///
@@ -160,6 +153,7 @@ public class AllGistsFragment
     /// Presenter
     ///
 
+    @Override
     public void onGistLoaded(List<GistModel> value, boolean resetForward, boolean resetBackward) {
         Timber.d("%d elements put in ui, %s resetForward, %s resetBackward", value.size(), resetForward, resetBackward);
         if (!isEmpty()) {
@@ -173,20 +167,6 @@ public class AllGistsFragment
         if (resetBackward) {
             mBackwardScrollListener.reset();
         }
-    }
-
-    private void resetScroller() {
-        mForwardScrollListener.reset();
-        mBackwardScrollListener.reset();
-    }
-
-    public void onUpdateSuccessful() {
-        mAdapter.clearAll();
-        swipe.setRefreshing(false);
-    }
-
-    public boolean isError() {
-        return mAdapter.getItemCount() == 1 && mAdapter.getGistByPosition(0) == null;
     }
 
     ////
@@ -218,7 +198,8 @@ public class AllGistsFragment
     public void nonBlockingError(String msg) {
         swipe.setRefreshing(false);
         Snackbar.make(recycler, msg, Snackbar.LENGTH_LONG).show();
-        resetScroller();
+        mForwardScrollListener.reset();
+        mBackwardScrollListener.reset();
     }
 
     @Override
@@ -227,20 +208,16 @@ public class AllGistsFragment
     }
 
     @Override
-    public void blockingError(String msg) {
+    public void blockingError(ErrorModel model) {
         swipe.setRefreshing(false);
         mAdapter.clearAll(); // что бы ошибки не накапливались с обновлением
-        mAdapter.addError(msg);
+        mAdapter.addError(model);
         if (recycler.getAdapter() == null) {
             recycler.setAdapter(mAdapter);
         }
     }
 
     @Override
-    public String toString() {
-        return "All Gists";
-    }
-
     public void toBlockingLoad(boolean visible) {
         if (visible) {
             root.toLoading();
@@ -249,11 +226,18 @@ public class AllGistsFragment
         }
     }
 
-    public void inlineLoad(boolean visible) {
-        if (visible) {
-            mAdapter.addLoading(_presenter.trueSize());
-        } else {
-            mAdapter.removeLastIfLoading();
-        }
+    @Override
+    public void inlineLoad(LoadingModel visible) {
+        mAdapter.addLoading(visible);
+    }
+
+    @Override
+    public void removeInlineLoad() {
+        mAdapter.removeLastIfLoading();
+    }
+
+    @Override
+    public String toString() {
+        return "All Gists";
     }
 }

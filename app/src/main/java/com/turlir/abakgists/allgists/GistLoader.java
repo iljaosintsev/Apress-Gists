@@ -3,6 +3,7 @@ package com.turlir.abakgists.allgists;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.turlir.abakgists.allgists.combination.ErrorProcessor;
 import com.turlir.abakgists.allgists.combination.InlineLoading;
 import com.turlir.abakgists.allgists.combination.ListCombination;
 import com.turlir.abakgists.allgists.combination.ListManipulator;
@@ -21,6 +22,7 @@ class GistLoader {
 
     private final GistListInteractor mInteractor;
     private final ListManipulator<GistModel> mCallback;
+    private final ErrorProcessor mErrorProcessor;
 
     @NonNull
     private ListCombination<GistModel> mState;
@@ -29,9 +31,10 @@ class GistLoader {
     private GistModel mLast = null;
     private boolean isEnded;
 
-    GistLoader(GistListInteractor interactor, ListManipulator<GistModel> callback) {
+    GistLoader(GistListInteractor interactor, ListManipulator<GistModel> callback, ErrorProcessor processor) {
         mInteractor = interactor;
         mCallback = callback;
+        mErrorProcessor = processor;
 
         mState = new Start(mCallback);
     }
@@ -82,7 +85,7 @@ class GistLoader {
                     @Override
                     public void onError(Throwable e) {
                         dispose();
-                        changeState(mState.error(e));
+                        changeState(mState.error(e, mErrorProcessor));
                     }
                 });
     }
@@ -125,7 +128,7 @@ class GistLoader {
                     }
                     @Override
                     public void onError(Throwable e) {
-                        changeState(mState.error(e));
+                        changeState(mState.error(e, mErrorProcessor));
                         dispose();
                     }
                 });
@@ -147,6 +150,7 @@ class GistLoader {
         } else {
             changeState(mState.content(nextItems));
             mLast = nextItems.get(nextItems.size() - 1);
+            mErrorProcessor.resetError();
         }
     }
 
@@ -162,6 +166,7 @@ class GistLoader {
             Timber.d("updating list direct");
             changeState(mState.content(nextItems)); // perform
         }
+        mErrorProcessor.resetError();
 
         boolean lessThan = nowSize < mInteractor.range.count();
         GistModel lastItem = nextItems.get(nowSize - 1);
@@ -178,8 +183,8 @@ class GistLoader {
 
     private void changeState(ListCombination<GistModel> now) {
         Timber.d("state change: leave %s, enter %s", mState.getClass().getSimpleName(), now.getClass().getSimpleName());
+        now.perform();
         mState = now;
-        mState.perform();
     }
 
     private boolean canLoad() {
@@ -201,7 +206,7 @@ class GistLoader {
 
         @Override
         public void onError(Throwable t) {
-            changeState(mState.error(t));
+            changeState(mState.error(t, mErrorProcessor));
         }
 
         @Override
