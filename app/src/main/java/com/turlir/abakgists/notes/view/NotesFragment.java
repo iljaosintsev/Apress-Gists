@@ -18,7 +18,7 @@ import com.turlir.abakgists.R;
 import com.turlir.abakgists.allgists.view.AllGistAdapter;
 import com.turlir.abakgists.base.App;
 import com.turlir.abakgists.base.BaseFragment;
-import com.turlir.abakgists.base.OnClickListener;
+import com.turlir.abakgists.base.GistItemClickListener;
 import com.turlir.abakgists.gist.GistActivity;
 import com.turlir.abakgists.model.GistModel;
 import com.turlir.abakgists.notes.NotesPresenter;
@@ -31,7 +31,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 
-public class NotesFragment extends BaseFragment implements OnClickListener {
+public class NotesFragment extends BaseFragment implements GistItemClickListener {
 
     @Inject
     NotesPresenter _presenter;

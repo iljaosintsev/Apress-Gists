@@ -14,8 +14,8 @@ public class Refresh<T> extends ListCombination<T> {
     }
 
     @Override
-    public ListCombination<T> error(Throwable err) {
-        Error<T> error = new Error<>(err);
+    public ListCombination<T> error(Throwable err, ErrorProcessor processor) {
+        Error<T> error = new Error<>(err, processor);
         error.setOwner(owner);
         return error;
     }

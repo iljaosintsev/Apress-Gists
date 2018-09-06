@@ -16,4 +16,6 @@ public interface ErrorProcessor {
     boolean isError();
 
     Resources getResources();
+
+    void resetError();
 }

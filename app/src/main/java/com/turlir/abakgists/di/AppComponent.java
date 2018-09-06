@@ -23,9 +23,8 @@ public interface AppComponent {
 
     void inject(NotesFragment fragment);
 
-    @VisibleForTesting
-    Repository provideRepository();
+    void inject(AllGistsPresenter presenter);
 
     @VisibleForTesting
-    AllGistsPresenter provideAllGistsPresenter();
+    Repository provideRepository();
 }

@@ -1,5 +1,6 @@
 package com.turlir.abakgists.allgists;
 
+import com.turlir.abakgists.allgists.combination.ErrorProcessor;
 import com.turlir.abakgists.allgists.combination.ListManipulator;
 import com.turlir.abakgists.allgists.loader.Range;
 import com.turlir.abakgists.allgists.loader.Window;
@@ -19,8 +20,8 @@ public class DataSourceFactory {
         return new GistListInteractor(mRepo, range);
     }
 
-    GistLoader create(WindowedRepository<GistModel> interactor, ListManipulator<GistModel> callback) {
-        return new GistLoader(interactor, callback);
+    GistLoader create(WindowedRepository<GistModel> interactor, ListManipulator<GistModel> callback, ErrorProcessor processor) {
+        return new GistLoader(interactor, callback, processor);
     }
 
     Range convert(Window w) {

@@ -17,7 +17,7 @@ class IntermediateState<T> extends ListCombination<T> {
     }
 
     @Override
-    public ListCombination<T> error(Throwable err) {
-        return mDelegate.error(err);
+    public ListCombination<T> error(Throwable err, ErrorProcessor processor) {
+        return mDelegate.error(err, processor);
     }
 }

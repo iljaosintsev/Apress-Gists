@@ -1,5 +1,6 @@
 package com.turlir.abakgists.allgists;
 
+import com.turlir.abakgists.allgists.combination.ErrorProcessor;
 import com.turlir.abakgists.allgists.combination.ListManipulator;
 import com.turlir.abakgists.allgists.loader.Loader;
 import com.turlir.abakgists.allgists.loader.WindowedRepository;
@@ -9,8 +10,8 @@ class GistLoader extends Loader<GistModel> {
 
     //private int mPreviousSize;
 
-    GistLoader(WindowedRepository<GistModel> interactor, ListManipulator<GistModel> callback) {
-       super(interactor, callback);
+    GistLoader(WindowedRepository<GistModel> interactor, ListManipulator<GistModel> callback, ErrorProcessor processor) {
+       super(interactor, callback, processor);
     }
 
     @Override

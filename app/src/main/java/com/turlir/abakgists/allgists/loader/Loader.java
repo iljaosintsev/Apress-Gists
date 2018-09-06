@@ -3,6 +3,7 @@ package com.turlir.abakgists.allgists.loader;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.turlir.abakgists.allgists.combination.ErrorProcessor;
 import com.turlir.abakgists.allgists.combination.InlineLoading;
 import com.turlir.abakgists.allgists.combination.ListCombination;
 import com.turlir.abakgists.allgists.combination.ListManipulator;
@@ -22,6 +23,7 @@ public abstract class Loader<T extends Identifiable<T>> {
 
     private final WindowedRepository<T> mInteractor;
     private final ListManipulator<T> mCallback;
+    private final ErrorProcessor mProcessor;
 
     @NonNull
     private ListCombination<T> mState;
@@ -30,9 +32,10 @@ public abstract class Loader<T extends Identifiable<T>> {
     private T mLast = null;
     private boolean isEnded;
 
-    public Loader(WindowedRepository<T> interactor, ListManipulator<T> callback) {
+    public Loader(WindowedRepository<T> interactor, ListManipulator<T> callback, ErrorProcessor processor) {
         mInteractor = interactor;
         mCallback = callback;
+        mProcessor = processor;
         mState = new Start<>(mCallback);
     }
 
@@ -86,7 +89,7 @@ public abstract class Loader<T extends Identifiable<T>> {
                     @Override
                     public void onError(Throwable e) {
                         dispose();
-                        changeState(mState.error(e));
+                        changeState(mState.error(e, mProcessor));
                     }
                 });
     }
@@ -127,7 +130,7 @@ public abstract class Loader<T extends Identifiable<T>> {
                     }
                     @Override
                     public void onError(Throwable e) {
-                        changeState(mState.error(e));
+                        changeState(mState.error(e, mProcessor));
                         dispose();
                     }
                 });
@@ -162,7 +165,7 @@ public abstract class Loader<T extends Identifiable<T>> {
 
         @Override
         public void onError(Throwable t) {
-            changeState(mState.error(t));
+            changeState(mState.error(t, mProcessor));
         }
 
         @Override
@@ -179,6 +182,7 @@ public abstract class Loader<T extends Identifiable<T>> {
                 if (shouldRender(nowSize)) {
                     changeState(mState.content(nextItems));
                     mLast = nextItems.get(nextItems.size() - 1);
+                    mProcessor.resetError();
                 }
             }
         }
@@ -197,6 +201,7 @@ public abstract class Loader<T extends Identifiable<T>> {
                     changeState(mState.content(nextItems)); // perform
                 }
             }
+            mProcessor.resetError();
 
             boolean lessThan = nowSize < mInteractor.range.count();
             T lastItem = nextItems.get(nowSize - 1);

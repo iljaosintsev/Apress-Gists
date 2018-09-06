@@ -191,11 +191,11 @@ public class GistActivity extends BaseActivity {
                     .setPositiveButton(android.R.string.ok, (dialog, which) -> {
                         onClickSave();
                         dialog.dismiss();
-                        onBackPressed();
+                        GistActivity.super.onBackPressed();
                     })
                     .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
-                        dialog.cancel();
-                        onBackPressed();
+                        dialog.dismiss();
+                        GistActivity.super.onBackPressed();
                     })
                     .create()
                     .show();

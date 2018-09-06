@@ -2,10 +2,8 @@ package com.turlir.abakgists.di;
 
 
 import com.turlir.abakgists.AppDatabase;
-import com.turlir.abakgists.allgists.AllGistsPresenter;
 import com.turlir.abakgists.allgists.DataSourceFactory;
-import com.turlir.abakgists.allgists.GistListInteractor;
-import com.turlir.abakgists.allgists.loader.Range;
+import com.turlir.abakgists.allgists.NotesInteractor;
 import com.turlir.abakgists.api.Repository;
 import com.turlir.abakgists.gist.EqualsSolver;
 import com.turlir.abakgists.gist.GistPresenter;
@@ -20,14 +18,8 @@ import dagger.Provides;
 public class PresenterModule {
 
     @Provides
-    public GistListInteractor provideGistListInteractor(Repository repo) {
-        return new GistListInteractor(repo, new Range(0, 30, 15));
-    }
-
-    @Provides
-    @Singleton
-    public AllGistsPresenter provideAllGistsPresenter(DataSourceFactory factory) {
-        return new AllGistsPresenter(factory);
+    public NotesInteractor provideNotesInteractor(Repository repo) {
+        return new NotesInteractor(repo);
     }
 
     @Provides
@@ -38,7 +30,7 @@ public class PresenterModule {
 
     @Provides
     @Singleton
-    public NotesPresenter provideNotesPresenter(GistListInteractor interactor) {
+    public NotesPresenter provideNotesPresenter(NotesInteractor interactor) {
         return new NotesPresenter(interactor);
     }
 
