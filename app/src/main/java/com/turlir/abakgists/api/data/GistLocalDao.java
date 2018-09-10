@@ -28,7 +28,7 @@ public interface GistLocalDao {
     void update(String id, String desc, String note);
 
     @Query("DELETE FROM gists_db WHERE id == :id")
-    void deleteById(String id);
+    int deleteById(String id);
 
     @Query("DELETE FROM gists_db")
     int deleteAll();

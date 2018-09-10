@@ -76,7 +76,10 @@ public class GistInteractor {
         if (content == null) {
             return Completable.error(new IllegalStateException());
         }
-        return Completable.fromRunnable(() -> mDao.deleteById(content.id))
+        return Completable.fromAction(() -> {
+            int c = mDao.deleteById(content.id);
+            if (c != 1)  throw new Exception();
+        })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }

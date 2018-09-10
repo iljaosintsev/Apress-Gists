@@ -35,7 +35,7 @@ public class GistPresenter extends MvpPresenter<GistView> {
                     @Override
                     public void onError(Throwable e) {
                         dispose();
-                        Timber.d(e, "failure load gist by id %s", id);
+                        Timber.e(e, "failure load gist by id %s", id);
                         getViewState().onLoadFailure();
                     }
                 });
@@ -56,7 +56,7 @@ public class GistPresenter extends MvpPresenter<GistView> {
                     @Override
                     public void onError(Throwable e) {
                         dispose();
-                        Timber.d(e, "update gist in failure");
+                        Timber.e(e, "update gist in failure");
                     }
                 });
     }
@@ -76,7 +76,7 @@ public class GistPresenter extends MvpPresenter<GistView> {
                     @Override
                     public void onError(Throwable e) {
                         dispose();
-                        Timber.d(e, "failure delete gist");
+                        Timber.e(e, "failure delete gist");
                         getViewState().deleteFailure();
                     }
                 });
