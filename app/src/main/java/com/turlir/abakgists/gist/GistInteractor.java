@@ -18,15 +18,13 @@ import timber.log.Timber;
 
 public class GistInteractor {
 
-    private final EqualsSolver mSolver;
     private final GistLocalDao mDao;
     private final GistMapper.Local mapper;
 
     @Nullable
     private GistModel content;
 
-    public GistInteractor(EqualsSolver solver, GistLocalDao dao) {
-        mSolver = solver;
+    public GistInteractor(GistLocalDao dao) {
         mDao = dao;
         mapper = new GistMapper.Local();
     }
@@ -54,7 +52,7 @@ public class GistInteractor {
             return false;
         }
         GistModel now = new GistModel(content, desc, note);
-        return mSolver.solveModel(content, now);
+        return !content.equals(now);
     }
 
     Completable transact(String desc, String note) {

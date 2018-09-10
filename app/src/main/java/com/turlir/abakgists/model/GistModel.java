@@ -7,8 +7,7 @@ import android.support.annotation.Nullable;
 
 import com.turlir.abakgists.R;
 
-public class GistModel
-        implements InterfaceModel, Identifiable<GistModel> {
+public class GistModel implements InterfaceModel, Identifiable<GistModel> {
 
     public final String id;
 
@@ -132,8 +131,6 @@ public class GistModel
         if (!url.equals(gistModel.url)) return false;
         if (!created.equals(gistModel.created)) return false;
 
-        if (!description.equals(gistModel.description)) return false;
-
         if (ownerLogin != null) {
             if (!ownerLogin.equals(gistModel.ownerLogin)) return false;
         } else {
@@ -146,9 +143,8 @@ public class GistModel
             if (gistModel.ownerAvatarUrl != null) return false;
         }
 
-        if (!note.equals(gistModel.note)) return false;
+        if (isLocal != gistModel.isLocal) return false;
 
-        return isLocal == gistModel.isLocal;
+        return gistModel.description.equals(description) && gistModel.note.equals(note);
     }
-
 }

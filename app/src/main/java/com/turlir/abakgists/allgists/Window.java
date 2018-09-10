@@ -1,6 +1,6 @@
 package com.turlir.abakgists.allgists;
 
-interface Window {
+public interface Window {
 
     int start();
 

@@ -29,7 +29,6 @@ public interface Data {
             false
     );
 
-
     GistModel LOCAL_STUB_TRUE = new GistModel(
             "85547e4878dd9a573215cd905650f284",
             "https://api.github.com/gists/85547e4878dd9a573215cd905650f284",
