@@ -6,15 +6,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+    android:layout_marginRight="@dimen/activity_horizontal_margin"
+    android:layout_marginTop="@dimen/half_margin"
+    android:layout_marginBottom="@dimen/half_margin"
     tools:context=".gist.GistActivity"
     app:init="loading">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="@dimen/half_margin"
         android:focusableInTouchMode="true"
         android:orientation="vertical">
 
@@ -22,7 +23,7 @@
             android:id="@+id/head_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="@dimen/half_margin">
 
             <ImageView
                 android:id="@+id/iv_avatar"
@@ -128,7 +129,6 @@
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
             android:text="@string/save" />
 
     </LinearLayout>
@@ -138,18 +138,17 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:drawablePadding="@dimen/half_margin"
-        android:text="@string/main_network_error"
+        android:text="@string/main_error"
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         app:drawableTopCompat="@drawable/ic_main_network_error" />
 
     <com.turlir.abakgists.widgets.VectorTextView
-        android:id="@+id/in_loading_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawablePadding="@dimen/half_margin"
         android:layout_gravity="center"
-        android:text="@string/in_loading"
+        android:text="@string/loading"
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-        app:animateDrawableTopCompat="@drawable/animation_loading"/>
+        app:animateDrawableTopCompat="@drawable/ic_cloud_download"/>
 
 </com.turlir.abakgists.widgets.SwitchLayout>

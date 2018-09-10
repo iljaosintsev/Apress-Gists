@@ -47,9 +47,6 @@ public class GistActivity extends MvpAppCompatActivity implements GistView {
     @BindView(R.id.gist_act_root)
     SwitchLayout root;
 
-    @BindView(R.id.in_loading_tv)
-    View loading;
-
     @BindView(R.id.tv_login)
     TextView tvLogin;
 
@@ -75,7 +72,6 @@ public class GistActivity extends MvpAppCompatActivity implements GistView {
                 btnSave.setVisibility(View.VISIBLE);
             }
         }
-
         private float dpToPx(Resources res, float valueInDp) {
             DisplayMetrics metrics = res.getDisplayMetrics();
             return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, valueInDp, metrics);
@@ -112,10 +108,11 @@ public class GistActivity extends MvpAppCompatActivity implements GistView {
                         .setTitle("Last chance")
                         .setMessage("Do you want to delete this gist?")
                         .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                            dialog.dismiss();
                             _presenter.delete();
                         })
                         .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
-                            dialog.cancel();
+                            dialog.dismiss();
                         })
                         .create()
                         .show();
@@ -196,6 +193,7 @@ public class GistActivity extends MvpAppCompatActivity implements GistView {
                     })
                     .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
                         dialog.dismiss();
+                        GistActivity.super.onBackPressed();
                     })
                     .create()
                     .show();
@@ -203,7 +201,7 @@ public class GistActivity extends MvpAppCompatActivity implements GistView {
     }
 
     private void applyContent(GistModel content) {
-        //supportPostponeEnterTransition();
+        supportPostponeEnterTransition();
         Picasso.with(GistActivity.this)
                 .load(content.ownerAvatarUrl)
                 .fit()
@@ -213,11 +211,11 @@ public class GistActivity extends MvpAppCompatActivity implements GistView {
                 .into(avatar, new Callback() {
                     @Override
                     public void onSuccess() {
-                        //supportStartPostponedEnterTransition();
+                        supportStartPostponedEnterTransition();
                     }
                     @Override
                     public void onError() {
-                        //supportStartPostponedEnterTransition();
+                        supportStartPostponedEnterTransition();
                     }
                 });
 

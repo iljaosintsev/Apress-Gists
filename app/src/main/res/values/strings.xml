@@ -14,7 +14,9 @@
     <string name="note">Note</string>
 
     <string name="in_loading">Please wait, while list loading</string>
+    <string name="loading">Please wait, while gist loading</string>
     <string name="main_network_error">Your network connection broken</string>
+    <string name="main_error">An error has occurred</string>
     <string name="inline_error">Oups, your network connection broken</string>
     <string name="inline_download" tools:ignore="PluralsCandidate">You looked at %1$d items already. Do not worry, we download next part of data</string>
     <string name="owner">Owner</string>
