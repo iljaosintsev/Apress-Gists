@@ -1,16 +1,14 @@
 package com.turlir.abakgists.model;
 
-import android.content.Context;
+import android.content.res.Resources;
 import android.net.Uri;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.turlir.abakgists.R;
 
 public class GistModel
-        implements InterfaceModel, Parcelable, Identifiable<GistModel> {
+        implements InterfaceModel, Identifiable<GistModel> {
 
     public final String id;
 
@@ -31,18 +29,6 @@ public class GistModel
     public final String note;
 
     private final boolean isLocal;
-
-    public static final Parcelable.Creator<GistModel> CREATOR = new Parcelable.Creator<GistModel>() {
-        @Override
-        public GistModel createFromParcel(Parcel in) {
-            return new GistModel(in);
-        }
-
-        @Override
-        public GistModel[] newArray(int size) {
-            return new GistModel[size];
-        }
-    };
 
     public GistModel(String id, String url, String created, @NonNull String description,
                      @Nullable String ownerLogin, @Nullable String ownerAvatarUrl, @NonNull String note, boolean isLocal) {
@@ -66,34 +52,6 @@ public class GistModel
 
         this.description = desc;
         this.note = note;
-    }
-
-    private GistModel(Parcel in) {
-        url = in.readString();
-        id = in.readString();
-        description = in.readString();
-        created = in.readString();
-        note = in.readString();
-        ownerLogin = in.readString();
-        ownerAvatarUrl = in.readString();
-        isLocal = in.readInt() == 1;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(url);
-        dest.writeString(id);
-        dest.writeString(description);
-        dest.writeString(created);
-        dest.writeString(note);
-        dest.writeString(ownerLogin);
-        dest.writeString(ownerAvatarUrl);
-        dest.writeInt(isLocal ? 1 : 0);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
     }
 
     @Override
@@ -125,10 +83,10 @@ public class GistModel
 
     /**
      * Формирует строковое представления автора гиста
-     * @param cnt контекст для получения ресурсов
+     * @param cnt ресурсы
      * @return логин автора или строка-заглушка
      */
-    public String login(Context cnt) {
+    public String login(Resources cnt) {
         if (ownerLogin == null) {
             return cnt.getString(R.string.anonymous);
         } else {

@@ -28,5 +28,6 @@
     <string name="delete">Delete</string>
 
     <string name="avatar_transition_tag">avatar_transition_tag</string>
+    <string name="fail_delete_gist">Error when deleting gist</string>
 
 </resources>

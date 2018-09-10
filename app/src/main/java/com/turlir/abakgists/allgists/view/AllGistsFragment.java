@@ -140,7 +140,7 @@ public class AllGistsFragment extends BaseFragment implements GistListView, Gist
     @Override
     public void onListItemClick(GistModel model, ImageView ivAvatar) {
         if (getActivity() != null) {
-            Intent i = GistActivity.getStartIntent(getActivity(), model);
+            Intent i = GistActivity.getStartIntent(getActivity(), model.getId());
             String tag = getString(R.string.avatar_transition_tag);
             ViewCompat.setTransitionName(ivAvatar, tag);
             ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation
