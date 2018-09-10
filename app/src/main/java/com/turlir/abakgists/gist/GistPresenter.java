@@ -1,6 +1,7 @@
 package com.turlir.abakgists.gist;
 
 import android.net.Uri;
+import android.support.annotation.NonNull;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
@@ -40,11 +41,11 @@ public class GistPresenter extends MvpPresenter<GistView> {
                 });
     }
 
-    boolean isChange(String desc, String note) {
+    boolean isChange(@NonNull String desc, @NonNull String note) {
         return interactor.isChange(desc, note);
     }
 
-    void transact(String desc, String note) {
+    void transact(@NonNull String desc, @NonNull String note) {
         interactor.transact(desc, note)
                 .subscribe(new ResourceCompletableObserver() {
                     @Override
@@ -82,6 +83,6 @@ public class GistPresenter extends MvpPresenter<GistView> {
     }
 
     Uri insteadWebLink() {
-        return interactor.insteadWebLink();
+        return Uri.parse(interactor.insteadWebLink());
     }
 }

@@ -1,6 +1,6 @@
 package com.turlir.abakgists.gist;
 
-import android.net.Uri;
+import android.support.annotation.NonNull;
 
 import com.turlir.abakgists.api.data.GistLocalDao;
 import com.turlir.abakgists.api.data.GistMapper;
@@ -39,9 +39,9 @@ public class GistInteractor {
     }
 
     @Nullable
-    Uri insteadWebLink() {
+    String insteadWebLink() {
         if (content != null) {
-            return content.insteadWebLink();
+            return (content.insteadWebLink());
         } else {
             return null;
         }
@@ -55,7 +55,7 @@ public class GistInteractor {
         return !content.equals(now);
     }
 
-    Completable transact(String desc, String note) {
+    Completable transact(@NonNull String desc, @NonNull String note) {
         if (content == null) {
             return Completable.error(new IllegalStateException());
         }

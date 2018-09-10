@@ -1,7 +1,6 @@
 package com.turlir.abakgists.model;
 
 import android.content.res.Resources;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -72,11 +71,11 @@ public class GistModel implements InterfaceModel, Identifiable<GistModel> {
      * формирует ссылку на github.com
      * @return ссылка на этот гист
      */
-    public Uri insteadWebLink() {
+    public String insteadWebLink() {
         if (ownerLogin != null) {
-            return Uri.parse(String.format("http://gist.github.com/%s/%s", ownerLogin, id));
+            return (String.format("http://gist.github.com/%s/%s", ownerLogin, id));
         } else {
-            return Uri.parse(String.format("http://gist.github.com/%s", id));
+            return (String.format("http://gist.github.com/%s", id));
         }
     }
 
