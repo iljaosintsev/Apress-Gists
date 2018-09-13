@@ -4,6 +4,7 @@ package com.turlir.abakgists.di;
 import com.turlir.abakgists.AppDatabase;
 import com.turlir.abakgists.allgists.GistListInteractor;
 import com.turlir.abakgists.api.Repository;
+import com.turlir.abakgists.gist.GistDeleteBus;
 import com.turlir.abakgists.gist.GistInteractor;
 import com.turlir.abakgists.notes.NotesPresenter;
 
@@ -29,5 +30,11 @@ public class PresenterModule {
     @Provides
     public GistInteractor provideGistInteractor(AppDatabase room) {
         return new GistInteractor(room.gistDao());
+    }
+
+    @Provides
+    @Singleton
+    public GistDeleteBus provideGistDeleteBus() {
+        return new GistDeleteBus();
     }
 }
