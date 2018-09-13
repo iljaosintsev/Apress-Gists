@@ -14,7 +14,6 @@ import com.hannesdorfmann.adapterdelegates3.ListDelegationAdapter;
 import com.turlir.abakgists.R;
 import com.turlir.abakgists.allgists.view.listing.ErrorDelegate;
 import com.turlir.abakgists.allgists.view.listing.GistModelDelegate;
-import com.turlir.abakgists.allgists.view.listing.GistModelHolder;
 import com.turlir.abakgists.allgists.view.listing.InlineErrorDelegate;
 import com.turlir.abakgists.allgists.view.listing.LoadingDelegate;
 import com.turlir.abakgists.base.GistItemClickListener;
@@ -30,7 +29,6 @@ import timber.log.Timber;
 
 public class AllGistAdapter extends ListDelegationAdapter<List<InterfaceModel>> {
 
-    private final GistItemClickListener mClick;
     private final GistModelDelegate mGistDelegate;
 
     private final ListUpdateCallback mLoggerAdapterOperations = new ListUpdateCallback() {
@@ -56,11 +54,10 @@ public class AllGistAdapter extends ListDelegationAdapter<List<InterfaceModel>> 
     };
 
     public AllGistAdapter(Context cnt, GistItemClickListener clickListener) {
-        LayoutInflater inflater = LayoutInflater.from(cnt);
-        mClick = clickListener;
         setItems(new ArrayList<>());
 
-        mGistDelegate = new GistModelDelegate(inflater);
+        LayoutInflater inflater = LayoutInflater.from(cnt);
+        mGistDelegate = new GistModelDelegate(inflater, clickListener);
         delegatesManager.addDelegate(R.layout.item_gist, mGistDelegate);
         delegatesManager.addDelegate(R.layout.inline_loading, new LoadingDelegate(inflater));
         delegatesManager.addDelegate(R.layout.inline_error, new InlineErrorDelegate(inflater));
@@ -70,18 +67,7 @@ public class AllGistAdapter extends ListDelegationAdapter<List<InterfaceModel>> 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        RecyclerView.ViewHolder holder = super.onCreateViewHolder(parent, viewType);
-        holder.itemView.setOnClickListener(v -> {
-            int position = holder.getAdapterPosition();
-            if (position != RecyclerView.NO_POSITION) {
-                GistModel g = getGistByPosition(position);
-                if (g != null) {
-                    holder.setIsRecyclable(false);
-                    mClick.onListItemClick(g, ((GistModelHolder) holder).ivAvatar);
-                }
-            }
-        });
-        return holder;
+        return super.onCreateViewHolder(parent, viewType);
     }
 
     @Override
@@ -101,6 +87,15 @@ public class AllGistAdapter extends ListDelegationAdapter<List<InterfaceModel>> 
 
         items.clear();
         items.addAll(value);
+    }
+
+    @Nullable
+    public GistModel getGistByPosition(int p) {
+        InterfaceModel item = items.get(p);
+        if (getItemViewType(p) == mGistDelegate.getLayout()) {
+            return (GistModel) item;
+        }
+        return null;
     }
 
     void addError(ErrorModel model) {
@@ -127,15 +122,6 @@ public class AllGistAdapter extends ListDelegationAdapter<List<InterfaceModel>> 
                 notifyItemRemoved(i);
             }
         }
-    }
-
-    @Nullable
-    private GistModel getGistByPosition(int p) {
-        InterfaceModel item = items.get(p);
-        if (getItemViewType(p) == mGistDelegate.getLayout()) {
-            return (GistModel) item;
-        }
-        return null;
     }
 
     private /*static*/ class GistDiffCallback extends DiffUtil.Callback {
