@@ -170,6 +170,11 @@ public class AllGistsFragment extends BaseFragment implements GistListView, Gist
         }
     }
 
+    @Override
+    public void onGistDeleted() {
+        Snackbar.make(root, R.string.gist_deleted, Snackbar.LENGTH_LONG).show();
+    }
+
     ////
     //// Pager(s)
     ////

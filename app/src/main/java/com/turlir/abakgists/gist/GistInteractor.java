@@ -9,6 +9,7 @@ import com.turlir.abakgists.model.GistModel;
 import javax.annotation.Nullable;
 
 import io.reactivex.Completable;
+import io.reactivex.Maybe;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -69,13 +70,14 @@ public class GistInteractor {
         return content != null;
     }
 
-    Completable delete() {
+    Maybe<String> delete() {
         if (content == null) {
-            return Completable.error(new IllegalStateException());
+            return Maybe.error(new IllegalStateException());
         }
-        return Completable.fromAction(() -> {
+        return Maybe.fromCallable(() -> {
             int c = mDao.deleteById(content.id);
             if (c != 1)  throw new Exception();
+            return content.id;
         })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());

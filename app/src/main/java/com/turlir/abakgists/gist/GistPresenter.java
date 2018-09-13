@@ -12,6 +12,7 @@ import javax.inject.Inject;
 
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.observers.ResourceCompletableObserver;
+import io.reactivex.observers.ResourceMaybeObserver;
 import timber.log.Timber;
 
 @InjectViewState
@@ -19,6 +20,9 @@ public class GistPresenter extends MvpPresenter<GistView> {
 
     @Inject
     GistInteractor interactor;
+
+    @Inject
+    GistDeleteBus deleteBus;
 
     GistPresenter() {
         App.getComponent().inject(this);
@@ -66,11 +70,12 @@ public class GistPresenter extends MvpPresenter<GistView> {
             return;
         }
         interactor.delete()
-                .subscribe(new ResourceCompletableObserver() {
+                .doOnSuccess(id -> deleteBus.gistDeleted(id))
+                .subscribe(new ResourceMaybeObserver<String>() {
                     @Override
-                    public void onComplete() {
+                    public void onSuccess(String id) {
                         dispose();
-                        Timber.v("gist successfully deleted");
+                        Timber.v("gist successfully deleted %s", id);
                         getViewState().deleteSuccess();
                     }
                     @Override
@@ -78,6 +83,10 @@ public class GistPresenter extends MvpPresenter<GistView> {
                         dispose();
                         Timber.e(e, "failure delete gist");
                         getViewState().deleteFailure();
+                    }
+                    @Override
+                    public void onComplete() {
+                        // stuff
                     }
                 });
     }

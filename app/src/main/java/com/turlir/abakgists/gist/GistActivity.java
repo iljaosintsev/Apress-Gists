@@ -180,14 +180,7 @@ public class GistActivity extends MvpAppCompatActivity implements GistView {
     }
 
     public void deleteSuccess() {
-        Snackbar.make(
-                findViewById(android.R.id.content), R.string.gist_deleted, Snackbar.LENGTH_SHORT)
-                .addCallback(new Snackbar.Callback() {
-                    @Override
-                    public void onDismissed(Snackbar transientBottomBar, int event) {
-                        finish();
-                    }
-                }).show();
+        finish();
     }
 
     public void deleteFailure() {
