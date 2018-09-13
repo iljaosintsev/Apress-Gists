@@ -1,6 +1,6 @@
 package com.turlir.abakgists.allgists;
 
-import com.turlir.abakgists.allgists.loader.LoadablePage;
+import com.turlir.abakgists.gistsloader.LoadablePage;
 
 import org.junit.Test;
 

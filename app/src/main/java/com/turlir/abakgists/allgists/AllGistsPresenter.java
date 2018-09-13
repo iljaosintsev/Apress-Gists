@@ -8,7 +8,16 @@ import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 import com.turlir.abakgists.allgists.combination.ErrorProcessor;
 import com.turlir.abakgists.allgists.combination.ListManipulator;
-import com.turlir.abakgists.allgists.loader.Range;
+import com.turlir.abakgists.gistsloader.Accumulator;
+import com.turlir.abakgists.gistsloader.DoLoadBehavior;
+import com.turlir.abakgists.gistsloader.LoadablePage;
+import com.turlir.abakgists.gistsloader.Range;
+import com.turlir.abakgists.gistsloader.SourceListing;
+import com.turlir.abakgists.gistsloader.StateAwareCallback;
+import com.turlir.abakgists.base.loader.SimpleLoader;
+import com.turlir.abakgists.base.loader.callback.CallbackLoader;
+import com.turlir.abakgists.base.loader.server.ServerLoader;
+import com.turlir.abakgists.base.loader.state.StateServerLoader;
 import com.turlir.abakgists.allgists.view.GistListView;
 import com.turlir.abakgists.base.App;
 import com.turlir.abakgists.base.erroring.ErrorInterpreter;
@@ -31,7 +40,7 @@ import timber.log.Timber;
 public class AllGistsPresenter extends MvpPresenter<GistListView> {
 
     @Inject
-    DataSourceFactory factory;
+    SourceListing repo;
 
     @Inject
     GistDeleteBus deleteBus;
@@ -39,15 +48,37 @@ public class AllGistsPresenter extends MvpPresenter<GistListView> {
     @Inject
     Context context;
 
-    private final GistLoader mLoader;
+    private final StateServerLoader<GistModel, LoadablePage> mLoader;
     private final LoaderCallback mViewInteract;
 
     private final Disposable delete;
 
+    private final Accumulator mAccumulator;
+
     public AllGistsPresenter() {
         App.getComponent().inject(this);
+
+        mLoader = new StateServerLoader<>(
+                new ServerLoader<>(
+                        new CallbackLoader<>(
+                                new SimpleLoader<>(
+                                        repo,
+                                        createStartPoint()
+                                )
+                        ),
+                        repo
+                )
+        );
+
         mViewInteract = new LoaderCallback();
-        mLoader = new GistLoader(factory.create(createStartPoint()), mViewInteract, new ErrorCallback());
+        StateAwareCallback<GistModel> callback = new StateAwareCallback<>(
+                new ErrorCallback(),
+                mViewInteract,
+                new DoLoadBehavior<>()
+        );
+        mLoader.setCallback(callback);
+
+        mAccumulator = new Accumulator();
         delete = deleteBus.subscribe(s -> getViewState().onGistDeleted());
     }
 
@@ -59,28 +90,48 @@ public class AllGistsPresenter extends MvpPresenter<GistListView> {
     }
 
     public void firstLoad() {
-        mLoader.firstPage();
+        if (!mLoader.hasLoad()) {
+            return;
+        }
+        mLoader.currentPage();
     }
 
     public void nextPage() {
+        if (!canNext()) {
+            return;
+        }
         mLoader.nextPage();
     }
 
     public void prevPage() {
+        if (!canPrevious()) {
+            return;
+        }
         mLoader.prevPage();
     }
 
     public void updateGist() {
-        mLoader.updateGist(createStartPoint());
+        mLoader.update(createStartPoint());
+    }
+
+    public boolean canUpdate() {
+        return mLoader.hasLoad();
+    }
+
+    private boolean canNext() {
+        return mLoader.hasNext();
+    }
+
+    private boolean canPrevious() {
+        return mLoader.hasPrevious();
     }
 
     private int trueSize() {
-        return mLoader.size();
+        return mAccumulator.accumulator();
     }
 
     private static Range createStartPoint() {
         return new Range(0, 30, 15);
-        //return new Range(0, 30, 30);
     }
 
     private boolean isViewAttached() {
@@ -113,10 +164,12 @@ public class AllGistsPresenter extends MvpPresenter<GistListView> {
         public void renderData(List<GistModel> items) {
             Timber.v("renderData %s", items.size());
             mItems = items.size();
-            boolean shouldReset = mLoader.isDifferent(items.get(items.size() - 1));
-            boolean forward = shouldReset && mLoader.canNext();
-            boolean backward = shouldReset && mLoader.canPrevious();
+            GistModel last = items.get(items.size() - 1);
+            boolean forward = mLoader.resetForward(last);
+            boolean backward = mLoader.resetBackward(last);
+
             getViewState().onGistLoaded(items, forward, backward);
+            mAccumulator.now(mLoader.getWindow(), items.size());
         }
 
         @Override

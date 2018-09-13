@@ -1,4 +1,6 @@
-package com.turlir.abakgists.allgists.loader;
+package com.turlir.abakgists.base.loader;
+
+import com.turlir.abakgists.base.loader.server.LoadableItem;
 
 public interface Window {
 
@@ -10,12 +12,6 @@ public interface Window {
 
     int count();
 
-    //
-
-    Range downScale(int coefficient);
-
-    //
-
     Window next();
 
     Window prev();
@@ -23,4 +19,6 @@ public interface Window {
     boolean hasNext();
 
     boolean hasPrevious();
+
+    LoadableItem constraint(int count);
 }

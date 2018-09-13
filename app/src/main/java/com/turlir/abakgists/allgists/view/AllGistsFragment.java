@@ -64,7 +64,11 @@ public class AllGistsFragment extends BaseFragment implements GistListView, Gist
     private UpScroller mBackwardScrollListener;
 
     private final SwipeRefreshLayout.OnRefreshListener mSwipeListener = () -> {
-        _presenter.updateGist();
+        if (_presenter.canUpdate()) {
+            _presenter.updateGist();
+        } else {
+            swipe.setRefreshing(false);
+        }
     };
 
     @Override

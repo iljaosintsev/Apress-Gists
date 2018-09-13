@@ -1,7 +1,8 @@
 package com.turlir.abakgists;
 
-import com.turlir.abakgists.allgists.loader.Range;
-import com.turlir.abakgists.allgists.loader.Window;
+import com.turlir.abakgists.gistsloader.Range;
+import com.turlir.abakgists.base.loader.Window;
+import com.turlir.abakgists.base.loader.server.LoadableItem;
 
 import org.junit.Test;
 
@@ -58,6 +59,39 @@ public class RangeTest {
     public void forbiddenPrevious() {
         Range page = new Range(0, 30, 15);
         assertFalse(page.hasPrevious());
+    }
+
+    // constraint
+
+    @Test
+    public void centerConstraint() {
+        Range range = new Range(0, 30);
+        LoadableItem item = range.constraint(15);
+        check(item, 2, 15);
+    }
+
+    @Test
+    public void startConstraint() {
+        Range range = new Range(0, 30);
+        LoadableItem item = range.constraint(0);
+        check(item, 1, 30);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void stopConstraint() {
+        Range range = new Range(0, 30);
+        range.constraint(30);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void constraintOutOfRange() {
+        Range range = new Range(15, 45);
+        range.constraint(31);
+    }
+
+    private void check(LoadableItem item, int first, int second) {
+        assertEquals(first, item.firstAxis());
+        assertEquals(second, item.secondAxis());
     }
 
     private void check(Window r, int s, int e) {

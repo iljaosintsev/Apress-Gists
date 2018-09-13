@@ -2,7 +2,6 @@ package com.turlir.abakgists.di;
 
 
 import com.turlir.abakgists.AppDatabase;
-import com.turlir.abakgists.allgists.DataSourceFactory;
 import com.turlir.abakgists.allgists.NotesInteractor;
 import com.turlir.abakgists.api.Repository;
 import com.turlir.abakgists.gist.GistDeleteBus;
@@ -22,11 +21,10 @@ public class PresenterModule {
         return new NotesInteractor(repo);
     }
 
-    @Provides
-    @Singleton
-    public DataSourceFactory provideDataSourceFactory(Repository repo) {
-        return new DataSourceFactory(repo);
-    }
+    /*@Provides
+    public SourceListing provideGistListInteractor(Repository repo) {
+        return new SourceListing(repo);
+    }*/
 
     @Provides
     @Singleton

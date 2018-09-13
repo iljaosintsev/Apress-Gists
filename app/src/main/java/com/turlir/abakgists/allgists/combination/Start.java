@@ -30,6 +30,11 @@ public class Start<T> extends ListCombination<T> {
     }
 
     @Override
+    public ListCombination<T> doLoad() {
+        return this;
+    }
+
+    @Override
     public void perform() {
         super.perform();
         owner.inlineLoad(false);

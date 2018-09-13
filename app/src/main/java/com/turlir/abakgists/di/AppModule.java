@@ -7,6 +7,7 @@ import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 import com.turlir.abakgists.AppDatabase;
 import com.turlir.abakgists.BuildConfig;
+import com.turlir.abakgists.gistsloader.SourceListing;
 import com.turlir.abakgists.api.ApiClient;
 import com.turlir.abakgists.api.LogInterceptor;
 import com.turlir.abakgists.api.Repository;
@@ -65,6 +66,11 @@ public class AppModule {
     @Singleton
     public Repository provideRepository(ApiClient client, AppDatabase db) {
         return new Repository(client, db.gistDao());
+    }
+
+    @Provides
+    public SourceListing provideSourceListing(Repository repo) {
+        return new SourceListing(repo);
     }
 
 }

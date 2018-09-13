@@ -1,12 +1,13 @@
 package com.turlir.abakgists.api;
 
-import com.turlir.abakgists.allgists.loader.Range;
-import com.turlir.abakgists.allgists.loader.WindowDiffer;
-import com.turlir.abakgists.allgists.loader.Window;
+import com.turlir.abakgists.gistsloader.LoadablePage;
+import com.turlir.abakgists.gistsloader.Range;
+import com.turlir.abakgists.base.loader.Window;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ShiftTest {
 
@@ -85,6 +86,47 @@ public class ShiftTest {
                 return new Range((number - 1) * size, number * size, size);
             }
         }
+    }
+
+    static class WindowDiffer {
+
+        public LoadablePage page(Window w) {
+            return page(w, w.count());
+        }
+
+        private LoadablePage page(Window w, int perPage) {
+            return new LoadablePage(w.start(), w.start() + perPage);
+        }
+
+        Window cut(Window w, int size) {
+            if (size > w.count()) throw new IllegalArgumentException();
+            return new Range(w.start(), w.start() + size, w.addition());
+        }
+
+        Window diff(Window a, Window o) {
+            int required = a.count() - o.count();
+            if (required < 1 || a.start() != o.start()) {
+                throw new IllegalArgumentException();
+            }
+            int at = o.stop();
+            if (at % required == 0) {
+                return new Range(at, a.stop(), required);
+            } else {
+                int center = a.start() + a.count() / 2;
+                if (at > center) {
+                    return downScale(a, 2);
+                } else {
+                    return a;
+                }
+            }
+        }
+
+        private Window downScale(Window context, int coefficient) {
+            if (coefficient < 2 || context.count() % coefficient != 0) throw new IllegalArgumentException();
+            int newStart = context.start() + context.count() / coefficient;
+            return new Range(newStart, context.stop(), context.addition());
+        }
+
     }
 
 }

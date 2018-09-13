@@ -1,12 +1,13 @@
-package com.turlir.abakgists.allgists.loader;
+package com.turlir.abakgists.gistsloader;
 
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.VisibleForTesting;
+
+import com.turlir.abakgists.base.loader.Window;
+import com.turlir.abakgists.base.loader.server.LoadableItem;
 
 import java.util.Objects;
 
-public class Range implements Window, Parcelable {
+public class Range implements Window {
 
     private static final int MAX_EL = 105;
 
@@ -18,45 +19,12 @@ public class Range implements Window, Parcelable {
     }
 
     public Range(int start, int stop, int addition) {
-        if (start >= stop) throw new IllegalArgumentException();
+        if (start > stop) throw new IllegalArgumentException();
+        if (start == stop && start != 0) throw new IllegalArgumentException();
         absStart = start;
         absStop = stop;
         this.addition = addition;
     }
-
-    //<editor-fold desc="Parcelable">
-
-    private Range(Parcel in) {
-        absStart = in.readInt();
-        absStop = in.readInt();
-        addition = in.readInt();
-    }
-
-    public static final Creator<Range> CREATOR = new Creator<Range>() {
-        @Override
-        public Range createFromParcel(Parcel in) {
-            return new Range(in);
-        }
-
-        @Override
-        public Range[] newArray(int size) {
-            return new Range[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(absStart);
-        dest.writeInt(absStop);
-        dest.writeInt(addition);
-    }
-
-    //</editor-fold>
 
     @Override
     public int start() {
@@ -100,10 +68,48 @@ public class Range implements Window, Parcelable {
     }
 
     @Override
-    public Range downScale(int coefficient) {
-        if (coefficient < 2 || count() % coefficient != 0) throw new IllegalArgumentException();
-        int newStart = absStart + count() / coefficient;
-        return new Range(newStart, absStop, addition);
+    public LoadableItem constraint(int count) {
+        Window already = cut(this, count);
+        Window required = diff(this, already);
+        LoadableItem page = page(required);
+        return page;
+    }
+
+    private Window cut(Window w, int size) {
+        if (size > w.count()) throw new IllegalArgumentException();
+        return new Range(w.start(), w.start() + size, w.addition());
+    }
+
+    private Window diff(Window a, Window o) {
+        int required = a.count() - o.count();
+        if (required < 1 || a.start() != o.start()) {
+            throw new IllegalArgumentException();
+        }
+        int at = o.stop();
+        if (at % required == 0) {
+            return new Range(at, a.stop(), required);
+        } else {
+            int center = a.start() + a.count() / 2;
+            if (at > center) {
+                return downScale(a);
+            } else {
+                return a;
+            }
+        }
+    }
+
+    private Window downScale(Window context) {
+        if (context.count() % 2 != 0) throw new IllegalArgumentException();
+        int newStart = context.start() + context.count() / 2;
+        return new Range(newStart, context.stop(), context.addition());
+    }
+
+    private LoadableItem page(Window w) {
+        return page(w, w.count());
+    }
+
+    private LoadableItem page(Window w, int perPage) {
+        return new LoadablePage(w.start(), w.start() + perPage);
     }
 
     @Override
