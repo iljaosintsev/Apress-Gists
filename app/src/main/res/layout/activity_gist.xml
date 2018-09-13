@@ -11,7 +11,7 @@
     android:layout_marginTop="@dimen/half_margin"
     android:layout_marginBottom="@dimen/half_margin"
     tools:context=".gist.GistActivity"
-    app:init="loading">
+    app:init="content">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -138,17 +138,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:drawablePadding="@dimen/half_margin"
-        android:text="@string/main_error"
+        android:text="@string/gist_does_not_open_error"
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         app:drawableTopCompat="@drawable/ic_main_network_error" />
-
-    <com.turlir.abakgists.widgets.VectorTextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:drawablePadding="@dimen/half_margin"
-        android:layout_gravity="center"
-        android:text="@string/loading"
-        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-        app:animateDrawableTopCompat="@drawable/ic_cloud_download"/>
 
 </com.turlir.abakgists.widgets.SwitchLayout>

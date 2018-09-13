@@ -6,8 +6,6 @@ import com.turlir.abakgists.api.data.GistLocalDao;
 import com.turlir.abakgists.api.data.GistMapper;
 import com.turlir.abakgists.model.GistModel;
 
-import java.util.concurrent.TimeUnit;
-
 import javax.annotation.Nullable;
 
 import io.reactivex.Completable;
@@ -31,7 +29,6 @@ public class GistInteractor {
 
     Single<GistModel> load(String id) {
         return mDao.byId(id)
-                .delay(1, TimeUnit.SECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .map(mapper)

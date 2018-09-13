@@ -84,14 +84,12 @@ public class GistActivity extends MvpAppCompatActivity implements GistView {
         setContentView(R.layout.activity_gist);
         ButterKnife.bind(this);
 
+        if (savedInstanceState == null) {
+            supportPostponeEnterTransition();
+            String id = getIntent().getStringExtra(EXTRA_GIST);
+            _presenter.load(id);
+        }
         root.getViewTreeObserver().addOnGlobalLayoutListener(mKeyboardListener);
-    }
-
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        String id = getIntent().getStringExtra(EXTRA_GIST);
-        _presenter.load(id);
     }
 
     @Override
@@ -131,11 +129,11 @@ public class GistActivity extends MvpAppCompatActivity implements GistView {
     @Override
     public void onLoadSuccess(GistModel model) {
         applyContent(model);
-        root.toContent();
     }
 
     @Override
     public void onLoadFailure() {
+        supportStartPostponedEnterTransition();
         root.toError();
     }
 
@@ -201,7 +199,6 @@ public class GistActivity extends MvpAppCompatActivity implements GistView {
     }
 
     private void applyContent(GistModel content) {
-        supportPostponeEnterTransition();
         Picasso.with(GistActivity.this)
                 .load(content.ownerAvatarUrl)
                 .fit()
