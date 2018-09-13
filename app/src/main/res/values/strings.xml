@@ -14,6 +14,7 @@
     <string name="note">Note</string>
 
     <string name="in_loading">Please wait, while list loading</string>
+    <string name="gist_deleted">Gist successfully deleted</string>
     <string name="loading">Please wait, while gist loading</string>
     <string name="main_network_error">Your network connection broken</string>
     <string name="main_error">An error has occurred</string>

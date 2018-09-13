@@ -62,11 +62,13 @@ public class GistActivity extends MvpAppCompatActivity implements GistView {
     @BindView(R.id.btn_save)
     View btnSave;
 
-    private ViewTreeObserver.OnGlobalLayoutListener mKeyboardListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+    private ViewTreeObserver.OnGlobalLayoutListener mKeyboardListener =
+            new ViewTreeObserver.OnGlobalLayoutListener() {
+        static final int THRESHOLD = 200;
         @Override
         public void onGlobalLayout() {
             int heightDiff = root.getRootView().getHeight() - root.getHeight();
-            if (heightDiff > dpToPx(getResources(), 200)) {
+            if (heightDiff > dpToPx(getResources(), THRESHOLD)) {
                 btnSave.setVisibility(View.GONE);
             } else {
                 btnSave.setVisibility(View.VISIBLE);
@@ -121,20 +123,30 @@ public class GistActivity extends MvpAppCompatActivity implements GistView {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    public void onBackPressed() {
+        if (!_presenter.isChange(desc.getText().toString(), note.getText().toString())) {
+            super.onBackPressed();
+        } else {
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.there_changes)
+                    .setMessage(R.string.save_quest)
+                    .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                        onClickSave();
+                        dialog.dismiss();
+                    })
+                    .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+                        dialog.dismiss();
+                        super.onBackPressed();
+                    })
+                    .create()
+                    .show();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
         root.getViewTreeObserver().removeOnGlobalLayoutListener(mKeyboardListener);
-    }
-
-    @Override
-    public void onLoadSuccess(GistModel model) {
-        applyContent(model);
-    }
-
-    @Override
-    public void onLoadFailure() {
-        supportStartPostponedEnterTransition();
-        root.toError();
     }
 
     @OnClick(R.id.btn_save)
@@ -156,17 +168,26 @@ public class GistActivity extends MvpAppCompatActivity implements GistView {
         );
     }
 
+    @Override
+    public void onLoadSuccess(GistModel model) {
+        applyContent(model);
+    }
+
+    @Override
+    public void onLoadFailure() {
+        supportStartPostponedEnterTransition();
+        root.toError();
+    }
+
     public void deleteSuccess() {
         Snackbar.make(
-                findViewById(android.R.id.content),
-                "Gist successfully deleted",
-                Snackbar.LENGTH_SHORT
-        ).addCallback(new Snackbar.Callback() {
-            @Override
-            public void onDismissed(Snackbar transientBottomBar, int event) {
-                onBackPressed();
-            }
-        }).show();
+                findViewById(android.R.id.content), R.string.gist_deleted, Snackbar.LENGTH_SHORT)
+                .addCallback(new Snackbar.Callback() {
+                    @Override
+                    public void onDismissed(Snackbar transientBottomBar, int event) {
+                        finish();
+                    }
+                }).show();
     }
 
     public void deleteFailure() {
@@ -174,28 +195,7 @@ public class GistActivity extends MvpAppCompatActivity implements GistView {
     }
 
     public void updateSuccess() {
-        finish();
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (!_presenter.isChange(desc.getText().toString(), note.getText().toString())) {
-            GistActivity.super.onBackPressed();
-        } else {
-            new AlertDialog.Builder(this)
-                    .setTitle(R.string.there_changes)
-                    .setMessage(R.string.save_quest)
-                    .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                        onClickSave();
-                        dialog.dismiss();
-                    })
-                    .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
-                        dialog.dismiss();
-                        GistActivity.super.onBackPressed();
-                    })
-                    .create()
-                    .show();
-        }
+        super.onBackPressed();
     }
 
     private void applyContent(GistModel content) {
