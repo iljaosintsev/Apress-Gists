@@ -3,6 +3,7 @@ package com.turlir.abakgists.allgists.view;
 import com.arellomobile.mvp.MvpView;
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
 import com.arellomobile.mvp.viewstate.strategy.SingleStateStrategy;
+import com.arellomobile.mvp.viewstate.strategy.SkipStrategy;
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 import com.turlir.abakgists.model.ErrorModel;
 import com.turlir.abakgists.model.GistModel;
@@ -14,6 +15,9 @@ import java.util.List;
 public interface GistListView extends MvpView {
 
     void onGistLoaded(List<GistModel> value, boolean resetForward, boolean resetBackward);
+
+    @StateStrategyType(SkipStrategy.class)
+    void onGistDeleted();
 
     void toBlockingLoad(boolean visible);
 

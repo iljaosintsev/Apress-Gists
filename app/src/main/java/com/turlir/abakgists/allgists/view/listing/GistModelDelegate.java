@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.turlir.abakgists.R;
+import com.turlir.abakgists.base.GistItemClickListener;
 import com.turlir.abakgists.model.GistModel;
 import com.turlir.abakgists.model.InterfaceModel;
 
@@ -14,8 +15,11 @@ import java.util.List;
 
 public class GistModelDelegate extends BaseAdapterDelegate {
 
-    public GistModelDelegate(LayoutInflater inflater) {
+    private final GistItemClickListener mClick;
+
+    public GistModelDelegate(LayoutInflater inflater, GistItemClickListener click) {
         super(inflater);
+        mClick = click;
     }
 
     @Override
@@ -27,12 +31,12 @@ public class GistModelDelegate extends BaseAdapterDelegate {
     @Override
     protected RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, View itemView) {
         GistModelHolder holder = new GistModelHolder(itemView);
-        /*holder.itemView.setOnClickListener(v -> {
+        holder.itemView.setOnClickListener(v -> {
             int position = holder.getAdapterPosition();
             if (position != RecyclerView.NO_POSITION) {
-                mClick.onGistItemClick(position, holder.ivAvatar);
+                mClick.onListItemClick(position, holder.ivAvatar);
             }
-        });*/
+        });
         return holder;
     }
 

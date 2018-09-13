@@ -3,6 +3,7 @@ package com.turlir.abakgists.gist;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,35 +19,33 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.arellomobile.mvp.MvpAppCompatActivity;
+import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.turlir.abakgists.R;
-import com.turlir.abakgists.base.App;
-import com.turlir.abakgists.base.BaseActivity;
 import com.turlir.abakgists.model.GistModel;
-
-import javax.inject.Inject;
+import com.turlir.abakgists.widgets.SwitchLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import timber.log.Timber;
 
-public class GistActivity extends BaseActivity {
+public class GistActivity extends MvpAppCompatActivity implements GistView {
 
     private static final String EXTRA_GIST = "EXTRA_GIST";
-    public static Intent getStartIntent(Context cnt, GistModel data) {
-        Intent i = new Intent(cnt, GistActivity.class);
-        i.putExtra(EXTRA_GIST, data);
-        return i;
+
+    public static Intent getStartIntent(Context cnt, String id) {
+        return new Intent(cnt, GistActivity.class).putExtra(EXTRA_GIST, id);
     }
 
-    @Inject
+    @InjectPresenter
     GistPresenter _presenter;
 
     @BindView(R.id.gist_act_root)
-    View root;
+    SwitchLayout root;
 
     @BindView(R.id.tv_login)
     TextView tvLogin;
@@ -63,19 +62,20 @@ public class GistActivity extends BaseActivity {
     @BindView(R.id.btn_save)
     View btnSave;
 
-    private ViewTreeObserver.OnGlobalLayoutListener mKeyboardListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+    private ViewTreeObserver.OnGlobalLayoutListener mKeyboardListener =
+            new ViewTreeObserver.OnGlobalLayoutListener() {
+        static final int THRESHOLD = 200;
         @Override
         public void onGlobalLayout() {
             int heightDiff = root.getRootView().getHeight() - root.getHeight();
-            if (heightDiff > dpToPx(getContext(), 200)) {
+            if (heightDiff > dpToPx(getResources(), THRESHOLD)) {
                 btnSave.setVisibility(View.GONE);
             } else {
                 btnSave.setVisibility(View.VISIBLE);
             }
         }
-
-        private float dpToPx(Context context, float valueInDp) {
-            DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        private float dpToPx(Resources res, float valueInDp) {
+            DisplayMetrics metrics = res.getDisplayMetrics();
             return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, valueInDp, metrics);
         }
     };
@@ -84,21 +84,14 @@ public class GistActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gist);
-        App.getComponent().inject(this);
-
         ButterKnife.bind(this);
 
-        root.getViewTreeObserver().addOnGlobalLayoutListener(mKeyboardListener);
-
-        final GistModel content;
         if (savedInstanceState == null) {
-            content = getIntent().getParcelableExtra(EXTRA_GIST);
-        } else {
-            content = savedInstanceState.getParcelable(EXTRA_GIST);
+            supportPostponeEnterTransition();
+            String id = getIntent().getStringExtra(EXTRA_GIST);
+            _presenter.load(id);
         }
-        _presenter.attach(this, content);
-
-        applyContent(content);
+        root.getViewTreeObserver().addOnGlobalLayoutListener(mKeyboardListener);
     }
 
     @Override
@@ -115,10 +108,11 @@ public class GistActivity extends BaseActivity {
                         .setTitle("Last chance")
                         .setMessage("Do you want to delete this gist?")
                         .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                            dialog.dismiss();
                             _presenter.delete();
                         })
                         .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
-                            dialog.cancel();
+                            dialog.dismiss();
                         })
                         .create()
                         .show();
@@ -129,15 +123,29 @@ public class GistActivity extends BaseActivity {
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelable(EXTRA_GIST, _presenter.content);
+    public void onBackPressed() {
+        if (!_presenter.isChange(desc.getText().toString(), note.getText().toString())) {
+            super.onBackPressed();
+        } else {
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.there_changes)
+                    .setMessage(R.string.save_quest)
+                    .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                        onClickSave();
+                        dialog.dismiss();
+                    })
+                    .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+                        dialog.dismiss();
+                        super.onBackPressed();
+                    })
+                    .create()
+                    .show();
+        }
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        _presenter.detach();
+    protected void onStop() {
+        super.onStop();
         root.getViewTreeObserver().removeOnGlobalLayoutListener(mKeyboardListener);
     }
 
@@ -153,57 +161,37 @@ public class GistActivity extends BaseActivity {
 
     @OnClick(R.id.btn_web)
     public void onClickWeb() {
-        Uri link = _presenter.content.insteadWebLink();
-        Intent i = new Intent(Intent.ACTION_VIEW);
-        i.setData(link);
-        startActivity(i);
-    }
-
-    public void deleteSuccess() {
-        Snackbar.make(
-                findViewById(android.R.id.content),
-                "Gist successfully deleted",
-                Snackbar.LENGTH_SHORT
-        ).addCallback(new Snackbar.Callback() {
-            @Override
-            public void onDismissed(Snackbar transientBottomBar, int event) {
-                onBackPressed();
-            }
-        }).show();
-    }
-
-    public void deleteFailure() {
-        Snackbar.make(findViewById(android.R.id.content), "Error when deleting gist", Snackbar.LENGTH_LONG).show();
-    }
-
-    public void updateSuccess() {
-        finish();
+        Uri link = _presenter.insteadWebLink();
+        startActivity(
+                new Intent(Intent.ACTION_VIEW)
+                        .setData(link)
+        );
     }
 
     @Override
-    public void onBackPressed() {
-        if (!_presenter.isChange(desc.getText().toString(), note.getText().toString())) {
-            GistActivity.super.onBackPressed();
-        } else {
-            new AlertDialog.Builder(this)
-                    .setTitle(R.string.there_changes)
-                    .setMessage(R.string.save_quest)
-                    .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                        onClickSave();
-                        dialog.dismiss();
-                        GistActivity.super.onBackPressed();
-                    })
-                    .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
-                        dialog.dismiss();
-                        GistActivity.super.onBackPressed();
-                    })
-                    .create()
-                    .show();
-        }
+    public void onLoadSuccess(GistModel model) {
+        applyContent(model);
+    }
+
+    @Override
+    public void onLoadFailure() {
+        supportStartPostponedEnterTransition();
+        root.toError();
+    }
+
+    public void deleteSuccess() {
+        finish();
+    }
+
+    public void deleteFailure() {
+        Snackbar.make(root, R.string.fail_delete_gist, Snackbar.LENGTH_LONG).show();
+    }
+
+    public void updateSuccess() {
+        super.onBackPressed();
     }
 
     private void applyContent(GistModel content) {
-        supportPostponeEnterTransition();
         Picasso.with(GistActivity.this)
                 .load(content.ownerAvatarUrl)
                 .fit()
@@ -221,7 +209,7 @@ public class GistActivity extends BaseActivity {
                     }
                 });
 
-        tvLogin.setText(content.login(getContext()));
+        tvLogin.setText(content.login(getResources()));
 
         desc.setText(content.description);
         note.setText(content.note);

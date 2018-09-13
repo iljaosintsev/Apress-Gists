@@ -1,80 +1,97 @@
 package com.turlir.abakgists.gist;
 
-import com.turlir.abakgists.api.data.GistLocalDao;
-import com.turlir.abakgists.base.BasePresenter;
+import android.net.Uri;
+import android.support.annotation.NonNull;
+
+import com.arellomobile.mvp.InjectViewState;
+import com.arellomobile.mvp.MvpPresenter;
+import com.turlir.abakgists.base.App;
 import com.turlir.abakgists.model.GistModel;
 
-import io.reactivex.Completable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
+import javax.inject.Inject;
+
+import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.observers.ResourceCompletableObserver;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.observers.ResourceMaybeObserver;
 import timber.log.Timber;
 
-public class GistPresenter extends BasePresenter<GistActivity> {
+@InjectViewState
+public class GistPresenter extends MvpPresenter<GistView> {
 
-    private final EqualsSolver mSolver;
-    private final GistLocalDao mDao;
+    @Inject
+    GistInteractor interactor;
 
-    public GistModel content;
+    @Inject
+    GistDeleteBus deleteBus;
 
-    public GistPresenter(EqualsSolver solver, GistLocalDao dao) {
-        mSolver = solver;
-        mDao = dao;
+    GistPresenter() {
+        App.getComponent().inject(this);
     }
 
-    void attach(GistActivity view, GistModel model) {
-        super.attach(view);
-        content = model;
-    }
-
-    boolean isChange(String desc, String note) {
-        GistModel now = new GistModel(content, desc, note);
-        return mSolver.solveModel(content, now);
-    }
-
-    void transact(String desc, String note) {
-        Completable.fromRunnable(() -> mDao.update(content.id, desc, note))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new ResourceCompletableObserver() {
+    void load(String id) {
+        interactor.load(id)
+                .subscribe(new DisposableSingleObserver<GistModel>() {
                     @Override
-                    public void onComplete() {
+                    public void onSuccess(GistModel model) {
                         dispose();
-                        Timber.v("update gist in Presenter success");
-                        content = new GistModel(content, desc, note);
-                        if (getView() != null) {
-                            getView().updateSuccess();
-                        }
+                        getViewState().onLoadSuccess(model);
                     }
                     @Override
                     public void onError(Throwable e) {
                         dispose();
-                        Timber.d(e, "update gist in GistPresenter failure");
+                        Timber.e(e, "failure load gist by id %s", id);
+                        getViewState().onLoadFailure();
                     }
                 });
     }
 
-    public void delete() {
-        Completable.fromRunnable(() -> mDao.deleteById(content.id))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+    boolean isChange(@NonNull String desc, @NonNull String note) {
+        return interactor.isChange(desc, note);
+    }
+
+    void transact(@NonNull String desc, @NonNull String note) {
+        interactor.transact(desc, note)
                 .subscribe(new ResourceCompletableObserver() {
                     @Override
                     public void onComplete() {
                         dispose();
-                        Timber.v("gist successfully deleted");
-                        if (getView() != null) {
-                            getView().deleteSuccess();
-                        }
+                        getViewState().updateSuccess();
                     }
                     @Override
                     public void onError(Throwable e) {
                         dispose();
-                        Timber.d(e, "failure delete gist");
-                        if (getView() != null) {
-                            getView().deleteFailure();
-                        }
+                        Timber.e(e, "update gist in failure");
                     }
                 });
+    }
+
+    void delete() {
+        if (!interactor.possiblyDelete()) {
+            return;
+        }
+        interactor.delete()
+                .doOnSuccess(id -> deleteBus.gistDeleted(id))
+                .subscribe(new ResourceMaybeObserver<String>() {
+                    @Override
+                    public void onSuccess(String id) {
+                        dispose();
+                        Timber.v("gist successfully deleted %s", id);
+                        getViewState().deleteSuccess();
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        dispose();
+                        Timber.e(e, "failure delete gist");
+                        getViewState().deleteFailure();
+                    }
+                    @Override
+                    public void onComplete() {
+                        // stuff
+                    }
+                });
+    }
+
+    Uri insteadWebLink() {
+        return Uri.parse(interactor.insteadWebLink());
     }
 }

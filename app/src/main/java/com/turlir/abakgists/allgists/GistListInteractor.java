@@ -21,7 +21,7 @@ public class GistListInteractor extends WindowedRepository<GistModel> {
     private final Repository mRepo;
     private final ListGistMapper.Local mTransformer = new ListGistMapper.Local(new GistMapper.Local());
 
-    public GistListInteractor(Repository repo, Window start) {
+    GistListInteractor(Repository repo, Window start) {
         super(start);
         mRepo = repo;
     }

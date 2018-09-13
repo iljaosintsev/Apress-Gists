@@ -87,9 +87,10 @@ public class NotesFragment extends BaseFragment implements GistItemClickListener
     }
 
     @Override
-    public void onListItemClick(GistModel model, ImageView ivAvatar) {
-        if (getActivity() != null) {
-            Intent i = GistActivity.getStartIntent(getActivity(), model);
+    public void onListItemClick(int position, ImageView ivAvatar) {
+        GistModel model = mAdapter.getGistByPosition(position);
+        if (getActivity() != null && model != null) {
+            Intent i = GistActivity.getStartIntent(getActivity(), model.getId());
             String tag = getString(R.string.avatar_transition_tag);
             ViewCompat.setTransitionName(ivAvatar, tag);
             ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation

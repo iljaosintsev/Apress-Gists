@@ -15,6 +15,7 @@ import com.turlir.abakgists.base.erroring.ErrorInterpreter;
 import com.turlir.abakgists.base.erroring.ErrorSelector;
 import com.turlir.abakgists.base.erroring.RepeatingError;
 import com.turlir.abakgists.base.erroring.TroubleSelector;
+import com.turlir.abakgists.gist.GistDeleteBus;
 import com.turlir.abakgists.model.ErrorModel;
 import com.turlir.abakgists.model.GistModel;
 import com.turlir.abakgists.model.LoadingModel;
@@ -23,6 +24,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.disposables.Disposable;
 import timber.log.Timber;
 
 @InjectViewState
@@ -32,22 +34,28 @@ public class AllGistsPresenter extends MvpPresenter<GistListView> {
     DataSourceFactory factory;
 
     @Inject
+    GistDeleteBus deleteBus;
+
+    @Inject
     Context context;
 
     private final GistLoader mLoader;
     private final LoaderCallback mViewInteract;
 
+    private final Disposable delete;
+
     public AllGistsPresenter() {
         App.getComponent().inject(this);
         mViewInteract = new LoaderCallback();
-        GistListInteractor interactor = factory.create(createStartPoint());
-        mLoader = factory.create(interactor, mViewInteract, new ErrorCallback());
+        mLoader = new GistLoader(factory.create(createStartPoint()), mViewInteract, new ErrorCallback());
+        delete = deleteBus.subscribe(s -> getViewState().onGistDeleted());
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         mLoader.stop();
+        delete.dispose();
     }
 
     public void firstLoad() {
