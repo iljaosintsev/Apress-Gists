@@ -37,11 +37,6 @@ public abstract class TokenizeLayout extends FrameLayout
     }
 
     /**
-     * @return максимально поддерживаемое число токенов, больше 0
-     */
-    public abstract int getMaxTokenCount();
-
-    /**
      * @param token токен потомка
      * @param index индекс потомка
      * @return принадлежит ли токен указанному потомку
@@ -55,6 +50,11 @@ public abstract class TokenizeLayout extends FrameLayout
      */
     @Override
     public abstract int getChildIndexByToken(int token);
+
+    /**
+     * @return максимально поддерживаемое число токенов, больше 0
+     */
+    protected abstract int getMaxTokenCount();
 
     /**
      * @param attrs атрибуты макета
@@ -217,11 +217,5 @@ public abstract class TokenizeLayout extends FrameLayout
             super.writeToParcel(out, flags);
             out.writeInt(index);
         }
-
-        private void apply(TokenizeLayout layout) {
-            layout.showChild(index);
-        }
-
     }
-
 }

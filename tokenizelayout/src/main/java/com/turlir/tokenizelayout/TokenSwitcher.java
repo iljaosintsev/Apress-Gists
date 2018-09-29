@@ -36,27 +36,20 @@ public class TokenSwitcher {
      */
     boolean applyGroupByChild(int child) {
         if (mLastItem != INVALID_INDEX) {
-
             return child == mLastItem;
-
+        } else if (mInformator.doesViewToToken(mToken, child)) {
+            mLastItem = child;
+            return true;
         } else {
-
-            if (mInformator.doesViewToToken(mToken, child)) {
-                mLastItem = child;
-                return true;
-            } else {
-                return false;
-            }
-
+            return false;
         }
     }
 
     /**
-     * @return проверить текущий набор потомков для имеющегося токена
+     * проверяет текущий набор потомков для имеющегося токена
      */
-    @NonNull
-    ChildDiff invalidateToken() {
-        return setToken(mToken);
+    void invalidateToken() {
+        setToken(mToken);
     }
 
     /**
@@ -66,40 +59,35 @@ public class TokenSwitcher {
      */
     @NonNull
     ChildDiff setToken(int token) {
-
         ChildDiff.Builder builder = new ChildDiff.Builder();
-
         if (mLastItem != INVALID_INDEX) { // есть настройки
-
             if (token != mToken) { // токен изменился
-
-                int cc = mInformator.getChildCount();
-                if (cc > mLastItem && mLastItem > INVALID_INDEX) {
-                    builder.hide(mLastItem);
-                }
-
-                if (cc > 0) {
-                    int index = mInformator.getChildIndexByToken(token);
-                    mLastItem = index;
-                    if (index != INVALID_INDEX) {
-                        builder.show(index);
-                        mToken = token;
-                    }
-                }
+                newToken(token, builder);
             }
-
         } else { // нет настроек
-
             int index = mInformator.getChildIndexByToken(token);
             if (index != INVALID_INDEX) {
                 mLastItem = index;
                 builder.show(index);
             }
-
             mToken = token;
         }
-
         return builder.build();
+    }
+
+    private void newToken(int token, ChildDiff.Builder builder) {
+        int cc = mInformator.getChildCount();
+        if (cc > mLastItem && mLastItem > INVALID_INDEX) {
+            builder.hide(mLastItem);
+        }
+        if (cc > 0) {
+            int index = mInformator.getChildIndexByToken(token);
+            mLastItem = index;
+            if (index != INVALID_INDEX) {
+                builder.show(index);
+                mToken = token;
+            }
+        }
     }
 
     /**
@@ -124,7 +112,5 @@ public class TokenSwitcher {
          * @return индекс потомка для данного токена или {@link TokenSwitcher#INVALID_INDEX}
          */
         int getChildIndexByToken(int token);
-
     }
-
 }

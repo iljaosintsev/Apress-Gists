@@ -1,6 +1,6 @@
 package com.turlir.tokenizelayout;
 
-class ChildDiff {
+final class ChildDiff {
 
     private final Pair[] mInstructions;
 
@@ -11,10 +11,10 @@ class ChildDiff {
     void apply(ChildManipulator manipulator) {
         for (Pair item : mInstructions) {
             if (item != null) {
-                if (item.second) {
-                    manipulator.showChild(item.first);
+                if (item.visibility) {
+                    manipulator.showChild(item.index);
                 } else {
-                    manipulator.hideChild(item.first);
+                    manipulator.hideChild(item.index);
                 }
             }
         }
@@ -26,7 +26,7 @@ class ChildDiff {
 
     static class Builder {
 
-        private Pair[] mInstructions;
+        private final Pair[] mInstructions;
 
         Builder() {
             mInstructions = new Pair[2];
@@ -45,7 +45,6 @@ class ChildDiff {
         ChildDiff build() {
             return new ChildDiff(mInstructions);
         }
-
     }
 
     interface ChildManipulator {
@@ -53,18 +52,16 @@ class ChildDiff {
         void hideChild(int i);
 
         void showChild(int i);
-
     }
 
     private static class Pair {
 
-        final Integer first;
-        final Boolean second;
+        final Integer index;
+        final Boolean visibility;
 
-        Pair(Integer first, Boolean second) {
-            this.first = first;
-            this.second = second;
+        Pair(Integer index, Boolean visibility) {
+            this.index = index;
+            this.visibility = visibility;
         }
-
     }
 }
