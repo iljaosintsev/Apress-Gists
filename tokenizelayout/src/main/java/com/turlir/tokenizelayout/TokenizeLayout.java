@@ -125,7 +125,7 @@ public abstract class TokenizeLayout extends FrameLayout
     protected void onRestoreInstanceState(Parcelable state) {
         super.onRestoreInstanceState(state);
         TokenizeLayoutState now = (TokenizeLayoutState) state;
-        now.apply(this);
+        showChild(now.index);
         mSwitcher.invalidateToken();
     }
 
@@ -149,7 +149,7 @@ public abstract class TokenizeLayout extends FrameLayout
     public void hideChild(int i) {
         View child = getChildAt(i);
         ViewGroup.LayoutParams lp = child.getLayoutParams();
-        int def = ((TokenizeLayoutParams) lp).getHideVisibility();
+        int def = ((TokenizeLayoutParams) lp).hided;
         //noinspection WrongConstant
         child.setVisibility(def);
 
@@ -164,11 +164,11 @@ public abstract class TokenizeLayout extends FrameLayout
 
     public static class TokenizeLayoutParams extends FrameLayout.LayoutParams {
 
-        private final int mHided;
+        final int hided;
 
         TokenizeLayoutParams(int width, int height) {
             super(width, height);
-            mHided = View.INVISIBLE;
+            hided = View.INVISIBLE;
         }
 
         TokenizeLayoutParams(@NonNull Context c, @Nullable AttributeSet attrs) {
@@ -176,14 +176,10 @@ public abstract class TokenizeLayout extends FrameLayout
 
             TypedArray ta = c.obtainStyledAttributes(attrs, R.styleable.TokenizeLayout_Layout, 0, 0);
             try {
-                mHided = ta.getInteger(R.styleable.TokenizeLayout_Layout_layout_hided, View.INVISIBLE); // default
+                hided = ta.getInteger(R.styleable.TokenizeLayout_Layout_layout_hided, View.INVISIBLE); // default
             } finally {
                 ta.recycle();
             }
-        }
-
-        int getHideVisibility() {
-            return mHided;
         }
 
     }
@@ -204,26 +200,26 @@ public abstract class TokenizeLayout extends FrameLayout
             }
         };
 
-        private final int mIndex;
+        final int index;
 
         private TokenizeLayoutState(Parcelable in, TokenizeLayout layout) {
             super(in);
-            mIndex = layout.mSwitcher.currentToken();
+            index = layout.mSwitcher.currentToken();
         }
 
         private TokenizeLayoutState(Parcel source) {
             super(source);
-            mIndex = source.readInt();
+            index = source.readInt();
         }
 
         @Override
         public void writeToParcel(Parcel out, int flags) {
             super.writeToParcel(out, flags);
-            out.writeInt(mIndex);
+            out.writeInt(index);
         }
 
         private void apply(TokenizeLayout layout) {
-            layout.showChild(mIndex);
+            layout.showChild(index);
         }
 
     }
