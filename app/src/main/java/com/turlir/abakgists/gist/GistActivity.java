@@ -26,7 +26,7 @@ import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.turlir.abakgists.R;
 import com.turlir.abakgists.model.GistModel;
-import com.turlir.abakgists.widgets.SwitchLayout;
+import com.turlir.tokenizelayout.SwitchLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

@@ -23,7 +23,7 @@ import com.turlir.abakgists.gist.GistActivity;
 import com.turlir.abakgists.model.GistModel;
 import com.turlir.abakgists.notes.NotesPresenter;
 import com.turlir.abakgists.widgets.DividerDecorator;
-import com.turlir.abakgists.widgets.SwitchLayout;
+import com.turlir.tokenizelayout.SwitchLayout;
 
 import java.util.List;
 

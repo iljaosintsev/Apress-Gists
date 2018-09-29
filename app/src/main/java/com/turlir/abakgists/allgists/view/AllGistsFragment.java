@@ -32,7 +32,7 @@ import com.turlir.abakgists.model.GistModel;
 import com.turlir.abakgists.model.LoadingModel;
 import com.turlir.abakgists.widgets.DividerDecorator;
 import com.turlir.abakgists.widgets.DownScroller;
-import com.turlir.abakgists.widgets.SwitchLayout;
+import com.turlir.tokenizelayout.SwitchLayout;
 import com.turlir.abakgists.widgets.UpScroller;
 
 import java.util.List;

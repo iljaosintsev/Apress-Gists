@@ -15,12 +15,6 @@
         <attr name="animateDrawableBottomCompat" format="reference" />
     </declare-styleable>
 
-    <declare-styleable name="SwitchLayout">
-        <attr name="init" format="enum">
-            <enum name="content" value="0"/>
-            <enum name="error" value="1"/>
-            <enum name="loading" value="2"/>
-        </attr>
-    </declare-styleable>
+
 
 </resources>

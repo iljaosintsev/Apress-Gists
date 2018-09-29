@@ -1,4 +1,4 @@
-<com.turlir.abakgists.widgets.SwitchLayout
+<com.turlir.tokenizelayout.SwitchLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -27,4 +27,4 @@
 
     <include layout="@layout/in_loading"/>
 
-</com.turlir.abakgists.widgets.SwitchLayout>
+</com.turlir.tokenizelayout.SwitchLayout>

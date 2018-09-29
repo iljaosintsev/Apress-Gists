@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.turlir.abakgists.widgets.SwitchLayout
+<com.turlir.tokenizelayout.SwitchLayout
     android:id="@+id/gist_act_root"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -142,4 +142,4 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         app:drawableTopCompat="@drawable/ic_main_network_error" />
 
-</com.turlir.abakgists.widgets.SwitchLayout>
+</com.turlir.tokenizelayout.SwitchLayout>
