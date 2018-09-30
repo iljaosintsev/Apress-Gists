@@ -43,6 +43,7 @@
 -dontwarn com.squareup.okhttp.**
 
 # Okio
+-dontwarn okhttp3.internal.platform.*
 -dontwarn okio.**
 
 # Retrofit 2
