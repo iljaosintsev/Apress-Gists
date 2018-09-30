@@ -1,8 +1,6 @@
 package com.turlir.abakgists.widgets;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
-import android.support.v7.view.CollapsibleActionView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +10,8 @@ import android.widget.LinearLayout;
 
 import com.turlir.abakgists.R;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.view.CollapsibleActionView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;

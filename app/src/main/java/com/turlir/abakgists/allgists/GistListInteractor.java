@@ -1,6 +1,6 @@
 package com.turlir.abakgists.allgists;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.turlir.abakgists.api.Repository;
 import com.turlir.abakgists.api.data.GistMapper;

@@ -2,7 +2,7 @@ package com.turlir.abakgists.base.erroring;
 
 
 import android.content.res.Resources;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.io.IOException;
 

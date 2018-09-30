@@ -1,7 +1,7 @@
 package com.turlir.abakgists.allgists.combination;
 
 import android.os.Looper;
-import android.support.annotation.CheckResult;
+import androidx.annotation.CheckResult;
 
 import java.util.List;
 

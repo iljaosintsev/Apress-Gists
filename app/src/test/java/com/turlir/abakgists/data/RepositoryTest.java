@@ -1,7 +1,5 @@
 package com.turlir.abakgists.data;
 
-import android.arch.persistence.db.SupportSQLiteDatabase;
-import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.os.Build;
@@ -30,6 +28,8 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
+import androidx.room.Room;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 import io.reactivex.Single;
 import io.reactivex.subscribers.TestSubscriber;
 

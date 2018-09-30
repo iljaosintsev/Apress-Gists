@@ -1,16 +1,20 @@
 package com.turlir.abakgists.widgets;
 
 
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public abstract class Scroller extends RecyclerView.OnScrollListener {
 
     boolean isLoaded;
 
     @Override
-    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+    public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
         LinearLayoutManager lm = (LinearLayoutManager) recyclerView.getLayoutManager();
+        if (lm == null) {
+            return;
+        }
         int firstVisibleItem = lm.findFirstVisibleItemPosition();
         if (firstVisibleItem == RecyclerView.NO_POSITION) {
             return; // игнор, если список пустой

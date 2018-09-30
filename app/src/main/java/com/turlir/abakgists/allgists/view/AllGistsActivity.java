@@ -1,7 +1,7 @@
 package com.turlir.abakgists.allgists.view;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.turlir.abakgists.R;
 

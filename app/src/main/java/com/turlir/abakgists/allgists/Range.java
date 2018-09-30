@@ -1,8 +1,8 @@
 package com.turlir.abakgists.allgists;
 
-import android.support.annotation.VisibleForTesting;
-
 import java.util.Objects;
+
+import androidx.annotation.VisibleForTesting;
 
 public class Range implements Window {
 

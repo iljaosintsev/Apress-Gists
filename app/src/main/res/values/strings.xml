@@ -33,5 +33,7 @@
 
     <string name="avatar_transition_tag">avatar_transition_tag</string>
     <string name="fail_delete_gist">Error when deleting gist</string>
+    <string name="github_logo">Github logo</string>
+    <string name="user_avatar">User avatar</string>
 
 </resources>

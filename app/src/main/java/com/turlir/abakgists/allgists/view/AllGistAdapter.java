@@ -2,15 +2,10 @@ package com.turlir.abakgists.allgists.view;
 
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.util.DiffUtil;
-import android.support.v7.util.ListUpdateCallback;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import com.hannesdorfmann.adapterdelegates3.ListDelegationAdapter;
+import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter;
 import com.turlir.abakgists.R;
 import com.turlir.abakgists.allgists.view.listing.ErrorDelegate;
 import com.turlir.abakgists.allgists.view.listing.GistModelDelegate;
@@ -25,6 +20,11 @@ import com.turlir.abakgists.model.LoadingModel;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListUpdateCallback;
+import androidx.recyclerview.widget.RecyclerView;
 import timber.log.Timber;
 
 public class AllGistAdapter extends ListDelegationAdapter<List<InterfaceModel>> {
@@ -66,7 +66,7 @@ public class AllGistAdapter extends ListDelegationAdapter<List<InterfaceModel>> 
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return super.onCreateViewHolder(parent, viewType);
     }
 

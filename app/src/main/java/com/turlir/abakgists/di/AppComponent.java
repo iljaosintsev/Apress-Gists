@@ -1,7 +1,7 @@
 package com.turlir.abakgists.di;
 
 
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 
 import com.turlir.abakgists.allgists.AllGistsPresenter;
 import com.turlir.abakgists.allgists.view.AllGistsFragment;

@@ -1,7 +1,7 @@
 package com.turlir.abakgists.widgets.anim.factor;
 
-import android.support.annotation.FloatRange;
-import android.support.v4.util.Pair;
+import androidx.annotation.FloatRange;
+import androidx.core.util.Pair;
 import android.view.View;
 
 import java.util.ArrayList;

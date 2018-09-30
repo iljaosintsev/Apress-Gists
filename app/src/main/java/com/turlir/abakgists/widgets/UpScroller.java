@@ -1,6 +1,6 @@
 package com.turlir.abakgists.widgets;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class UpScroller extends Scroller {
 
