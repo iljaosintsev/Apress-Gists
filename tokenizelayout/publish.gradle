@@ -1,0 +1,80 @@
+apply plugin: "com.jfrog.bintray"
+apply plugin: "maven-publish"
+apply plugin: "signing"
+
+def authorId = "iljaosintsev"
+def authorName = "Ilja Osintcev"
+def authorEmail = "iljaosincev@gmail.com"
+
+def libDesc = "TokenizeLayout is a android ViewGroup for manipulating view."
+def siteUrl = "https://github.com/iljaosintsev/Apress-Gists"
+def issueUrl = "https://github.com/iljaosintsev/Apress-Gists/issues"
+def vscUrl = "https://github.com/iljaosintsev/Apress-Gists.git"
+def gitRepo = "iljaosintsev/Apress-Gists"
+
+bintray {
+    def prop = new Properties()
+    prop.load(new FileInputStream(file("local.properties")))
+
+    user = prop.getProperty("bintray.user")
+    key = prop.getProperty("bintray.apikey")
+    publications = [project.name]
+
+    pkg {
+        repo = "TokenizeLayout"
+        name = project.name
+        desc = "$libDesc"
+        licenses = ["Apache-2.0"]
+        websiteUrl = "$siteUrl"
+        issueTrackerUrl = "$issueUrl"
+        vcsUrl = "$vscUrl"
+        publicDownloadNumbers = true
+        githubRepo = "$gitRepo"
+
+        version {
+            name = project.version
+            released = new Date()
+            gpg {
+                sign = true
+                passphrase = prop.getProperty("pgp.pass")
+            }
+        }
+    }
+}
+
+def pomConfig = {
+    licenses {
+        license {
+            name "The Apache Software License, Version 2.0"
+            url "http://www.apache.org/licenses/LICENSE-2.0.txt"
+        }
+    }
+    developers {
+        developer {
+            id "$authorId"
+            name "$authorName"
+            email "$authorEmail"
+        }
+    }
+    scm {
+        connection vscUrl
+        developerConnection vscUrl
+        url siteUrl
+    }
+}
+
+publishing {
+    publications {
+        tokenizeLayout(MavenPublication) {
+            artifact sourcesJar
+            artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
+            pom.withXml {
+                def root = asNode()
+                root.appendNode("name", project.name)
+                root.appendNode("description", libDesc)
+                root.appendNode("url", siteUrl)
+                root.children().last() + pomConfig
+            }
+        }
+    }
+}
