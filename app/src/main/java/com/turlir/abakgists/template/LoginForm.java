@@ -4,14 +4,13 @@ import android.graphics.Color;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.turlir.abakgists.templater.DynamicForm;
-import com.turlir.abakgists.templater.Structure;
-import com.turlir.abakgists.templater.base.Grouper;
-import com.turlir.abakgists.templater.base.Interceptor;
-import com.turlir.abakgists.templater.widget.FormWidget;
-import com.turlir.abakgists.templater.widget.MaterialField;
-
 import androidx.annotation.NonNull;
+import example.turlir.com.templater.DynamicForm;
+import example.turlir.com.templater.Structure;
+import example.turlir.com.templater.base.Grouper;
+import example.turlir.com.templater.base.Interceptor;
+import example.turlir.com.templater.widget.FormWidget;
+import example.turlir.com.templater.widget.MaterialField;
 
 class LoginForm extends DynamicForm<EditableProfile> {
 

@@ -1,8 +1,8 @@
 package com.turlir.abakgists.template;
 
-import com.turlir.abakgists.templater.BaseBuilder;
-import com.turlir.abakgists.templater.check.PhoneChecker;
-import com.turlir.abakgists.templater.widget.WidgetFactory;
+import example.turlir.com.templater.BaseBuilder;
+import example.turlir.com.templater.check.PhoneChecker;
+import example.turlir.com.templater.widget.WidgetFactory;
 
 class LoginBuilder extends BaseBuilder<EditableProfile, LoginBuilder> {
 

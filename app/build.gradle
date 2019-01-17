@@ -48,6 +48,7 @@ android {
 }
 
 dependencies {
+    implementation project(':templater')
     implementation 'com.turlir.tokenizelayout:tokenizelayout:1.0.0'
 
     implementation 'com.jakewharton:butterknife:10.0.0'
