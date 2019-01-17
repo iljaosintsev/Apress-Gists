@@ -20,7 +20,7 @@
         <item name="android:textColorPrimaryInverse">@color/textColorPrimary</item>
     </style>
 
-    <style name="WhiteActivityTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="WhiteActivityTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>

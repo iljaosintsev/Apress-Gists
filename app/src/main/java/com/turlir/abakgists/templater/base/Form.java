@@ -1,6 +1,6 @@
 package com.turlir.abakgists.templater.base;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 public interface Form<T> {
 
@@ -12,7 +12,8 @@ public interface Form<T> {
 
     boolean verify();
 
-    @NonNull T collect();
+    @NonNull
+    T collect();
 
     ////
 

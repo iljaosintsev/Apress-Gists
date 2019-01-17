@@ -1,6 +1,5 @@
 package com.turlir.abakgists.templater;
 
-import android.support.annotation.Nullable;
 import android.view.ViewGroup;
 
 import com.turlir.abakgists.templater.base.Group;
@@ -8,6 +7,8 @@ import com.turlir.abakgists.templater.base.Grouper;
 
 import java.util.Iterator;
 import java.util.Queue;
+
+import androidx.annotation.Nullable;
 
 class Mixer {
 

@@ -1,7 +1,6 @@
 package com.turlir.abakgists.template;
 
 import android.graphics.Color;
-import android.support.annotation.NonNull;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
@@ -11,6 +10,8 @@ import com.turlir.abakgists.templater.base.Grouper;
 import com.turlir.abakgists.templater.base.Interceptor;
 import com.turlir.abakgists.templater.widget.FormWidget;
 import com.turlir.abakgists.templater.widget.MaterialField;
+
+import androidx.annotation.NonNull;
 
 class LoginForm extends DynamicForm<EditableProfile> {
 

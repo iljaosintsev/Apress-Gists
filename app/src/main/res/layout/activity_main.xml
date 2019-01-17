@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -24,16 +23,16 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
             android:layout_marginTop="16dp"
-            android:text="@string/description"/>
+            android:text="@string/description"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/board_button_margin"
-            android:layout_marginRight="@dimen/board_button_margin"
             android:layout_marginTop="24dp"
+            android:layout_marginRight="@dimen/board_button_margin"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -43,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/activity_vertical_margin"
                 android:text="@string/all_gists"
-                app:icon="@drawable/ic_list_white_24dp"/>
+                app:icon="@drawable/ic_list_white_24dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_notes"
@@ -51,24 +50,26 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/activity_vertical_margin"
                 android:text="@string/notes"
-                app:icon="@drawable/ic_speaker_notes_white_24dp"/>
+                app:icon="@drawable/ic_speaker_notes_white_24dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_all_in_one"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
                 android:text="@string/all_in_one"
-                app:icon="@drawable/ic_select_all_white_24dp"/>
+                app:icon="@drawable/ic_select_all_white_24dp" />
 
-        <com.turlir.abakgists.widgets.VectorButton
-            android:id="@+id/btn_template"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/template"
-            app:drawableLeftCompat="@drawable/ic_template"/>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_template"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/template"
+                app:icon="@drawable/ic_template" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
-
-</LinearLayout>
+</ScrollView>

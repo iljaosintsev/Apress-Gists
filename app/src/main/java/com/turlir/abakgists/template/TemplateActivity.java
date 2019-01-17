@@ -1,13 +1,13 @@
 package com.turlir.abakgists.template;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.widget.LinearLayout;
 
 import com.turlir.abakgists.R;
 import com.turlir.abakgists.base.BaseActivity;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;

@@ -14,6 +14,7 @@ import android.view.animation.LinearInterpolator;
 
 import com.turlir.abakgists.allgists.view.AllGistsActivity;
 import com.turlir.abakgists.notes.view.NotesActivity;
+import com.turlir.abakgists.template.TemplateActivity;
 import com.turlir.abakgists.widgets.anim.base.Factory;
 import com.turlir.abakgists.widgets.anim.creator.Timing;
 import com.turlir.abakgists.widgets.anim.factor.ButtonAnimFactory;

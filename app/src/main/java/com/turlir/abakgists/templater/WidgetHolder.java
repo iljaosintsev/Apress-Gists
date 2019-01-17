@@ -1,11 +1,12 @@
 package com.turlir.abakgists.templater;
 
-import android.support.annotation.Nullable;
 import android.view.ViewGroup;
 
 import com.turlir.abakgists.templater.base.Interceptor;
 import com.turlir.abakgists.templater.check.Checker;
 import com.turlir.abakgists.templater.widget.FormWidget;
+
+import androidx.annotation.Nullable;
 
 public class WidgetHolder {
 

@@ -1,7 +1,6 @@
 package com.turlir.abakgists.templater;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.view.KeyEvent;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -13,6 +12,8 @@ import com.turlir.abakgists.templater.widget.WidgetFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.NonNull;
 
 public abstract class DynamicForm<T> implements Form<T> {
 

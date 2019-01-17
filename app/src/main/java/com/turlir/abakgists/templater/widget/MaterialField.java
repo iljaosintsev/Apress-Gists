@@ -1,12 +1,12 @@
 package com.turlir.abakgists.templater.widget;
 
 import android.content.Context;
-import android.support.design.widget.TextInputEditText;
-import android.support.design.widget.TextInputLayout;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.turlir.abakgists.R;
 
 import butterknife.BindDimen;

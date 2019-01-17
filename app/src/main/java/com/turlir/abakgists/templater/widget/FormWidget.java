@@ -1,10 +1,11 @@
 package com.turlir.abakgists.templater.widget;
 
-import android.support.annotation.IntDef;
 import android.view.View;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+
+import androidx.annotation.IntDef;
 
 public interface FormWidget {
 
