@@ -1,2 +1,1 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="example.turlir.com.templater" />
+<manifest package="example.turlir.com.templater" />
