@@ -13,8 +13,10 @@ def vscUrl = "https://github.com/iljaosintsev/Apress-Gists.git"
 def gitRepo = "iljaosintsev/Apress-Gists"
 
 bintray {
+    def propFile = file("local.properties")
+    if (!propFile.exists()) return
     def prop = new Properties()
-    prop.load(new FileInputStream(file("local.properties")))
+    prop.load(new FileInputStream(propFile))
 
     user = prop.getProperty("bintray.user")
     key = prop.getProperty("bintray.apikey")
