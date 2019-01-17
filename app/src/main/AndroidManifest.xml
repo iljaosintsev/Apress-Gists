@@ -40,6 +40,16 @@
             android:label="@string/all_in_one"
             android:theme="@style/AllInOneTheme"/>
 
+        <activity
+            android:name=".template.TemplateActivity"
+            android:exported="true"
+            android:theme="@style/WhiteActivityTheme"
+            android:label="@string/template">
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>

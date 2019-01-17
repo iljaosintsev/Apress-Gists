@@ -6,6 +6,7 @@
     <dimen name="board_button_margin">72dp</dimen>
     <dimen name="half_margin">8dp</dimen>
     <dimen name="list_item_bottom_margin">20dp</dimen>
+    <dimen name="four_margin">4dp</dimen>
     <dimen name="divider_height">2dp</dimen>
     <dimen name="number_tv_padding">4dp</dimen>
     <dimen name="small_avatar_size">56dp</dimen>

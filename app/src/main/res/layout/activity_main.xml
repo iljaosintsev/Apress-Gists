@@ -60,8 +60,15 @@
                 android:text="@string/all_in_one"
                 app:icon="@drawable/ic_select_all_white_24dp"/>
 
-        </LinearLayout>
+        <com.turlir.abakgists.widgets.VectorButton
+            android:id="@+id/btn_template"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/template"
+            app:drawableLeftCompat="@drawable/ic_template"/>
 
     </LinearLayout>
 
-</ScrollView>
+
+</LinearLayout>

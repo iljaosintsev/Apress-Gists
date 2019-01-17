@@ -36,4 +36,7 @@
     <string name="github_logo">Github logo</string>
     <string name="user_avatar">User avatar</string>
 
+    <string name="template">Template</string>
+    <string name="phone_error">Phone error</string>
+
 </resources>
