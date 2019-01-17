@@ -1,1 +1,1 @@
-include ':app', ':tokenizelayout'
+include ':app', ':tokenizelayout', ':templater'
