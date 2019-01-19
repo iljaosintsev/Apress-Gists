@@ -26,12 +26,6 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="TitleTextAppearance" parent="TextAppearance.AppCompat.Caption">
-        <item name="android:textSize">14sp</item>
-    </style>
-
-    <style name="FieldTextAppearance" parent="TextAppearance.AppCompat.Subhead" />
-
     <style name="WhiteButtonOverlay" parent="ThemeOverlay.AppCompat.Light">
         <item name="colorAccent">#FFF</item>
         <item name="android:textColor">@color/colorAccent</item>

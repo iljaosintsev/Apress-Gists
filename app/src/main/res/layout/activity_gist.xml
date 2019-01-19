@@ -1,145 +1,159 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.turlir.tokenizelayout.SwitchLayout
-    android:id="@+id/gist_act_root"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/gist_act_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-    android:layout_marginRight="@dimen/activity_horizontal_margin"
-    android:layout_marginTop="@dimen/half_margin"
-    android:layout_marginBottom="@dimen/half_margin"
-    tools:context=".gist.GistActivity"
-    app:init="content">
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:focusableInTouchMode="true"
-        android:orientation="vertical">
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/left_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="16dp" />
 
-        <RelativeLayout
-            android:id="@+id/head_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/half_margin">
-
-            <ImageView
-                android:id="@+id/iv_avatar"
-                android:layout_width="@dimen/avatar_size"
-                android:layout_height="@dimen/avatar_size"
-                android:contentDescription="@string/user_avatar"
-                android:transitionName="@string/avatar_transition_tag"
-                tools:background="@color/colorAccent" />
-
-            <TextView
-                android:id="@+id/tv_owner_hint"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_marginStart="16dp"
-                android:layout_toEndOf="@+id/iv_avatar"
-                android:text="@string/owner"
-                android:textAppearance="@style/TitleTextAppearance" />
-
-            <TextView
-                android:id="@+id/tv_login"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/tv_owner_hint"
-                android:layout_below="@+id/tv_owner_hint"
-                android:layout_marginTop="8dp"
-                android:maxLines="1"
-                android:textAppearance="@style/FieldTextAppearance"
-                tools:text="turlir" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_web"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentTop="false"
-                android:drawablePadding="4dp"
-                android:gravity="center_vertical"
-                android:text="@string/web_link"
-                android:textAllCaps="false"
-                app:backgroundTint="?attr/colorPrimary"
-                app:icon="@drawable/ic_link" />
-
-        </RelativeLayout>
-
-        <LinearLayout
-            android:id="@+id/desc_container"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:text="@string/desc"
-                android:textAppearance="@style/FieldTextAppearance" />
-
-            <EditText
-                android:id="@+id/et_desc"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/bg_text_area_selector"
-                android:gravity="top"
-                android:inputType="text|textMultiLine"
-                android:textAppearance="@style/FieldTextAppearance"
-                tools:text="Star wars intro text" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:text="@string/note"
-                android:textAppearance="@style/FieldTextAppearance" />
-
-            <EditText
-                android:id="@+id/et_note"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/bg_text_area_selector"
-                android:gravity="top"
-                android:inputType="text|textMultiLine"
-                android:paddingTop="16dp"
-                android:textAppearance="@style/FieldTextAppearance"
-                tools:text="Long long far away" />
-
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/btn_save"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/save" />
-
-    </LinearLayout>
+    <ImageView
+        android:id="@+id/iv_avatar"
+        android:layout_width="@dimen/avatar_size"
+        android:layout_height="@dimen/avatar_size"
+        android:layout_marginTop="16dp"
+        android:contentDescription="@string/user_avatar"
+        android:transitionName="@string/avatar_transition_tag"
+        app:layout_constraintStart_toStartOf="@+id/left_guideline"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:background="@color/colorAccent" />
 
     <TextView
+        android:id="@+id/tv_owner_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="16dp"
+        android:layout_toEndOf="@+id/iv_avatar"
+        android:text="@string/owner"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+        app:layout_constraintStart_toEndOf="@+id/iv_avatar"
+        app:layout_constraintTop_toTopOf="@+id/iv_avatar" />
+
+    <TextView
+        android:id="@+id/tv_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_owner_hint"
+        android:layout_alignStart="@+id/tv_owner_hint"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:maxLines="1"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+        app:layout_constraintEnd_toStartOf="@+id/btn_web"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/tv_owner_hint"
+        app:layout_constraintTop_toBottomOf="@+id/tv_owner_hint"
+        tools:text="turlir" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_web"
+        style="@style/Widget.MaterialComponents.Button.Icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="false"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:gravity="center_vertical"
+        android:text="@string/web_link"
+        android:textAllCaps="false"
+        app:backgroundTint="?attr/colorPrimary"
+        app:icon="@drawable/ic_link"
+        app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_desc_container"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:hint="@string/desc"
+        app:layout_constraintBottom_toTopOf="@+id/til_note_container"
+        app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+        app:layout_constraintStart_toStartOf="@+id/left_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/iv_avatar"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintVertical_weight="1">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_desc"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="top"
+            tools:text="Desc example" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_note_container"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:hint="@string/note"
+        app:layout_constraintBottom_toTopOf="@+id/btn_save"
+        app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+        app:layout_constraintStart_toStartOf="@+id/left_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/til_desc_container"
+        app:layout_constraintVertical_weight="1">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_note"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="top"
+            tools:text="Note example" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/content_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="btn_web,btn_save,tv_owner_hint,tv_login,til_note_container,til_desc_container,iv_avatar" />
+
+    <TextView
+        android:id="@+id/error"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:drawableTop="@drawable/ic_main_network_error"
         android:drawablePadding="@dimen/half_margin"
         android:text="@string/gist_does_not_open_error"
-        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-        android:drawableTop="@drawable/ic_main_network_error" />
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+        app:layout_constraintStart_toStartOf="@+id/left_guideline"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</com.turlir.tokenizelayout.SwitchLayout>
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/right_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="16dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:insetLeft="0dp"
+        android:insetRight="0dp"
+        android:insetBottom="0dp"
+        android:text="@string/save"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

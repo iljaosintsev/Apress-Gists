@@ -11,6 +11,7 @@ import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -24,7 +25,6 @@ import com.squareup.picasso.Picasso;
 import com.turlir.abakgists.R;
 import com.turlir.abakgists.base.BaseActivity;
 import com.turlir.abakgists.model.GistModel;
-import com.turlir.tokenizelayout.SwitchLayout;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -45,7 +45,13 @@ public class GistActivity extends BaseActivity implements GistView {
     GistPresenter _presenter;
 
     @BindView(R.id.gist_act_root)
-    SwitchLayout root;
+    ViewGroup root;
+
+    @BindView(R.id.content_group)
+    View content;
+
+    @BindView(R.id.error)
+    View error;
 
     @BindView(R.id.tv_login)
     TextView tvLogin;
@@ -176,7 +182,8 @@ public class GistActivity extends BaseActivity implements GistView {
     @Override
     public void onLoadFailure() {
         supportStartPostponedEnterTransition();
-        root.toError();
+        content.setVisibility(View.INVISIBLE);
+        error.setVisibility(View.VISIBLE);
     }
 
     public void deleteSuccess() {
