@@ -107,7 +107,7 @@ public class GistActivity extends BaseActivity implements GistView {
                 new AlertDialog.Builder(this)
                         .setTitle("Last chance")
                         .setMessage("Do you want to delete this gist?")
-                        .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                        .setPositiveButton(R.string.delete, (dialog, which) -> {
                             dialog.dismiss();
                             _presenter.delete();
                         })
@@ -130,7 +130,7 @@ public class GistActivity extends BaseActivity implements GistView {
             new AlertDialog.Builder(this)
                     .setTitle(R.string.there_changes)
                     .setMessage(R.string.save_quest)
-                    .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                    .setPositiveButton(R.string.save, (dialog, which) -> {
                         onClickSave();
                         dialog.dismiss();
                     })
