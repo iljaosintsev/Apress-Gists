@@ -24,7 +24,7 @@ public interface GistLocalDao {
     @Insert()
     void insertAll(List<GistLocal> users);
 
-    @Query("UPDATE gists_db SET 'desc' = :desc, note = :note WHERE id = :id")
+    @Query("UPDATE gists_db SET description = :desc, note = :note WHERE id = :id")
     void update(String id, String desc, String note);
 
     @Query("DELETE FROM gists_db WHERE id == :id")

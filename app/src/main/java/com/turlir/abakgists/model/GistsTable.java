@@ -8,7 +8,7 @@ public interface GistsTable {
             BASE_NAME = "gists_db",
             GISTS = "gists",
             ID = "id",
-            DESC = "desc",
+            DESC = "description",
             URL = "url",
             CREATED = "created",
             OWNER_LOGIN = "ownerLogin",
