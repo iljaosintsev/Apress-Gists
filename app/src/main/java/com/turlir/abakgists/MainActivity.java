@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 
@@ -41,6 +42,9 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.btn_all_in_one)
     View btnAll;
 
+    @BindView(R.id.secondary_btn_container)
+    ViewGroup secondary;
+
     private AnimatorSet animation;
 
     @Override
@@ -55,6 +59,12 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         if (animation != null) {
             compatReverse(animation);
+            secondary.animate()
+                    .translationXBy(-secondary.getWidth())
+                    .alpha(1)
+                    .setDuration(COMMON.duration)
+                    .setStartDelay(COMMON.delay)
+                    .start();
         }
     }
 
@@ -67,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
                 animation.end();
             }
         }
+        secondary.animate().cancel();
     }
 
     @OnClick(R.id.btn_all_gists)
@@ -105,6 +116,13 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+        secondary.animate()
+                .translationX(secondary.getWidth())
+                .alpha(0)
+                .setDuration(COMMON.duration)
+                .setStartDelay(COMMON.delay)
+                .start();
     }
 
     private AnimatorSet animateButton(final Params params) {
