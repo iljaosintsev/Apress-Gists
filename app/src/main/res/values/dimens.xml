@@ -13,4 +13,5 @@
     <dimen name="avatar_size">72dp</dimen>
     <dimen name="indicator_size">12dp</dimen>
     <dimen name="logo_size">72dp</dimen>
+    <dimen name="search_height">192dp</dimen>
 </resources>
