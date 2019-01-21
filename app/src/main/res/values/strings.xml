@@ -27,8 +27,9 @@
 
     <string name="there_changes">There are changes</string>
     <string name="save_quest">Do you want to save the changes?</string>
+    <string name="last_chance">Last chance</string>
+    <string name="do_you_want_to_delete">Do you want to delete this gist?</string>
     <string name="try_now">Try now</string>
-    <string name="title_activity_room">RoomActivity</string>
     <string name="delete">Delete</string>
 
     <string name="avatar_transition_tag">avatar_transition_tag</string>

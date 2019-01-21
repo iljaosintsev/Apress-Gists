@@ -109,8 +109,8 @@ public class GistActivity extends BaseActivity implements GistView {
         switch (item.getItemId()) {
             case R.id.gist_menu_delete:
                 new AlertDialog.Builder(this)
-                        .setTitle("Last chance")
-                        .setMessage("Do you want to delete this gist?")
+                        .setTitle(R.string.last_chance)
+                        .setMessage(R.string.do_you_want_to_delete)
                         .setPositiveButton(R.string.delete, (dialog, which) -> {
                             dialog.dismiss();
                             _presenter.delete();
