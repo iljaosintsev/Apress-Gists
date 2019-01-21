@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.google.android.material.snackbar.Snackbar;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.turlir.abakgists.R;
@@ -93,7 +92,6 @@ public class GistActivity extends BaseActivity implements GistView {
         ButterKnife.bind(this);
 
         if (savedInstanceState == null) {
-            supportPostponeEnterTransition();
             String id = getIntent().getStringExtra(EXTRA_GIST);
             _presenter.load(id);
         }
@@ -203,22 +201,16 @@ public class GistActivity extends BaseActivity implements GistView {
                 .load(content.ownerAvatarUrl)
                 .fit()
                 .error(R.drawable.ic_github)
+                .placeholder(R.drawable.ic_github)
                 .networkPolicy(NetworkPolicy.OFFLINE)
                 .priority(Picasso.Priority.HIGH)
-                .into(avatar, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        supportStartPostponedEnterTransition();
-                    }
-                    @Override
-                    public void onError() {
-                        supportStartPostponedEnterTransition();
-                    }
-                });
+                .into(avatar);
 
         tvLogin.setText(content.login(getResources()));
 
         desc.setText(content.description);
         note.setText(content.note);
+
+        supportStartPostponedEnterTransition();
     }
 }
