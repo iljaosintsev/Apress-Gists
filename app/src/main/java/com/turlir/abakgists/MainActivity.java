@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 
+import com.turlir.abakgists.all.AllInOneActivity;
 import com.turlir.abakgists.allgists.view.AllGistsActivity;
 import com.turlir.abakgists.notes.view.NotesActivity;
 import com.turlir.abakgists.template.TemplateActivity;

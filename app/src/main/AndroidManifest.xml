@@ -36,7 +36,7 @@
             android:label="@string/notes"/>
 
         <activity
-            android:name=".AllInOneActivity"
+            android:name=".all.AllInOneActivity"
             android:label="@string/all_in_one"
             android:theme="@style/AllInOneTheme"/>
 

@@ -1,8 +1,9 @@
-package com.turlir.abakgists;
+package com.turlir.abakgists.all;
 
 import android.os.Bundle;
 
 import com.google.android.material.tabs.TabLayout;
+import com.turlir.abakgists.R;
 import com.turlir.abakgists.allgists.view.AllGistsFragment;
 import com.turlir.abakgists.notes.view.NotesFragment;
 
