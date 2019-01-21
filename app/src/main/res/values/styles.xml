@@ -31,4 +31,8 @@
         <item name="android:textColor">@color/colorAccent</item>
     </style>
 
+    <style name="PrimaryOverlay" parent="ThemeOverlay.MaterialComponents">
+        <item name="colorAccent">@color/colorPrimary</item>
+    </style>
+
 </resources>
