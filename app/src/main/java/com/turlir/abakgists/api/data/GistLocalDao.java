@@ -1,11 +1,10 @@
 package com.turlir.abakgists.api.data;
 
+import java.util.List;
+
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
-
-import java.util.List;
-
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 
@@ -14,6 +13,9 @@ public interface GistLocalDao {
 
     @Query("SELECT * FROM gists_db")
     Flowable<List<GistLocal>> all();
+
+    @Query("SELECT * FROM gists_db WHERE description LIKE :request OR note LIKE :request")
+    Single<List<GistLocal>> search(String request);
 
     @Query("SELECT * FROM gists_db WHERE id = :id")
     Single<GistLocal> byId(String id);

@@ -25,6 +25,10 @@ public class Repository {
         mTransformer = new ListGistMapper.Json(new GistMapper.Json());
     }
 
+    public Single<List<GistLocal>> search(String text) {
+        return mDao.search(text);
+    }
+
     /**
      * Скачивает очередную страницу с сервера и сохраняет ее в БД
      *
